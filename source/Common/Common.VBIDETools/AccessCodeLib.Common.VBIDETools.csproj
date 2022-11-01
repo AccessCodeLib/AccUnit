@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9FA679C2-82C0-42DC-A34F-F78A9012EEEB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AccessCodeLib.Common.VBIDETools</RootNamespace>
+    <AssemblyName>AccessCodeLib.Common.VBIDETools</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>ExtendedCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>ExtendedCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccessApplicationHelper.cs" />
+    <Compile Include="CommentAttributes\AttributeDefinitionBase.cs" />
+    <Compile Include="CommentAttributes\CommentAttributeLineParser.cs" />
+    <Compile Include="CommentAttributes\Domain.cs" />
+    <Compile Include="CommentAttributes\IAttributeParser.cs" />
+    <Compile Include="CommentAttributes\CommentAttribute.cs" />
+    <Compile Include="CommentAttributes\CommentAttributeReader.cs" />
+    <Compile Include="CommentAttributes\InvalidDomainIdentifierException.cs" />
+    <Compile Include="CommentAttributes\InvalidIdentifierException.cs" />
+    <Compile Include="CommentAttributes\InvalidLiteralStringException.cs" />
+    <Compile Include="CommentAttributes\MalformedParameterListException.cs" />
+    <Compile Include="CommentAttributes\MissingDomainIdentifierException.cs" />
+    <Compile Include="CommentAttributes\Parameter.cs" />
+    <Compile Include="CommentAttributes\ParameterListParser.cs" />
+    <Compile Include="CommentAttributes\ParsedCommentAttributeLine.cs" />
+    <Compile Include="CodeModuleGenerator.cs" />
+    <Compile Include="CodeModuleInfo.cs" />
+    <Compile Include="CodeModuleContainer.cs" />
+    <Compile Include="CodeModuleMember.cs" />
+    <Compile Include="CodeModuleMemberList.cs" />
+    <Compile Include="CodeModuleReader.cs" />
+    <Compile Include="Commandbar\CommandbarButtonData.cs" />
+    <Compile Include="Commandbar\CommandBarExtensions.cs" />
+    <Compile Include="Commandbar\ICommandBarsAdapterClient.cs" />
+    <Compile Include="Commandbar\VbeCommandBarAdapter.cs" />
+    <Compile Include="CommentAttributes\TypeMismatchException.cs" />
+    <Compile Include="CommentAttributes\WrongNumberOfParametersException.cs" />
+    <Compile Include="CommentsBlockReader.cs" />
+    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="HotKey.cs" />
+    <Compile Include="HotKeyEventArgs.cs" />
+    <Compile Include="HotKeys.cs" />
+    <Compile Include="Integration\ComTools.cs" />
+    <Compile Include="Integration\HostApplicationTools.cs" />
+    <Compile Include="InvocationHelper.cs" />
+    <Compile Include="NonCommentLineException.cs" />
+    <Compile Include="OfficeApplicationHelper.cs" />
+    <Compile Include="OfficeInvokeStrings.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Templates\CodeTemplate.cs" />
+    <Compile Include="Templates\CodeTemplateCollection.cs" />
+    <Compile Include="TypeLib\Constant.cs" />
+    <Compile Include="TypeLib\ConstantParent.cs" />
+    <Compile Include="TypeLib\Constants.cs" />
+    <Compile Include="TypeLib\ConstantsReader.cs" />
+    <Compile Include="TypeLib\IConstantParent.cs" />
+    <Compile Include="TypeLib\TypeLibInfo.cs" />
+    <Compile Include="TypeLib\TypeLibTools.cs" />
+    <Compile Include="VbaProjectManagement\IVbeManager.cs" />
+    <Compile Include="VbaProjectManagement\Member.cs" />
+    <Compile Include="VbaProjectManagement\MemberType.cs" />
+    <Compile Include="VbaProjectManagement\Module.cs" />
+    <Compile Include="VbaProjectManagement\TextContainerModule.cs" />
+    <Compile Include="VbaProjectManagement\VbeManager.cs" />
+    <Compile Include="VbeAdapter.cs" />
+    <Compile Include="VbeOnlyApplicatonHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="TLI">
+      <Guid>{8B217740-717D-11CE-AB5B-D41203C10000}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>True</Private>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>True</Private>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Tools\AccessCodeLib.Common.Tools.csproj">
+      <Project>{7AF24615-91B3-4775-BC6E-C8986F980B57}</Project>
+      <Name>AccessCodeLib.Common.Tools</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\AssemblyInfo.template" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>"%25programfiles(x86)%25\Microsoft SDKs\Windows\v7.0A\bin\sgen" /t:AccessCodeLib.Common.VBIDETools.Templates.CodeTemplateCollection /a:"$(TargetPath)" /f</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

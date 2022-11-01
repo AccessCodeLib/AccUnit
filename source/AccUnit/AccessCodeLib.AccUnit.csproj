@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1575D69A-C503-4149-B3A9-2CE188B19C15}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AccessCodeLib.AccUnit</RootNamespace>
+    <AssemblyName>AccUnit</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Interop.TLI, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\lib\TypeLibInfo\Interop.TLI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Interop.VBA">
+      <HintPath>..\lib\VBA\Interop.VBA.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assertions\Assertions.cs" />
+    <Compile Include="Assertions\Constraints\ComparerContraint.cs" />
+    <Compile Include="Assertions\Constraints\ConstraintBase.cs" />
+    <Compile Include="Assertions\Constraints\DBNullConstraint.cs" />
+    <Compile Include="Assertions\Constraints\NullConstraint.cs" />
+    <Compile Include="Assertions\Constraints\NotConstraint.cs" />
+    <Compile Include="Assertions\Interfaces\AssertionException.cs" />
+    <Compile Include="Assertions\Interfaces\IAssertion.cs" />
+    <Compile Include="Assertions\Interfaces\IAssertionsBuilder.cs" />
+    <Compile Include="Assertions\Interfaces\IConstraint.cs" />
+    <Compile Include="Assertions\Interfaces\IConstraintBuilder.cs" />
+    <Compile Include="Assertions\Interfaces\IMatchResult.cs" />
+    <Compile Include="Assertions\Interfaces\IMatchResultCollector.cs" />
+    <Compile Include="Assertions\Interfaces\IMatchResultCollectorBridge.cs" />
+    <Compile Include="Common\CodeModuleMemberWithMarker.cs" />
+    <Compile Include="Common\CompareTypeHelper.cs" />
+    <Compile Include="Common\IgnoreInfo.cs" />
+    <Compile Include="Common\MessageBoxData.cs" />
+    <Compile Include="Common\MessageStrings.Designer.cs" />
+    <Compile Include="Common\TagList.cs" />
+    <Compile Include="Common\TestClassInfo.cs" />
+    <Compile Include="Common\TestClassMemberInfo.cs" />
+    <Compile Include="Common\TestClassMemberList.cs" />
+    <Compile Include="Common\TestItemTag.cs" />
+    <Compile Include="Common\UITools.cs" />
+    <Compile Include="Common\UserControls.Designer.cs" />
+    <Compile Include="Configuration\AccUnitLoaderAddInCodeTemplates.cs" />
+    <Compile Include="Integration\AccessRunException.cs" />
+    <Compile Include="Integration\AccessTestSuite.cs" />
+    <Compile Include="Common\StringTools.cs" />
+    <Compile Include="Common\TestResultEventArgs.cs" />
+    <Compile Include="Configuration\AccUnitVBAReference.cs" />
+    <Compile Include="Configuration\AccUnitVBAReferences.cs" />
+    <Compile Include="Configuration\Configurator.cs" />
+    <Compile Include="Configuration\TestSuiteCodeTemplates.cs" />
+    <Compile Include="Integration\CouldNotCompileDynamicTestRowGeneratorException.cs" />
+    <Compile Include="Integration\DaoTransactionManager.cs" />
+    <Compile Include="Integration\ITestFixtureMembers.cs" />
+    <Compile Include="Integration\MethodTest.cs" />
+    <Compile Include="Integration\TestFixture.cs" />
+    <Compile Include="Integration\TestFixtureMember.cs" />
+    <Compile Include="Integration\TestResult.cs" />
+    <Compile Include="Integration\TestResultCollection.cs" />
+    <Compile Include="Interfaces\ITestData.cs" />
+    <Compile Include="Interfaces\ITestManagerBridge.cs" />
+    <Compile Include="Interfaces\ITestSummaryFormatter.cs" />
+    <Compile Include="Interfaces\IVBATestSuite.cs" />
+    <Compile Include="Integration\MissingTestMessageBoxResultsException.cs" />
+    <Compile Include="Integration\TagList.cs" />
+    <Compile Include="Integration\TestClassFactoryManager.cs" />
+    <Compile Include="Integration\TestClassInfo.cs" />
+    <Compile Include="Integration\TestClassList.cs" />
+    <Compile Include="Integration\TestClassManager.cs" />
+    <Compile Include="Integration\TestClassMemberInfo.cs" />
+    <Compile Include="Integration\TestClassMemberList.cs" />
+    <Compile Include="Integration\TestClassReader.cs" />
+    <Compile Include="Integration\TestItemTag.cs" />
+    <Compile Include="Integration\TestManager.cs" />
+    <Compile Include="Integration\TestMessageBox.cs" />
+    <Compile Include="Integration\TestRow.cs" />
+    <Compile Include="Integration\TestRowGenerator.cs" />
+    <Compile Include="Integration\TestSummaryFormatter.cs" />
+    <Compile Include="Integration\UserSettings.cs" />
+    <Compile Include="Integration\VBATestBuilder.cs" />
+    <Compile Include="Integration\VBATestSuite.cs" />
+    <Compile Include="Interfaces\IParamTest.cs" />
+    <Compile Include="Interfaces\IRowTest.cs" />
+    <Compile Include="Interfaces\ITest.cs" />
+    <Compile Include="Interfaces\ITestFixture.cs" />
+    <Compile Include="Interfaces\ITestList.cs" />
+    <Compile Include="Interfaces\ITestListener.cs" />
+    <Compile Include="Common\Interfaces\ITestMessageBox.cs" />
+    <Compile Include="Interfaces\ITestResult.cs" />
+    <Compile Include="Interfaces\ITestResultCollector.cs" />
+    <Compile Include="Interfaces\ITestRow.cs" />
+    <Compile Include="Interfaces\ITestRunner.cs" />
+    <Compile Include="Interfaces\ITestSuite.cs" />
+    <Compile Include="Interfaces\ITestSummary.cs" />
+    <Compile Include="Interfaces\ResetMode.cs" />
+    <Compile Include="Interfaces\RunState.cs" />
+    <Compile Include="Interfaces\TestContextMethodNames.cs" />
+    <Compile Include="Interop\Assert.cs" />
+    <Compile Include="Interop\CodeInfo.cs" />
+    <Compile Include="Interop\Constants.cs" />
+    <Compile Include="Interop\TestBuilder.cs" />
+    <Compile Include="Interop\VbaFactory\AccUnitFactory.cs" />
+    <Compile Include="Interop\VbaFactory\DllExportFactory.cs" />
+    <Compile Include="Interop\ConstraintBuilder.cs" />
+    <Compile Include="Interop\MatchResultCollector.cs" />
+    <Compile Include="Interop\MatchResult.cs" />
+    <Compile Include="Assertions\ConstraintBuilder.cs" />
+    <Compile Include="Assertions\MatchResult.cs" />
+    <Compile Include="Interop\TestRunner.cs" />
+    <Compile Include="Interop\TestSuite.cs" />
+    <Compile Include="Interop\VbaTestSuite.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="TestRunner\VbaTestRunner.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Common\MessageStrings.resx" />
+    <EmbeddedResource Include="Common\UserControls.de.resx" />
+    <EmbeddedResource Include="Common\UserControls.resx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.Tools\AccessCodeLib.Common.Tools.csproj">
+      <Project>{7af24615-91b3-4775-bc6e-c8986f980b57}</Project>
+      <Name>AccessCodeLib.Common.Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.VBIDETools\AccessCodeLib.Common.VBIDETools.csproj">
+      <Project>{9fa679c2-82c0-42dc-a34f-f78a9012eeeb}</Project>
+      <Name>AccessCodeLib.Common.VBIDETools</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetDir)$(TargetFileName) $(TargetDir)$(ProjectName).dll
+"$(ProjectDir)..\tools\tlb\tlbExp.exe" $(TargetDir)$(TargetFileName) /out:$(TargetDir)\$(ProjectName).tlb
+copy $(TargetDir)$(TargetFileName).config $(TargetDir)$(ProjectName).dll.config</PostBuildEvent>
+  </PropertyGroup>
+</Project>

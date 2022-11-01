@@ -1,0 +1,7 @@
+﻿################################################################################
+# Diese .gitignore-Datei wurde von Microsoft(R) Visual Studio automatisch erstellt.
+################################################################################
+
+/examples/msaccess/lib
+/source/Tests/msaccess-files/lib
+/access-add-in/lib
