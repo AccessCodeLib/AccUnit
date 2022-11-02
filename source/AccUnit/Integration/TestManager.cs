@@ -13,6 +13,7 @@ using VBA;
 using Exception = System.Exception;
 using ITest = AccessCodeLib.AccUnit.Interfaces.ITest;
 using VbMsgBoxResult = AccessCodeLib.AccUnit.Interfaces.VbMsgBoxResult;
+using TLI = TypeLibInformation;
 
 namespace AccessCodeLib.AccUnit
 {

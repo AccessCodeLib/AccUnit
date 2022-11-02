@@ -5,7 +5,7 @@ using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.VbaProjectManagement;
 using System.Collections.Generic;
 using System.Linq;
-using TLI;
+using TLI = TypeLibInformation;
 
 namespace AccessCodeLib.AccUnit
 {

@@ -4,6 +4,7 @@ using Microsoft.Office.Interop.Access;
 using Microsoft.Vbe.Interop;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using TLI = TypeLibInformation;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
 {

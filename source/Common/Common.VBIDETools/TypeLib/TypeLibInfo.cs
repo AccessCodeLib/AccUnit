@@ -1,4 +1,6 @@
-﻿namespace AccessCodeLib.Common.VBIDETools.TypeLib
+﻿using TLI = TypeLibInformation;
+
+namespace AccessCodeLib.Common.VBIDETools.TypeLib
 {
     public class TypeLibInfo
     {

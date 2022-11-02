@@ -1,4 +1,5 @@
-﻿
+﻿using TLI = TypeLibInformation;
+
 namespace AccessCodeLib.Common.VBIDETools.TypeLib
 {
     public static class TypeLibTools

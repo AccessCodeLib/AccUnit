@@ -20,7 +20,7 @@ namespace AccessCodeLib.AccUnit.Configuration
             Add(new CodeTemplate(@"AccUnit_Factory", vbext_ComponentType.vbext_ct_StdModule, code));
         }
 
-        private static string AccUnitLoaderFactoryCode = 
+        private static string AccUnitLoaderFactoryCode =
             @"Option Compare Database
 Option Explicit
 
@@ -31,8 +31,13 @@ Private m_AccUnitLoaderFactory As Object
 Private Property Get AccUnitLoaderFactory() As Object
    If m_AccUnitLoaderFactory Is Nothing Then
       Set m_AccUnitLoaderFactory = Application.Run(GetAddInPath & ""AccUnitLoader.GetAccUnitFactory"")
+      m_AccUnitLoaderFactory.Init NewDebugPrintMatchResultCollector
    End If
    Set AccUnitLoaderFactory = m_AccUnitLoaderFactory
+End Property
+
+Private Property Get AccUnitFactory() As AccUnit.AccUnitFactory
+   Set AccUnitFactory = AccUnitLoaderFactory.AccUnitFactory
 End Property
 
 Private Function GetAddInPath() As String
@@ -63,7 +68,7 @@ Public Property Get TestBuilder() As Object
     Set TestBuilder = AccUnitLoaderFactory.TestBuilder
 End Property
 
-Public Function NewDebugPrintMatchResultCollector(Optional ByVal ShowPassedText As Boolean = False, Optional ByVal UseRaiseErrorForFailedMatch As Boolean = False) As Object
+Public Function NewDebugPrintMatchResultCollector(Optional ByVal ShowPassedText As Boolean = False, Optional ByVal UseRaiseErrorForFailedMatch As Boolean = True) As Object
    Set NewDebugPrintMatchResultCollector = AccUnitLoaderFactory.NewDebugPrintMatchResultCollector(ShowPassedText, UseRaiseErrorForFailedMatch)
 End Function
 
@@ -81,7 +86,6 @@ End Property
 
 Public Sub RunTest(ByVal testClassInstance As Object, Optional ByVal MethodName As String = ""*"", Optional ByVal PrintSummary As Boolean = True, Optional ByVal TestResultCollector As Object)
    AccUnitLoaderFactory.RunTest testClassInstance, MethodName, PrintSummary, TestResultCollector
-End Sub
-";
+End Sub";
     }
 }

@@ -100,7 +100,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
                 {
                     invocationHelper.InvokeMethod(testFixture.Members.Setup.Name);
                 }
-               
+                
                 try
                 {
                     invocationHelper.InvokeMethod(test.MethodName);
@@ -145,7 +145,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
                 {
                     testResult.Executed = true;
                 }
-
+                
                 if (testFixture.HasTeardown)
                 {
                     invocationHelper.InvokeMethod(testFixture.Members.Teardown.Name);

@@ -9,7 +9,7 @@ using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.TypeLib;
 using Microsoft.Vbe.Interop;
-using TLI;
+using TypeLibInformation;
 
 namespace AccessCodeLib.AccUnit
 {

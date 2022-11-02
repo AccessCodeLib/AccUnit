@@ -1,4 +1,12 @@
-﻿namespace AccessCodeLib.Common.VBIDETools.TypeLib
+﻿using TLI = TypeLibInformation;
+
+/*
+ * 
+ * "%programfiles(x86)%\Microsoft SDKs\Windows\v7.0A\bin\sgen" /t:AccessCodeLib.Common.VBIDETools.Templates.CodeTemplateCollection /a:"$(TargetPath)" /f
+ * 
+ */
+
+namespace AccessCodeLib.Common.VBIDETools.TypeLib
 {
     public class Constant
     {

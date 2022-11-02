@@ -1,4 +1,5 @@
-﻿using AccessCodeLib.Common.TestHelpers.AccessRelated;
+﻿using AccessCodeLib.AccUnit.Integration;
+using AccessCodeLib.Common.TestHelpers.AccessRelated;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using NUnit.Framework;
@@ -103,7 +104,8 @@ public Function TestMethod1() as Long
    TestMethod1 = m_Value      
 End Function
 public Function TestMethod2() as Long
-   TestMethod2 = m_Value      
+   Dim a as Long
+   a = m_Value / 0
 End Function
 private Function TestMethod3() as Long
    TestMethod3 = 999      
@@ -117,8 +119,15 @@ End Function
             testRunner.Run(fixture, "*", result);
 
             var resultCount = result.Results.Count();
-
+            
             Assert.That(resultCount, Is.EqualTo(2));
+
+            foreach (var testResult in result.Results)
+            {
+                var res = testResult as TestResult;
+                Assert.That(res.IsSuccess, Is.EqualTo(true), res.Message);
+            }
+           
 
             var invocHelper = new InvocationHelper(fixture);
             var ValueAfterTeardowns = invocHelper.InvokeMethod("TestMethod1");
