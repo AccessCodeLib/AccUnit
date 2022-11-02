@@ -8,7 +8,7 @@ For more informations see https://accunit.access-codelib.net/
 * Try to run COM regfree
 
 ### Dev state
-* Simple test can started by Access-Add-In (required: registered tlbinf32.dll)
+* Simple test can started by [Access-Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in) (required: registered tlbinf32.dll)
 * Todo: remove usage of TLBINF32.dll
 
 ### Remarks
