@@ -49,15 +49,33 @@ Function GetAppDataLocation()
 End Function
 
 Function FileCopy(SourceFilePath, DestFilePath)
-
+   Set AccessApp = CreateObject("Access.Application") 
    set fso = CreateObject("Scripting.FileSystemObject") 
    fso.CopyFile SourceFilePath, DestFilePath
+End Function
 
+Function DeleteFile(File2Delete)
+   Set fso = CreateObject("Scripting.FileSystemObject")
+   fso.DeleteFile File2Delete
 End Function
 
 Function CreateMde(SourceFilePath, DestFilePath)
 
-   Set AccessApp = CreateObject("Access.Application")
-   AccessApp.SysCmd 603, (SourceFilePath), (DestFilePath)
+   FileToCompile = DestFilePath & ".accdb"
+   FileCopy SourceFilePath, FileToCompile
+  
+   Set AccessApp = CreateObject("Access.Application") 
+   RunPrecompileProcedure AccessApp, FileToCompile
+   AccessApp.SysCmd 603, (FileToCompile), (DestFilePath)
+   
+   DeleteFile FileToCompile
+
+End Function
+
+Function RunPrecompileProcedure(AccessApp, SourceFilePath)
+
+   AccessApp.OpenCurrentDatabase SourceFilePath
+   AccessApp.Run "CheckAccUnitTypeLibFile"
+   AccessApp.CloseCurrentDatabase
 
 End Function
