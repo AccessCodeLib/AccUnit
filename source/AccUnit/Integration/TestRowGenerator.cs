@@ -9,7 +9,6 @@ using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.TypeLib;
 using Microsoft.Vbe.Interop;
-using TypeLibInformation;
 
 namespace AccessCodeLib.AccUnit
 {
@@ -236,9 +235,12 @@ namespace AccessCodeLib.AccUnit
 
             if (constant==null)
                 return paramstring;
-            
 
+
+            throw new NotImplementedException("Replace TliVarType code");
+            /*
             string valueString;
+            // TODO: replace TypeLib reference
             switch (constant.VarType)
             {
                 case TliVarType.VT_BSTR:
@@ -248,8 +250,10 @@ namespace AccessCodeLib.AccUnit
                     valueString = constant.Value.ToString();
                     break;
             }
-
+           
             return valueString;
+
+             */
         }
 
 

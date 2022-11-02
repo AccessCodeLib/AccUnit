@@ -1,10 +1,9 @@
 ﻿using AccessCodeLib.Common.TestHelpers.AccessRelated;
 using AccessCodeLib.Common.VBIDETools;
-using Microsoft.Office.Interop.Access;
 using Microsoft.Vbe.Interop;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using TLI = TypeLibInformation;
+using System.Linq;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
 {
@@ -104,15 +103,15 @@ End Function
 
             Assert.That(fixture, Is.Not.Null);
 
-            var members = AccessCodeLib.Common.VBIDETools.TypeLib.TypeLibTools.GetTLIInterfaceMembers(fixture);
+            var members = AccessCodeLib.Common.VBIDETools.TypeLib.TypeLibTools.GetTLIInterfaceMemberNames(fixture);
             Assert.That(members, Is.Not.Null);
             Assert.That(members.Count, Is.EqualTo(1));
 
-            var member = members[1];
-            Assert.That(member.Name, Is.EqualTo("TestMethod"));
+            var member = members.ElementAt(1);
+            Assert.That(member, Is.EqualTo("TestMethod"));
 
             var invocHelper = new InvocationHelper(fixture);
-            var actual = invocHelper.InvokeMethod(member.Name);
+            var actual = invocHelper.InvokeMethod(member);
 
             testBuilder.Dispose();
 
@@ -144,15 +143,15 @@ End Function
             
             Assert.That(fixture, Is.Not.Null);
 
-            var members = AccessCodeLib.Common.VBIDETools.TypeLib.TypeLibTools.GetTLIInterfaceMembers(fixture);
+            var members = AccessCodeLib.Common.VBIDETools.TypeLib.TypeLibTools.GetTLIInterfaceMemberNames(fixture);
             Assert.That(members, Is.Not.Null);
             Assert.That(members.Count, Is.EqualTo(2));
 
             var invocHelper = new InvocationHelper(fixture);
 
-            foreach (TLI.MemberInfo member in members)
+            foreach (var member in members)
             {
-                var actual = invocHelper.InvokeMethod(member.Name);
+                var actual = invocHelper.InvokeMethod(member);
                 Assert.That(actual, Is.EqualTo(123));
             }
         }

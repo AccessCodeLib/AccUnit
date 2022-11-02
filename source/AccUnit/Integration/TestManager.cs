@@ -13,7 +13,6 @@ using VBA;
 using Exception = System.Exception;
 using ITest = AccessCodeLib.AccUnit.Interfaces.ITest;
 using VbMsgBoxResult = AccessCodeLib.AccUnit.Interfaces.VbMsgBoxResult;
-using TLI = TypeLibInformation;
 
 namespace AccessCodeLib.AccUnit
 {
@@ -84,6 +83,9 @@ namespace AccessCodeLib.AccUnit
 
         public void AddTests(ITestFixture testFixture)
         {
+            throw new NotImplementedException("TODO: replace TypeLibTools.GetTLIInterfaceMembers (TypleLib less) ");
+            // TODO: replace TypeLibTools.GetTLIInterfaceMembers (TypleLib less) 
+            /*
             foreach (TLI.MemberInfo member in TypeLibTools.GetTLIInterfaceMembers(_testObject))
             {
                 
@@ -109,26 +111,29 @@ namespace AccessCodeLib.AccUnit
                     memberinfo = new TestClassMemberInfo(member.Name);
                 }
 
-                /*
-                var databuilder = testCaseCollector.Add(name);
-                if (useGetTestData)
-                {
-                    _testRowGenerator.GetTestData(databuilder, memberinfo);
-                }
-                */
+            
+
+               
+                //var databuilder = testCaseCollector.Add(name);
+                //if (useGetTestData)
+                //{
+                //    _testRowGenerator.GetTestData(databuilder, memberinfo);
+                //}
+                
 
                 _members.Add(memberinfo);
 
                 // init TestMessagebox
-
+               
             }
+            */
         }
 
         public TestClassMemberList Members { get { return _members; } }
 
-        private static bool IsSetupOrTeardown(TLI.MemberInfo member, ITestFixture testFixtureInfo)
+        private static bool IsSetupOrTeardown(string memberName, ITestFixture testFixtureInfo)
         {
-            switch (member.Name.ToLower())
+            switch (memberName.ToLower())
             {
                 case "fixturesetup":
                     testFixtureInfo.HasFixtureSetup = true;

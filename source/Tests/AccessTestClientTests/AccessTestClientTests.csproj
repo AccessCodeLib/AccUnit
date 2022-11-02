@@ -89,10 +89,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="TlbInf32.Interop, Version=1.1.81.69, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\TypeLibInformation.1.2.0\lib\net45\TlbInf32.Interop.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessClientTest.cs" />

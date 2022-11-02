@@ -5,7 +5,6 @@ using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.VbaProjectManagement;
 using System.Collections.Generic;
 using System.Linq;
-using TLI = TypeLibInformation;
 
 namespace AccessCodeLib.AccUnit
 {
@@ -46,11 +45,11 @@ namespace AccessCodeLib.AccUnit
             {
                 return;
             }
-
-            TLI.Members members = AccessCodeLib.Common.VBIDETools.TypeLib.TypeLibTools.GetTLIInterfaceMembers(_testClassInstance);
-            foreach(TLI.MemberInfo member in members)
+            
+            var memberNames = AccessCodeLib.Common.VBIDETools.TypeLib.TypeLibTools.GetTLIInterfaceMemberNames(_testClassInstance);
+            foreach(var memberName in memberNames)
             {
-                var fixtureMember = new TestFixtureMember(member.Name);
+                var fixtureMember = new TestFixtureMember(memberName);
                 _fixtureMembers.Add(fixtureMember);
                 
                 if (fixtureMember.IsFixtureSetup)
