@@ -8,9 +8,8 @@ For more informations see https://accunit.access-codelib.net/
 * Try to run COM regfree
 
 ### Dev state
-* Simple test can started by [Access-Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in) (required: registered tlbinf32.dll)
+* Simple test can started by [Access-Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in)
 * Todo: remove usage of TLBINF32.dll
 
 ### Remarks
-#### 64 Bit 
-Use tlbinf32.dll for 64 Bit: see https://stackoverflow.com/questions/42569377/tlbinf32-dll-in-a-64bits-net-application/42581513#42581513
+
