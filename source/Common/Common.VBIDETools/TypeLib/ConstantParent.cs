@@ -1,6 +1,4 @@
-﻿using TLI = TypeLibInformation;
-
-namespace AccessCodeLib.Common.VBIDETools.TypeLib
+﻿namespace AccessCodeLib.Common.VBIDETools.TypeLib
 {
     internal class ConstantParent : IConstantParent
     {

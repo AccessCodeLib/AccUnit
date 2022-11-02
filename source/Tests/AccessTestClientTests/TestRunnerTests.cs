@@ -2,12 +2,8 @@
 using AccessCodeLib.Common.TestHelpers.AccessRelated;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NUnit.Framework;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
 {
@@ -105,7 +101,7 @@ public Function TestMethod1() as Long
 End Function
 public Function TestMethod2() as Long
    Dim a as Long
-   a = m_Value / 0
+   a = m_Value
 End Function
 private Function TestMethod3() as Long
    TestMethod3 = 999      

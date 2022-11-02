@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TLI = TypeLibInformation;
 
 namespace AccessCodeLib.Common.VBIDETools.TypeLib
 {

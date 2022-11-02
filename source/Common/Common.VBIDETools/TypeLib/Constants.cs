@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using TypeLibInformation;
+using TLI;
 
 namespace AccessCodeLib.Common.VBIDETools.TypeLib
 {

@@ -72,6 +72,10 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Interop.TLI">
+      <HintPath>..\..\lib\TypeLibInfo\Interop.TLI.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
@@ -79,10 +83,6 @@
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="TlbInf32.Interop, Version=1.1.81.69, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\TypeLibInformation.1.2.0\lib\net35\TlbInf32.Interop.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessApplicationHelper.cs" />
@@ -170,7 +170,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="Properties\AssemblyInfo.template" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

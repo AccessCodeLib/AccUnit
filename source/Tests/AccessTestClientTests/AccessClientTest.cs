@@ -107,7 +107,7 @@ End Function
             Assert.That(members, Is.Not.Null);
             Assert.That(members.Count, Is.EqualTo(1));
 
-            var member = members.ElementAt(1);
+            var member = members.ElementAt(0);
             Assert.That(member, Is.EqualTo("TestMethod"));
 
             var invocHelper = new InvocationHelper(fixture);
