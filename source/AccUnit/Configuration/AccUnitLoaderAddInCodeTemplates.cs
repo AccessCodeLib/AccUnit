@@ -36,7 +36,11 @@ Private Property Get AccUnitLoaderFactory() As Object
    Set AccUnitLoaderFactory = m_AccUnitLoaderFactory
 End Property
 
+#If USE_ACCUNIT_TYPELIB Then
 Private Property Get AccUnitFactory() As AccUnit.AccUnitFactory
+#Else
+Private Property Get AccUnitFactory() As Object
+#End If
    Set AccUnitFactory = AccUnitLoaderFactory.AccUnitFactory
 End Property
 
