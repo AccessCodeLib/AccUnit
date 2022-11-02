@@ -10,6 +10,7 @@ Select Case MsgBox("Soll das Add-In als MDE verwendet werden?" + chr(13) & _
    case 6 ' vbYes
       CreateMde GetSourceFileFullName, GetDestFileFullName
    case 7 ' vbNo
+	  DeleteAddInFiles
       FileCopy GetSourceFileFullName, GetDestFileFullName
    case else
       
@@ -54,9 +55,22 @@ Function FileCopy(SourceFilePath, DestFilePath)
    fso.CopyFile SourceFilePath, DestFilePath
 End Function
 
-Function DeleteFile(File2Delete)
+Function DeleteAddInFiles()
+
    Set fso = CreateObject("Scripting.FileSystemObject")
-   fso.DeleteFile File2Delete
+   
+   DestFile = GetDestFileFullName()
+   Tlbfile = GetAddInLocation & "\lib\AccessCodeLib.AccUnit.tlb"
+   
+   DeleteFile fso, DestFile
+   DeleteFile fso, Tlbfile
+   
+End Function
+
+Function DeleteFile(fso, File2Delete)
+   if fso.FileExists(File2Delete) then
+      fso.DeleteFile File2Delete
+   end if
 End Function
 
 Function CreateMde(SourceFilePath, DestFilePath)
@@ -68,7 +82,19 @@ Function CreateMde(SourceFilePath, DestFilePath)
    RunPrecompileProcedure AccessApp, FileToCompile
    AccessApp.SysCmd 603, (FileToCompile), (DestFilePath)
    
-   DeleteFile FileToCompile
+   Set fso = CreateObject("Scripting.FileSystemObject")
+   DeleteFile fso, FileToCompile
+
+End Function
+
+Function DeleteDestFiles()
+
+	
+
+   Set fso = CreateObject("Scripting.FileSystemObject")
+
+   DeleteFile fso, DestFilePath
+   DeleteFile fso, GetAddInLocation() & "\lib\"
 
 End Function
 

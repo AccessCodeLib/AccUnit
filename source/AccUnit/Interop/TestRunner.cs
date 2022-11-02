@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Vbe.Interop;
+using System;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interop
@@ -21,5 +22,8 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId(Constants.ProgIdLibName + ".TestRunner")]
     public class TestRunner : AccUnit.TestRunner.VbaTestRunner, ITestRunner
     {
+        public TestRunner(VBProject vbProject = null) : base(vbProject)
+        {
+        }
     }
 }
