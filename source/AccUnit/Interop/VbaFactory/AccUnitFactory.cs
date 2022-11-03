@@ -1,6 +1,5 @@
 ﻿using AccessCodeLib.AccUnit.Configuration;
 using AccessCodeLib.Common.VBIDETools;
-using Microsoft.Vbe.Interop;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interop
@@ -11,7 +10,7 @@ namespace AccessCodeLib.AccUnit.Interop
     {
         IConstraintBuilder ConstraintBuilder { get; }
         IAssert Assert { get; }
-        ITestRunner TestRunner(VBProject VBProject);
+        ITestRunner TestRunner { get; }
         ITestBuilder TestBuilder { get; }
         IConfigurator Configurator { get; }
     }
@@ -38,9 +37,12 @@ namespace AccessCodeLib.AccUnit.Interop
             }
         }
 
-        public ITestRunner TestRunner(VBProject vbProject = null)
+        public ITestRunner TestRunner
         {
-            return new TestRunner(vbProject);
+            get
+            {
+                return new TestRunner();
+            }
         }
 
         public ITestBuilder TestBuilder

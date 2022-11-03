@@ -5,8 +5,6 @@ using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.VbaProjectManagement;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualBasic;
-using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit
 {
@@ -20,15 +18,17 @@ namespace AccessCodeLib.AccUnit
         public TestFixture(object testClassInstance)
         {
             _testClassInstance = testClassInstance;
-            Name = Information.TypeName(testClassInstance);
+            Name = AccessCodeLib.Common.VBIDETools.TypeLib.TypeLibTools.GetTLIInterfaceInfoName(testClassInstance);
             FullName = Name;
+            FillInstanceMembers();
         }
-
+        
         public TestFixture(string name, object testToAdd)
         {
+            _testClassInstance = testToAdd;
             Name = name;
             FullName = name;
-            _testClassInstance = testToAdd;
+            FillInstanceMembers();
         }
 
         public ITestFixtureMembers Members
@@ -39,20 +39,17 @@ namespace AccessCodeLib.AccUnit
             }
         }
 
-        public void FillInstanceMembers(VBProject vbProject)
+        private void FillInstanceMembers()
         {
             if (_testClassInstance == null)
             {
                 return;
             }
-
-            var vbc = vbProject.VBComponents.Item(Name);
-            var codeReader = new CodeModuleReader(vbc.CodeModule);
-            var members = codeReader.Members.FindAll(true).FindAll(m => m.ProcKind == vbext_ProcKind.vbext_pk_Proc);
             
-            foreach(var member in members)
+            var memberNames = AccessCodeLib.Common.VBIDETools.TypeLib.TypeLibTools.GetTLIInterfaceMemberNames(_testClassInstance);
+            foreach(var memberName in memberNames)
             {
-                var fixtureMember = new TestFixtureMember(member.Name);
+                var fixtureMember = new TestFixtureMember(memberName);
                 _fixtureMembers.Add(fixtureMember);
                 
                 if (fixtureMember.IsFixtureSetup)

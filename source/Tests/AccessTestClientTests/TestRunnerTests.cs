@@ -4,7 +4,6 @@ using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System.Linq;
 using NUnit.Framework;
-using System;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
 {
@@ -72,7 +71,7 @@ End Function
 ");
             var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
             Assert.That(fixture, Is.Not.Null);
-            
+
             var result = new TestResultCollector();
             var testRunner = new Interop.TestRunner();
             testRunner.Run(fixture, "*", result);
@@ -129,42 +128,6 @@ End Function
             var invocHelper = new InvocationHelper(fixture);
             var ValueAfterTeardowns = invocHelper.InvokeMethod("TestMethod1");
             Assert.That(ValueAfterTeardowns, Is.EqualTo(1));
-
-        }
-
-
-
-        [Test]
-        public void FindTestMethodesFromTestClassWithoutTlbInf32()
-        {
-            var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
-public Function TestMethod1() as Long
-   TestMethod1 = 123      
-End Function
-public Function TestMethod2() as Long
-   TestMethod2 = 123      
-End Function
-private Function TestMethod3() as Long
-   TestMethod3 = 999      
-End Function
-");
-            var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
-            Assert.That(fixture, Is.Not.Null);
-
-            // get type name from object
-            var name = Microsoft.VisualBasic.Information.TypeName(fixture);
-            Assert.That(name, Is.EqualTo("clsAccUnitTestClass"));
-
-            var vbc = _testBuilder.ActiveVBProject.VBComponents.Item(name);
-            var codeReader = new CodeModuleReader(vbc.CodeModule);
-
-            var publicMembers = codeReader.Members.FindAll(true).FindAll(m => m.ProcKind == vbext_ProcKind.vbext_pk_Proc);
-            Assert.That(publicMembers.Count, Is.EqualTo(2));
-
-            foreach (var member in publicMembers)
-            {
-                Assert.That(member.Name.Substring(0,10), Is.EqualTo("TestMethod"));
-            }
 
         }
     }

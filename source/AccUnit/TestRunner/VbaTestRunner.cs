@@ -2,7 +2,6 @@
 using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.VBIDETools;
-using Microsoft.Vbe.Interop;
 using System;
 
 namespace AccessCodeLib.AccUnit.TestRunner
@@ -15,18 +14,6 @@ namespace AccessCodeLib.AccUnit.TestRunner
         public event FinishedEventHandler TestFixtureFinished;
         public event TestStartedEventHandler TestStarted;
         public event FinishedEventHandler TestFinished;
-
-        private readonly VBProject _vbProject;
-
-        public VbaTestRunner()
-        {
-        }
-
-        public VbaTestRunner(VBProject vbProject)
-        {
-            _vbProject = vbProject;
-        }
-
 
         public void Run(ITestSuite testSuite, ITestResultCollector testResultCollector)
         {
@@ -77,7 +64,6 @@ namespace AccessCodeLib.AccUnit.TestRunner
 
             if (testMethodName == "*")
             {
-                testFixture.FillInstanceMembers(_vbProject);
                 Run(testFixture, testResultCollector);
                 return;
             }
