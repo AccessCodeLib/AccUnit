@@ -5,7 +5,6 @@ using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Integration;
-using AccessCodeLib.Common.VBIDETools.TypeLib;
 using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit
@@ -204,7 +203,7 @@ namespace AccessCodeLib.AccUnit
         void DisposeManagedResources()
         {
             TestClassFactoryManager.Dispose();
-            ConstantsReader.Clear();
+            //ConstantsReader.Clear();
         }
 
         void DisposeUnmanagedResources()

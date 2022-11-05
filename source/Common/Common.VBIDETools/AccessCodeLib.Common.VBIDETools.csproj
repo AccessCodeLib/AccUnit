@@ -72,10 +72,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Interop.TLI">
-      <HintPath>..\..\lib\TypeLibInfo\Interop.TLI.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
@@ -126,13 +122,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Templates\CodeTemplate.cs" />
     <Compile Include="Templates\CodeTemplateCollection.cs" />
-    <Compile Include="TypeLib\Constant.cs" />
-    <Compile Include="TypeLib\ConstantParent.cs" />
-    <Compile Include="TypeLib\Constants.cs" />
-    <Compile Include="TypeLib\ConstantsReader.cs" />
-    <Compile Include="TypeLib\IConstantParent.cs" />
-    <Compile Include="TypeLib\TypeLibInfo.cs" />
-    <Compile Include="TypeLib\TypeLibTools.cs" />
     <Compile Include="VbaProjectManagement\IVbeManager.cs" />
     <Compile Include="VbaProjectManagement\Member.cs" />
     <Compile Include="VbaProjectManagement\MemberType.cs" />

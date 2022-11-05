@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
-using AccessCodeLib.Common.VBIDETools.TypeLib;
 using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit
@@ -470,7 +469,7 @@ namespace AccessCodeLib.AccUnit
                     return this;
             }
 
-            ConstantsReader.Clear();
+            //ConstantsReader.Clear();
             _accUnitTests.Clear();
            // TestSuite.Reset(mode);
 

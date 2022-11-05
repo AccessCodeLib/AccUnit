@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using AccessCodeLib.AccUnit.Common;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Integration;
-using AccessCodeLib.Common.VBIDETools.TypeLib;
 using Microsoft.Vbe.Interop;
-using VBA;
+using Microsoft.VisualBasic;
 using Exception = System.Exception;
 using ITest = AccessCodeLib.AccUnit.Interfaces.ITest;
 using VbMsgBoxResult = AccessCodeLib.AccUnit.Interfaces.VbMsgBoxResult;
@@ -40,7 +37,7 @@ namespace AccessCodeLib.AccUnit
         {
             try
             {
-                TestName = TypeLibTools.GetTLIInterfaceInfoName(testmanagerbridge);
+                TestName = Information.TypeName(testmanagerbridge);
             }
             catch (Exception ex) { Logger.Log(ex.Message); }
 
