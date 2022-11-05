@@ -11,6 +11,23 @@ namespace AccessCodeLib.AccUnit.Interop
 
         void That(object Actual, IConstraintBuilder Constraint, string InfoText = null);
         new void Dispose();
+
+        void AreEqual(object Expected, object Actual, string InfoText = null);
+        void AreNotEqual(object Expected, object Actual, string InfoText = null);
+        //void AreSame( [MarshalAs(UnmanagedType.IDispatch)]object Expected, [MarshalAs(UnmanagedType.IDispatch)] object Actual, string InfoText = null);
+        //void AreNotSame([MarshalAs(UnmanagedType.IDispatch)] object Expected, [MarshalAs(UnmanagedType.IDispatch)] object Actual, string InfoText = null);
+        void Greater(object Arg1, object Arg2, string InfoText = null);
+        void GreaterOrEqual(object Arg1, object Arg2, string InfoText = null);
+        void Less(object Arg1, object Arg2, string InfoText = null);
+        void LessOrEqual(object Arg1, object Arg2, string InfoText = null);
+        void IsTrue(bool Condition, string InfoText = null);
+        void IsFalse(bool Condition, string InfoText = null);
+        void IsEmpty(object Actual, string InfoText = null);
+        void IsNull(object Actual, string InfoText = null);
+        void IsNotNull(object Actual, string InfoText = null);
+        void IsNothing([MarshalAs(UnmanagedType.IDispatch)] object Actual, string InfoText = null);
+        void IsNotNothing([MarshalAs(UnmanagedType.IDispatch)] object Actual, string InfoText = null);
+        
     }
 
     [ComVisible(true)]
@@ -47,7 +64,7 @@ namespace AccessCodeLib.AccUnit.Interop
                 MatchResultCollector.Add(result, infoText);
             }
         }
-
+        
         #region IDisposable Support
 
         bool _disposed;
@@ -92,7 +109,7 @@ namespace AccessCodeLib.AccUnit.Interop
         {
             //_hostApplication = null;
         }
-
+        
         ~Assert()
         {
             Dispose(false);

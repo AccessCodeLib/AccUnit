@@ -89,6 +89,7 @@ End Function
 
 
         [Test]
+        [Ignore("don't use TLBINF32.dll")]
         public void FindMethodeNameWithTLI()
         {
             var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
@@ -119,6 +120,7 @@ End Function
         }
 
         [Test]
+        [Ignore("don't use TLBINF32.dll")]
         public void FindPublicMethodesWithTLI()
         {
             var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"

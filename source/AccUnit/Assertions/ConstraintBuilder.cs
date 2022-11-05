@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using AccessCodeLib.AccUnit.Assertions.Constraints;
-using AccessCodeLib.AccUnit.Interfaces;
 
 namespace AccessCodeLib.AccUnit.Assertions
 {

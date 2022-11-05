@@ -27,6 +27,74 @@ namespace AccessCodeLib.AccUnit.Assertions
             }
         }
 
+        #region Compare-Methoden
+        public void AreEqual(object expected, object actual, string infoText = null)
+        {
+            That(actual, new ConstraintBuilder().EqualTo(expected), infoText);
+        }
+
+        public void AreNotEqual(object expected, object actual, string infoText = null)
+        {
+            That(actual, new ConstraintBuilder().Not.EqualTo(expected), infoText);
+        }
+
+        public void Greater(object arg1, object arg2, string infoText = null)
+        {
+            That(arg1, new ConstraintBuilder().GreaterThan(arg2), infoText);
+        }
+
+        public void GreaterOrEqual(object arg1, object arg2, string infoText = null)
+        {
+            That(arg1, new ConstraintBuilder().GreaterThanOrEqualTo(arg2), infoText);
+        }
+
+        public void Less(object arg1, object arg2, string infoText = null)
+        {
+            That(arg1, new ConstraintBuilder().LessThan(arg2), infoText);
+        }
+
+        public void LessOrEqual(object arg1, object arg2, string infoText = null)
+        {
+            That(arg1, new ConstraintBuilder().GreaterThanOrEqualTo(arg2), infoText);
+        }
+
+        public void IsTrue(bool condition, string infoText = null)
+        {
+            That(condition, new ConstraintBuilder().EqualTo(true), infoText);
+        }
+
+        public void IsFalse(bool condition, string infoText = null)
+        {
+            That(condition, new ConstraintBuilder().EqualTo(false), infoText);
+        }
+
+        public void IsEmpty(object actual, string infoText = null)
+        {
+            That(actual, new ConstraintBuilder().Empty, infoText);
+        }
+
+        public void IsNull(object actual, string infoText = null)
+        {
+            That(actual, new ConstraintBuilder().DBNull, infoText);
+        }
+
+        public void IsNotNull(object actual, string infoText = null)
+        {
+            That(actual, new ConstraintBuilder().Not.DBNull, infoText);
+        }
+
+        public void IsNothing(object actual, string infoText = null)
+        {
+            That(actual, new ConstraintBuilder().Not.Null, infoText);
+        }
+
+        public void IsNotNothing(object actual, string infoText = null)
+        {
+            That(actual, new ConstraintBuilder().Not.Null, infoText);
+        }
+
+        #endregion
+
         protected virtual void Fail(IMatchResult result)
         {
             if (MatchResultCollector != null)

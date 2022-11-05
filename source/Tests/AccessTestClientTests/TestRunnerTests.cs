@@ -50,7 +50,7 @@ End Function
             var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
             Assert.That(fixture, Is.Not.Null);
 
-            var testRunner = new Interop.TestRunner();
+            var testRunner = new Interop.TestRunner(_testBuilder.ActiveVBProject);
             testRunner.Run(fixture, "TestMethod");
 
         }
@@ -73,7 +73,7 @@ End Function
             Assert.That(fixture, Is.Not.Null);
             
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner();
+            var testRunner = new Interop.TestRunner(_testBuilder.ActiveVBProject);
             testRunner.Run(fixture, "*", result);
 
             var actual = result.Results.Count();
@@ -111,7 +111,7 @@ End Function
             Assert.That(fixture, Is.Not.Null);
 
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner();
+            var testRunner = new Interop.TestRunner(_testBuilder.ActiveVBProject);
             testRunner.Run(fixture, "*", result);
 
             var resultCount = result.Results.Count();

@@ -46,7 +46,28 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             Assert.That(result.Match, Is.EqualTo(expectedResult), result.Text);
         }
 
-        
+        [Test]
+        [TestCase(1, 1, true)]
+        [TestCase(0, 0, true)]
+        [TestCase(-1, -1, true)]
+        [TestCase(1, 0, false)]
+        [TestCase("abc", "abc", true)]
+        [TestCase("abc", "xyz", false)]
+        [TestCase("", "", true)]
+        [TestCase("abc", "", false)]
+        [TestCase(null, null, true)]
+        [TestCase(1, null, false)]
+        [TestCase(null, 1, false)]
+        public void AreEqualTest_InteropAssert(object actual, object expected, bool expectedResult)
+        {
+            var testCollector = new TestCollector();
+            var assert = NewTestAssert(testCollector);
+            
+            assert.AreEqual(expected, actual);
+            var result = testCollector.Result;
+
+            Assert.That(result.Match, Is.EqualTo(expectedResult), result.Text);
+        }
 
         [Test]
         [TestCase(1, 1, false)]
