@@ -1,4 +1,5 @@
 ﻿using AccessCodeLib.AccUnit.Assertions.Interfaces;
+using AccessCodeLib.AccUnit.Common;
 using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.VBIDETools;
@@ -103,7 +104,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
                 return new RowTest(testFixture, memberInfo);
             }
 
-            var test = new MethodTest(testFixture, testMethodName);
+            var test = new MethodTest(testFixture, memberInfo);
             return test;
         }
 
@@ -120,6 +121,15 @@ namespace AccessCodeLib.AccUnit.TestRunner
 
         public ITestResult Run(ITest test)
         {
+            if (test.TestClassMemberInfo.IgnoreInfo.Ignore)
+            {
+                var ignoreTestResult = new TestResult(test);
+                ignoreTestResult.IsIgnored = true;
+                ignoreTestResult.Message = test.TestClassMemberInfo.IgnoreInfo.Comment;
+                RaiseTestFinished(ignoreTestResult);
+                return ignoreTestResult;
+            }
+            
             if (test is IRowTest)
             {
                 return Run((IRowTest)test);
@@ -132,7 +142,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
             {
                 var ignoreInfo = new IgnoreInfo();
 
-                RaiseTestStarted(test, ignoreInfo, new TagList());
+                RaiseTestStarted(test, ignoreInfo, test.TestClassMemberInfo.Tags);
                 if (ignoreInfo.Ignore)
                 {
                     testResult.IsIgnored = true;

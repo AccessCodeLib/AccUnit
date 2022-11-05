@@ -6,5 +6,6 @@
         string MethodName { get; }
         string DisplayName { get; set; }
         RunState RunState { set; get; }
+        ITestClassMemberInfo TestClassMemberInfo { get; }
     }
 }

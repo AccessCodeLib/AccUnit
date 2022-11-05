@@ -121,7 +121,7 @@ namespace AccessCodeLib.AccUnit
                 return new RowTest(testFixture, memberInfo);
             }
 
-            var test = new MethodTest(testFixture, testMethodName);
+            var test = new MethodTest(testFixture, memberInfo);
             return test;
         }
 

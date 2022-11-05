@@ -120,9 +120,11 @@
     <Compile Include="Configuration\AccUnitVBAReferences.cs" />
     <Compile Include="Configuration\Configurator.cs" />
     <Compile Include="Configuration\TestSuiteCodeTemplates.cs" />
+    <Compile Include="Integration\BaseTest.cs" />
     <Compile Include="Integration\CouldNotCompileDynamicTestRowGeneratorException.cs" />
     <Compile Include="Integration\DaoTransactionManager.cs" />
-    <Compile Include="Integration\ITestFixtureMembers.cs" />
+    <Compile Include="Interfaces\ITestClassMemberInfo.cs" />
+    <Compile Include="Interfaces\ITestFixtureMembers.cs" />
     <Compile Include="Integration\MethodTest.cs" />
     <Compile Include="Integration\ParamTest.cs" />
     <Compile Include="Integration\RowTest.cs" />

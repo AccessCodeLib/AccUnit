@@ -7,7 +7,7 @@ using AccessCodeLib.Common.Tools.Logging;
 
 namespace AccessCodeLib.AccUnit
 {
-    public class TestClassMemberInfo
+    public class TestClassMemberInfo : ITestClassMemberInfo
     {
         internal delegate void GetParentEventHandler(TestClassMemberInfo sender, ref TestClassInfo parent);
         internal event GetParentEventHandler GetParent;
@@ -48,10 +48,11 @@ namespace AccessCodeLib.AccUnit
             }
         }
 
-        public IgnoreInfo IgnoreInfo;
+        private IgnoreInfo _ignoreInfo;
+        public IgnoreInfo IgnoreInfo { get { return _ignoreInfo; } }
 
         private readonly List<int> _testRowFilter;
-        public List<int> TestRowFilter { get { return _testRowFilter; } }
+        public IList<int> TestRowFilter { get { return _testRowFilter; } }
 
         public TagList Tags { get; private set; }
 
@@ -74,12 +75,12 @@ namespace AccessCodeLib.AccUnit
         private void SetIgnoreStateFromProcHeader(string procHeader)
         {
             var match = IgnoreMemberRegex.Match(procHeader);
-            IgnoreInfo.Ignore = match.Success;
+            _ignoreInfo.Ignore = match.Success;
             if (!match.Success) return;
             var comment = match.Groups[1].Value;
             if (!string.IsNullOrEmpty(comment))
             {
-                IgnoreInfo.Comment = comment.Trim();
+                _ignoreInfo.Comment = comment.Trim();
             }
         }
 
