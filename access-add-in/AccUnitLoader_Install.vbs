@@ -58,7 +58,12 @@ End Function
 Function DeleteAddInFiles()
 
    Set fso = CreateObject("Scripting.FileSystemObject")
+   DeleteAddInFilesFso fso
    
+End Function
+
+Function DeleteAddInFilesFso(fso)
+
    DestFile = GetDestFileFullName()
    Tlbfile = GetAddInLocation & "\lib\AccessCodeLib.AccUnit.tlb"
    
@@ -74,6 +79,9 @@ Function DeleteFile(fso, File2Delete)
 End Function
 
 Function CreateMde(SourceFilePath, DestFilePath)
+	
+   Set fso = CreateObject("Scripting.FileSystemObject")
+   DeleteAddInFilesFso fso
 
    FileToCompile = DestFilePath & ".accdb"
    FileCopy SourceFilePath, FileToCompile
@@ -82,14 +90,11 @@ Function CreateMde(SourceFilePath, DestFilePath)
    RunPrecompileProcedure AccessApp, FileToCompile
    AccessApp.SysCmd 603, (FileToCompile), (DestFilePath)
    
-   Set fso = CreateObject("Scripting.FileSystemObject")
    DeleteFile fso, FileToCompile
 
 End Function
 
 Function DeleteDestFiles()
-
-	
 
    Set fso = CreateObject("Scripting.FileSystemObject")
 

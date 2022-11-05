@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
-using AccessCodeLib.Common.VBIDETools.TypeLib;
 using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit
@@ -175,6 +174,10 @@ namespace AccessCodeLib.AccUnit
         private static readonly Regex ConstantStringRegex = new Regex(@"([\(\,]?)\s*([A-z\.]+)\s*([\)\,])", RegexOptions.CultureInvariant | RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase);
         private string ConvertConstantStringsToVB(string paramstring)
         {
+            // TODO: find a TLBINF32 replacement
+            return paramstring;
+            
+            /*
             var constants = ConstantsReader.Constants;
             if (constants.Count == 0 && ActiveVBProject != null)
                 ConstantsReader.AddConstants(ActiveVBProject);
@@ -193,12 +196,16 @@ namespace AccessCodeLib.AccUnit
                                                                              ReplaceReplaceVbConstant(m.Groups[2].Value), m.Groups[3].Value));
             Logger.Log("completed");
             return tempString;
+            */
         }
 
         private static string ReplaceReplaceVbConstant(string paramstring)
         {
             Logger.Log(string.Format("input: >{0}.<", paramstring));
-
+            return paramstring;
+            
+            // TODO: find a TLBINF32 replacement
+            /*
             var parts = paramstring.Split('.');
             string searchString;
 
@@ -216,7 +223,7 @@ namespace AccessCodeLib.AccUnit
                 default:
                     return paramstring;
             }
-
+            
             Constant constant;
             try
             {
@@ -235,10 +242,7 @@ namespace AccessCodeLib.AccUnit
 
             if (constant==null)
                 return paramstring;
-
-
-            throw new NotImplementedException("Replace TliVarType code");
-            /*
+            
             string valueString;
             // TODO: replace TypeLib reference
             switch (constant.VarType)
