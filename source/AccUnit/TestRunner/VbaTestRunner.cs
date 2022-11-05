@@ -4,6 +4,7 @@ using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
+using System.Linq;
 
 namespace AccessCodeLib.AccUnit.TestRunner
 {
@@ -78,11 +79,12 @@ namespace AccessCodeLib.AccUnit.TestRunner
             if (testMethodName == "*")
             {
                 testFixture.FillInstanceMembers(_vbProject);
+                testFixture.FillTestListFromTestClassInstance(_vbProject);
                 Run(testFixture, testResultCollector);
                 return;
             }
 
-            var test = new MethodTest(testFixture, testMethodName);
+            var test = CreateTest(testFixture, testMethodName);
             testFixture.Add(test);
 
             var result = Run(test);
@@ -91,9 +93,38 @@ namespace AccessCodeLib.AccUnit.TestRunner
                 testResultCollector.Add(result);
             }
         }
+        
+        private ITest CreateTest(ITestFixture testFixture, string testMethodName)
+        {
+            var memberInfo = TestFixture.GetTestFixtureMember(_vbProject, testFixture.Name, testMethodName).TestClassMemberInfo;
+
+            if (memberInfo.TestRows.Count > 0)
+            {
+                return new RowTest(testFixture, memberInfo);
+            }
+
+            var test = new MethodTest(testFixture, testMethodName);
+            return test;
+        }
+
+        public ITestResult Run(IRowTest test)
+        {
+            var results = new TestResultCollection(test);
+            foreach(var paramTest in test.ParamTests)
+            {
+                var result = Run(paramTest);
+                results.Add(result);
+            }
+            return results;
+        }
 
         public ITestResult Run(ITest test)
         {
+            if (test is IRowTest)
+            {
+                return Run((IRowTest)test);
+            }
+
             var testResult = new TestResult(test);
             var testFixture = test.Fixture;
 
@@ -117,7 +148,15 @@ namespace AccessCodeLib.AccUnit.TestRunner
                 
                 try
                 {
-                    invocationHelper.InvokeMethod(test.MethodName);
+                    if (test is IParamTest paramTest)
+                    {
+                        var testParams = paramTest.Parameters.ToArray();
+                        invocationHelper.InvokeMethod(test.MethodName, testParams);
+                    }
+                    else
+                    {
+                        invocationHelper.InvokeMethod(test.MethodName);
+                    }
                     testResult.IsSuccess = true;
                 }
                 catch (Exception ex)

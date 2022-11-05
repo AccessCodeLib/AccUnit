@@ -4,8 +4,8 @@ using System.Linq;
 
 namespace AccessCodeLib.AccUnit
 {
-
-    internal class TestFixtureMembers : List<ITestFixtureMember>, ITestFixtureMembers
+    
+    public class TestFixtureMembers : List<ITestFixtureMember>, ITestFixtureMembers
     {
         public ITestFixtureMember FixtureSetup
         {
@@ -57,9 +57,10 @@ namespace AccessCodeLib.AccUnit
         bool IsTeardown { get; }
         bool IsFixtureTeardown { get; }
         bool IsTest { get; }
+        TestClassMemberInfo TestClassMemberInfo { get; set; }
     }
 
-    internal class TestFixtureMember : ITestFixtureMember
+    public class TestFixtureMember : ITestFixtureMember
     {
         public TestFixtureMember (string name)
         {
@@ -97,6 +98,8 @@ namespace AccessCodeLib.AccUnit
         public bool IsTeardown { get; private set; }
         public bool IsFixtureTeardown { get; private set; }
         public bool IsTest { get; private set; }
+
+        public TestClassMemberInfo TestClassMemberInfo { get; set; }
 
     }
 }

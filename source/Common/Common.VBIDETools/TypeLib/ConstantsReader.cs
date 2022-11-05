@@ -21,7 +21,11 @@ namespace AccessCodeLib.Common.VBIDETools.TypeLib
             _constants.Clear();
             foreach (Reference reference in vbProject.References)
             {
-                AddConstants(reference);
+                try
+                {
+                    AddConstants(reference);
+                }
+                catch { }
             }
         }
 
@@ -32,6 +36,10 @@ namespace AccessCodeLib.Common.VBIDETools.TypeLib
 
         private static void AddConstants(Constants constants)
         {
+            if (constants == null)
+            {
+                return;
+            }
             foreach (var c in constants)
             {
                 _constants.Add(c.Key, c.Value);
@@ -40,8 +48,16 @@ namespace AccessCodeLib.Common.VBIDETools.TypeLib
 
         private static Constants GetConstants(Reference reference)
         {
-            var lib = new TypeLibInfo(reference.FullPath);
-            return lib.Constants;
+            try
+            {
+                var lib = new TypeLibInfo(reference.FullPath);
+                return lib.Constants;
+            }
+            catch
+            {
+                return null;
+            }
+
         }
     }
 }

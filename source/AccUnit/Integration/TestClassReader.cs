@@ -100,7 +100,16 @@ namespace AccessCodeLib.AccUnit
             using (new BlockLogger())
             {
                 var reader = new CodeModuleReader(VbProject.VBComponents.Item(classname).CodeModule);
-                return new TestClassMemberInfo(membername, reader.GetProcedureHeader(membername));
+                var memberInfo = new TestClassMemberInfo(membername, reader.GetProcedureHeader(membername));
+
+                var rowGenerator = new TestRowGenerator();
+                rowGenerator.ActiveVBProject = (VBProject)VbProject;
+                rowGenerator.TestName = classname;
+                var testRows = rowGenerator.GetTestRows(membername);
+
+                memberInfo.TestRows.AddRange(testRows);
+                
+                return memberInfo;
             }
         }
 

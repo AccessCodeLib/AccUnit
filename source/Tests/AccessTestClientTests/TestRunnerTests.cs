@@ -4,7 +4,6 @@ using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System.Linq;
 using NUnit.Framework;
-using System;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
 {
@@ -165,6 +164,63 @@ End Function
             {
                 Assert.That(member.Name.Substring(0,10), Is.EqualTo("TestMethod"));
             }
+
+        }
+
+        [Test]
+        public void RunRowTest_1Param()
+        {
+            var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+private m_Check as Long
+
+'AccUnit:Row(123).Name = ""Row1""
+public Function TestMethod1(byval x as Long) as Long
+   m_Check = x   
+   TestMethod1 = x
+End Function
+
+'AccUnit:Row(123, 2).Name = ""Row1""
+public Function TestMethod2(byval x as Long, byval y as Long) as Long
+   m_Check = x + y 
+   TestMethod2 = x + y
+End Function
+
+public Function GetCheckValue() as long
+   GetCheckValue = m_Check
+End Function
+");
+            var fixtureName = "clsAccUnitTestClass";
+            var fixture = _testBuilder.CreateTest(fixtureName);
+            Assert.That(fixture, Is.Not.Null);
+
+            var memberName = "TestMethod1";
+            var fixtureMember = new TestFixtureMember(memberName);
+
+            var testClassReader = new TestClassReader(_testBuilder.ActiveVBProject);
+            fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
+
+            var rowGenerator = new TestRowGenerator();
+            rowGenerator.ActiveVBProject = _testBuilder.ActiveVBProject;
+            rowGenerator.TestName = fixtureName;
+            var testRows = rowGenerator.GetTestRows(memberName);
+
+            Assert.That(testRows.Count, Is.EqualTo(1));
+            Assert.That(testRows[0].Args[0], Is.EqualTo(123));
+
+            var invocHelper = new InvocationHelper(fixture);
+            var returnValue = invocHelper.InvokeMethod("TestMethod1", testRows[0].Args.ToArray());
+            Assert.That(returnValue, Is.EqualTo(123));
+
+            var result = new TestResultCollector();
+            var testRunner = new Interop.TestRunner(_testBuilder.ActiveVBProject);
+            testRunner.Run(fixture, "TestMethod1", result);
+
+            var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
+            Assert.That(valueAfterTestRun, Is.EqualTo(123));
+
+            testRunner.Run(fixture, "TestMethod2", result);
+            var valueAfterTestRun2 = invocHelper.InvokeMethod("GetCheckValue");
+            Assert.That(valueAfterTestRun2, Is.EqualTo(125));
 
         }
     }

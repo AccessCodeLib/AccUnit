@@ -28,7 +28,7 @@ namespace AccessCodeLib.AccUnit
 
         public ITestRow SetName(string name)
         {
-            using (new BlockLogger("TestRow.Ignore"))
+            using (new BlockLogger("TestRow.SetName"))
             {
                 Name = name;
                 Logger.Log(string.Format("Name: {0}", name));

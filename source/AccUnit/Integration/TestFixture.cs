@@ -52,7 +52,7 @@ namespace AccessCodeLib.AccUnit
             
             foreach(var member in members)
             {
-                var fixtureMember = new TestFixtureMember(member.Name);
+                var fixtureMember = GetTestFixtureMember(vbProject, Name, member.Name);
                 _fixtureMembers.Add(fixtureMember);
                 
                 if (fixtureMember.IsFixtureSetup)
@@ -74,6 +74,16 @@ namespace AccessCodeLib.AccUnit
             }
         }
 
+        public static ITestFixtureMember GetTestFixtureMember(VBProject vbProject, string fixtureName, string memberName)
+        {
+            var fixtureMember = new TestFixtureMember(memberName);
+            
+            var testClassReader = new TestClassReader(vbProject);
+            fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
+            
+            return fixtureMember;
+        }
+
         public object Instance
         {
             get { return _testClassInstance; }
@@ -89,23 +99,32 @@ namespace AccessCodeLib.AccUnit
         {
             get 
             {
-                if (_tests.Count == 0)
-                {
-                    FillTestListFromTestClassInstance();
-                }
                 return _tests; 
             }
         }
 
-        private void FillTestListFromTestClassInstance()
+        public void FillTestListFromTestClassInstance(VBProject vbProject)
         {
             foreach (var member in from member in _fixtureMembers.Tests
                                    select member)
             {
-                _tests.Add(new MethodTest(this, member.Name));
+                _tests.Add(CreateTest(vbProject, this, member.Name));
             }
         }
-        
+
+        public static ITest CreateTest(VBProject vbProject, ITestFixture testFixture, string testMethodName)
+        {
+            var memberInfo = TestFixture.GetTestFixtureMember(vbProject, testFixture.Name, testMethodName).TestClassMemberInfo;
+
+            if (memberInfo.TestRows.Count > 0)
+            {
+                return new RowTest(testFixture, memberInfo);
+            }
+
+            var test = new MethodTest(testFixture, testMethodName);
+            return test;
+        }
+
         public bool HasFixtureSetup { get; set; }
         public bool HasSetup { get; set; }
         public bool HasTeardown { get; set; }

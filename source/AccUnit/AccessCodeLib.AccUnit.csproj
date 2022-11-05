@@ -124,6 +124,8 @@
     <Compile Include="Integration\DaoTransactionManager.cs" />
     <Compile Include="Integration\ITestFixtureMembers.cs" />
     <Compile Include="Integration\MethodTest.cs" />
+    <Compile Include="Integration\ParamTest.cs" />
+    <Compile Include="Integration\RowTest.cs" />
     <Compile Include="Integration\TestFixture.cs" />
     <Compile Include="Integration\TestFixtureMember.cs" />
     <Compile Include="Integration\TestResult.cs" />
