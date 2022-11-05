@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssertExceptionTests.cs" />
+    <Compile Include="AssertTests.cs" />
     <Compile Include="ConstraintTests.cs" />
     <Compile Include="InteropContraintTest.cs" />
     <Compile Include="TestHelper\InteropTestCollector.cs" />

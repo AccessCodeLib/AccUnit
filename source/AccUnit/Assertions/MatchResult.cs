@@ -36,6 +36,9 @@ namespace AccessCodeLib.AccUnit.Assertions
             if (value == DBNull.Value)
                 return "Null";
 
+            if (value is string)
+                return "\"" + value + "\"";
+
             return value.ToString();
         }
 

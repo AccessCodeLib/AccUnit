@@ -58,6 +58,8 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
         [TestCase(null, null, true)]
         [TestCase(1, null, false)]
         [TestCase(null, 1, false)]
+        [TestCase("1", 1, false)] // string ist not numeric
+        [TestCase(1, "1", false)] // string ist not numeric
         public void AreEqualTest_InteropAssert(object actual, object expected, bool expectedResult)
         {
             var testCollector = new TestCollector();

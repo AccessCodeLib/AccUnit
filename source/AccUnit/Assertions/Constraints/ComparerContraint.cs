@@ -56,11 +56,18 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
                 return new MatchResult(CompareText, false, "actual is Null and expected is not Null", actual, Expected);
             }
 
+            // Check type
+            var actualType = ConstraintBuilder.Type2Compare(actual);
+            var expectedType = ConstraintBuilder.Type2Compare(Expected);
+            if (actualType != expectedType)
+            {
+                var returnText = "actual (" + actual.GetType().Name + ") is not of type " + FormattedTypeDescription(expectedType);
+                return new MatchResult(CompareText, false, returnText, actual, Expected);
+            }
+
+            // Check value
             var a = (T)Convert.ChangeType(actual, typeof(T));
-
             var result = Comparer<T>.Default.Compare(a, Expected);
-            //var result = Comparer<IComparable>.Default.Compare((IComparable)actual, (IComparable)Expected);
-
             if (result == ExpectedComparerResult)
             {
                 return new MatchResult(CompareText, true, null, actual, Expected);
@@ -86,6 +93,11 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
             }
 
             return new MatchResult(CompareText, false, compareInfo, actual, Expected);
+        }
+        
+        private static string FormattedTypeDescription(Type type)
+        {
+            return type == typeof(double) ? "numeric type" : type.Name;
         }
     }
 }

@@ -58,12 +58,12 @@ namespace AccessCodeLib.AccUnit.Assertions
                 }
             }
             
-            Type myType = getCompareType(expected);
+            Type myType = GetCompareType(expected);
             var newConstraint = Activator.CreateInstance(myType, compareText, expected, expectedComparerResult);
             AddChild((IConstraint)newConstraint);
         }
 
-        private Type getCompareType(object v)
+        public static Type Type2Compare(object v)
         {
             Type T = v.GetType();
             /*
@@ -73,6 +73,12 @@ namespace AccessCodeLib.AccUnit.Assertions
             if (IsNumeric(T))
                 T = typeof(double);
 
+            return T;
+        }
+
+        private static Type GetCompareType(object v)
+        {
+            Type T = Type2Compare(v);
             return typeof(ComparerContraint<>).MakeGenericType(T);
         }
 
