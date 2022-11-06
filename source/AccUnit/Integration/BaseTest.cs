@@ -10,20 +10,18 @@ namespace AccessCodeLib.AccUnit.Integration
             Name = testClassMemberInfo.Name;
             MethodName = testClassMemberInfo.Name;
             TestClassMemberInfo = testClassMemberInfo;
-            
-            SetFullName();
         }
 
-        protected virtual void SetFullName()
+        protected virtual string FormattedFullName()
         {
-            FullName = $"{Fixture.Name}.{MethodName}";
+            return $"{Fixture.Name}.{MethodName}";
         }
 
         public ITestFixture Fixture { get; private set; }
 
         public string MethodName { get; private set; }
 
-        public string FullName { get; private set; }
+        public string FullName { get { return FormattedFullName(); } }
 
         public string DisplayName { get; set; }
         public RunState RunState { get; set; }

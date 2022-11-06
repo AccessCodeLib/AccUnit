@@ -1,12 +1,16 @@
 ﻿using AccessCodeLib.AccUnit.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace AccessCodeLib.AccUnit.Integration
 {
-    public class TestResultCollection : List<ITestResult>, ITestResult
+    [ComVisible(true)]
+    [Guid("E1BB5665-7C46-4ED3-ACD1-25695AD2EA22")]
+    [ClassInterface(ClassInterfaceType.None)]
+    [ProgId(Interop.Constants.ProgIdLibName + ".TestResultCollection")]
+    public class TestResultCollection : List<ITestResult>, ITestResultSummary
     {
         public TestResultCollection(ITestData test)
         {
@@ -51,10 +55,15 @@ namespace AccessCodeLib.AccUnit.Integration
             {
                 IsSuccess = false;
             }
-            Message += "\n" + testResult.Message;
+            Message += "\n" +  testResult.Message;
             Time += testResult.Time;
         }
 
+        public ITestResult Item(int index)
+        {
+           return base[index];
+        }
+        
         public ITestData Test { get; private set; }
 
         public bool Executed { get; set; }
@@ -84,5 +93,6 @@ namespace AccessCodeLib.AccUnit.Integration
         }
         
         public double Time { get; set; }
+        
     }
 }

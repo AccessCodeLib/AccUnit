@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Runtime.InteropServices;
-
+﻿// TLB-Export:
 /*
  * "$(ProjectDir)..\tools\tlb\tlbExp.exe" $(TargetDir)\$(ProjectName).dll /out:$(TargetDir)\$(ProjectName).tlb
  */
-namespace AccessCodeLib.AccUnit.Interop
-{
+
+// MarshalAs
+   /*
     interface IVbaObject
     {
         void Add([MarshalAs(UnmanagedType.IDispatch)] object Object2Add);
@@ -22,4 +21,4 @@ namespace AccessCodeLib.AccUnit.Interop
         [return: MarshalAs(UnmanagedType.SafeArray, SafeArraySubType = VarEnum.VT_DISPATCH)]
         object[] ToArray();
     }
-}
+   */

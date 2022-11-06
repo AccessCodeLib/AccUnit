@@ -134,6 +134,7 @@
     <Compile Include="Integration\TestResultCollection.cs" />
     <Compile Include="Interfaces\ITestData.cs" />
     <Compile Include="Interfaces\ITestManagerBridge.cs" />
+    <Compile Include="Interfaces\ITestResultSummary.cs" />
     <Compile Include="Interfaces\ITestSummaryFormatter.cs" />
     <Compile Include="Interfaces\IVBATestSuite.cs" />
     <Compile Include="Integration\MissingTestMessageBoxResultsException.cs" />
