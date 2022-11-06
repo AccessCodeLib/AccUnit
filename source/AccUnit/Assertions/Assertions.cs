@@ -40,22 +40,22 @@ namespace AccessCodeLib.AccUnit.Assertions
 
         public void Greater(object arg1, object arg2, string infoText = null)
         {
-            That(arg1, new ConstraintBuilder().GreaterThan(arg2), infoText);
+            That(arg2, new ConstraintBuilder().GreaterThan(arg1), infoText);
         }
 
         public void GreaterOrEqual(object arg1, object arg2, string infoText = null)
         {
-            That(arg1, new ConstraintBuilder().GreaterThanOrEqualTo(arg2), infoText);
+            That(arg2, new ConstraintBuilder().GreaterThanOrEqualTo(arg1), infoText);
         }
 
         public void Less(object arg1, object arg2, string infoText = null)
         {
-            That(arg1, new ConstraintBuilder().LessThan(arg2), infoText);
+            That(arg2, new ConstraintBuilder().LessThan(arg1), infoText);
         }
 
         public void LessOrEqual(object arg1, object arg2, string infoText = null)
         {
-            That(arg1, new ConstraintBuilder().GreaterThanOrEqualTo(arg2), infoText);
+            That(arg2, new ConstraintBuilder().LessThanOrEqualTo(arg1), infoText);
         }
 
         public void IsTrue(bool condition, string infoText = null)
