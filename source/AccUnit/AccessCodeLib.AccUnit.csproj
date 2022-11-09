@@ -89,6 +89,7 @@
     <Compile Include="Assertions\Constraints\ComparerContraint.cs" />
     <Compile Include="Assertions\Constraints\ConstraintBase.cs" />
     <Compile Include="Assertions\Constraints\DBNullConstraint.cs" />
+    <Compile Include="Assertions\Constraints\EmptyConstraint.cs" />
     <Compile Include="Assertions\Constraints\NullConstraint.cs" />
     <Compile Include="Assertions\Constraints\NotConstraint.cs" />
     <Compile Include="Assertions\Interfaces\AssertionException.cs" />

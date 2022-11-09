@@ -7,3 +7,4 @@
 /access-add-in/lib
 /examples/msaccess/LocalTest.accdb
 /access-add-in/LocalTest.accdb
+*.laccdb

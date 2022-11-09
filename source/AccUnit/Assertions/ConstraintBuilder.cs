@@ -14,7 +14,6 @@ namespace AccessCodeLib.AccUnit.Assertions
 
         public IConstraintBuilder EqualTo(object expected)
         {
-            //AddChild(new EqualConstraint(expected));
             AddComparerConstraint("actual = expected", expected, 0); 
             return this;
         }
@@ -66,12 +65,8 @@ namespace AccessCodeLib.AccUnit.Assertions
         public static Type Type2Compare(object v)
         {
             Type T = v.GetType();
-            /*
-            if (IsIntNumeric(T))
-                T = typeof(long);
-            else */
             if (IsNumeric(T))
-                T = typeof(double);
+                T = typeof(double);  // should all numeric types be compared as double?
 
             return T;
         }
@@ -81,19 +76,6 @@ namespace AccessCodeLib.AccUnit.Assertions
             Type T = Type2Compare(v);
             return typeof(ComparerContraint<>).MakeGenericType(T);
         }
-
-        /*
-        private static bool IsIntNumeric(Type T)
-        {
-            return IntNumericTypes.Contains(Nullable.GetUnderlyingType(T) ?? T);
-        }
-
-        private static readonly HashSet<Type> IntNumericTypes = new HashSet<Type>
-        {
-            typeof(long), typeof(int), typeof(short), typeof(byte), typeof(sbyte),
-            typeof(ulong), typeof(uint), typeof(ushort)
-        };
-        */
         
         private static bool IsNumeric(Type T)
         {
@@ -118,7 +100,7 @@ namespace AccessCodeLib.AccUnit.Assertions
         {
             get {
                 AddChild(new NullConstraint());
-                return (this);
+                return this;
             }
         }
 
@@ -127,7 +109,7 @@ namespace AccessCodeLib.AccUnit.Assertions
             get
             {
                 AddChild(new DBNullConstraint());
-                return (this);
+                return this;
             }
         }
 
@@ -135,7 +117,8 @@ namespace AccessCodeLib.AccUnit.Assertions
         {
             get
             {
-                throw new NotImplementedException();
+                AddChild(new EmptyConstraint());
+                return this;
             }
         }
 
@@ -143,7 +126,7 @@ namespace AccessCodeLib.AccUnit.Assertions
         {
             get {
                 AddChild(new NotConstraint());
-                return (this);
+                return this;
             }
         }
 

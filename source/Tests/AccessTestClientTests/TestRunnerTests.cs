@@ -223,5 +223,26 @@ End Function
             Assert.That(valueAfterTestRun2, Is.EqualTo(125));
 
         }
+
+        [Test] 
+        public void VbNullstringTest()
+        {
+            var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+public Function TestMethod() as String
+   dim s as String
+   s = """"
+   TestMethod = s      
+End Function
+");
+            var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
+            Assert.That(fixture, Is.Not.Null);
+
+            var invocHelper = new InvocationHelper(fixture);
+            var returnValue = invocHelper.InvokeMethod("TestMethod");
+            
+            Assert.That(returnValue, Is.Empty);
+            // vbNullString is null!
+        }
+
     }
 }
