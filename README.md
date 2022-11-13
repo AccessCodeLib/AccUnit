@@ -9,7 +9,8 @@ For more informations see https://accunit.access-codelib.net/
 
 ### Dev state
 * Simple test can started by [Access-Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in)
-* Todo: remove usage of TLBINF32.dll
+* Row test available
+
 
 ### Remarks
-
+Examples see [./examples/msaccess/](https://github.com/AccessCodeLib/AccUnit/blob/main/examples/msaccess/)
