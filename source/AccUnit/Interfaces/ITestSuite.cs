@@ -2,14 +2,14 @@
 
 namespace AccessCodeLib.AccUnit.Interfaces
 {
-    public interface ITestSuite : ITestSuiteEvents
+    public interface ITestSuite : ITestSuiteEvents, ITestData
     {
-        string Name { get; }
+        //string Name { get; } // Inherited from ITestData
         IEnumerable<ITestFixture> TestFixtures { get; }
         ITestSummary Summary { get; }
         
         ITestRunner TestRunner { get; set; }
-        ITestSummaryTestResultCollector TestResultCollector { get; set; }
+        ITestResultCollector TestResultCollector { get; set; }
         
         ITestSuite Run();
         ITestSuite Reset(ResetMode mode = ResetMode.ResetTestData);

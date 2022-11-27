@@ -6,6 +6,10 @@ using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit
 {
+    public interface IAccessTestSuite : IVBATestSuite
+    {
+    }
+    
     public class AccessTestSuite : VBATestSuite, IAccessTestSuite
     {
         public enum VbaErrorTrapping : short
@@ -182,8 +186,5 @@ namespace AccessCodeLib.AccUnit
         #endregion
 
     }
-
-    public interface IAccessTestSuite : IVBATestSuite
-    {       
-    }
+    
 }

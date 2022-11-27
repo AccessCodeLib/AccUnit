@@ -50,7 +50,7 @@ namespace AccessCodeLib.AccUnit.Integration
             }
         }
 
-        public double Time { get; set; }
+        public double ElapsedTime { get; set; }
         
     }
 }

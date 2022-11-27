@@ -114,7 +114,7 @@
     <Compile Include="Common\UserControls.Designer.cs" />
     <Compile Include="Configuration\AccUnitLoaderAddInCodeTemplates.cs" />
     <Compile Include="Integration\AccessRunException.cs" />
-    <Compile Include="Integration\AccessTestSuite.cs" />
+    <Compile Include="TestSuite\AccessTestSuite.cs" />
     <Compile Include="Common\StringTools.cs" />
     <Compile Include="Common\TestResultEventArgs.cs" />
     <Compile Include="Configuration\AccUnitVBAReference.cs" />
@@ -155,7 +155,7 @@
     <Compile Include="Integration\TestSummaryFormatter.cs" />
     <Compile Include="Integration\UserSettings.cs" />
     <Compile Include="Integration\VBATestBuilder.cs" />
-    <Compile Include="Integration\VBATestSuite.cs" />
+    <Compile Include="TestSuite\VBATestSuite.cs" />
     <Compile Include="Interfaces\IParamTest.cs" />
     <Compile Include="Interfaces\IRowTest.cs" />
     <Compile Include="Interfaces\ITest.cs" />

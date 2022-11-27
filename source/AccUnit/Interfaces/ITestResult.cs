@@ -19,6 +19,6 @@ namespace AccessCodeLib.AccUnit.Interfaces
         string Message { get; }
 
         string Result { get; }
-        double Time { set; get; }
+        double ElapsedTime { set; get; }
     }
 }

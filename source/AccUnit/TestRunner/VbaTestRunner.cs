@@ -19,7 +19,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
         public event FinishedEventHandler TestFinished;
 
         private readonly VBProject _vbProject;
-
+        
         public VbaTestRunner()
         {
         }
@@ -28,13 +28,21 @@ namespace AccessCodeLib.AccUnit.TestRunner
         {
             _vbProject = vbProject;
         }
-
-
-        public void Run(ITestSuite testSuite, ITestResultCollector testResultCollector)
+        
+        public ITestResult Run(ITestSuite testSuite, ITestResultCollector testResultCollector)
         {
             RaiseTestSuiteStarted(testSuite);
-            throw new NotImplementedException();
-            RaiseTestSuiteFinished(null);
+            var results = new TestResultCollection(testSuite);
+
+            foreach (var tests in testSuite.TestFixtures)
+            {
+                var result = Run(tests, testResultCollector);
+                results.Add(result);
+            }
+            
+            RaiseTestSuiteFinished(results);
+
+            return results;
         }
 
         void RaiseTestSuiteStarted(ITestSuite testSuite)
@@ -47,20 +55,22 @@ namespace AccessCodeLib.AccUnit.TestRunner
             TestSuiteFinished?.Invoke(testResult);
         }
 
-        public void Run(ITestFixture testFixture, ITestResultCollector testResultCollector)
+        public ITestResult Run(ITestFixture testFixture, ITestResultCollector testResultCollector)
         {
             RaiseTestFixtureStarted(testFixture);
-            
-            var result = new TestResultCollection(testFixture);
+
+            var results = new TestResultCollection(testFixture);
 
             foreach (var test in testFixture.Tests)
             {
                 var testResult = Run(test);
                 testResultCollector.Add(testResult);
-                result.Add(testResult);
+                results.Add(testResult);
             }
-            
-            RaiseTestFixtureFinished(result);
+
+            RaiseTestFixtureFinished(results);
+
+            return results;
         }
 
         void RaiseTestFixtureStarted(ITestFixture testFixture)

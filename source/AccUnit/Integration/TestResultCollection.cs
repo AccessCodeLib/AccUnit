@@ -10,7 +10,7 @@ namespace AccessCodeLib.AccUnit.Integration
     [Guid("E1BB5665-7C46-4ED3-ACD1-25695AD2EA22")]
     [ClassInterface(ClassInterfaceType.None)]
     [ProgId(Interop.Constants.ProgIdLibName + ".TestResultCollection")]
-    public class TestResultCollection : List<ITestResult>, ITestResultSummary
+    public class TestResultCollection : List<ITestResult>, ITestResultSummary, ITestSummary
     {
         public TestResultCollection(ITestData test)
         {
@@ -56,14 +56,19 @@ namespace AccessCodeLib.AccUnit.Integration
                 IsSuccess = false;
             }
             Message += "\n" +  testResult.Message;
-            Time += testResult.Time;
+            ElapsedTime += testResult.ElapsedTime;
         }
 
         public ITestResult Item(int index)
         {
            return base[index];
         }
-        
+
+        public void Reset()
+        {
+            throw new NotImplementedException();
+        }
+
         public ITestData Test { get; private set; }
 
         public bool Executed { get; set; }
@@ -91,8 +96,17 @@ namespace AccessCodeLib.AccUnit.Integration
                 return resultBuilder.ToString();
             }
         }
-        
-        public double Time { get; set; }
-        
+
+        public double ElapsedTime { get; set; }
+
+        public IEnumerable<ITestResult> TestResults => throw new NotImplementedException();
+
+        public int Total { get { return ExecutedCount; } }
+
+        public int Passed { get { return IsIgnoredCount; } }
+
+        public int Failed { get { return IsFailureCount + IsErrorCount; } }
+
+        public int Ignored { get { return IsIgnoredCount; } }
     }
 }

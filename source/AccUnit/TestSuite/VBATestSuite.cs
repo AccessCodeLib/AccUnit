@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
 using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit
 {
-    public class VBATestSuite : IVBATestSuite, IDisposable
+    public class VBATestSuite : IVBATestSuite, IDisposable, ITestData
     {
         public VBATestSuite()
         {
             using (new BlockLogger())
             {
                 SummaryFormatter = new TestSummaryFormatter(UserSettings.Current.SeparatorMaxLength, UserSettings.Current.SeparatorChar);
-
                 _testBuilder.OfficeApplicationReferenceRequired += OnOfficeApplicationReferenceRequired;
             }
         }
@@ -23,12 +23,15 @@ namespace AccessCodeLib.AccUnit
         private readonly List<ITestManagerBridge> _accUnitTests = new List<ITestManagerBridge>();
         private readonly List<ITestFixture> _testFixtures = new List<ITestFixture>();
 
+        public IEnumerable<ITestFixture> TestFixtures { get { return _testFixtures; } }
+
+        private ITestSummary _testSummary;
         private TestSummaryFormatter SummaryFormatter { get; set; }
         private readonly VBATestBuilder _testBuilder = new VBATestBuilder();
 
         //private ITestSuite _suite;
         private ITestRunner _testRunner;
-        public ITestSummaryTestResultCollector TestResultCollector { get; set; }
+        public ITestResultCollector TestResultCollector { get; set; }
 
         #region TestSuite Events
 
@@ -364,6 +367,7 @@ namespace AccessCodeLib.AccUnit
         }
 
         public virtual string Name { get { return null; } }
+        string ITestData.FullName { get { return Name; } }
 
         public ITestRunner TestRunner
         { 
@@ -468,9 +472,16 @@ namespace AccessCodeLib.AccUnit
                     return this;
             }
 
+            if (_testSummary != null)
+            {
+                _testSummary.Reset();
+            }
+
+            if (TestResultCollector is ITestSummaryTestResultCollector testSummaryCollector)
+                testSummaryCollector.Summary.Reset();
+
             //ConstantsReader.Clear();
             _accUnitTests.Clear();
-           // TestSuite.Reset(mode);
 
             // clear Memberinfo (maybe source code changed)
             _testCaseInfos.Clear();
@@ -492,14 +503,27 @@ namespace AccessCodeLib.AccUnit
         public virtual IVBATestSuite Run()
         {
             Cancel = false;
-            TestRunner.Run(this, TestResultCollector);
-            RaiseTraceMessage(SummaryFormatter.GetTestSummaryText(this.Summary));
+            var testResult = TestRunner.Run(this, TestResultCollector);
+            _testSummary = testResult as ITestSummary;
+            RaiseTraceMessage(SummaryFormatter.GetTestSummaryText(Summary));
             return this;
         }
 
-        public virtual ITestSummary Summary { get { return TestResultCollector.Summary; } }
+        public virtual ITestSummary Summary
+        {
+            get
+            {
+                if (TestResultCollector is ITestSummaryTestResultCollector summaryCollector)
+                {
+                    return summaryCollector.Summary;
+                }
+                else
+                {
+                    return _testSummary;
+                }
+            }
+        }
 
-        
         public event TestSuiteStartedEventHandler TestSuiteStarted;
         public event FinishedEventHandler TestSuiteFinished;
         public event TestFixtureStartedEventHandler TestFixtureStarted;
@@ -525,10 +549,6 @@ namespace AccessCodeLib.AccUnit
             }
         }
         
-        public IEnumerable<ITestFixture> TestFixtures => throw new NotImplementedException();
-
-        public ITestSummary TestSummary => throw new NotImplementedException();
-
         #region IDisposable Support
 
         public event DisposeEventHandler Disposed;

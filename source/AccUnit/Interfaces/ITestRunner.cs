@@ -2,8 +2,8 @@
 {
     public interface ITestRunner : ITestRunnerEvents
     {
-        void Run(ITestSuite testSuite, ITestResultCollector testResultCollector); 
-        void Run(ITestFixture testFixture, ITestResultCollector testResultCollector);
+        ITestResult Run(ITestSuite testSuite, ITestResultCollector testResultCollector);
+        ITestResult Run(ITestFixture testFixture, ITestResultCollector testResultCollector);
         ITestResult Run(ITest test);
     }
 

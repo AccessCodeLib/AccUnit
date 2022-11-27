@@ -10,7 +10,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
     public interface ITestResultSummary : ITestResult
     {
         int Count { get; }
-
+        
         [DispId(0)]
         ITestResult Item(int Index);
     }
