@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
@@ -7,11 +6,7 @@ using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit
 {
-    [ComVisible(true)]
-    [Guid("9F96EBE4-7FE4-4232-9510-A0818F9906FB")]
-    [ClassInterface(ClassInterfaceType.None)]
-    [ProgIdAttribute("AccUnit.AccessTestSuite")]
-    public class AccessTestSuite : Interop.VBATestSuite, IAccessTestSuiteComInterface
+    public class AccessTestSuite : VBATestSuite, IAccessTestSuite
     {
         public enum VbaErrorTrapping : short
         {
@@ -133,7 +128,7 @@ namespace AccessCodeLib.AccUnit
             return ApplicationHelper.IsCompiled;
         }
 
-        public override IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData)
+        public new IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData)
         {
             _errorTrapping = VbaErrorTrapping.BreakOnUnhandledErrors;
             base.Reset(mode);
@@ -188,28 +183,7 @@ namespace AccessCodeLib.AccUnit
 
     }
 
-    [ComVisible(true)]
-    [Guid("CC72AE5A-3C67-48BB-B8CE-C7D73506EC0A")]
-    public interface IAccessTestSuiteComInterface : Interop.IVBATestSuite
-    {
-        #region COM visibility of inherited members
-
-// ReSharper disable UnusedMember.Global
-        new string Name { get; }
-        new ITestSummary Summary { get; }
-        
-        new IVBATestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
-        new IVBATestSuite AddByClassName(string className);
-        new IVBATestSuite AddFromVBProject();
-        new IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
-        new IVBATestSuite Run();
-        new void Dispose();
-// ReSharper restore UnusedMember.Global
-
-        #endregion
-
-// ReSharper disable UnusedMemberInSuper.Global
-        object HostApplication { get; set; }
-// ReSharper restore UnusedMemberInSuper.Global
+    public interface IAccessTestSuite : IVBATestSuite
+    {       
     }
 }

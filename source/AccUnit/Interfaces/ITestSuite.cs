@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit.Interfaces
 {
@@ -9,8 +6,8 @@ namespace AccessCodeLib.AccUnit.Interfaces
     {
         string Name { get; }
         IEnumerable<ITestFixture> TestFixtures { get; }
-        ITestSummary TestSummary { get; }
-
+        ITestSummary Summary { get; }
+        
         ITestRunner TestRunner { get; set; }
         ITestSummaryTestResultCollector TestResultCollector { get; set; }
         

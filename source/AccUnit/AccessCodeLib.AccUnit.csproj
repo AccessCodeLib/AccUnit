@@ -172,6 +172,7 @@
     <Compile Include="Interfaces\ResetMode.cs" />
     <Compile Include="Interfaces\RunState.cs" />
     <Compile Include="Interfaces\TestContextMethodNames.cs" />
+    <Compile Include="Interop\AccessTestSuite.cs" />
     <Compile Include="Interop\Assert.cs" />
     <Compile Include="Interop\CodeInfo.cs" />
     <Compile Include="Interop\Constants.cs" />

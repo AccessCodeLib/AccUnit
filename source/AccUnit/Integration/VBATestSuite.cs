@@ -7,7 +7,6 @@ using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit
 {
-    
     public class VBATestSuite : IVBATestSuite, IDisposable
     {
         public VBATestSuite()

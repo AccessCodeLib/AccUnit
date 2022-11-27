@@ -1,45 +1,19 @@
-﻿using AccessCodeLib.AccUnit.Interfaces;
-using Microsoft.Vbe.Interop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Runtime.InteropServices;
-using System.Text;
+using AccessCodeLib.AccUnit.Interfaces;
+using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit.Interop
 {
     [ComVisible(true)]
-    [Guid("C856410C-BB3B-495E-8822-C8FBB4D4DC0F")]
-    public interface IVBATestSuite : ITestSuite
+    [Guid("F403650A-691E-427F-8E64-7729CD39C9E5")]
+    public interface IVBATestSuite : Interfaces.IVBATestSuite
     {
         #region COM visibility of inherited members
-
+        
         new string Name { get; }
-        ITestSummary Summary { get; }
-
-        IVBATestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
-        new IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
-        new IVBATestSuite Run();
-
-        #endregion
-
-        IVBATestSuite AddByClassName(string className);
-        IVBATestSuite AddFromVBProject();
-
-        [ComVisible(true)]
-        void Dispose();
-
-        [ComVisible(false)]
-        TestClassMemberInfo GetTestClassMemberInfo(string classname, string membername);
-
-    }
-
-    [ComVisible(true)]
-    [Guid("5DAF3C2F-04AA-4B11-BB6B-6ADB15C7D554")]
-    public interface IVBATestSuiteComInterface : IVBATestSuite
-    {
-        #region COM visibility of inherited members
-
+        new VBProject ActiveVBProject { get; set; }
+        new object HostApplication { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)] set; }
         new ITestSummary Summary { get; }
 
         new IVBATestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
@@ -47,71 +21,48 @@ namespace AccessCodeLib.AccUnit.Interop
         new IVBATestSuite AddFromVBProject();
         new IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
         new IVBATestSuite Run();
+        
         new void Dispose();
 
         #endregion
-
-        VBProject ActiveVBProject { get; set; }
-        object HostApplication { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)] set; }
-
     }
 
     [ComVisible(true)]
-    [Guid("CE3393EA-8C3A-44E9-8191-8C35451E599E")]
+    [Guid("3824FB7F-768F-456E-8D43-5013628B8399")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComSourceInterfaces(typeof(ITestSuiteComEvents))]
     [ProgId("AccUnit.VBATestSuite")]
-    public class VBATestSuite : AccUnit.VBATestSuite, IVBATestSuiteComInterface, IDisposable
+    public class VBATestSuite : AccUnit.VBATestSuite, IVBATestSuite, IDisposable
     {
         
-        IVBATestSuite IVBATestSuiteComInterface.Add(object testToAdd)
+        new public IVBATestSuite Add(object testToAdd)
         {
-            throw new NotImplementedException();
+            base.Add(testToAdd);
+            return this;
         }
 
-        IVBATestSuite IVBATestSuite.Add(object testToAdd)
+        new public IVBATestSuite AddByClassName(string className)
         {
-            throw new NotImplementedException();
+            base.AddByClassName(className);
+            return this;
         }
 
-        IVBATestSuite IVBATestSuiteComInterface.AddByClassName(string className)
+        new public IVBATestSuite AddFromVBProject()
         {
-            throw new NotImplementedException();
+            base.AddFromVBProject();
+            return this;
         }
 
-        IVBATestSuite IVBATestSuite.AddByClassName(string className)
+        new virtual public IVBATestSuite Reset(ResetMode mode)
         {
-            throw new NotImplementedException();
+            base.Reset(mode);
+            return this;
         }
-
-        IVBATestSuite IVBATestSuiteComInterface.AddFromVBProject()
+        
+        new public IVBATestSuite Run()
         {
-            throw new NotImplementedException();
-        }
-
-        IVBATestSuite IVBATestSuite.AddFromVBProject()
-        {
-            throw new NotImplementedException();
-        }
-
-        IVBATestSuite IVBATestSuiteComInterface.Reset(ResetMode mode)
-        {
-            throw new NotImplementedException();
-        }
-
-        IVBATestSuite IVBATestSuite.Reset(ResetMode mode)
-        {
-            throw new NotImplementedException();
-        }
-
-        IVBATestSuite IVBATestSuiteComInterface.Run()
-        {
-            throw new NotImplementedException();
-        }
-
-        IVBATestSuite IVBATestSuite.Run()
-        {
-            throw new NotImplementedException();
+            base.Run();
+            return this;
         }
     }
 }

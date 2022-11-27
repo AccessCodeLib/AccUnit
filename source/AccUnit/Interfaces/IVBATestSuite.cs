@@ -1,11 +1,17 @@
-﻿namespace AccessCodeLib.AccUnit.Interfaces
+﻿using Microsoft.Vbe.Interop;
+using System;
+using System.Runtime.InteropServices;
+
+namespace AccessCodeLib.AccUnit.Interfaces
 {
-    
-    public interface IVBATestSuite : ITestSuite
+    public interface IVBATestSuite : ITestSuite, IDisposable
     {
+        IVBATestSuite       Add(object testToAdd);
         IVBATestSuite       AddByClassName(string className);
         IVBATestSuite       AddFromVBProject();
-        void                Dispose();
         TestClassMemberInfo GetTestClassMemberInfo(string classname, string membername);
+
+        VBProject ActiveVBProject { get; set; }
+        object HostApplication { get; set; }
     }
 }
