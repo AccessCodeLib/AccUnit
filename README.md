@@ -4,12 +4,13 @@
 For more informations see https://accunit.access-codelib.net/
 
 ### Notes
-* New Version for 32 and 64 Bit
-* Try to run COM regfree
+* For 32 and 64 Bit Office/Access
+* Run COM regfree (with [Access-Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in))
 
 ### Dev state
 * Simple test can started by [Access-Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in)
 * Row test available
+* VbaTestSuite with 'Debug.Print'-Output to VBE Immediate window
 
 
 ### Remarks
