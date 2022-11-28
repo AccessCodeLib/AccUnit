@@ -114,6 +114,7 @@
     <Compile Include="Common\UserControls.Designer.cs" />
     <Compile Include="Configuration\AccUnitLoaderAddInCodeTemplates.cs" />
     <Compile Include="Integration\AccessRunException.cs" />
+    <Compile Include="Interop\ITestSummaryPrinter.cs" />
     <Compile Include="TestSuite\AccessTestSuite.cs" />
     <Compile Include="Common\StringTools.cs" />
     <Compile Include="Common\TestResultEventArgs.cs" />

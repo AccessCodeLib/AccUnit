@@ -10,7 +10,7 @@ namespace AccessCodeLib.AccUnit.Integration
     [Guid("E1BB5665-7C46-4ED3-ACD1-25695AD2EA22")]
     [ClassInterface(ClassInterfaceType.None)]
     [ProgId(Interop.Constants.ProgIdLibName + ".TestResultCollection")]
-    public class TestResultCollection : List<ITestResult>, ITestResultSummary, ITestSummary
+    public class TestResultCollection : List<ITestResult>, ITestResultSummary, ITestSummary, ITestResultCollector
     {
         public TestResultCollection(ITestData test)
         {
@@ -26,25 +26,49 @@ namespace AccessCodeLib.AccUnit.Integration
         new public void Add(ITestResult testResult)
         {
             base.Add(testResult);
-            ExecutedCount++;
-            if (testResult.IsError)
+
+            if (testResult is ITestSummary testSummary)
             {
-                IsErrorCount++;
-                IsError = true;
+                ExecutedCount += testSummary.Total;
+                if (testResult.IsError)
+                {
+                    IsErrorCount += testSummary.Error;
+                    IsError = true;
+                }
+                if (testResult.IsFailure)
+                {
+                    IsFailureCount += testSummary.Failed;
+                    IsFailure = true;
+                }
+                if (testResult.IsIgnored)
+                {
+                    IsIgnoredCount += testSummary.Ignored;
+                    IsIgnored = true;
+                }
+                IsSuccessCount += testSummary.Passed;
             }
-            else if (testResult.IsFailure)
+            else
             {
-                IsFailureCount++;
-                IsFailure = true;
-            }
-            else if (testResult.IsIgnored)
-            {
-                IsIgnoredCount++;
-                IsIgnored = true;
-            }
-            else if (testResult.IsSuccess)
-            {
-                IsSuccessCount++;
+                ExecutedCount++;
+                if (testResult.IsError)
+                {
+                    IsErrorCount++;
+                    IsError = true;
+                }
+                else if (testResult.IsFailure)
+                {
+                    IsFailureCount++;
+                    IsFailure = true;
+                }
+                else if (testResult.IsIgnored)
+                {
+                    IsIgnoredCount++;
+                    IsIgnored = true;
+                }
+                else if (testResult.IsSuccess)
+                {
+                    IsSuccessCount++;
+                }   
             }
 
             if (IsSuccessCount == ExecutedCount)
@@ -55,10 +79,11 @@ namespace AccessCodeLib.AccUnit.Integration
             {
                 IsSuccess = false;
             }
+
             Message += "\n" +  testResult.Message;
             ElapsedTime += testResult.ElapsedTime;
         }
-
+        
         public ITestResult Item(int index)
         {
            return base[index];
@@ -102,10 +127,12 @@ namespace AccessCodeLib.AccUnit.Integration
         public IEnumerable<ITestResult> TestResults => throw new NotImplementedException();
 
         public int Total { get { return ExecutedCount; } }
+        
+        public int Passed { get { return IsSuccessCount; } }
 
-        public int Passed { get { return IsIgnoredCount; } }
-
-        public int Failed { get { return IsFailureCount + IsErrorCount; } }
+        public int Failed { get { return IsFailureCount; } }
+        
+        public int Error { get { return IsErrorCount; } }
 
         public int Ignored { get { return IsIgnoredCount; } }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.AccUnit.TestRunner;
 using AccessCodeLib.Common.Tools.Logging;
 using Microsoft.Vbe.Interop;
 
@@ -92,6 +93,7 @@ namespace AccessCodeLib.AccUnit
             if (Cancel) return;
             using (new BlockLogger(result.Message))
             {
+                RaiseTraceMessage(SummaryFormatter.GetTestSuiteFinishedText(result));
                 RaiseTestSuiteFinished(result);
             }
         }
@@ -372,7 +374,11 @@ namespace AccessCodeLib.AccUnit
         public ITestRunner TestRunner
         { 
             get 
-            { 
+            {
+                if (_testRunner == null)
+                {
+                    _testRunner = new VbaTestRunner(_testBuilder.ActiveVBProject);
+                }
                 return _testRunner; 
             } 
             set 
@@ -415,6 +421,8 @@ namespace AccessCodeLib.AccUnit
                 _accUnitTests.Add(bridge);
 
             var fixture = new TestFixture(testToAdd);
+            fixture.FillInstanceMembers(_testBuilder.ActiveVBProject);
+            fixture.FillTestListFromTestClassInstance(_testBuilder.ActiveVBProject);
             _testFixtures.Add(fixture);
         }
 
@@ -503,8 +511,13 @@ namespace AccessCodeLib.AccUnit
         public virtual IVBATestSuite Run()
         {
             Cancel = false;
+            if (TestResultCollector == null)
+            {
+                TestResultCollector = new TestResultCollection(this);
+            }
             var testResult = TestRunner.Run(this, TestResultCollector);
             _testSummary = testResult as ITestSummary;
+
             RaiseTraceMessage(SummaryFormatter.GetTestSummaryText(Summary));
             return this;
         }

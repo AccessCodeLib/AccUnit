@@ -6,7 +6,7 @@ using System.Text;
 namespace AccessCodeLib.AccUnit.Interfaces
 {
     [ComVisible(true)]
-    [Guid("5A88F46E-015B-4F0B-93D3-394AA9FB5B6F")]
+    [Guid("A45A8733-3069-40C0-A896-80C94EBDA1D8")]
     public interface ITestResult
     {
         ITestData Test { get; }

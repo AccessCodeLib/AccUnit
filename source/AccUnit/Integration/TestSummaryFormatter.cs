@@ -66,15 +66,15 @@ namespace AccessCodeLib.AccUnit
             sb.AppendLine(String.Format("Total  : {0}", summary.Total));
             sb.AppendLine(separatorLine);
             sb.AppendLine(String.Format("Passed : {0}", summary.Passed));
-            sb.AppendLine(String.Format("Failed : {0}", summary.Failed));
+            sb.AppendLine(String.Format("Failed : {0}", summary.Failed + summary.Error));
             sb.AppendLine(String.Format("Ignored: {0}", summary.Ignored));
 
             sb.AppendLine(maxSeparatorLine);
             sb.AppendLine(timeString);
             sb.AppendLine(maxSeparatorLine);
-            if (summary.Failed > 0)
+            if ((summary.Failed + summary.Error) > 0)
             {
-                sb.AppendLine(String.Format("{0} / {1} failed", summary.Failed, summary.Total));
+                sb.AppendLine(String.Format("{0} / {1} failed", summary.Failed + summary.Error, summary.Total));
             }
             else if (summary.Passed == summary.Total)
             {
@@ -165,6 +165,16 @@ namespace AccessCodeLib.AccUnit
         public string GetTestSuiteStartedText(ITestSuite suite)
         {
             return suite.Name;
+        }
+
+        public string GetTestSuiteFinishedText(ITestResult result)
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine(new string(SeparatorChar, TestFixtureFinishedSeparatorLength));
+            sb.AppendLine(String.Format("Finished: {0}", CurrentTimeString));
+            
+            return sb.ToString();
         }
 
     }

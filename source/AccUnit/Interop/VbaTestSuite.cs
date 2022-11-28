@@ -15,6 +15,8 @@ namespace AccessCodeLib.AccUnit.Interop
         new VBProject ActiveVBProject { get; set; }
         new object HostApplication { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)] set; }
         new ITestSummary Summary { get; }
+        new ITestResultCollector TestResultCollector { get; set; }
+        new ITestRunner TestRunner { get; set; }
 
         new IVBATestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
         new IVBATestSuite AddByClassName(string className);
@@ -34,7 +36,18 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId("AccUnit.VBATestSuite")]
     public class VBATestSuite : AccUnit.VBATestSuite, IVBATestSuite, IDisposable
     {
-        
+        ITestRunner IVBATestSuite.TestRunner
+        {
+            get
+            {
+                return base.TestRunner as ITestRunner;
+            }
+            set
+            {
+                base.TestRunner = value;
+            }
+        }
+
         new public IVBATestSuite Add(object testToAdd)
         {
             base.Add(testToAdd);

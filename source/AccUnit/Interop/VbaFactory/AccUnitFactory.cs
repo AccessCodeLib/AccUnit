@@ -14,6 +14,8 @@ namespace AccessCodeLib.AccUnit.Interop
         ITestRunner TestRunner(VBProject VBProject);
         ITestBuilder TestBuilder { get; }
         IConfigurator Configurator { get; }
+        IVBATestSuite VBATestSuite { get; }
+        IAccessTestSuite AccessTestSuite { get; }
     }
 
     [ComVisible(true)]
@@ -56,6 +58,22 @@ namespace AccessCodeLib.AccUnit.Interop
             get
             {
                 return new Configurator();
+            }
+        }
+
+        public IVBATestSuite VBATestSuite
+        {
+            get
+            {
+                return new VBATestSuite();
+            }
+        }
+
+        public IAccessTestSuite AccessTestSuite
+        {
+            get
+            {
+                return new AccessTestSuite();
             }
         }
     }

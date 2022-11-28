@@ -1,8 +1,6 @@
 ﻿using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
-using AccessCodeLib.AccUnit.Interop;
 using AccessCodeLib.Common.VBIDETools;
-using AccessCodeLib.Common.VBIDETools.VbaProjectManagement;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualBasic;
@@ -10,7 +8,6 @@ using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit
 {
-
     internal class TestFixture : ITestFixture
     {
         private readonly object _testClassInstance;

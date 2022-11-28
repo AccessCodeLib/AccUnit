@@ -1,18 +1,31 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interfaces
 {
+    [ComVisible(true)]
+    [Guid("31B48F47-857E-4B65-8B45-4C4A13CD8E16")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface ITestSuite : ITestSuiteEvents, ITestData
     {
-        //string Name { get; } // Inherited from ITestData
+        new string Name { get; } // Inherited from ITestData
+
+        [ComVisible(false)]
         IEnumerable<ITestFixture> TestFixtures { get; }
-        ITestSummary Summary { get; }
         
+        [ComVisible(false)]
+        ITestSummary Summary { get; }
+
+        [ComVisible(false)]
         ITestRunner TestRunner { get; set; }
+
+        [ComVisible(false)]
         ITestResultCollector TestResultCollector { get; set; }
         
         ITestSuite Run();
         ITestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
+
+        [ComVisible(false)]
         void AddTestClasses(IEnumerable<TestClassInfo> testClasses);
     }
     

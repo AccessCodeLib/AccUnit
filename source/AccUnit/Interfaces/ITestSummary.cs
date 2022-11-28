@@ -13,6 +13,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
         int Total { get; }
         int Passed { get; }
         int Failed { get; }
+        int Error { get; }
         int Ignored { get; }
         void Reset();
     }
