@@ -97,8 +97,8 @@ namespace AccessCodeLib.AccUnit
         {
             var sb = new StringBuilder();
 
-            sb.Append(result.Test.Name);
-            if (result.Test.Name.Length < TestCaseResultStartPos)
+            sb.Append(result.Test.FullName);
+            if (result.Test.FullName.Length < TestCaseResultStartPos)
                 sb.Append(new string(' ', TestCaseResultStartPos - result.Test.Name.Length));
 
             if (result.IsSuccess)
