@@ -326,6 +326,5 @@ End Class";
             return testparams.Aggregate<string, string>(null, (current, paramString) => current + string.Format("{0}\r\n", paramString));
         }
 
-
     }
 }

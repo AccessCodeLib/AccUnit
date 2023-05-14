@@ -20,9 +20,15 @@ namespace AccessCodeLib.AccUnit.Integration
         {
             Rows = TestClassMemberInfo.TestRows;
             var paramTests = new List<IParamTest>();
+            int i = 0;
             
             foreach (var row in Rows)
             {
+                i++;
+                if (row.Name == null)
+                {
+                    row.Name = i.ToString();
+                }
                 var paramTest = new ParamTest(Fixture, TestClassMemberInfo, row.Name, row.Args);
                 paramTests.Add(paramTest);
             }

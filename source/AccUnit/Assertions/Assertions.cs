@@ -1,5 +1,6 @@
 ﻿using System;
 using AccessCodeLib.AccUnit.Assertions.Interfaces;
+using AccessCodeLib.AccUnit.Common;
 
 namespace AccessCodeLib.AccUnit.Assertions
 {
@@ -94,6 +95,12 @@ namespace AccessCodeLib.AccUnit.Assertions
         }
 
         #endregion
+
+        public void Throws(int ErrorNumber, string InfoText = null)
+        {
+            
+            AssertThrowsStore.ExpectedErrorNumber = ErrorNumber;
+        }
 
         protected virtual void Fail(IMatchResult result)
         {

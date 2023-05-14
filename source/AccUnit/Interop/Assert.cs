@@ -27,7 +27,7 @@ namespace AccessCodeLib.AccUnit.Interop
         void IsNotNull(object Actual, string InfoText = null);
         void IsNothing([MarshalAs(UnmanagedType.IDispatch)] object Actual, string InfoText = null);
         void IsNotNothing([MarshalAs(UnmanagedType.IDispatch)] object Actual, string InfoText = null);
-        
+        void Throws(int ErrorNumber, string InfoText = null);
     }
 
     [ComVisible(true)]

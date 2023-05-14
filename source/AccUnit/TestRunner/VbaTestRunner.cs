@@ -1,11 +1,12 @@
 ﻿using AccessCodeLib.AccUnit.Assertions.Interfaces;
-using AccessCodeLib.AccUnit.Common;
+using AccessCodeLib.AccUnit.Assertions;
 using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.TestRunner
 {
@@ -193,31 +194,36 @@ namespace AccessCodeLib.AccUnit.TestRunner
                         messageException = ex;
                     }
 
-                    if (messageException is AssertionException assertionException)
+                    if (!AssertThrowsStore.CompaireTestRunnerException(messageException, testResult))
                     {
-                        testResult.IsFailure = true;
-                        testResult.Message = assertionException.Message;
-                    }
-                    else
-                    {
-                        // über Invoke kommt AssertionException anscheinend nicht durch
-                        
-                        if (IsInvocationException && messageException.GetType() == typeof(Exception))
+                        if (messageException is AssertionException assertionException)
                         {
                             testResult.IsFailure = true;
+                            testResult.Message = assertionException.Message;
                         }
                         else
                         {
-                            testResult.IsError = true;
+                            // über Invoke kommt AssertionException anscheinend nicht durch
+
+                            if (IsInvocationException && messageException.GetType() == typeof(Exception))
+                            {
+                                testResult.IsFailure = true;
+                            }
+                            else
+                            {
+                                testResult.IsError = true;
+                            }
+                            testResult.Message += messageException.Message;
                         }
-                        testResult.Message = messageException.Message;
+                        testResult.IsSuccess = false;
                     }
-                    testResult.IsSuccess = false;
                 }
                 finally
                 {
                     testResult.Executed = true;
                 }
+
+                AssertThrowsStore.CompaireTestRunnerException(null, testResult);
                 
                 if (testFixture.HasTeardown)
                 {

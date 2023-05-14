@@ -19,7 +19,7 @@ namespace AccessCodeLib.AccUnit
         private const int DefaultSeparatorMaxLength = 0;
         private const char DefaultSeparatorChar = '-';
         private const int DefaultFixtureFinishedSeparatorLength = 5;
-        private const int DefaultTestCaseResultStartPos = 40;
+        private const int DefaultTestCaseResultStartPos = 50;
 
         public TestSummaryFormatter()
             : this(DefaultSeparatorMaxLength, DefaultSeparatorChar)
@@ -100,6 +100,8 @@ namespace AccessCodeLib.AccUnit
             sb.Append(result.Test.FullName);
             if (result.Test.FullName.Length < TestCaseResultStartPos)
                 sb.Append(new string(' ', TestCaseResultStartPos - result.Test.Name.Length));
+            else
+                sb.Append(" ");
 
             if (result.IsSuccess)
             {
