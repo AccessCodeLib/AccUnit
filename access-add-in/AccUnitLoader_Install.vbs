@@ -9,9 +9,11 @@ Select Case MsgBox("Soll das Add-In als MDE verwendet werden?" + chr(13) & _
                    "(Add-In wird kompiliert ins Add-In-Verzeichnis kopiert.)", 3, MsgBoxTitle)
    case 6 ' vbYes
       CreateMde GetSourceFileFullName, GetDestFileFullName
+	  MsgBox "Complicated file was created.", , MsgBoxTitle
    case 7 ' vbNo
-	  DeleteAddInFiles
+      DeleteAddInFiles
       FileCopy GetSourceFileFullName, GetDestFileFullName
+	  MsgBox "File was copied.", , MsgBoxTitle
    case else
       
 End Select
