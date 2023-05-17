@@ -15,3 +15,5 @@ For more informations see https://accunit.access-codelib.net/
 
 ### Remarks
 Examples see [./examples/msaccess/](https://github.com/AccessCodeLib/AccUnit/blob/main/examples/msaccess/)
+
+If the DLL files are located in a network drive, it will not work.
