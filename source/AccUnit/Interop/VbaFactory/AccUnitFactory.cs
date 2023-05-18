@@ -16,6 +16,7 @@ namespace AccessCodeLib.AccUnit.Interop
         IConfigurator Configurator { get; }
         IVBATestSuite VBATestSuite { get; }
         IAccessTestSuite AccessTestSuite { get; }
+        ICodeCoverageTracker CodeCoverageTracker(VBProject VBProject);
     }
 
     [ComVisible(true)]
@@ -75,6 +76,11 @@ namespace AccessCodeLib.AccUnit.Interop
             {
                 return new AccessTestSuite();
             }
+        }
+
+        public ICodeCoverageTracker CodeCoverageTracker(VBProject vbProject = null)
+        {
+            return new CodeCoverageTracker(vbProject);
         }
     }
 }
