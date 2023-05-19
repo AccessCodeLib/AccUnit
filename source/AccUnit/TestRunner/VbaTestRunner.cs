@@ -100,10 +100,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
             testFixture.Add(test);
 
             var result = Run(test);
-            if (testResultCollector != null)
-            {
-                testResultCollector.Add(result);
-            }
+            testResultCollector?.Add(result);
         }
         
         private ITest CreateTest(ITestFixture testFixture, string testMethodName)
@@ -134,16 +131,18 @@ namespace AccessCodeLib.AccUnit.TestRunner
         {
             if (test.TestClassMemberInfo.IgnoreInfo.Ignore)
             {
-                var ignoreTestResult = new TestResult(test);
-                ignoreTestResult.IsIgnored = true;
-                ignoreTestResult.Message = test.TestClassMemberInfo.IgnoreInfo.Comment;
+                var ignoreTestResult = new TestResult(test)
+                {
+                    IsIgnored = true,
+                    Message = test.TestClassMemberInfo.IgnoreInfo.Comment
+                };
                 RaiseTestFinished(ignoreTestResult);
                 return ignoreTestResult;
             }
             
-            if (test is IRowTest)
+            if (test is IRowTest rowTest)
             {
-                return Run((IRowTest)test);
+                return Run(rowTest);
             }
 
             var testResult = new TestResult(test);

@@ -72,10 +72,9 @@ namespace AccessCodeLib.Common.VBIDETools
             var currentLine = _codeModule.CountOfDeclarationLines + 1;
             while (currentLine <= _codeModule.CountOfLines)
             {
-                vbext_ProcKind tempProcKind;
-// ReSharper disable UseIndexedProperty
-                var tempProcName = _codeModule.get_ProcOfLine(currentLine, out tempProcKind);
-// ReSharper restore UseIndexedProperty
+                // ReSharper disable UseIndexedProperty
+                var tempProcName = _codeModule.get_ProcOfLine(currentLine, out vbext_ProcKind tempProcKind);
+                // ReSharper restore UseIndexedProperty
                 if (tempProcName.Length > 0)
                 {
                     var tempProcLine = _codeModule.Lines[_codeModule.ProcBodyLine[tempProcName, tempProcKind], 1].Trim();

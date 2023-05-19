@@ -7,7 +7,7 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
 {
     internal class CodeModuleTracker
     {
-        private static readonly Dictionary<string, ProcedureTracker> _procedures = new Dictionary<string, ProcedureTracker>();
+        private readonly Dictionary<string, ProcedureTracker> _procedures = new Dictionary<string, ProcedureTracker>();
 
         public CodeModuleTracker(string codeModuleName)
         {
