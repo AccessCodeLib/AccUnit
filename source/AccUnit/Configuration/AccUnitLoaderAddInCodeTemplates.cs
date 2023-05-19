@@ -20,7 +20,7 @@ namespace AccessCodeLib.AccUnit.Configuration
             Add(new CodeTemplate(@"AccUnit_Factory", vbext_ComponentType.vbext_ct_StdModule, code));
         }
 
-        private static string AccUnitLoaderFactoryCode =
+        private static readonly string AccUnitLoaderFactoryCode =
             @"Option Compare Database
 Option Explicit
 
@@ -28,6 +28,7 @@ Option Explicit
 
 Private m_AccUnitLoaderFactory As Object
 Private m_UseMatchResultCollector As Boolean
+Private m_CodeCoverageTracker As Object
 
 Private Function AccUnitLoaderFactory() As Object
    If m_AccUnitLoaderFactory Is Nothing Then
@@ -118,6 +119,45 @@ End Sub
 Public Sub RunAllTests()
    TestSuite.AddFromVBProject.Run
 End Sub
+
+#If USE_ACCUNIT_TYPELIB Then
+Public Property Get CodeCoverageTracker(Optional ReInit As Boolean = False) As AccUnit.CodeCoverageTracker
+#Else
+Public Property Get CodeCoverageTracker(Optional ReInit As Boolean = False) As Object
+#End If
+   If ReInit Then
+      Set m_CodeCoverageTracker = Nothing
+   End If
+   If m_CodeCoverageTracker Is Nothing Then
+      Set m_CodeCoverageTracker = AccUnitLoaderFactory.CodeCoverageTracker
+   End If
+   Set CodeCoverageTracker = m_CodeCoverageTracker
+End Property
+
+#If USE_ACCUNIT_TYPELIB Then
+Public Function CodeCoverageTest(ParamArray CodeModulNames() As Variant) As AccUnit.VBATestSuite
+#Else
+Public Function CodeCoverageTest(ParamArray CodeModulNames() As Variant) As Object
+#End If
+   Dim CodeModuleName As Variant
+   Dim CodeCoverageTestSuite As Object
+
+   With CodeCoverageTracker(True)
+      For Each CodeModuleName In CodeModulNames
+         .Add CodeModuleName
+      Next
+   End With
+   
+   If m_UseMatchResultCollector Then
+      m_UseMatchResultCollector = False
+      Set m_AccUnitLoaderFactory = Nothing
+   End If
+   Set CodeCoverageTestSuite = AccUnitLoaderFactory.DebugPrintTestSuite
+   Set CodeCoverageTestSuite.CodeCoverageTracker = m_CodeCoverageTracker
+   
+   Set CodeCoverageTest = CodeCoverageTestSuite
+   
+End Function
 ";
     }
 }

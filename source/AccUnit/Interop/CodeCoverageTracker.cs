@@ -11,6 +11,7 @@ namespace AccessCodeLib.AccUnit.Interop
         ICodeCoverageTracker Add(string CodeModuleName);
         void Track(string CodeModulName, string ProcedureName, int LineNo);
         string GetReport();
+        void Clear(string CodeModuleName = null);
     }
 
     [ComVisible(true)]

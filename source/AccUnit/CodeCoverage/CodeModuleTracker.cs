@@ -59,7 +59,7 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
 
             foreach (var key in _procedures.Keys.OrderBy(k => k))
             {
-                sb.AppendLine($"{key} : {_procedures[key].GetCoverage()*100.0:0.0%} ({_procedures[key].GetCoverageInfo()})");
+                sb.AppendLine($"{key} : {_procedures[key].GetCoverage():0.0%} ({_procedures[key].GetCoverageInfo()})");
             }
             return sb.ToString();
         }
