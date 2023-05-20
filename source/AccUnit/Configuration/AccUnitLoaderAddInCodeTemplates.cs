@@ -126,7 +126,10 @@ Public Property Get CodeCoverageTracker(Optional ReInit As Boolean = False) As A
 Public Property Get CodeCoverageTracker(Optional ReInit As Boolean = False) As Object
 #End If
    If ReInit Then
-      Set m_CodeCoverageTracker = Nothing
+      If Not m_CodeCoverageTracker Is Nothing Then
+         m_CodeCoverageTracker.Dispose
+         Set m_CodeCoverageTracker = Nothing
+      End If
    End If
    If m_CodeCoverageTracker Is Nothing Then
       Set m_CodeCoverageTracker = AccUnitLoaderFactory.CodeCoverageTracker
