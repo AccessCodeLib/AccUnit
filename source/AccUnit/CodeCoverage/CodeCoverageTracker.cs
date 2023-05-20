@@ -1,5 +1,6 @@
 ﻿using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,9 +67,14 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
         private void InsertCodeCoverageTracker(CodeModule codeModule, CodeModuleReader cmReader, CodeModuleMember procedure)
         {
             var procedureCode = cmReader.GetProcedureCode(procedure.Name, procedure.ProcKind);
+            const string IgnorePattern = @"(?!\s*If\s.*Then\b)(?!\s*Else\b)(?!\s*ElseIf\b)(?!\s*End If\b)" +
+                                         @"(?!\s*Select Case\b)(?!\s*Case\b)(?!\s*End Select\b)" +
+                                         @"(?!\s*With\b)(?!\s*End With\b)" +
+                                         @"(?!\s*For\b)(?!\s*Next\b)" +
+                                         @"(?!\s*Do\b)(?!\s*Loop\b)" +
+                                         @"(?!\s*While\b)(?!\s*Wend\b)";
 
-            //const string pattern = @"^(\d+:)";
-            const string pattern = @"^(\d+[ :]|^\d+$)(?!\s*CodeCoverageTracker\.Track\b)(.*)";
+            const string pattern = @"^(\d+[ :]|^\d+$)(?!\s*CodeCoverageTracker\.Track\b)" + IgnorePattern + "(.*)";
             Regex regex = new Regex(pattern, RegexOptions.Singleline);
 
             string[] procedureLines = procedureCode.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
@@ -135,7 +141,7 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
 
         private void FillProcedureData(CodeModuleTracker tracker, CodeModuleReader cmReader, CodeModuleMember procedure)
         {
-            var procedureCode = cmReader.GetProcedureCode(procedure.Name);
+            var procedureCode = cmReader.GetProcedureCode(procedure.Name, procedure.ProcKind);
             int trackLinesCount = Regex.Matches(procedureCode, @"^\d+[ :]\s*CodeCoverageTracker\.Track", RegexOptions.Multiline).Count;
             tracker.Add(procedure.Name, trackLinesCount);
         }
@@ -144,7 +150,8 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
         {
             if (!_codeModules.ContainsKey(codeModulName))
             {
-                Add(codeModulName);
+                //Add(codeModulName);
+                _codeModules.Add(codeModulName, new CodeModuleTracker(codeModulName));
             }
             _codeModules[codeModulName].Track(procedureName, lineNo);
         }
