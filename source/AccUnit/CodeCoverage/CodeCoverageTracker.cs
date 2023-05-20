@@ -74,7 +74,7 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
                                          @"(?!\s*Do\b)(?!\s*Loop\b)" +
                                          @"(?!\s*While\b)(?!\s*Wend\b)";
 
-            const string pattern = @"^(\d+[ :]|^\d+$)(?!\s*CodeCoverageTracker\.Track\b)" + IgnorePattern + "(.*)";
+            const string pattern = @"^(\d+\s|^\d+$)(?!\s*CodeCoverageTracker\.Track\b)" + IgnorePattern + "(.*)";
             Regex regex = new Regex(pattern, RegexOptions.Singleline);
 
             string[] procedureLines = procedureCode.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
@@ -95,7 +95,24 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
         {
             int procStartLine = codeModule.ProcBodyLine[procedure.Name, procedure.ProcKind];
             int cmLineNo = procStartLine + lineNo;
-            codeModule.ReplaceLine(cmLineNo, $"{lineCode.TrimEnd()} CodeCoverageTracker.Track \"{codeModule.Name}\", \"{procedure.Name}\", {lineCode.TrimEnd()}:{codeLine}");
+
+            string procName = FormattedProcedureName(procedure);
+
+            codeModule.ReplaceLine(cmLineNo, $"{lineCode.TrimEnd()} CodeCoverageTracker.Track \"{codeModule.Name}\", \"{procName}\", {lineCode.TrimEnd()}:{codeLine}");
+        }
+
+        private string FormattedProcedureName(CodeModuleMember procedure)
+        {
+            string procName = procedure.Name;
+
+            if (procedure.ProcKind == vbext_ProcKind.vbext_pk_Get)
+                procName += "_get";
+            else if (procedure.ProcKind == vbext_ProcKind.vbext_pk_Let)
+                procName += "_let";
+            else if (procedure.ProcKind == vbext_ProcKind.vbext_pk_Set)
+                procName += "_set";
+
+            return procName;
         }
 
         private void RemoveCodeCoverageTracker(string codeModuleName)
@@ -103,8 +120,8 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
             var codeModule = _vbProject.VBComponents.Item(codeModuleName).CodeModule;
             var cmReader = new CodeModuleReader(codeModule);
             
-            const string pattern = @"^(\d+[ :]+)CodeCoverageTracker.Track.*:(.*)";
-            Regex regex = new Regex(pattern, RegexOptions.Multiline);
+            const string pattern = @"^(\d+\s+)CodeCoverageTracker.Track[^:]*:(.*)";
+            Regex regex = new Regex(pattern, RegexOptions.Singleline);
 
             string[] codeLines = cmReader.SourceCode.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
@@ -142,8 +159,8 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
         private void FillProcedureData(CodeModuleTracker tracker, CodeModuleReader cmReader, CodeModuleMember procedure)
         {
             var procedureCode = cmReader.GetProcedureCode(procedure.Name, procedure.ProcKind);
-            int trackLinesCount = Regex.Matches(procedureCode, @"^\d+[ :]\s*CodeCoverageTracker\.Track", RegexOptions.Multiline).Count;
-            tracker.Add(procedure.Name, trackLinesCount);
+            int trackLinesCount = Regex.Matches(procedureCode, @"^\d+\s+CodeCoverageTracker\.Track", RegexOptions.Multiline).Count;
+            tracker.Add(FormattedProcedureName(procedure), trackLinesCount);
         }
 
         public void Track(string codeModulName, string procedureName, int lineNo)
