@@ -1,5 +1,4 @@
-﻿using Microsoft.Vbe.Interop;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -58,7 +57,7 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
             var sb = new StringBuilder();
             var maxLineNoLength = TotalProcedureCount.ToString().Length;
             
-            var procedureKeys = GetFilteredKeys(procedureName).OrderBy(k => k);
+            var procedureKeys = _procedures.Keys.Where(k => (procedureName ?? "*") == "*" || k == procedureName).OrderBy(k => k);
 
             foreach (var key in procedureKeys)
             {
@@ -74,18 +73,6 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
                 }
             }
             return sb.ToString();
-        }
-
-        private IEnumerable<string> GetFilteredKeys(string procedureName = "*")
-        {
-            if (procedureName == "*" || procedureName == null)
-            {
-                return _procedures.Keys;
-            }
-            else
-            {
-                return _procedures.Keys.Where(k => k == procedureName);
-            }
         }
     }
 }

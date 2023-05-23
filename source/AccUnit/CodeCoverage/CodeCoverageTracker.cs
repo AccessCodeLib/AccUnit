@@ -181,8 +181,8 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
             sb.AppendLine("Code Coverage Report:");
             sb.AppendLine("---------------------");
 
-            var codeModulKeys = GetFilteredKeys(codeModuleName).OrderBy(k => k);
-            
+            var codeModulKeys = _codeModules.Keys.Where(k => (codeModuleName ?? "*") == "*" || k == codeModuleName).OrderBy(k => k);
+
             foreach (var key in codeModulKeys)
             {
                 sb.AppendLine($"Codemodule {key}:");
@@ -191,19 +191,7 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
             }
             return sb.ToString();
         }
-
-        private IEnumerable<string> GetFilteredKeys(string codeModuleName = "*")
-        {
-            if (codeModuleName == "*" || codeModuleName == null)
-            {
-                return _codeModules.Keys;
-            }
-            else
-            {
-                return _codeModules.Keys.Where(k => k == codeModuleName);
-            }
-        }
-
+        
         #region IDisposable Support
 
         bool _disposed;
