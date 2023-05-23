@@ -72,10 +72,9 @@ namespace AccessCodeLib.Common.VBIDETools
             var currentLine = _codeModule.CountOfDeclarationLines + 1;
             while (currentLine <= _codeModule.CountOfLines)
             {
-                vbext_ProcKind tempProcKind;
-// ReSharper disable UseIndexedProperty
-                var tempProcName = _codeModule.get_ProcOfLine(currentLine, out tempProcKind);
-// ReSharper restore UseIndexedProperty
+                // ReSharper disable UseIndexedProperty
+                var tempProcName = _codeModule.get_ProcOfLine(currentLine, out vbext_ProcKind tempProcKind);
+                // ReSharper restore UseIndexedProperty
                 if (tempProcName.Length > 0)
                 {
                     var tempProcLine = _codeModule.Lines[_codeModule.ProcBodyLine[tempProcName, tempProcKind], 1].Trim();
@@ -94,7 +93,7 @@ namespace AccessCodeLib.Common.VBIDETools
                     _members.Add(new CodeModuleMember(tempProcName, tempProcKind, isPublic));
                     currentLine = _codeModule.ProcStartLine[tempProcName, tempProcKind] + _codeModule.ProcCountLines[tempProcName, tempProcKind];
                 }
-                currentLine = currentLine + 1;
+                currentLine++;
             }
         }
 
@@ -118,9 +117,11 @@ namespace AccessCodeLib.Common.VBIDETools
 
         public string GetProcedureCode(string procedureName, vbext_ProcKind procKind = vbext_ProcKind.vbext_pk_Proc)
         {
+            var procStartLineNumber = _codeModule.ProcStartLine[procedureName, procKind];
             var procBodyLineNumber = _codeModule.ProcBodyLine[procedureName, procKind];
             var procCountLines = _codeModule.ProcCountLines[procedureName, procKind];
-            return _codeModule.Lines[procBodyLineNumber, procCountLines];
+            var procBodyLineCount = procStartLineNumber + procCountLines - procBodyLineNumber;
+            return _codeModule.Lines[procBodyLineNumber, procBodyLineCount];
         }
 
     }

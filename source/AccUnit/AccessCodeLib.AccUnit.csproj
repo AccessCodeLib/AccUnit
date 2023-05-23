@@ -101,6 +101,8 @@
     <Compile Include="Assertions\Interfaces\IMatchResultCollector.cs" />
     <Compile Include="Assertions\Interfaces\IMatchResultCollectorBridge.cs" />
     <Compile Include="Assertions\AssertThrowsContainer.cs" />
+    <Compile Include="CodeCoverage\CodeModuleTracker.cs" />
+    <Compile Include="CodeCoverage\ProcedureTracker.cs" />
     <Compile Include="Common\CodeModuleMemberWithMarker.cs" />
     <Compile Include="Common\CompareTypeHelper.cs" />
     <Compile Include="Common\IgnoreInfo.cs" />
@@ -115,6 +117,8 @@
     <Compile Include="Common\UserControls.Designer.cs" />
     <Compile Include="Configuration\AccUnitLoaderAddInCodeTemplates.cs" />
     <Compile Include="Integration\AccessRunException.cs" />
+    <Compile Include="CodeCoverage\CodeCoverageTracker.cs" />
+    <Compile Include="Interop\CodeCoverageTracker.cs" />
     <Compile Include="Interop\ITestSummaryPrinter.cs" />
     <Compile Include="TestSuite\AccessTestSuite.cs" />
     <Compile Include="Common\StringTools.cs" />

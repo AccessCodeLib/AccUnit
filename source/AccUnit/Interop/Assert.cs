@@ -59,10 +59,7 @@ namespace AccessCodeLib.AccUnit.Interop
 
         protected override void AddResultToMatchResultCollector(Assertions.IMatchResult result, string infoText)
         {
-            if (MatchResultCollector != null)
-            {
-                MatchResultCollector.Add(result, infoText);
-            }
+            MatchResultCollector?.Add(result, infoText);
         }
         
         #region IDisposable Support
