@@ -10,7 +10,7 @@ namespace AccessCodeLib.AccUnit.Interop
     {
         ICodeCoverageTracker Add(string CodeModuleName);
         void Track(string CodeModulName, string ProcedureName, int LineNo);
-        string GetReport();
+        string GetReport(string CodeModuleName = "*", string ProcedureName = "*", bool ShowCoverageDetails = false);
         void Clear(string CodeModuleName = null);
         new void Dispose();
     }

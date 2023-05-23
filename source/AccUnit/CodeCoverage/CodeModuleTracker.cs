@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Vbe.Interop;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -52,17 +53,39 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
         private int TrackedProcedureCount { get { return _procedures.Keys.Where(k => _procedures[k].GetCoverage() > 0).Count(); } }
         private int TotalProcedureCount { get { return _procedures.Keys.Count; } }
 
-        public string GetCoverageProcedureInfo()
+        public string GetCoverageProcedureInfo(string procedureName = "*", bool showCoverageDetails = false)
         {
             var sb = new StringBuilder();
             var maxLineNoLength = TotalProcedureCount.ToString().Length;
+            
+            var procedureKeys = GetFilteredKeys(procedureName).OrderBy(k => k);
 
-            foreach (var key in _procedures.Keys.OrderBy(k => k))
+            foreach (var key in procedureKeys)
             {
                 sb.AppendLine($"{key} : {_procedures[key].GetCoverage():0.0%} ({_procedures[key].GetCoverageInfo()})");
+                if (showCoverageDetails)
+                {
+                    var CoverageLineInfo = _procedures[key].GetCoverageLineInfo();
+                    if (!string.IsNullOrEmpty(CoverageLineInfo))
+                    {
+                        CoverageLineInfo = "  " + CoverageLineInfo.Replace(Environment.NewLine, Environment.NewLine + "  ");
+                        sb.AppendLine(CoverageLineInfo);
+                    }
+                }
             }
             return sb.ToString();
         }
 
+        private IEnumerable<string> GetFilteredKeys(string procedureName = "*")
+        {
+            if (procedureName == "*" || procedureName == null)
+            {
+                return _procedures.Keys;
+            }
+            else
+            {
+                return _procedures.Keys.Where(k => k == procedureName);
+            }
+        }
     }
 }

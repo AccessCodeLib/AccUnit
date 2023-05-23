@@ -173,20 +173,35 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
             _codeModules[codeModulName].Track(procedureName, lineNo);
         }
 
-        public string GetReport()
+        public string GetReport(string codeModuleName = "*", string procedureName = "*", bool showCoverageDetails =false)
         {
             const string SeparatorLine = "------------------------------------------";
             var sb = new StringBuilder();
             sb.AppendLine(SeparatorLine);
             sb.AppendLine("Code Coverage Report:");
             sb.AppendLine("---------------------");
-            foreach (var key in _codeModules.Keys.OrderBy(k => k))
+
+            var codeModulKeys = GetFilteredKeys(codeModuleName).OrderBy(k => k);
+            
+            foreach (var key in codeModulKeys)
             {
                 sb.AppendLine($"Codemodule {key}:");
-                sb.AppendLine(_codeModules[key].GetCoverageProcedureInfo());
+                sb.AppendLine(_codeModules[key].GetCoverageProcedureInfo(procedureName, showCoverageDetails));
                 sb.AppendLine(SeparatorLine);
             }
             return sb.ToString();
+        }
+
+        private IEnumerable<string> GetFilteredKeys(string codeModuleName = "*")
+        {
+            if (codeModuleName == "*" || codeModuleName == null)
+            {
+                return _codeModules.Keys;
+            }
+            else
+            {
+                return _codeModules.Keys.Where(k => k == codeModuleName);
+            }
         }
 
         #region IDisposable Support
