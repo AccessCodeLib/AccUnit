@@ -11,6 +11,7 @@ For more informations see https://accunit.access-codelib.net/
 * Simple test can started by [Access-Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in)
 * Row test available
 * VbaTestSuite with 'Debug.Print'-Output to VBE Immediate window
+* Code coverage tests ([Video](https://accunit.access-codelib.net/videos/examples/CodeCoverageTest.mp4))
 
 
 ### Remarks
