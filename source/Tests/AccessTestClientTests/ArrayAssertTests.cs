@@ -52,7 +52,7 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
         [Test]
         public void CheckArray()
         {
-            var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
 public Function TestMethod() as Variant
    dim X() as variant
    X = Array(1,2,3)
@@ -78,7 +78,7 @@ End Function
         [Test]
         public void IntArrayIsEqual()
         {
-            var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
 public Function TestMethod() as Long()
    dim X(2) as Long
    x(0) = 1
@@ -109,7 +109,7 @@ End Function
         [Test]
         public void VariantArrayIsEqual()
         {
-            var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
 public Function TestMethod() as Variant()
    dim X(2) as Variant
    x(0) = 1
@@ -141,7 +141,7 @@ End Function
         [Test]
         public void ArrayInVariantIsEqualVariantArray()
         {
-            var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
 public Function ActualArray() as Variant
    ActualArray = Array(1, 2, 3)   
 End Function
@@ -165,7 +165,6 @@ End Function
             var assert = NewTestAssert(testCollector);
             var Iz = new ConstraintBuilder();
 
-            //Array expected = new object[] { 1, 2, 3 };
             var expected = invocHelper.InvokeMethod("ExpectedArray");
 
             assert.That(actual, Iz.EqualTo(expected));
@@ -175,9 +174,44 @@ End Function
         }
 
         [Test]
+        public void ArrayInVariantIsNotEqual_WrongLength()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+public Function ActualArray() as Variant
+   ActualArray = Array(1, 2, 3, 4)   
+End Function
+
+public Function ExpectedArray() as Variant()
+   dim X(2) as Variant
+   x(0) = 1
+   x(1) = 2
+   x(2) = 3
+   ExpectedArray = x     
+End Function
+");
+
+            var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
+            Assert.That(fixture, Is.Not.Null);
+
+            var invocHelper = new InvocationHelper(fixture);
+            var actual = invocHelper.InvokeMethod("ActualArray");
+
+            var testCollector = new TestCollector();
+            var assert = NewTestAssert(testCollector);
+            var Iz = new ConstraintBuilder();
+
+            var expected = invocHelper.InvokeMethod("ExpectedArray");
+
+            assert.That(actual, Iz.EqualTo(expected));
+            var result = testCollector.Result;
+
+            Assert.That(result.Match, Is.EqualTo(false), result.Text);
+        }
+
+        [Test]
         public void Dim2ArrayInVariantIsEqualVariantArray()
         {
-            var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
 public Function ActualArray() as Variant
    dim X(2,1) as Variant
    x(0,0) = 1
@@ -205,7 +239,6 @@ End Function
             var assert = NewTestAssert(testCollector);
             var Iz = new ConstraintBuilder();
 
-            //Array expected = new object[] { 1, 2, 3 };
             var expected = invocHelper.InvokeMethod("ExpectedArray");
 
             assert.That(actual, Iz.EqualTo(expected));
@@ -214,6 +247,82 @@ End Function
             Assert.That(result.Match, Is.EqualTo(true), result.Text);
         }
 
+        [Test]
+        public void Dim2ArrayInVariantIsNotEqual_WrongRank()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+public Function ActualArray() as Variant
+   dim X(2,1,1) as Variant
+   x(0,0,0) = 1
+   x(1,0,0) = 2
+   x(2,0,0) = 3
+   ActualArray = x   
+End Function
 
+public Function ExpectedArray() as Variant()
+   dim X(2,1) as Variant
+   x(0,0) = 1
+   x(1,0) = 2
+   x(2,0) = 3
+   ExpectedArray = x     
+End Function
+");
+
+            var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
+            Assert.That(fixture, Is.Not.Null);
+
+            var invocHelper = new InvocationHelper(fixture);
+            var actual = invocHelper.InvokeMethod("ActualArray");
+
+            var testCollector = new TestCollector();
+            var assert = NewTestAssert(testCollector);
+            var Iz = new ConstraintBuilder();
+
+            var expected = invocHelper.InvokeMethod("ExpectedArray");
+
+            assert.That(actual, Iz.EqualTo(expected));
+            var result = testCollector.Result;
+
+            Assert.That(result.Match, Is.EqualTo(false), result.Text);
+        }
+
+        [Test]
+        public void Dim2ArrayInVariantIsNotEqual_WrongDimensionLen()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+public Function ActualArray() as Variant
+   dim X(2,2) as Variant
+   x(0,0) = 1
+   x(1,0) = 2
+   x(2,0) = 3
+   ActualArray = x   
+End Function
+
+public Function ExpectedArray() as Variant()
+   dim X(2,1) as Variant
+   x(0,0) = 1
+   x(1,0) = 2
+   x(2,0) = 3
+   ExpectedArray = x     
+End Function
+");
+
+            var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
+            Assert.That(fixture, Is.Not.Null);
+
+            var invocHelper = new InvocationHelper(fixture);
+            var actual = invocHelper.InvokeMethod("ActualArray");
+
+            var testCollector = new TestCollector();
+            var assert = NewTestAssert(testCollector);
+            var Iz = new ConstraintBuilder();
+
+            var expected = invocHelper.InvokeMethod("ExpectedArray");
+
+            assert.That(actual, Iz.EqualTo(expected));
+            var result = testCollector.Result;
+
+            Assert.That(result.Match, Is.EqualTo(false), result.Text);
+        }
     }
 }
