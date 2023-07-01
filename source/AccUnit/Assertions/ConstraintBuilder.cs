@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using AccessCodeLib.AccUnit.Assertions.Constraints;
+using AccessCodeLib.AccUnit.Interop;
 
 namespace AccessCodeLib.AccUnit.Assertions
 {
@@ -41,8 +42,19 @@ namespace AccessCodeLib.AccUnit.Assertions
             return this;
         }
 
+        private static bool IsArray(object objectToCheck)
+        {
+            return objectToCheck != null && objectToCheck.GetType().IsArray;
+        }
+
         private void AddComparerConstraint(string compareText, object expected, int expectedComparerResult)
         {
+            if (expected is Array expectedArray)
+            {
+                AddArrayComparerConstraint(compareText, expectedArray, expectedComparerResult);
+                return;
+            }
+
             if (expected == null)
             {
                 if  (expectedComparerResult == 0)
@@ -62,6 +74,16 @@ namespace AccessCodeLib.AccUnit.Assertions
             AddChild((IConstraint)newConstraint);
         }
 
+        private void AddArrayComparerConstraint(string compareText, Array expected, int expectedComparerResult)
+        {
+            //var newConstraint = new ArrayConstraint(compareText, expected, expectedComparerResult);
+            
+            Type T = expected.GetType().GetElementType();
+            Type myType = typeof(ArrayConstraint<>).MakeGenericType(T);
+            var newConstraint = Activator.CreateInstance(myType, compareText, expected, expectedComparerResult);
+            AddChild((IConstraint)newConstraint);
+        }
+
         public static Type Type2Compare(object v)
         {
             Type T = v.GetType();
@@ -74,7 +96,7 @@ namespace AccessCodeLib.AccUnit.Assertions
         private static Type GetCompareType(object v)
         {
             Type T = Type2Compare(v);
-            return typeof(ComparerContraint<>).MakeGenericType(T);
+            return typeof(ComparerConstraint<>).MakeGenericType(T);
         }
         
         private static bool IsNumeric(Type T)
@@ -90,8 +112,24 @@ namespace AccessCodeLib.AccUnit.Assertions
 
         private void AddComparerConstraint(string compareText, object expected, int expectedComparerResult, int expectedComparerResult2)
         {
+            if (expected is Array expectedArray)
+            {
+                AddArrayComparerConstraint(compareText, expectedArray, expectedComparerResult, expectedComparerResult2);
+                return;
+            }
+
             Type T = expected.GetType();
-            Type myType = typeof(ComparerContraint<>).MakeGenericType(T);
+            Type myType = typeof(ComparerConstraint<>).MakeGenericType(T);
+            var newConstraint = Activator.CreateInstance(myType, compareText, expected, expectedComparerResult, expectedComparerResult2);
+            AddChild((IConstraint)newConstraint);
+        }
+
+        private void AddArrayComparerConstraint(string compareText, Array expected, int expectedComparerResult, int expectedComparerResult2)
+        {
+            //var newConstraint = new ArrayConstraint(compareText, expected, expectedComparerResult, expectedComparerResult2);
+            
+            Type T = expected.GetType().GetElementType();
+            Type myType = typeof(ArrayConstraint<>).MakeGenericType(T);
             var newConstraint = Activator.CreateInstance(myType, compareText, expected, expectedComparerResult, expectedComparerResult2);
             AddChild((IConstraint)newConstraint);
         }

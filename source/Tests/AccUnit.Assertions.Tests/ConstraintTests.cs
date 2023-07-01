@@ -256,5 +256,53 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
 
             Assert.That(result.Match, Is.EqualTo(false), result.Text);
         }
+
+        [Test]
+        public void IntArrayIsEqualTest()
+        {
+            var testCollector = new TestCollector();
+            var assert = NewTestAssert(testCollector);
+            var Iz = new ConstraintBuilder();
+
+            int[] expected = new int[] {1, 2, 3};
+            int[] actual = new int[] {1, 2, 3};
+
+            assert.That(actual, Iz.EqualTo(expected));
+            var result = testCollector.Result;
+
+            Assert.That(result.Match, Is.EqualTo(true), result.Text);
+        }
+
+        [Test]
+        public void StringArrayIsEqualTest()
+        {
+            var testCollector = new TestCollector();
+            var assert = NewTestAssert(testCollector);
+            var Iz = new ConstraintBuilder();
+
+            string[] expected = new string[] { "a", "b", "c" };
+            string[] actual = new string[] { "a", "b", "c" };
+
+            assert.That(actual, Iz.EqualTo(expected));
+            var result = testCollector.Result;
+
+            Assert.That(result.Match, Is.EqualTo(true), result.Text);
+        }
+
+        [Test]
+        public void IntArrayIsNotEqual_DifferentLength ()
+        {
+            var testCollector = new TestCollector();
+            var assert = NewTestAssert(testCollector);
+            var Iz = new ConstraintBuilder();
+
+            int[] expected = new int[] { 1, 2, 3 };
+            int[] actual = new int[] { 1, 2 };
+
+            assert.That(actual, Iz.EqualTo(expected));
+            var result = testCollector.Result;
+
+            Assert.That(result.Match, Is.EqualTo(false), result.Text);
+        }
     }
 }

@@ -21,8 +21,7 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
         [TearDown]
         public void AccessClientTestsCleanup()
         {
-            if (_accessTestHelper != null)
-                _accessTestHelper.Dispose();
+            _accessTestHelper?.Dispose();
             _accessTestHelper = null;
         }
 
@@ -72,9 +71,11 @@ Public Function AccUnitTestClassFactory_clsAccUnitTestClass() As Object
    Set AccUnitTestClassFactory_clsAccUnitTestClass = New clsAccUnitTestClass
 End Function
 ");
-            var testBuilder = new Interop.TestBuilder();
-            testBuilder.HostApplication = _accessTestHelper.Application;
-            
+            var testBuilder = new Interop.TestBuilder
+            {
+                HostApplication = _accessTestHelper.Application
+            };
+
             var fixture = testBuilder.CreateTest("clsAccUnitTestClass");
 
             Assert.That(fixture, Is.Not.Null);
