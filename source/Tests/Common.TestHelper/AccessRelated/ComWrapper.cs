@@ -9,10 +9,7 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
 
         public ComWrapper(T comReference)
         {
-            if (comReference == null)
-                throw new ArgumentNullException("comReference");
-
-            _comReference = comReference;
+            _comReference = comReference ?? throw new ArgumentNullException("comReference");
         }
 
         public T ComReference

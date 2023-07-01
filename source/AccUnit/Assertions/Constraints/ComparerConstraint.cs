@@ -3,21 +3,21 @@ using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit.Assertions.Constraints
 {
-    class ComparerContraint<T> : ConstraintBase
+    class ComparerConstraint<T> : ConstraintBase
     {
         protected T Expected { get; }
         protected int ExpectedComparerResult;
         protected int ExpectedComparerResult2;
         protected bool UseOr = false;
 
-        public ComparerContraint(string compareText, T expected, int expectedComparerResult)
+        public ComparerConstraint(string compareText, T expected, int expectedComparerResult)
         {
             CompareText = compareText;
             Expected = expected;
             ExpectedComparerResult = expectedComparerResult;
         }
 
-        public ComparerContraint(string compareText, T expected, int expectedComparerResult, int expectedComparerResult2)
+        public ComparerConstraint(string compareText, T expected, int expectedComparerResult, int expectedComparerResult2)
         {
             CompareText = compareText;
             Expected = expected;
