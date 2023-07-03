@@ -324,5 +324,39 @@ End Function
 
             Assert.That(result.Match, Is.EqualTo(false), result.Text);
         }
+        
+        [Test]
+        public void EmptyArrayInVariantIsEqualEmptyVariantArray()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+public Function ActualArray() as Variant
+   dim X() as Variant
+   ActualArray = x   
+End Function
+
+public Function ExpectedArray() as Variant()
+   dim X() as Variant
+   ExpectedArray = x     
+End Function
+");
+
+            var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
+            Assert.That(fixture, Is.Not.Null);
+
+            var invocHelper = new InvocationHelper(fixture);
+            var actual = invocHelper.InvokeMethod("ActualArray");
+
+            var testCollector = new TestCollector();
+            var assert = NewTestAssert(testCollector);
+            var Iz = new ConstraintBuilder();
+
+            var expected = invocHelper.InvokeMethod("ExpectedArray");
+
+            assert.That(actual, Iz.EqualTo(expected));
+            var result = testCollector.Result;
+            
+            Assert.That(result.Match, Is.EqualTo(true), result.Text);
+            
+        }
     }
 }
