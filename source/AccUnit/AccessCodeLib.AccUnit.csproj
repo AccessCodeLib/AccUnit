@@ -117,6 +117,8 @@
     <Compile Include="Common\UITools.cs" />
     <Compile Include="Common\UserControls.Designer.cs" />
     <Compile Include="Configuration\AccUnitLoaderAddInCodeTemplates.cs" />
+    <Compile Include="Configuration\TestClassGenerator.cs" />
+    <Compile Include="Configuration\TestClassTemplate.cs" />
     <Compile Include="Integration\AccessRunException.cs" />
     <Compile Include="CodeCoverage\CodeCoverageTracker.cs" />
     <Compile Include="Interop\CodeCoverageTracker.cs" />

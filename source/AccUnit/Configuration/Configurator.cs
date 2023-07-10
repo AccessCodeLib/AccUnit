@@ -18,6 +18,8 @@ namespace AccessCodeLib.AccUnit.Configuration
         void InsertAccUnitLoaderFactoryModule(VBProject VBProject, bool UseAccUnitTypeLib, bool removeIfExists = false);
         void RemoveAccUnitLoaderFactoryModule(VBProject VBProject);
 
+        ITestClassGenerator TestClassGenerator { get; }
+
     }
 
     [ComVisible(true)]
@@ -26,6 +28,8 @@ namespace AccessCodeLib.AccUnit.Configuration
     [ProgId("AccUnit.Configurator")]
     public class Configurator : IConfigurator, IDisposable
     {
+        private VBProject _vbProject;
+
         public Configurator()
         {
             //References = new AccUnitVBAReferences();
@@ -99,8 +103,15 @@ namespace AccessCodeLib.AccUnit.Configuration
             */
         }
 
-
         public AccUnitVBAReferences References { get; private set; }
+
+        public ITestClassGenerator TestClassGenerator
+        {
+            get
+            {
+                return new TestClassGenerator(_vbProject);
+            }
+        }
 
         public static void CheckAccUnitVBAReferences(VBProject vbProject)
         {
@@ -125,8 +136,7 @@ namespace AccessCodeLib.AccUnit.Configuration
         public event DisposeEventHandler Disposed;
 
         bool _disposed;
-        private VBProject _vbProject;
-
+        
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)

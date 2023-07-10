@@ -11,5 +11,8 @@
     <Setting Name="ImportExportFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)">%APPFOLDER%\Tests\%APPNAME%</Value>
     </Setting>
+    <Setting Name="TemplateFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%APPDATA%\AccessCodeLib\AccUnit\Templates</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
