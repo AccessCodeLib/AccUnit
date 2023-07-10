@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using AccessCodeLib.Common.Tools.Logging;
+using AccessCodeLib.Common.VBIDETools.Integration;
+using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit.Configuration
@@ -15,10 +17,10 @@ namespace AccessCodeLib.AccUnit.Configuration
         void Remove(VBProject VBProject = null, bool RemoveTestModules = false, bool ExportModulesBeforeRemoving = true);
 
         [ComVisible(true)]
-        void InsertAccUnitLoaderFactoryModule(VBProject VBProject, bool UseAccUnitTypeLib, bool removeIfExists = false);
-        void RemoveAccUnitLoaderFactoryModule(VBProject VBProject);
+        void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib, bool removeIfExists = false, VBProject VBProject = null);
+        void RemoveAccUnitLoaderFactoryModule(VBProject VBProject = null);
 
-        ITestClassGenerator TestClassGenerator { get; }
+        ITestClassGenerator TestClassGenerator(object HostApplication);
 
     }
 
@@ -32,16 +34,14 @@ namespace AccessCodeLib.AccUnit.Configuration
 
         public Configurator()
         {
-            //References = new AccUnitVBAReferences();
         }
 
         public Configurator(VBProject vbproject)
         {
-            //References = new AccUnitVBAReferences();
             _vbProject = vbproject;
         }
 
-        public void InsertAccUnitLoaderFactoryModule(VBProject vbProject = null, bool UseAccUnitTypeLib = false, bool removeIfExists = false)
+        public void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib = false, bool removeIfExists = false, VBProject vbProject = null)
         {
             if (vbProject != null)
             {
@@ -105,12 +105,11 @@ namespace AccessCodeLib.AccUnit.Configuration
 
         public AccUnitVBAReferences References { get; private set; }
 
-        public ITestClassGenerator TestClassGenerator
+        public ITestClassGenerator TestClassGenerator(object HostApplication)
         {
-            get
-            {
-                return new TestClassGenerator(_vbProject);
-            }
+            var officeApplicationHelper = ComTools.GetTypeForComObject(HostApplication, "Access.Application") != null
+                                                ? new AccessApplicationHelper(HostApplication) : new OfficeApplicationHelper(HostApplication);
+            return new TestClassGenerator(officeApplicationHelper);
         }
 
         public static void CheckAccUnitVBAReferences(VBProject vbProject)

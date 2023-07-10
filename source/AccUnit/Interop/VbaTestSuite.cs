@@ -2,6 +2,8 @@
 using System.Runtime.InteropServices;
 using AccessCodeLib.AccUnit.Configuration;
 using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.Common.VBIDETools.Integration;
+using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit.Interop
@@ -83,7 +85,12 @@ namespace AccessCodeLib.AccUnit.Interop
 
         public ITestClassGenerator TestClassGenerator
         {
-            get { return new TestClassGenerator(base.ActiveVBProject); }
+            get
+            {
+                var officeApplicationHelper = ComTools.GetTypeForComObject(HostApplication, "Access.Application") != null
+                                                ? new AccessApplicationHelper(HostApplication) : new OfficeApplicationHelper(HostApplication);
+                return new TestClassGenerator(officeApplicationHelper);
+            }
         }
     }
 }

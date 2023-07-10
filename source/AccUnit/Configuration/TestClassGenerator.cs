@@ -1,4 +1,5 @@
-﻿using Microsoft.Vbe.Interop;
+﻿using AccessCodeLib.Common.VBIDETools;
+using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,16 +23,17 @@ namespace AccessCodeLib.AccUnit.Configuration
     [ProgId("AccUnit.TestClassGenerator")]
     public class TestClassGenerator : ITestClassGenerator
     {
-        private VBProject _vbProject;
-
         public TestClassGenerator()
         {
         }
 
-        public TestClassGenerator(VBProject vbproject)
+        public TestClassGenerator(OfficeApplicationHelper applicationHelper)
         {
-            _vbProject = vbproject;
+            ApplicationHelper = applicationHelper;
         }
+
+        public VBProject ActiveVBProject { get { return ApplicationHelper.CurrentVBProject; } }
+        public OfficeApplicationHelper ApplicationHelper { get; set; }
 
         public void EditTestClass(string TestClassName = null)
         {

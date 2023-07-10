@@ -13,7 +13,7 @@ namespace AccessCodeLib.AccUnit.Interop
         IAssert Assert { get; }
         ITestRunner TestRunner(VBProject VBProject);
         ITestBuilder TestBuilder { get; }
-        IConfigurator Configurator { get; }
+        IConfigurator Configurator(VBProject VBProject = null);
         IVBATestSuite VBATestSuite { get; }
         IAccessTestSuite AccessTestSuite { get; }
         ICodeCoverageTracker CodeCoverageTracker(VBProject VBProject);
@@ -54,12 +54,9 @@ namespace AccessCodeLib.AccUnit.Interop
             }
         }
 
-        public IConfigurator Configurator
+        public IConfigurator Configurator(VBProject vbProject = null)
         {
-            get
-            {
-                return new Configurator();
-            }
+            return new Configurator(vbProject);
         }
 
         public IVBATestSuite VBATestSuite

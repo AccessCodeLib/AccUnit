@@ -14,5 +14,11 @@
     <Setting Name="TemplateFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)">%APPDATA%\AccessCodeLib\AccUnit\Templates</Value>
     </Setting>
+    <Setting Name="TestMethodTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="TestClassNameFormat" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>
