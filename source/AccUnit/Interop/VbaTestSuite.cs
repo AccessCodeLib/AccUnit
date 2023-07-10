@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using AccessCodeLib.AccUnit.Configuration;
 using AccessCodeLib.AccUnit.Interfaces;
 using Microsoft.Vbe.Interop;
 
@@ -25,6 +26,8 @@ namespace AccessCodeLib.AccUnit.Interop
         new IVBATestSuite Run();
         
         new void Dispose();
+
+        ITestClassGenerator TestClassGenerator { get; }
 
         #endregion
     }
@@ -76,6 +79,11 @@ namespace AccessCodeLib.AccUnit.Interop
         {
             base.Run();
             return this;
+        }
+
+        public ITestClassGenerator TestClassGenerator
+        {
+            get { return new TestClassGenerator(base.ActiveVBProject); }
         }
     }
 }
