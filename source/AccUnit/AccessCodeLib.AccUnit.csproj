@@ -118,7 +118,7 @@
     <Compile Include="Common\UITools.cs" />
     <Compile Include="Common\UserControls.Designer.cs" />
     <Compile Include="Configuration\AccUnitLoaderAddInCodeTemplates.cs" />
-    <Compile Include="Configuration\TestClassGenerator.cs" />
+    <Compile Include="Interop\TestClassGenerator.cs" />
     <Compile Include="Configuration\TestClassTemplate.cs" />
     <Compile Include="Configuration\UserSettings.cs" />
     <Compile Include="Integration\AccessRunException.cs" />

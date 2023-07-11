@@ -127,12 +127,14 @@
 	Actual = "actual value"
 	' Assert
 	Assert.That Actual, Iz.EqualTo(Expected)
-End Sub</value>
+End Sub
+</value>
   </data>
   <data name="DefaultTestsSectionHeader" xml:space="preserve">
     <value>'--------------------------------------------------------------------
 ' Tests
-'--------------------------------------------------------------------</value>
+'--------------------------------------------------------------------
+</value>
   </data>
   <data name="InsertTestTemplateInputboxPromptText" xml:space="preserve">
     <value>New class name:</value>
@@ -147,6 +149,8 @@ End Sub</value>
     <value>Option Compare Text
 Option Explicit
 
-'AccUnit:TestClass</value>
+'AccUnit:TestClass
+
+</value>
   </data>
 </root>

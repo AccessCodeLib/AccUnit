@@ -19,9 +19,6 @@ namespace AccessCodeLib.AccUnit.Configuration
         [ComVisible(true)]
         void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib, bool removeIfExists = false, VBProject VBProject = null);
         void RemoveAccUnitLoaderFactoryModule(VBProject VBProject = null);
-
-        ITestClassGenerator TestClassGenerator(object HostApplication);
-
     }
 
     [ComVisible(true)]
@@ -103,21 +100,14 @@ namespace AccessCodeLib.AccUnit.Configuration
             */
         }
 
-        public AccUnitVBAReferences References { get; private set; }
-
-        public ITestClassGenerator TestClassGenerator(object HostApplication)
-        {
-            var officeApplicationHelper = ComTools.GetTypeForComObject(HostApplication, "Access.Application") != null
-                                                ? new AccessApplicationHelper(HostApplication) : new OfficeApplicationHelper(HostApplication);
-            return new TestClassGenerator(officeApplicationHelper);
-        }
-
+        /*
         public static void CheckAccUnitVBAReferences(VBProject vbProject)
         {
             throw new NotImplementedException("TestSuite-Factory ist noch nicht fertig");
             // var references = new AccUnitVBAReferences();
             // references.EnsureReferencesExistIn(vbProject);
         }
+        */
 
         /*
         private TestSuiteCodeTemplates TestSuiteCodeTemplates { get; } = new TestSuiteCodeTemplates();

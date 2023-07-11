@@ -29,9 +29,9 @@ namespace AccessCodeLib.AccUnit.Interop
         
         new void Dispose();
 
-        ITestClassGenerator TestClassGenerator { get; }
-
         #endregion
+
+        ITestClassGenerator TestClassGenerator { get; }
     }
 
     [ComVisible(true)]
@@ -87,9 +87,11 @@ namespace AccessCodeLib.AccUnit.Interop
         {
             get
             {
+                /*
                 var officeApplicationHelper = ComTools.GetTypeForComObject(HostApplication, "Access.Application") != null
                                                 ? new AccessApplicationHelper(HostApplication) : new OfficeApplicationHelper(HostApplication);
-                return new TestClassGenerator(officeApplicationHelper);
+                */
+                return new TestClassGenerator(ActiveVBProject);
             }
         }
     }
