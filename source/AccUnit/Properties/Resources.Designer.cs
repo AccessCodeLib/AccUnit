@@ -82,8 +82,7 @@ namespace AccessCodeLib.AccUnit.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &apos;--------------------------------------------------------------------
         ///&apos; Tests
-        ///&apos;--------------------------------------------------------------------
-        ///.
+        ///&apos;--------------------------------------------------------------------.
         /// </summary>
         internal static string DefaultTestsSectionHeader {
             get {
@@ -123,6 +122,17 @@ namespace AccessCodeLib.AccUnit.Properties {
         ///Option Explicit
         ///
         ///&apos;AccUnit:TestClass
+        ///
+        ///&apos;--------------------------------------------------------------------
+        ///&apos; Test Preparation / Cleanup
+        ///&apos;--------------------------------------------------------------------
+        ///Public Sub Setup()
+        ///&apos; Runs before each test
+        ///End Sub
+        ///
+        ///Public Sub TearDown()
+        ///&apos; Runs after each test
+        ///End Sub
         ///
         ///.
         /// </summary>

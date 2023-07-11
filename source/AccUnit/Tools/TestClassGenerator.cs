@@ -19,28 +19,34 @@ namespace AccessCodeLib.AccUnit.Tools
         public CodeModule NewTestClass(string CodeModuleToTest = null, bool CreateNewNameIfTestClassExists = true, bool GenerateTestMethodsFromCodeModuleToTest = false, string stateUnderTest = null, string expectedBehaviour = null)
         {
             var testClassName = GenerateTestClassName(CodeModuleToTest, CreateNewNameIfTestClassExists);
-            string[] methodeNames = new string[] { };
+            IEnumerable<CodeModuleMember> methods = new TestCodeModuleMember[] { };
             
             if (GenerateTestMethodsFromCodeModuleToTest)
             {
-                methodeNames = GetMethodNamesFromCodeModule(CodeModuleToTest);
+                methods = GetTestCodeModuleMemberFromCodeModule(CodeModuleToTest);
             }
-            return InsertTestMethods(testClassName, methodeNames, stateUnderTest, expectedBehaviour);
+            return InsertTestMethods(testClassName, methods);
         }
 
-        private string[] GetMethodNamesFromCodeModule(string codeModuleToTest)
+        private IEnumerable<CodeModuleMember> GetTestCodeModuleMemberFromCodeModule(string codeModuleToTest, string stateUnderTest = null, string expectedBehaviour = null)
         {
             var codeModule = new CodeModuleContainer(_vbProject).TryGetCodeModule(codeModuleToTest);
             if (codeModule == null)
             {
-                return new string[] { };
+                return new TestCodeModuleMember[] { };
             }
 
             var codeModulueReader = new CodeModuleReader(codeModule);
             var members = codeModulueReader.Members;
-            var publicMembers = members.FindAll(true).Select(member => member.Name).ToArray();
+            var publicMembers = members.FindAll(true);
 
-            return publicMembers;
+            var testCodeModuleMembers = new List<CodeModuleMember>();
+            foreach (var member in publicMembers)
+            {
+                testCodeModuleMembers.Add(new TestCodeModuleMember(member, stateUnderTest, expectedBehaviour));
+            }
+
+            return testCodeModuleMembers;
         }
 
         protected bool CodeModuleExists(string testClass)
@@ -70,11 +76,29 @@ namespace AccessCodeLib.AccUnit.Tools
             return testClassName;
         }
 
+        public CodeModule InsertTestMethods(string testClass, IEnumerable<CodeModuleMember> testMethods)
+        {
+            var testCodeGenerator = new TestCodeGenerator();
+            testCodeGenerator.Add(testMethods);
+            
+            var modules = new CodeModuleContainer(_vbProject);
+            var testModule = modules.TryGetCodeModule(testClass);
+            var testModuleExists = testModule != null;
+            var sourcecode = testCodeGenerator.GenerateSourceCode(includeHeader: !testModuleExists);
+
+            if (testModuleExists)
+            {
+                testModule.InsertLines(testModule.CountOfLines + 1, sourcecode);
+                return testModule;
+            }
+            return modules.Generator.Add(vbext_ComponentType.vbext_ct_ClassModule, testClass, sourcecode, true);
+        }
+
         public CodeModule InsertTestMethods(string testClass, IEnumerable<string> methodsUnderTest, string stateUnderTest, string expectedBehaviour)
         {
             var testCodeGenerator = new TestCodeGenerator();
             testCodeGenerator.Add(methodsUnderTest, stateUnderTest, expectedBehaviour);
-            
+
             var modules = new CodeModuleContainer(_vbProject);
             var testModule = modules.TryGetCodeModule(testClass);
             var testModuleExists = testModule != null;

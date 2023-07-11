@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -23,7 +24,7 @@ namespace AccessCodeLib.AccUnit.Tools
             Add(CreateMembers(methodsUnderTest, stateUnderTest, expectedBehaviour));
         }
 
-        private void Add(IEnumerable<CodeModuleMember> codeModuleMembers)
+        public void Add(IEnumerable<CodeModuleMember> codeModuleMembers)
         {
             Add(codeModuleMembers.Select(member => (member is TestCodeModuleMember)
                                                        ? (TestCodeModuleMember) member
@@ -38,7 +39,6 @@ namespace AccessCodeLib.AccUnit.Tools
 
         private static IEnumerable<CodeModuleMember> CreateMembers(IEnumerable<string> methodsUnderTest, string stateUnderTest, string expectedBehaviour)
         {
-            //return methodsUnderTest.Select(name => new TestCodeModuleMemberInfo(name, stateUnderTest, expectedBehaviour)).Cast<CodeModuleMemberInfo>().ToList();
             var list = new List<CodeModuleMember>();
             foreach (var method in methodsUnderTest)
             {
@@ -88,19 +88,59 @@ namespace AccessCodeLib.AccUnit.Tools
             using (new BlockLogger(string.Format(TestMethodNameFormat, member.Name, member.StateUnderTest, member.ExpectedBehaviour)))
             {
                 var code = TestMethodTemplate;
+
+                if (string.IsNullOrEmpty(member.StateUnderTest))
+                    code = code.Replace("_" + StateUnderTestPlaceholder, StateUnderTestPlaceholder);
+                if (string.IsNullOrEmpty(member.ExpectedBehaviour))
+                    code = code.Replace("_" + ExpectedBehaviourPlaceholder, ExpectedBehaviourPlaceholder);
+
                 code = code.Replace(MethodUnderTestPlaceholder, member.Name);
                 code = code.Replace(StateUnderTestPlaceholder, member.StateUnderTest);
                 code = code.Replace(ExpectedBehaviourPlaceholder, member.ExpectedBehaviour);
-                code = code.Replace(ParamsPlaceholder, GetProcedureParameterString(member.Name, member.DeclarationString));
+
+                var parameters = GetProcedureParameterString(member.Name, member.DeclarationString);
+                code = code.Replace(ParamsPlaceholder, parameters);
+                if (parameters.Length > 2) // () is the shortest possible parameter string
+                {
+                    code = GetProcedureRowTestString(parameters) + Environment.NewLine + code;
+                }
+                
                 return code;
             }
+        }
+
+        private static string GetProcedureRowTestString(string parameters)
+        {
+            var paramString = parameters.Replace("ByRef ", "").Replace("ByVal ", "");
+
+            if (paramString.Contains(")"))
+                paramString = paramString.Substring(0, paramString.IndexOf(")"));
+
+            if (paramString.Contains("("))
+                paramString = paramString.Substring(1, paramString.Length-1);
+
+            var Params = paramString.Split(',');
+    
+            for (int i = 0; i < Params.Length; i++)
+            {
+                var param = Params[i];
+                if (param.Contains(" As "))
+                    param = param.Substring(0, param.IndexOf(" As "));
+                
+                Params[i] = param.Trim();
+            }
+            return @"'AccUnit.Row(" + string.Join(", ", Params) + ").Name = \"Example row - please replace the variables with values)\"";
         }
 
         private static string GetProcedureParameterString(string procedureName, string procDeclaration)
         {
             if (string.IsNullOrEmpty(procDeclaration))
-                return "()"; 
+                return "()";
 
+            var declarationCheckString = procDeclaration.Replace(" ", "");
+            if (declarationCheckString.Contains("()"))
+                return "()";
+           
             var parameters = procDeclaration.Substring(procDeclaration.IndexOf(procedureName) + procedureName.Length);
             parameters = ConvertReturnValueToExpected(parameters);
             parameters = ConvertReturnValueToExpectedWithParam(parameters);

@@ -133,8 +133,7 @@ End Sub
   <data name="DefaultTestsSectionHeader" xml:space="preserve">
     <value>'--------------------------------------------------------------------
 ' Tests
-'--------------------------------------------------------------------
-</value>
+'--------------------------------------------------------------------</value>
   </data>
   <data name="InsertTestTemplateInputboxPromptText" xml:space="preserve">
     <value>New class name:</value>
@@ -150,6 +149,17 @@ End Sub
 Option Explicit
 
 'AccUnit:TestClass
+
+'--------------------------------------------------------------------
+' Test Preparation / Cleanup
+'--------------------------------------------------------------------
+Public Sub Setup()
+' Runs before each test
+End Sub
+
+Public Sub TearDown()
+' Runs after each test
+End Sub
 
 </value>
   </data>
