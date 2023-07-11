@@ -94,7 +94,7 @@ namespace AccessCodeLib.AccUnit.Tools
                 if (string.IsNullOrEmpty(member.ExpectedBehaviour))
                     code = code.Replace("_" + ExpectedBehaviourPlaceholder, ExpectedBehaviourPlaceholder);
 
-                code = code.Replace(MethodUnderTestPlaceholder, member.Name);
+                code = code.Replace(MethodUnderTestPlaceholder, GetProcedureNameForTest(member));
                 code = code.Replace(StateUnderTestPlaceholder, member.StateUnderTest);
                 code = code.Replace(ExpectedBehaviourPlaceholder, member.ExpectedBehaviour);
 
@@ -109,9 +109,19 @@ namespace AccessCodeLib.AccUnit.Tools
             }
         }
 
+        private static string GetProcedureNameForTest(TestCodeModuleMember member)
+        {
+            // use Get, Let or Set prefix related to the member type
+            var suffix = member.ProcKind == Microsoft.Vbe.Interop.vbext_ProcKind.vbext_pk_Get ? "_Get" 
+                            : member.ProcKind == Microsoft.Vbe.Interop.vbext_ProcKind.vbext_pk_Let ? "_Let" 
+                            : member.ProcKind == Microsoft.Vbe.Interop.vbext_ProcKind.vbext_pk_Set ? "_Set" : "";
+       
+            return member.Name +suffix;
+        }
+
         private static string GetProcedureRowTestString(string parameters)
         {
-            var paramString = parameters.Replace("ByRef ", "").Replace("ByVal ", "");
+            var paramString = parameters.Replace("ByRef ", "").Replace("ByVal ", "").Replace("_" + Environment.NewLine, "");
 
             if (paramString.Contains(")"))
                 paramString = paramString.Substring(0, paramString.IndexOf(")"));
@@ -129,7 +139,7 @@ namespace AccessCodeLib.AccUnit.Tools
                 
                 Params[i] = param.Trim();
             }
-            return @"'AccUnit.Row(" + string.Join(", ", Params) + ").Name = \"Example row - please replace the variables with values)\"";
+            return @"'AccUnit.Row(" + string.Join(", ", Params) + ").Name = \"Example row - please replace the parameter names with values)\"";
         }
 
         private static string GetProcedureParameterString(string procedureName, string procDeclaration)
@@ -140,6 +150,30 @@ namespace AccessCodeLib.AccUnit.Tools
             var declarationCheckString = procDeclaration.Replace(" ", "");
             if (declarationCheckString.Contains("()"))
                 return "()";
+
+            procDeclaration = procDeclaration.Replace("Optional ", "");
+
+            //remove string between "=" and ("," or ")")
+            var equalSignIndex = procDeclaration.IndexOf("=");
+            while (equalSignIndex > 0)
+            {
+                var commaIndex = procDeclaration.IndexOf(",", equalSignIndex);
+
+                if (commaIndex > 0)
+                {
+                    procDeclaration = procDeclaration.Remove(equalSignIndex, commaIndex - equalSignIndex);
+                }
+                else
+                {
+                    var bracketIndex = procDeclaration.IndexOf(")", equalSignIndex);
+                    if (bracketIndex > 0)
+                    {
+                        procDeclaration = procDeclaration.Remove(equalSignIndex, bracketIndex - equalSignIndex);
+                    }
+                }
+                equalSignIndex = procDeclaration.IndexOf("=");
+            }
+            
            
             var parameters = procDeclaration.Substring(procDeclaration.IndexOf(procedureName) + procedureName.Length);
             parameters = ConvertReturnValueToExpected(parameters);

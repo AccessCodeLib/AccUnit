@@ -14,7 +14,7 @@ namespace AccessCodeLib.AccUnit.Configuration
         [ComVisible(false)]
         void Init(VBProject VBProject);
         [ComVisible(false)]
-        void Remove(VBProject VBProject = null, bool RemoveTestModules = false, bool ExportModulesBeforeRemoving = true);
+        void Remove(bool RemoveTestModules = false, bool ExportModulesBeforeRemoving = true, VBProject VBProject = null);
 
         [ComVisible(true)]
         void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib, bool removeIfExists = false, VBProject VBProject = null);
@@ -75,7 +75,7 @@ namespace AccessCodeLib.AccUnit.Configuration
             //TestSuiteCodeTemplates.EnsureModulesExistIn(_vbProject);
         }
 
-        public void Remove(VBProject vbProject = null, bool removeTestModules = false, bool exportModulesBeforeRemoving = true)
+        public void Remove(bool removeTestModules = false, bool exportModulesBeforeRemoving = true, VBProject vbProject = null)
         {
             throw new NotImplementedException("TestSuite-Factory ist noch nicht fertig");
             

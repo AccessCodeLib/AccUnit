@@ -16,14 +16,17 @@ namespace AccessCodeLib.AccUnit.Tools
             _vbProject = vbproject;
         }
 
-        public CodeModule NewTestClass(string CodeModuleToTest = null, bool CreateNewNameIfTestClassExists = true, bool GenerateTestMethodsFromCodeModuleToTest = false, string stateUnderTest = null, string expectedBehaviour = null)
+        public CodeModule NewTestClass(string CodeModuleToTest = null, 
+                                        bool CreateNewNameIfTestClassExists = true, 
+                                        bool GenerateTestMethodsFromCodeModuleToTest = false, 
+                                        string stateUnderTest = null, string expectedBehaviour = null)
         {
             var testClassName = GenerateTestClassName(CodeModuleToTest, CreateNewNameIfTestClassExists);
             IEnumerable<CodeModuleMember> methods = new TestCodeModuleMember[] { };
             
             if (GenerateTestMethodsFromCodeModuleToTest)
             {
-                methods = GetTestCodeModuleMemberFromCodeModule(CodeModuleToTest);
+                methods = GetTestCodeModuleMemberFromCodeModule(CodeModuleToTest, stateUnderTest, expectedBehaviour);
             }
             return InsertTestMethods(testClassName, methods);
         }
