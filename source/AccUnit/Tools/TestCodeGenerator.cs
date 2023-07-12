@@ -102,6 +102,10 @@ namespace AccessCodeLib.AccUnit.Tools
                 code = code.Replace(ParamsPlaceholder, parameters);
                 if (parameters.Length > 2) // () is the shortest possible parameter string
                 {
+                    // replace expected declareation in code
+                    code = code.Replace("   Const Expected As Variant = \"expected value\"", "");
+
+                    // insert row test code
                     code = GetProcedureRowTestString(parameters) + Environment.NewLine + code;
                 }
                 
@@ -119,15 +123,17 @@ namespace AccessCodeLib.AccUnit.Tools
             return member.Name +suffix;
         }
 
-        private static string GetProcedureRowTestString(string parameters)
+        public static string GetProcedureRowTestString(string parameters)
         {
-            var paramString = parameters.Replace("ByRef ", "").Replace("ByVal ", "").Replace("_" + Environment.NewLine, "");
+            var paramString = parameters.Replace("ByRef ", "").Replace("ByVal ", "").Replace("_" + Environment.NewLine, "")
+                    .Replace("()", "[]");
 
             if (paramString.Contains(")"))
                 paramString = paramString.Substring(0, paramString.IndexOf(")"));
 
             if (paramString.Contains("("))
                 paramString = paramString.Substring(1, paramString.Length-1);
+          
 
             var Params = paramString.Split(',');
     
@@ -139,7 +145,7 @@ namespace AccessCodeLib.AccUnit.Tools
                 
                 Params[i] = param.Trim();
             }
-            return @"'AccUnit.Row(" + string.Join(", ", Params) + ").Name = \"Example row - please replace the parameter names with values)\"";
+            return @"'AccUnit:Row(" + string.Join(", ", Params).Replace("[]", "()") + ").Name = \"Example row - please replace the parameter names with values)\"";
         }
 
         public static string GetProcedureParameterString(string procedureName, string procDeclaration)

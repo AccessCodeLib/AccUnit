@@ -57,5 +57,28 @@ namespace TestGeneratorTests
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void GetProcedureRowTestString_WithParamArray_ReturnWithArray()
+        {
+            const string parameters = "(ByVal s As String, ByRef x() As Variant, ByVal Expected As String)";
+            var expected = "'AccUnit.Row(s, x(), Expected).Name = \"Example row - please replace the parameter names with values)\"";
+
+            var actual = TestCodeGenerator.GetProcedureRowTestString(parameters);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GetProcedureRowTestString_WithParamArrayAndComment_ReturnWithArray()
+        {
+            const string parameters = "(ByVal s As String, ByRef x() As Variant, ByVal Expected As String) ' this is a commend";
+            var expected = "'AccUnit.Row(s, x(), Expected).Name = \"Example row - please replace the parameter names with values)\"";
+
+            var actual = TestCodeGenerator.GetProcedureRowTestString(parameters);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+
     }
 }
