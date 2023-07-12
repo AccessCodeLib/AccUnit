@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using AccessCodeLib.AccUnit.Configuration;
 using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.Common.VBIDETools.Integration;
+using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit.Interop
@@ -27,6 +30,8 @@ namespace AccessCodeLib.AccUnit.Interop
         new void Dispose();
 
         #endregion
+
+        ITestClassGenerator TestClassGenerator { get; }
     }
 
     [ComVisible(true)]
@@ -76,6 +81,18 @@ namespace AccessCodeLib.AccUnit.Interop
         {
             base.Run();
             return this;
+        }
+
+        public ITestClassGenerator TestClassGenerator
+        {
+            get
+            {
+                /*
+                var officeApplicationHelper = ComTools.GetTypeForComObject(HostApplication, "Access.Application") != null
+                                                ? new AccessApplicationHelper(HostApplication) : new OfficeApplicationHelper(HostApplication);
+                */
+                return new TestClassGenerator(ActiveVBProject);
+            }
         }
     }
 }

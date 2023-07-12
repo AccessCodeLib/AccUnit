@@ -238,16 +238,10 @@ namespace AccessCodeLib.AccUnit
 
         public void ImportTestComponents(IEnumerable<CodeModuleInfo> list)
         {
-            EnsureReferencesExistInVbProject();
             foreach (var m in list)
             {
                 ImportTestComponent(new FileInfo(m.FileName), m.ComponentType);
             }
-        }
-
-        private void EnsureReferencesExistInVbProject()
-        {
-            Configurator.CheckAccUnitVBAReferences(ActiveVBProject);
         }
 
         private void ImportTestComponent(FileInfo importFile, vbext_ComponentType type)
@@ -406,7 +400,6 @@ namespace AccessCodeLib.AccUnit
 
         public CodeModule InsertTestTemplate(CodeTemplate template, string templateName)
         {
-            EnsureReferencesExistInVbProject();
             return template.AddToVBProject(ActiveVBProject, templateName);
         }
 

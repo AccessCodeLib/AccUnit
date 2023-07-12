@@ -81,6 +81,7 @@
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
@@ -117,6 +118,9 @@
     <Compile Include="Common\UITools.cs" />
     <Compile Include="Common\UserControls.Designer.cs" />
     <Compile Include="Configuration\AccUnitLoaderAddInCodeTemplates.cs" />
+    <Compile Include="Interop\TestClassGenerator.cs" />
+    <Compile Include="Configuration\TestClassTemplate.cs" />
+    <Compile Include="Configuration\UserSettings.cs" />
     <Compile Include="Integration\AccessRunException.cs" />
     <Compile Include="CodeCoverage\CodeCoverageTracker.cs" />
     <Compile Include="Interop\CodeCoverageTracker.cs" />
@@ -206,6 +210,14 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="TestRunner\VbaTestRunner.cs" />
+    <Compile Include="Tools\ITestClassGenerator.cs" />
+    <Compile Include="Tools\Templates\BuiltInTemplateSources.cs" />
+    <Compile Include="Tools\Templates\TestTemplateCollection.cs" />
+    <Compile Include="Tools\Templates\TestTemplateSources.cs" />
+    <Compile Include="Tools\TestClassGenerator.cs" />
+    <Compile Include="Tools\TestCodeGenerator.cs" />
+    <Compile Include="Tools\TestCodeModuleMember.cs" />
+    <Compile Include="Tools\UserSettings.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

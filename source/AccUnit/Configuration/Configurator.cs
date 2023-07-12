@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using AccessCodeLib.Common.Tools.Logging;
+using AccessCodeLib.Common.VBIDETools.Integration;
+using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit.Configuration
@@ -12,12 +14,11 @@ namespace AccessCodeLib.AccUnit.Configuration
         [ComVisible(false)]
         void Init(VBProject VBProject);
         [ComVisible(false)]
-        void Remove(VBProject VBProject = null, bool RemoveTestModules = false, bool ExportModulesBeforeRemoving = true);
+        void Remove(bool RemoveTestModules = false, bool ExportModulesBeforeRemoving = true, VBProject VBProject = null);
 
         [ComVisible(true)]
-        void InsertAccUnitLoaderFactoryModule(VBProject VBProject, bool UseAccUnitTypeLib, bool removeIfExists = false);
-        void RemoveAccUnitLoaderFactoryModule(VBProject VBProject);
-
+        void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib, bool removeIfExists = false, VBProject VBProject = null);
+        void RemoveAccUnitLoaderFactoryModule(VBProject VBProject = null);
     }
 
     [ComVisible(true)]
@@ -26,18 +27,18 @@ namespace AccessCodeLib.AccUnit.Configuration
     [ProgId("AccUnit.Configurator")]
     public class Configurator : IConfigurator, IDisposable
     {
+        private VBProject _vbProject;
+
         public Configurator()
         {
-            //References = new AccUnitVBAReferences();
         }
 
         public Configurator(VBProject vbproject)
         {
-            //References = new AccUnitVBAReferences();
             _vbProject = vbproject;
         }
 
-        public void InsertAccUnitLoaderFactoryModule(VBProject vbProject = null, bool UseAccUnitTypeLib = false, bool removeIfExists = false)
+        public void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib = false, bool removeIfExists = false, VBProject vbProject = null)
         {
             if (vbProject != null)
             {
@@ -74,7 +75,7 @@ namespace AccessCodeLib.AccUnit.Configuration
             //TestSuiteCodeTemplates.EnsureModulesExistIn(_vbProject);
         }
 
-        public void Remove(VBProject vbProject = null, bool removeTestModules = false, bool exportModulesBeforeRemoving = true)
+        public void Remove(bool removeTestModules = false, bool exportModulesBeforeRemoving = true, VBProject vbProject = null)
         {
             throw new NotImplementedException("TestSuite-Factory ist noch nicht fertig");
             
@@ -99,15 +100,14 @@ namespace AccessCodeLib.AccUnit.Configuration
             */
         }
 
-
-        public AccUnitVBAReferences References { get; private set; }
-
+        /*
         public static void CheckAccUnitVBAReferences(VBProject vbProject)
         {
             throw new NotImplementedException("TestSuite-Factory ist noch nicht fertig");
             // var references = new AccUnitVBAReferences();
             // references.EnsureReferencesExistIn(vbProject);
         }
+        */
 
         /*
         private TestSuiteCodeTemplates TestSuiteCodeTemplates { get; } = new TestSuiteCodeTemplates();
@@ -125,8 +125,7 @@ namespace AccessCodeLib.AccUnit.Configuration
         public event DisposeEventHandler Disposed;
 
         bool _disposed;
-        private VBProject _vbProject;
-
+        
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)

@@ -127,40 +127,32 @@
 	Actual = "actual value"
 	' Assert
 	Assert.That Actual, Iz.EqualTo(Expected)
-End Sub
-</value>
-  </data>
-  <data name="DefaultTestsSectionHeader" xml:space="preserve">
-    <value>'--------------------------------------------------------------------
-' Tests
-'--------------------------------------------------------------------</value>
-  </data>
-  <data name="InsertTestTemplateInputboxPromptText" xml:space="preserve">
-    <value>New class name:</value>
-  </data>
-  <data name="InsertTestTemplateInputboxTitle" xml:space="preserve">
-    <value>New Test</value>
-  </data>
-  <data name="MissingTestMessageBoxResult" xml:space="preserve">
-    <value>There are no (more) VbMsgBoxResults  available.</value>
+End Sub</value>
+    <comment>proc lines starting with {tab}!</comment>
   </data>
   <data name="TestClassCommonHeader" xml:space="preserve">
     <value>Option Compare Text
 Option Explicit
 
 'AccUnit:TestClass
-
+</value>
+  </data>
+  <data name="ImplementingInterfaces" xml:space="preserve">
+    <value>
+' AccUnit infrastructure for advanced AccUnit features. Do not remove these lines.
+Implements SimplyVBUnit.ITestFixture
+Implements AccUnit_Integration.ITestManagerBridge
+Private TestManager As AccUnit_Integration.TestManager
+Private Sub ITestManagerBridge_InitTestManager(ByVal NewTestManager As AccUnit_Integration.ITestManagerComInterface) : Set TestManager = NewTestManager : End Sub
+Private Function ITestManagerBridge_GetTestManager() As AccUnit_Integration.ITestManagerComInterface: Set ITestManagerBridge_GetTestManager = TestManager: End Function
+Private Sub ITestFixture_AddTestCases(ByVal Tests As SimplyVBUnit.TestCaseCollector) : TestManager.AddTestCases Tests : End Sub
+</value>
+  </data>
+  <data name="DefaultTestsSectionHeader" xml:space="preserve">
+    <value>
 '--------------------------------------------------------------------
-' Test Preparation / Cleanup
+' Tests
 '--------------------------------------------------------------------
-Public Sub Setup()
-' Runs before each test
-End Sub
-
-Public Sub TearDown()
-' Runs after each test
-End Sub
-
 </value>
   </data>
 </root>

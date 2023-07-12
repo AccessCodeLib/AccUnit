@@ -90,7 +90,8 @@ namespace AccessCodeLib.Common.VBIDETools
                             isPublic = tempProcLine.Substring(0, 7).Equals("Friend ", System.StringComparison.InvariantCultureIgnoreCase);
                     }
                     
-                    _members.Add(new CodeModuleMember(tempProcName, tempProcKind, isPublic));
+                    var tempProcDeclaration = GetProcedureDeclaration(tempProcName, tempProcKind);
+                    _members.Add(new CodeModuleMember(tempProcName, tempProcKind, isPublic, tempProcDeclaration));
                     currentLine = _codeModule.ProcStartLine[tempProcName, tempProcKind] + _codeModule.ProcCountLines[tempProcName, tempProcKind];
                 }
                 currentLine++;

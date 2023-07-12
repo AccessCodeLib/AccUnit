@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AccessCodeLib.AccUnit.Tools.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TemplateFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%APPDATA%\AccessCodeLib\AccUnit\Templates</Value>
+    </Setting>
+    <Setting Name="TestMethodTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>
