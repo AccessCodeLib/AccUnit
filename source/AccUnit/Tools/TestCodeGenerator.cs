@@ -176,25 +176,12 @@ namespace AccessCodeLib.AccUnit.Tools
                 }
                 equalSignIndex = procDeclaration.IndexOf("=");
             }
-            
            
             var parameters = procDeclaration.Substring(procDeclaration.IndexOf(procedureName) + procedureName.Length);
             parameters = ConvertReturnValueToExpectedWithParam(parameters);
             return parameters;
         }
 
-        private static readonly Regex ConvertReturnValueToExpectedRegex = new Regex(@"\(\) As ([^\s]*)", RegexOptions.CultureInvariant | RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase);
-        private static string ConvertReturnValueToExpected(string parameters)
-        {
-            // Anzahl der offenen Klammern in parameters zählen
-            if (parameters.Count(c => c == '(') > 1)
-                return parameters;
-
-            return ConvertReturnValueToExpectedRegex.Replace(parameters,
-                                                               m =>
-                                                               string.Format("(ByVal Expected As {0})", m.Groups[1].Value));
-        }
-        // As ([^\s()]+)(?:\s*'.*)?$
         private static readonly Regex ConvertReturnValueToExpectedWithParamRegex = new Regex(@"\) As ([^\s]*)", RegexOptions.CultureInvariant | RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase);
         public static string ConvertReturnValueToExpectedWithParam(string parameters)
         {
