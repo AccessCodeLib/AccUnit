@@ -142,16 +142,16 @@ namespace AccessCodeLib.AccUnit.Tools
             return @"'AccUnit.Row(" + string.Join(", ", Params) + ").Name = \"Example row - please replace the parameter names with values)\"";
         }
 
-        private static string GetProcedureParameterString(string procedureName, string procDeclaration)
+        public static string GetProcedureParameterString(string procedureName, string procDeclaration)
         {
             if (string.IsNullOrEmpty(procDeclaration))
                 return "()";
 
             var declarationCheckString = procDeclaration.Replace(" ", "");
-            if (declarationCheckString.Contains("()"))
+            if (declarationCheckString.Contains("()") && (declarationCheckString.Count(c => c == '(') == 1))
                 return "()";
 
-            procDeclaration = procDeclaration.Replace("Optional ", "");
+            procDeclaration = procDeclaration.Replace("Optional ", "").Replace("ParamArray", "ByRef");
 
             //remove string between "=" and ("," or ")")
             var equalSignIndex = procDeclaration.IndexOf("=");
@@ -165,36 +165,31 @@ namespace AccessCodeLib.AccUnit.Tools
                 }
                 else
                 {
+                    // issue #7-2: Public Function Xyz(Byval X as long, ParamArray P() As Variant) as String
+                    procDeclaration = procDeclaration.Replace("()", "[]");
                     var bracketIndex = procDeclaration.IndexOf(")", equalSignIndex);
                     if (bracketIndex > 0)
                     {
                         procDeclaration = procDeclaration.Remove(equalSignIndex, bracketIndex - equalSignIndex);
                     }
+                    procDeclaration = procDeclaration.Replace("[]", "()");
                 }
                 equalSignIndex = procDeclaration.IndexOf("=");
             }
-            
            
             var parameters = procDeclaration.Substring(procDeclaration.IndexOf(procedureName) + procedureName.Length);
-            parameters = ConvertReturnValueToExpected(parameters);
             parameters = ConvertReturnValueToExpectedWithParam(parameters);
             return parameters;
         }
 
-        private static readonly Regex ConvertReturnValueToExpectedRegex = new Regex(@"\(\) As ([^\s]*)", RegexOptions.CultureInvariant | RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase);
-        private static string ConvertReturnValueToExpected(string parameters)
-        {
-            return ConvertReturnValueToExpectedRegex.Replace(parameters,
-                                                               m =>
-                                                               string.Format("(ByVal Expected As {0})", m.Groups[1].Value));
-        }
-
         private static readonly Regex ConvertReturnValueToExpectedWithParamRegex = new Regex(@"\) As ([^\s]*)", RegexOptions.CultureInvariant | RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase);
-        private static string ConvertReturnValueToExpectedWithParam(string parameters)
+        public static string ConvertReturnValueToExpectedWithParam(string parameters)
         {
-            return ConvertReturnValueToExpectedWithParamRegex.Replace(parameters,
+            parameters = parameters.Replace("()", "[]");
+            parameters = ConvertReturnValueToExpectedWithParamRegex.Replace(parameters,
                                                                m =>
                                                                string.Format(", ByVal Expected As {0})", m.Groups[1].Value));
+            return parameters.Replace("[]", "()");
         }
 
         internal static string TestClassHeader { get { return TestTemplateSources.TestClassHeader; } }
