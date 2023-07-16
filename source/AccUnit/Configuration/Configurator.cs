@@ -123,7 +123,7 @@ namespace AccessCodeLib.AccUnit.Configuration
             OfficeApplicationHelper officeApplicationHelper = new VbeOnlyApplicatonHelper(_vbProject.VBE);
             using (var testClassManager = new TestClassManager(officeApplicationHelper))
             {
-                testClassManager.ImportTestComponents(FileNameFilter, importPath);
+                testClassManager.ImportTestComponents(FileNameFilter, importPath, true);
             }
         }
 

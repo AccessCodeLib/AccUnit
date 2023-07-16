@@ -241,7 +241,7 @@ namespace AccessCodeLib.AccUnit
             return path;
         }
 
-        public void ImportTestComponents(string fileNameFilter = null, string importPath = null)
+        public void ImportTestComponents(string fileNameFilter = null, string importPath = null, bool overwriteExistingComponent = false)
         {
             var importDirectory = (importPath ?? ImportDirectory);
             if (fileNameFilter == null)
@@ -250,23 +250,49 @@ namespace AccessCodeLib.AccUnit
             }
             var importComponents = GetTestModulesFromDirectory(importDirectory, fileNameFilter);
 
-            ImportTestComponents(importComponents);
+            ImportTestComponents(importComponents, overwriteExistingComponent);
         }
 
-        public void ImportTestComponents(IEnumerable<CodeModuleInfo> list)
+        public void ImportTestComponents(IEnumerable<CodeModuleInfo> list, bool overwriteExistingComponent = false)
         {
             foreach (var m in list)
             {
+                if (overwriteExistingComponent)
+                {
+                    RemoveComponentIfExists(m);
+                }
                 ImportTestComponent(new FileInfo(m.FileName), m.ComponentType);
             }
         }
+
+        private void RemoveComponentIfExists(CodeModuleInfo codeModuleInfo)
+        {
+            if (codeModuleInfo.ComponentType == vbext_ComponentType.vbext_ct_Document)
+            {
+                try
+                {
+                    RemoveOfficeDocument(codeModuleInfo.Name, false, null);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }   
+            }
+            else
+            {
+                CodeModuleManager.Remove(codeModuleInfo.Name);
+            }
+        }
+
 
         private void ImportTestComponent(FileInfo importFile, vbext_ComponentType type)
         {
             if (type == vbext_ComponentType.vbext_ct_Document)
                 ImportOfficeObject(importFile);
             else
+            {
                 CodeModuleManager.Generator.Add(importFile);
+            }   
         }
 
         private void ImportOfficeObject(FileSystemInfo importFile)
