@@ -13,12 +13,13 @@ namespace AccessCodeLib.AccUnit.Configuration
     {
         [ComVisible(false)]
         void Init(VBProject VBProject);
-        [ComVisible(false)]
-        void Remove(bool RemoveTestModules = false, bool ExportModulesBeforeRemoving = true, VBProject VBProject = null);
 
         [ComVisible(true)]
+        void RemoveTestEnvironment(bool RemoveTestModules = false, bool ExportModulesBeforeRemoving = true, VBProject VBProject = null);
         void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib, bool removeIfExists = false, VBProject VBProject = null);
         void RemoveAccUnitLoaderFactoryModule(VBProject VBProject = null);
+        void ExportTestClasses(string ExportPath = null, VBProject VBProject = null);
+        void ImportTestClasses(string FileNameFilter = null, string ImportPath = null, VBProject VBProject = null);
     }
 
     [ComVisible(true)]
@@ -75,15 +76,10 @@ namespace AccessCodeLib.AccUnit.Configuration
             //TestSuiteCodeTemplates.EnsureModulesExistIn(_vbProject);
         }
 
-        public void Remove(bool removeTestModules = false, bool exportModulesBeforeRemoving = true, VBProject vbProject = null)
+        public void RemoveTestEnvironment(bool removeTestModules = false, bool exportModulesBeforeRemoving = true, VBProject vbProject = null)
         {
-            throw new NotImplementedException("TestSuite-Factory ist noch nicht fertig");
-            
-            /*
             if (vbProject != null)
                 _vbProject = vbProject;
-            
-           
             
             if (removeTestModules)
             {
@@ -94,10 +90,41 @@ namespace AccessCodeLib.AccUnit.Configuration
                 }
             }
 
-            DeleteFactoryCodeModule();
-            TestSuiteCodeTemplates.RemoveFromVBProject(_vbProject);
-            References.RemoveReferencesFrom(_vbProject);
-            */
+            RemoveAccUnitLoaderFactoryModule();
+            RemoveAccUnitTlbReference();
+        }
+
+        private void RemoveAccUnitTlbReference()
+        {
+            foreach (Reference reference in _vbProject.References)
+            {
+                if (reference.Name == "AccUnit")
+                {
+                    _vbProject.References.Remove(reference);
+                    break;
+                }
+            }
+        }
+
+        public void ExportTestClasses(string exportPath = null, VBProject vbProject = null)
+        {
+            if (vbProject != null)
+                _vbProject = vbProject;
+
+            OfficeApplicationHelper officeApplicationHelper = new VbeOnlyApplicatonHelper(_vbProject.VBE);
+            using (var testClassManager = new TestClassManager(officeApplicationHelper))
+            {
+                testClassManager.ExportTestClasses(exportPath);
+            }
+        }
+
+        public void ImportTestClasses(string FileNameFilter = null, string importPath = null, VBProject VBProject = null)
+        {
+            OfficeApplicationHelper officeApplicationHelper = new VbeOnlyApplicatonHelper(_vbProject.VBE);
+            using (var testClassManager = new TestClassManager(officeApplicationHelper))
+            {
+                testClassManager.ImportTestComponents(FileNameFilter, importPath, true);
+            }
         }
 
         /*
