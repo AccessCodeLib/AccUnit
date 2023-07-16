@@ -74,11 +74,12 @@ namespace AccessCodeLib.AccUnit
             var components = (new TestClassReader(ActiveVBProject)).GetTestComponents();
             RemoveTestComponents(components, export);
 
-            if (!removeTestEnvironment) return;
-
-            using (var configurator = new Configurator(ActiveVBProject))
+            if (removeTestEnvironment)
             {
-                configurator.Remove();
+                using (var configurator = new Configurator(ActiveVBProject))
+                {
+                    configurator.RemoveTestEnvironment();
+                }
             }
         }
 
@@ -150,9 +151,13 @@ namespace AccessCodeLib.AccUnit
             }
         }
 
-        public void ExportTestClasses()
+        public void ExportTestClasses(string exportDirectory = null)
         {
-            var exportDirectory = ExportDirectory;
+            if (exportDirectory == null)
+            {
+                exportDirectory = ExportDirectory;
+            }
+
             var classNames = (new TestClassReader(ActiveVBProject)).GetTestClasses();
             foreach (var testClassInfo in classNames)
             {
@@ -160,7 +165,7 @@ namespace AccessCodeLib.AccUnit
             }
         }
 
-        private void DeleteFactoryCodeModule()
+        public void DeleteFactoryCodeModule()
         {
             var factory = new TestClassFactoryManager(ActiveVBProject, new TestClassReader(ActiveVBProject));
             factory.DeleteFactoryCodeModule();
@@ -236,6 +241,18 @@ namespace AccessCodeLib.AccUnit
             return path;
         }
 
+        public void ImportTestComponents(string fileNameFilter = null, string importPath = null)
+        {
+            var importDirectory = (importPath ?? ImportDirectory);
+            if (fileNameFilter == null)
+            {
+                fileNameFilter = "*";
+            }
+            var importComponents = GetTestModulesFromDirectory(importDirectory, fileNameFilter);
+
+            ImportTestComponents(importComponents);
+        }
+
         public void ImportTestComponents(IEnumerable<CodeModuleInfo> list)
         {
             foreach (var m in list)
@@ -264,19 +281,19 @@ namespace AccessCodeLib.AccUnit
             accessApplication.LoadFromText(objectInfo.ObjectType, objectInfo.Name, importFile.FullName);
         }
 
-        private IEnumerable<FileInfo> GetTestFilesFromDirectory(string path = null)
+        private IEnumerable<FileInfo> GetTestFilesFromDirectory(string path = null, string fileNameSeachPattern = "*")
         {
             if (path == null)
                 path = ImportDirectory;
-            return TestClassReader.GetTestFilesFromDirectory(path);
+            return TestClassReader.GetTestFilesFromDirectory(path, fileNameSeachPattern);
         }
 
-        public IEnumerable<CodeModuleInfo> GetTestModulesFromDirectory(string path = null)
+        public IEnumerable<CodeModuleInfo> GetTestModulesFromDirectory(string path = null, string fileNameSeachPattern = "*")
         {
             if (path == null)
                 path = ImportDirectory;
 
-            return from FileInfo file in GetTestFilesFromDirectory(path)
+            return from FileInfo file in GetTestFilesFromDirectory(path, fileNameSeachPattern)
                    select CreateCodeModuleInfo(file);
         }
 

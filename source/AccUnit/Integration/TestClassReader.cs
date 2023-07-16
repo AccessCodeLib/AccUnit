@@ -150,13 +150,13 @@ namespace AccessCodeLib.AccUnit
             return !string.IsNullOrEmpty(checkString) && regex.IsMatch(checkString);
         }
 
-        public static List<System.IO.FileInfo> GetTestFilesFromDirectory(string path)
+        public static List<System.IO.FileInfo> GetTestFilesFromDirectory(string path, string fileNameSeachPattern = "*")
         {
             var di = new System.IO.DirectoryInfo(path);
-            var list = di.GetFiles("*.cls").ToList();
-            list.AddRange(di.GetFiles("*.bas").ToList());
-            list.AddRange(di.GetFiles("*.acf").ToList());
-            list.AddRange(di.GetFiles("*.acr").ToList());
+            var list = di.GetFiles(fileNameSeachPattern + ".cls").ToList();
+            list.AddRange(di.GetFiles(fileNameSeachPattern + ".bas").ToList());
+            list.AddRange(di.GetFiles(fileNameSeachPattern + ".acf").ToList());
+            list.AddRange(di.GetFiles(fileNameSeachPattern + ".acr").ToList());
             return list;
         }
 
