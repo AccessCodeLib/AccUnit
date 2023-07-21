@@ -98,8 +98,8 @@ namespace AccessCodeLib.AccUnit.Assertions
 
         public void Throws(int ErrorNumber, string InfoText = null)
         {
-            
             AssertThrowsStore.ExpectedErrorNumber = ErrorNumber;
+            AssertThrowsStore.InfoText = InfoText;
         }
 
         protected virtual void Fail(IMatchResult result)
@@ -119,10 +119,7 @@ namespace AccessCodeLib.AccUnit.Assertions
 
         protected virtual void AddResultToMatchResultCollector(IMatchResult result, string infoText)
         {
-            if (MatchResultCollector != null)
-            {
-                MatchResultCollector.Add(result, infoText);
-            }
+            MatchResultCollector?.Add(result, infoText);
         }
 
         #region IDisposable Support

@@ -42,11 +42,6 @@ namespace AccessCodeLib.AccUnit.Assertions
             return this;
         }
 
-        private static bool IsArray(object objectToCheck)
-        {
-            return objectToCheck != null && objectToCheck.GetType().IsArray;
-        }
-
         private void AddComparerConstraint(string compareText, object expected, int expectedComparerResult)
         {
             if (expected is Array expectedArray)
@@ -76,8 +71,6 @@ namespace AccessCodeLib.AccUnit.Assertions
 
         private void AddArrayComparerConstraint(string compareText, Array expected, int expectedComparerResult)
         {
-            //var newConstraint = new ArrayConstraint(compareText, expected, expectedComparerResult);
-            
             Type T = expected.GetType().GetElementType();
             Type myType = typeof(ArrayConstraint<>).MakeGenericType(T);
             var newConstraint = Activator.CreateInstance(myType, compareText, expected, expectedComparerResult);

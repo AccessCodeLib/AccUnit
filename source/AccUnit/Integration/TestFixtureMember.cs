@@ -65,10 +65,10 @@ namespace AccessCodeLib.AccUnit
         public TestFixtureMember (string name)
         {
             Name = name;
-            setType();
+            SetType();
         }
 
-        private void setType()
+        private void SetType()
         {
             if (Name.Equals("FixtureSetup", System.StringComparison.InvariantCultureIgnoreCase))
             {

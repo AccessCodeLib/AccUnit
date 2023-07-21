@@ -15,20 +15,20 @@ namespace AccessCodeLib.AccUnit.Assertions
             InfoText = infoText;
         }
 
-        public string FormattedText { get { return formatResultText(Text, Actual, Expected, InfoText); } }
+        public string FormattedText { get { return FormatResultText(Text, Actual, Expected, InfoText); } }
 
-        protected static string formatResultText(string text, object actual, object expected, string infoText = null)
+        protected static string FormatResultText(string text, object actual, object expected, string infoText = null)
         {
             if (text == null)
             {
                 return infoText;
             }
             
-            var compareText = "Expected: " + convertToString(expected) + " but was: " + convertToString(actual);
+            var compareText = "Expected: " + ConvertToString(expected) + " but was: " + ConvertToString(actual);
             return $"{text} ({compareText})" + (infoText == null ? "" : $", {infoText}");
         }
 
-        protected static string convertToString(object value)
+        protected static string ConvertToString(object value)
         {
             if (value == null)
                 return "Nothing";

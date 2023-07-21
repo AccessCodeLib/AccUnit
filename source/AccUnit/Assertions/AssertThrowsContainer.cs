@@ -1,10 +1,6 @@
 ﻿using AccessCodeLib.AccUnit.Integration;
-using AccessCodeLib.AccUnit.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace AccessCodeLib.AccUnit.Assertions
 {
@@ -33,6 +29,8 @@ namespace AccessCodeLib.AccUnit.Assertions
         }
 
         private static int ErrorNumber { get; set; }
+
+        public static string InfoText { get; set; }
 
         internal static bool CompaireTestRunnerException(Exception ex, TestResult testResult)
         {
@@ -88,6 +86,7 @@ namespace AccessCodeLib.AccUnit.Assertions
         public static void Clear()
         {
             ExpectedErrorNumber = 0;
+            InfoText = null;
         }
     }
 }

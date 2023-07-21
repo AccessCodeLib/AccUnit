@@ -161,77 +161,89 @@ namespace AccessCodeLib.AccUnit.TestRunner
                     return testResult;
                 }
 
-                if (testFixture.HasSetup)
-                {
-                    invocationHelper.InvokeMethod(testFixture.Members.Setup.Name);
-                }
-                
-                try
-                {
-                    if (test is IParamTest paramTest)
-                    {
-                        var testParams = paramTest.Parameters.ToArray();
-                        invocationHelper.InvokeMethod(test.MethodName, testParams);
-                    }
-                    else
-                    {
-                        invocationHelper.InvokeMethod(test.MethodName);
-                    }
-                    testResult.IsSuccess = true;
-                }
-                catch (Exception ex)
-                {
-                    Exception messageException;
-                    bool IsInvocationException = false;
-                    if (ex is System.Reflection.TargetInvocationException)
-                    {
-                        messageException = ex.InnerException ?? ex;
-                        IsInvocationException = true;
-                    } 
-                    else
-                    {
-                        messageException = ex;
-                    }
-
-                    if (!AssertThrowsStore.CompaireTestRunnerException(messageException, testResult))
-                    {
-                        if (messageException is AssertionException assertionException)
-                        {
-                            testResult.IsFailure = true;
-                            testResult.Message = assertionException.Message;
-                        }
-                        else
-                        {
-                            // über Invoke kommt AssertionException anscheinend nicht durch
-
-                            if (IsInvocationException && messageException.GetType() == typeof(Exception))
-                            {
-                                testResult.IsFailure = true;
-                            }
-                            else
-                            {
-                                testResult.IsError = true;
-                            }
-                            testResult.Message += messageException.Message;
-                        }
-                        testResult.IsSuccess = false;
-                    }
-                }
-                finally
-                {
-                    testResult.Executed = true;
-                }
-
+                RunTestSetup(testFixture, invocationHelper);
+                RunTest(test, testResult, invocationHelper);
                 AssertThrowsStore.CompaireTestRunnerException(null, testResult);
-                
-                if (testFixture.HasTeardown)
-                {
-                    invocationHelper.InvokeMethod(testFixture.Members.Teardown.Name);
-                }
+                RunTeardown(testFixture, invocationHelper);
             }
 
             RaiseTestFinished(testResult);
             return testResult;
+        }
+
+        private static void RunTestSetup(ITestFixture testFixture, InvocationHelper invocationHelper)
+        {
+            if (testFixture.HasSetup)
+            {
+                invocationHelper.InvokeMethod(testFixture.Members.Setup.Name);
+            }
+        }
+
+        private static void RunTest(ITest test, TestResult testResult, InvocationHelper invocationHelper)
+        {
+            try
+            {
+                if (test is IParamTest paramTest)
+                {
+                    var testParams = paramTest.Parameters.ToArray();
+                    invocationHelper.InvokeMethod(test.MethodName, testParams);
+                }
+                else
+                {
+                    invocationHelper.InvokeMethod(test.MethodName);
+                }
+                testResult.IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                Exception messageException;
+                bool IsInvocationException = false;
+                if (ex is System.Reflection.TargetInvocationException)
+                {
+                    messageException = ex.InnerException ?? ex;
+                    IsInvocationException = true;
+                }
+                else
+                {
+                    messageException = ex;
+                }
+
+                if (!AssertThrowsStore.CompaireTestRunnerException(messageException, testResult))
+                {
+                    if (messageException is AssertionException assertionException)
+                    {
+                        testResult.IsFailure = true;
+                        testResult.Message = assertionException.Message;
+                    }
+                    else
+                    {
+                        // AssertionException does not seem to get through via Invoke
+
+                        if (IsInvocationException && messageException.GetType() == typeof(Exception))
+                        {
+                            testResult.IsFailure = true;
+                        }
+                        else
+                        {
+                            testResult.IsError = true;
+                        }
+                        testResult.Message += messageException.Message;
+                    }
+                    testResult.IsSuccess = false;
+                }
+            }
+            finally
+            {
+                testResult.Executed = true;
+            }
+        }
+
+        private static void RunTeardown(ITestFixture testFixture, InvocationHelper invocationHelper)
+        {
+            if (testFixture.HasTeardown)
+            {
+                invocationHelper.InvokeMethod(testFixture.Members.Teardown.Name);
+            }
         }
 
         void RaiseTestStarted(ITest test, IgnoreInfo ignoreInfo, TagList tags)
