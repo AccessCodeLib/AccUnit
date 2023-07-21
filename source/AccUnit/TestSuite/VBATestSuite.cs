@@ -302,58 +302,37 @@ namespace AccessCodeLib.AccUnit
 
         private void RaiseTestSuiteStarted(ITestSuite testSuite, TagList tags)
         {
-            if (TestSuiteStarted != null)
-            {
-                TestSuiteStarted(testSuite, tags);
-            }
+            TestSuiteStarted?.Invoke(testSuite, tags);
         }
 
         private void RaiseTestSuiteFinished(ITestResult result)
         {
-            if (TestSuiteFinished != null)
-            {
-                TestSuiteFinished(result);
-            }
+            TestSuiteFinished?.Invoke(result);
         }
 
         private void RaiseTestFixtureFinished(ITestResult result)
         {
-            if (TestFixtureFinished != null)
-            {
-                TestFixtureFinished(result);
-            }
+            TestFixtureFinished?.Invoke(result);
         }
 
         private void RaiseTestFixtureStarted(ITestFixture fixture)
         {
-            if (TestFixtureStarted != null)
-            {
-                TestFixtureStarted(fixture);
-            }
+            TestFixtureStarted?.Invoke(fixture);
         }
 
         private void RaiseTestStarted(ITest testcase, IgnoreInfo ignoreInfo, TagList tags)
         {
-            if (TestStarted != null)
-            {
-                TestStarted(testcase, ignoreInfo, tags);
-            }
+            TestStarted?.Invoke(testcase, ignoreInfo, tags);
         }
 
         private void RaiseTestFinished(ITestResult result)
         {
-            if (TestFinished != null)
-            {
-                TestFinished(result);
-            }
+            TestFinished?.Invoke(result);
         }
 
         private void RaiseTraceMessage(string text)
         {
-            if (TestTraceMessage != null)
-            {
-                TestTraceMessage(text);
-            }
+            TestTraceMessage?.Invoke(text);
         }
 
         #endregion
@@ -362,9 +341,8 @@ namespace AccessCodeLib.AccUnit
 
         public TestClassMemberInfo GetTestClassMemberInfo(string classname, string membername)
         {
-            TestClassMemberInfo memberinfo;
             var key = GetTestCaseKey(classname, membername);
-            _testCaseInfos.TryGetValue(key, out memberinfo);
+            _testCaseInfos.TryGetValue(key, out TestClassMemberInfo memberinfo);
             return memberinfo;
         }
 

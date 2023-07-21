@@ -35,8 +35,8 @@ namespace AccessCodeLib.AccUnit.Interop
 
         new public bool Match { get { return base.Match; } }
         
-        new public string Actual { get { return convertToString(base.Actual); } }
-        new public string Expected { get { return convertToString(base.Expected); } }
+        new public string Actual { get { return ConvertToString(base.Actual); } }
+        new public string Expected { get { return ConvertToString(base.Expected); } }
 
         new public string Text { get { return base.Text; } }
    
