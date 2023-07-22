@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessCodeLib.Common.TestHe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessTestClientTests", "Tests\AccessTestClientTests\AccessTestClientTests.csproj", "{CCA7B1D6-C871-4F1B-901B-2F00278BF7E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGeneratorTests", "Tests\TestGeneratorTests\TestGeneratorTests.csproj", "{CF0B66F5-C8C0-4C13-9B3B-B8AF272C744E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestGeneratorTests", "Tests\TestGeneratorTests\TestGeneratorTests.csproj", "{CF0B66F5-C8C0-4C13-9B3B-B8AF272C744E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
