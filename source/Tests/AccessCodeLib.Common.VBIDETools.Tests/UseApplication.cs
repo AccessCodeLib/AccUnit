@@ -2,7 +2,7 @@ using AccessCodeLib.Common.TestHelpers.AccessRelated;
 using NUnit.Framework;
 using Access = Microsoft.Office.Interop.Access;
 
-namespace AccessCodeLib.AccUnit.Assertions.Tests
+namespace AccessCodeLib.Common.VBIDETools.Tests 
 {
     public class AccessApplicationHelperTests
     {

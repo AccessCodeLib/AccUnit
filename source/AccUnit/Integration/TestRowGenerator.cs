@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.AccUnit.Tools.VBA;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
@@ -174,98 +175,52 @@ namespace AccessCodeLib.AccUnit
         private static readonly Regex ConstantStringRegex = new Regex(@"([\(\,]?)\s*([A-z\.]+)\s*([\)\,])", RegexOptions.CultureInvariant | RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase);
         private string ConvertConstantStringsToVB(string paramstring)
         {
-            // TODO: find a TLBINF32 replacement
-            return paramstring;
-            
-            /*
-            var constants = ConstantsReader.Constants;
-            if (constants.Count == 0 && ActiveVBProject != null)
-                ConstantsReader.AddConstants(ActiveVBProject);
-            
-            Logger.Log(string.Format("Fill params, Constants: {0}", constants.Count));
-
-            if (constants.Count == 0)
-            {
-                Logger.Log("Missing constants!");
-                return paramstring;
-            }
+            Logger.Log(string.Format("Fill params, replace constants"));
 
             var tempString = ConstantStringRegex.Replace(paramstring,
                                                             m => 
                                                             string.Format("{0}{1}{2}", m.Groups[1].Value,
-                                                                             ReplaceReplaceVbConstant(m.Groups[2].Value), m.Groups[3].Value));
+                                                                             ReplaceParamConstantStringWithValue(m.Groups[2].Value), m.Groups[3].Value));
             Logger.Log("completed");
             return tempString;
-            */
         }
 
-        private static string ReplaceReplaceVbConstant(string paramstring)
+        private static string ReplaceParamConstantStringWithValue(string paramstring)
         {
             Logger.Log(string.Format("input: >{0}.<", paramstring));
-            return paramstring;
-            
-            // TODO: find a TLBINF32 replacement
-            /*
-            var parts = paramstring.Split('.');
-            string searchString;
 
+            var parts = paramstring.Split('.');
+            object value = null;
+            
             switch (parts.Length)
             {
                 case 1:
-                    searchString = string.Format("{0}.", parts[0]);
+                    var enumValue = VbaTools.ConstantsDictionary.GetEnumValue(parts[0]);
+                    if (enumValue != null)
+                    {
+                        value = (int)enumValue;
+                        break;
+                    }
+                    value =  VbaTools.ConstantsDictionary.GetConstantValue(parts[0]);
                     break;
                 case 2:
-                    searchString = string.Format("{0}.{1}.", parts[1], parts[0]);
+                    value = VbaTools.ConstantsDictionary.GetEnumValue(parts[0], parts[1]) ?? VbaTools.ConstantsDictionary.GetConstantValue(parts[0], parts[1]);
                     break;
                 case 3:
-                    searchString = string.Format("{0}.{1}.{2}", parts[2], parts[1], parts[0]);
+                    if (parts[0].Equals("VBA", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        value = VbaTools.ConstantsDictionary.GetEnumValue(parts[1], parts[2]) ?? VbaTools.ConstantsDictionary.GetConstantValue(parts[1], parts[2]);
+                    }
                     break;
-                default:
-                    return paramstring;
-            }
-            
-            Constant constant;
-            try
-            {
-                if (parts.Length == 3)
-                    constant = ConstantsReader.Constants[searchString];
-                else
-                    constant =
-                        ConstantsReader.Constants.First(
-                            c => c.Key.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase)).Value;
-                
-            }
-            catch
-            {
-                return paramstring;
             }
 
-            if (constant==null)
-                return paramstring;
-            
-            string valueString;
-            // TODO: replace TypeLib reference
-            switch (constant.VarType)
-            {
-                case TliVarType.VT_BSTR:
-                    valueString = string.Format("\"{0}\"", constant.Value);
-                    break;
-                default:
-                    valueString = constant.Value.ToString();
-                    break;
-            }
-           
-            return valueString;
+            return value != null ? value.ToString() : paramstring;
 
-             */
         }
-
 
         private static object CreateTestRowGenerator(string testparamstring)
         {
             var sourcecode = GetTestRowGeneratorSource(testparamstring);
-
-            //Logger.Log(sourcecode);
 
             using (var bcp = new Microsoft.VisualBasic.VBCodeProvider())
             {
