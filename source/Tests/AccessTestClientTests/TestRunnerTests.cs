@@ -291,5 +291,53 @@ End Function
             // vbNullString is null!
         }
 
+        [Test]
+        public void RunRowTest_WithVbaConstant()
+        {
+            var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+private m_Check as Long
+
+'AccUnit:Row(vbsunday)
+public Function TestMethod1(ByVal x as Long) as Long
+   m_Check = x
+   TestMethod1 = x
+End Function
+
+public Function GetCheckValue() as long
+   GetCheckValue = m_Check
+End Function
+");
+            var fixtureName = "clsAccUnitTestClass";
+            var fixture = _testBuilder.CreateTest(fixtureName);
+            Assert.That(fixture, Is.Not.Null);
+
+            var memberName = "TestMethod1";
+            var fixtureMember = new TestFixtureMember(memberName);
+
+            var testClassReader = new TestClassReader(_testBuilder.ActiveVBProject);
+            fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
+
+            var rowGenerator = new TestRowGenerator();
+            rowGenerator.ActiveVBProject = _testBuilder.ActiveVBProject;
+            rowGenerator.TestName = fixtureName;
+            var testRows = rowGenerator.GetTestRows(memberName);
+
+            /*
+            Assert.That(testRows.Count, Is.EqualTo(1));
+            Assert.That(testRows[0].Args[0], Is.EqualTo( new int[] {1, 2} ));
+            */
+
+            var invocHelper = new InvocationHelper(fixture);
+            var returnValue = invocHelper.InvokeMethod("TestMethod1", testRows[0].Args.ToArray());
+            Assert.That(returnValue, Is.EqualTo(1));
+
+            var result = new TestResultCollector();
+            var testRunner = new Interop.TestRunner(_testBuilder.ActiveVBProject);
+            testRunner.Run(fixture, "TestMethod1", result);
+
+            var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
+            Assert.That(valueAfterTestRun, Is.EqualTo(1));
+        }
+
     }
 }
