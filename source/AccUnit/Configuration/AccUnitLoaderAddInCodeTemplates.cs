@@ -1,9 +1,5 @@
 ﻿using AccessCodeLib.Common.VBIDETools.Templates;
 using Microsoft.Vbe.Interop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace AccessCodeLib.AccUnit.Configuration
 {
@@ -97,7 +93,7 @@ Public Property Get TestRunner() As Object
 End Property
 
 #If USE_ACCUNIT_TYPELIB Then
-Public Property Get TestSuite() As AccUnit.VBATestSuite
+Public Property Get TestSuite() As AccUnit.AccessTestSuite
 #Else
 Public Property Get TestSuite() As Object
 #End If
@@ -138,7 +134,7 @@ Public Property Get CodeCoverageTracker(Optional ReInit As Boolean = False) As O
 End Property
 
 #If USE_ACCUNIT_TYPELIB Then
-Public Function CodeCoverageTest(ParamArray CodeModulNames() As Variant) As AccUnit.VBATestSuite
+Public Function CodeCoverageTest(ParamArray CodeModulNames() As Variant) As AccUnit.AccessTestSuite
 #Else
 Public Function CodeCoverageTest(ParamArray CodeModulNames() As Variant) As Object
 #End If
