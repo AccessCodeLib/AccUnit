@@ -12,7 +12,8 @@ For more informations see https://accunit.access-codelib.net/
 * Row test available
 * VbaTestSuite with 'Debug.Print'-Output to VBE Immediate window
 * Code coverage tests ([Video](https://accunit.access-codelib.net/videos/examples/CodeCoverageTest.mp4))
-* Generate test classes with TestClassGenerator (write TestSuite.TestClassGenerator in VBA immediate window)
+* Generate test classes with TestClassGenerator (write TestSuite.TestClassGenerator in VBA immediate window) ([Video](https://accunit.access-codelib.net/videos/examples/NW2-UnitTests.mp4
+))
 
 
 ### Remarks
