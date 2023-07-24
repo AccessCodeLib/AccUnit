@@ -109,6 +109,16 @@ namespace AccessCodeLib.AccUnit.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] InteropVBA {
+            get {
+                object obj = ResourceManager.GetObject("InteropVBA", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There are no (more) VbMsgBoxResults  available..
         /// </summary>
         internal static string MissingTestMessageBoxResult {

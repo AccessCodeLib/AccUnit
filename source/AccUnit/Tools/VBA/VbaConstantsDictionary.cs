@@ -1,14 +1,30 @@
-﻿using System;
+﻿using AccessCodeLib.AccUnit.Properties;
+using Microsoft.Vbe.Interop;
+using System;
+using System.Linq;
 using System.Reflection;
-using VBA;
 
 namespace AccessCodeLib.AccUnit.Tools.VBA
 {
     public class VbaConstantsDictionary : AssemblyInfo
     {
-        public VbaConstantsDictionary() : base(Assembly.Load("Interop.VBA"))
+        public VbaConstantsDictionary() : base(GetEmbeddedInterOpAssembly())
         {
             FillConstantDictionary();
+        }
+
+        private static Assembly GetEmbeddedInterOpAssembly()
+        {
+            var assemblyName = new AssemblyName("Interop.VBA");
+            var assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == assemblyName.Name);
+
+            if (assembly == null)
+            {
+                byte[] interopVbaBytes = Resources.InteropVBA;
+                assembly = Assembly.Load(interopVbaBytes);
+            }
+
+            return assembly ?? typeof(VBComponent).Assembly;
         }
 
         private void FillConstantDictionary()

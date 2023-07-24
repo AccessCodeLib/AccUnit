@@ -141,6 +141,10 @@ End Sub
   <data name="InsertTestTemplateInputboxTitle" xml:space="preserve">
     <value>New Test</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="InteropVBA" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Interop.VBA.dll;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="MissingTestMessageBoxResult" xml:space="preserve">
     <value>There are no (more) VbMsgBoxResults  available.</value>
   </data>

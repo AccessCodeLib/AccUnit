@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using AccessCodeLib.AccUnit.Tools.VBA;
 using NUnit.Framework;
 
@@ -120,5 +121,16 @@ namespace AccessCodeLib.Common.VBIDETools.Tests
             Assert.That(vbaToolsConstantsDictionary.GetConstantValue("vbTab"), Is.EqualTo(VBA.Constants.vbTab));
             Assert.That(vbaToolsConstantsDictionary.GetConstantValue("vbtab"), Is.EqualTo(VBA.Constants.vbTab));
         }
+
+        [Test]
+        [Ignore("only a check, not a test")]
+        // check VBA.Constants.vbNullString if that is string pointer 0
+        public void CheckPointerOfVbNullString()
+        {
+            var ptr = Marshal.StringToHGlobalAnsi(VBA.Constants.vbNullString);
+            Console.WriteLine($"PTr={ptr}");
+            Marshal.FreeHGlobal(ptr);
+        }
+
     }
 }
