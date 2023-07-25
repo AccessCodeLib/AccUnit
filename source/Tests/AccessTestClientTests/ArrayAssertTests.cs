@@ -1,11 +1,9 @@
 ﻿using AccessCodeLib.AccUnit.Assertions;
 using AccessCodeLib.Common.TestHelpers.AccessRelated;
 using AccessCodeLib.Common.VBIDETools;
-using Microsoft.Office.Interop.Access;
 using Microsoft.Vbe.Interop;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using System;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
 {
@@ -324,7 +322,7 @@ End Function
 
             Assert.That(result.Match, Is.EqualTo(false), result.Text);
         }
-        
+
         [Test]
         public void EmptyArrayInVariantIsEqualEmptyVariantArray()
         {
@@ -354,9 +352,9 @@ End Function
 
             assert.That(actual, Iz.EqualTo(expected));
             var result = testCollector.Result;
-            
+
             Assert.That(result.Match, Is.EqualTo(true), result.Text);
-            
+
         }
     }
 }

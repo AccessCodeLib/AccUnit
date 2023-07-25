@@ -21,7 +21,7 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
             accessTestHelper.Application.RunCommand(AcCommand.acCmdCompileAndSaveAllModules);
             return codeModule;
         }
-        
+
         public static AccessTestHelper NewAccessTestHelper(int cnt)
         {
             var testHelper = new AccessTestHelper(@"C:\test\Test_" + cnt.ToString() + ".accdb");

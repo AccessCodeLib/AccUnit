@@ -1,6 +1,6 @@
-﻿using System.Runtime.InteropServices;
-using AccessCodeLib.AccUnit.Common;
+﻿using AccessCodeLib.AccUnit.Common;
 using AccessCodeLib.Common.VBIDETools;
+using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interfaces
 {
@@ -9,7 +9,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
     [Guid("BA74B9B5-0E96-4648-AC25-78B8052845BC")]
     public interface ITestMessageBox
     {
-        int Show(object Prompt, int Buttons = 1, object Title = null, 
+        int Show(object Prompt, int Buttons = 1, object Title = null,
                  object HelpFile = null, object Context = null);
 
         MessageBoxData[] MessageBoxData { get; }

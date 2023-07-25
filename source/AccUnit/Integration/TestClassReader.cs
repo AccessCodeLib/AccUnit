@@ -1,12 +1,10 @@
-﻿using System;
+﻿using AccessCodeLib.Common.Tools.Logging;
+using AccessCodeLib.Common.VBIDETools;
+using Microsoft.Vbe.Interop;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using AccessCodeLib.AccUnit.Common;
-using AccessCodeLib.AccUnit.Interfaces;
-using AccessCodeLib.Common.Tools.Logging;
-using AccessCodeLib.Common.VBIDETools;
-using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit
 {
@@ -22,9 +20,7 @@ namespace AccessCodeLib.AccUnit
     {
         public TestClassReader(_VBProject vbProject)
         {
-            if (vbProject == null)
-                throw new ArgumentNullException(nameof(vbProject));
-            VbProject = vbProject;
+            VbProject = vbProject ?? throw new ArgumentNullException(nameof(vbProject));
         }
 
         private _VBProject VbProject { get; }
@@ -57,7 +53,7 @@ namespace AccessCodeLib.AccUnit
             using (new BlockLogger(vbc.CodeModule.Name))
             {
                 var reader = new CodeModuleReader(vbc.CodeModule);
-                var members = (initMembers ? GetTestClassMembers(reader) : null);
+                var members = initMembers ? GetTestClassMembers(reader) : null;
                 return new TestClassInfo(vbc.Name, reader.SourceCode, members);
             }
         }
@@ -103,13 +99,15 @@ namespace AccessCodeLib.AccUnit
                 var reader = new CodeModuleReader(VbProject.VBComponents.Item(classname).CodeModule);
                 var memberInfo = new TestClassMemberInfo(membername, reader.GetProcedureHeader(membername));
 
-                var rowGenerator = new TestRowGenerator();
-                rowGenerator.ActiveVBProject = (VBProject)VbProject;
-                rowGenerator.TestName = classname;
+                var rowGenerator = new TestRowGenerator
+                {
+                    ActiveVBProject = (VBProject)VbProject,
+                    TestName = classname
+                };
                 var testRows = rowGenerator.GetTestRows(membername);
 
                 memberInfo.TestRows.AddRange(testRows);
-                
+
                 return memberInfo;
             }
         }
@@ -126,13 +124,12 @@ namespace AccessCodeLib.AccUnit
 
         private static int GetLinesBeforeFirstProcBody(_CodeModule codeModule)
         {
-            vbext_ProcKind procKind;
             //Logger.Log(string.Format("Module: {0}", codeModule.Name));
             //Logger.Log(string.Format("Module: {0}\nCountOfLines: {1}", codeModule.Name, codeModule.CountOfLines));
             //Logger.Log(string.Format("Module: {0}\nCountOfDeclarationLines: {1}", codeModule.Name, codeModule.CountOfDeclarationLines));
-// ReSharper disable UseIndexedProperty 
-            var firstProc = codeModule.get_ProcOfLine(codeModule.CountOfDeclarationLines + 1, out procKind);
-// ReSharper restore UseIndexedProperty
+            // ReSharper disable UseIndexedProperty 
+            var firstProc = codeModule.get_ProcOfLine(codeModule.CountOfDeclarationLines + 1, out vbext_ProcKind procKind);
+            // ReSharper restore UseIndexedProperty
             return string.IsNullOrEmpty(firstProc) ? codeModule.CountOfLines : codeModule.ProcBodyLine[firstProc, procKind];
         }
 

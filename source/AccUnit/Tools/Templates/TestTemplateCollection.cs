@@ -1,16 +1,16 @@
-﻿using System;
+﻿using AccessCodeLib.Common.Tools.Logging;
+using AccessCodeLib.Common.VBIDETools.Templates;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using AccessCodeLib.Common.Tools.Logging;
-using AccessCodeLib.Common.VBIDETools.Templates;
 
 namespace AccessCodeLib.AccUnit.Tools.Templates
 {
     public class TestTemplateCollection : CodeTemplateCollection
     {
         private const string UserTemplatesFileName = "TestTemplates.xml";
-        
+
         public TestTemplateCollection()
         {
             using (new BlockLogger())

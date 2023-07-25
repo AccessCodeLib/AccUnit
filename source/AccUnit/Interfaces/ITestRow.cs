@@ -1,8 +1,6 @@
-﻿using AccessCodeLib.AccUnit.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace AccessCodeLib.AccUnit.Interfaces
 {
@@ -31,7 +29,9 @@ namespace AccessCodeLib.AccUnit.Interfaces
     */
     [ComVisible(true)]
     [Guid("B9BA0F7E-5FEB-4FCF-BD6C-7C6F33A1324E")]
+#pragma warning disable IDE1006 // Benennungsstile
     public interface _ITestRow
+#pragma warning restore IDE1006 // Benennungsstile
     {
         string Name { get; set; }
         ITestRow ClickingMsgBox(params VbMsgBoxResult[] args);

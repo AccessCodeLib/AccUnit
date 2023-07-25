@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using AccessCodeLib.AccUnit.Interfaces;
+﻿using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
+using System;
+using System.Collections.Generic;
 using VbMsgBoxResult = AccessCodeLib.AccUnit.Interfaces.VbMsgBoxResult;
 
 namespace AccessCodeLib.AccUnit
@@ -62,7 +62,7 @@ namespace AccessCodeLib.AccUnit
                 {
                     Logger.Log(ex);
                 }
-                
+
             }
             return this;
         }

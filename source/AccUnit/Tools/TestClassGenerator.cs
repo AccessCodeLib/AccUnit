@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net.Security;
-using AccessCodeLib.AccUnit.Interop;
-using AccessCodeLib.Common.VBIDETools;
+﻿using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
+using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit.Tools
 {
@@ -16,14 +13,14 @@ namespace AccessCodeLib.AccUnit.Tools
             _vbProject = vbproject;
         }
 
-        public CodeModule NewTestClass(string CodeModuleToTest = null, 
-                                        bool CreateNewNameIfTestClassExists = true, 
-                                        bool GenerateTestMethodsFromCodeModuleToTest = false, 
+        public CodeModule NewTestClass(string CodeModuleToTest = null,
+                                        bool CreateNewNameIfTestClassExists = true,
+                                        bool GenerateTestMethodsFromCodeModuleToTest = false,
                                         string stateUnderTest = null, string expectedBehaviour = null)
         {
             var testClassName = GenerateTestClassName(CodeModuleToTest, CreateNewNameIfTestClassExists);
             IEnumerable<CodeModuleMember> methods = new TestCodeModuleMember[] { };
-            
+
             if (GenerateTestMethodsFromCodeModuleToTest)
             {
                 methods = GetTestCodeModuleMemberFromCodeModule(CodeModuleToTest, stateUnderTest, expectedBehaviour);
@@ -83,7 +80,7 @@ namespace AccessCodeLib.AccUnit.Tools
         {
             var testCodeGenerator = new TestCodeGenerator();
             testCodeGenerator.Add(testMethods);
-            
+
             var modules = new CodeModuleContainer(_vbProject);
             var testModule = modules.TryGetCodeModule(testClass);
             var testModuleExists = testModule != null;

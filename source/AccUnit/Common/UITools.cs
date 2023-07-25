@@ -1,8 +1,8 @@
+using AccessCodeLib.Common.Tools.Logging;
 using System;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using AccessCodeLib.Common.Tools.Logging;
 
 namespace AccessCodeLib.AccUnit.Common
 {
@@ -38,7 +38,7 @@ namespace AccessCodeLib.AccUnit.Common
 
 
         public static DialogResult ShowMessage(string message, MessageBoxButtons buttons = MessageBoxButtons.OK,
-                                               MessageBoxIcon icon = MessageBoxIcon.Information, 
+                                               MessageBoxIcon icon = MessageBoxIcon.Information,
                                                MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1)
         {
             return MessageBox.Show(message, Application.ProductName, buttons, icon, defaultButton);
@@ -69,7 +69,7 @@ namespace AccessCodeLib.AccUnit.Common
             buttonCancel.SetBounds(309, 72, 75, 23);
 
             label.AutoSize = true;
-            textBox.Anchor = textBox.Anchor | AnchorStyles.Right;
+            textBox.Anchor |= AnchorStyles.Right;
             buttonOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
 

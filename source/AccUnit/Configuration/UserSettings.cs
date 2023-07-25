@@ -1,11 +1,10 @@
-﻿using System;
+﻿using AccessCodeLib.AccUnit.Properties;
+using AccessCodeLib.AccUnit.Tools.Templates;
+using AccessCodeLib.Common.Tools.Logging;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing.Design;
-using AccessCodeLib.AccUnit.Common;
-using AccessCodeLib.AccUnit.Properties;
-using AccessCodeLib.AccUnit.Tools.Templates;
-using AccessCodeLib.Common.Tools.Logging;
 
 namespace AccessCodeLib.AccUnit.Configuration
 {
@@ -38,8 +37,7 @@ namespace AccessCodeLib.AccUnit.Configuration
             }
             set
             {
-                if (value == null) throw new ArgumentNullException();
-                _current = value;
+                _current = value ?? throw new ArgumentNullException();
             }
         }
 
@@ -47,7 +45,7 @@ namespace AccessCodeLib.AccUnit.Configuration
 
         private AccUnit.UserSettings _testSuiteUserSettings;
         private Tools.UserSettings _toolsUserSettings;
-        
+
         private UserSettings()
         {
         }
@@ -84,7 +82,7 @@ namespace AccessCodeLib.AccUnit.Configuration
             AccUnit.UserSettings.Current.Save();
             Tools.UserSettings.Current = _toolsUserSettings;
             Tools.UserSettings.Current.Save();
-           
+
             Settings.Default.TestClassNameFormat = TestClassNameFormat;
         }
 

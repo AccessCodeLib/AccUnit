@@ -24,5 +24,5 @@ namespace AccessCodeLib.AccUnit.Interop
         public string DefaultNameSpace { get { return AccUnitDefaultNameSpace; } }
     }
 
-    
+
 }

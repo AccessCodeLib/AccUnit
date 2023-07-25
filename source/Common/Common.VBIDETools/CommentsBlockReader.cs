@@ -11,14 +11,14 @@ namespace AccessCodeLib.Common.VBIDETools
                 return null;
 
             if (commentsBlock == "")
-                return new[] {""};
+                return new[] { "" };
 
             return GetCommentLineContents(commentsBlock);
         }
 
         private IEnumerable<string> GetCommentLineContents(string commentsBlock)
         {
-            var nonEmptyLines = commentsBlock.Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
+            var nonEmptyLines = commentsBlock.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var line in nonEmptyLines)
             {
                 var temp = line.Trim();

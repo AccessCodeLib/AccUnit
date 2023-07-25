@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using NUnit.Framework;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NUnit.Framework;
 
 namespace AccessCodeLib.Common.VBIDETools.Tests
 {
@@ -16,7 +15,7 @@ namespace AccessCodeLib.Common.VBIDETools.Tests
 
             Dictionary<string, List<string>> eventDictionary = new Dictionary<string, List<string>>();
 
-            foreach (var type in vbaInteropAssembly.GetTypes()) 
+            foreach (var type in vbaInteropAssembly.GetTypes())
             {
                 if (type.IsInterface || type.IsClass)
                 {
@@ -26,7 +25,7 @@ namespace AccessCodeLib.Common.VBIDETools.Tests
                         if (!eventDictionary.ContainsKey(eventInfo.Name))
                         {
                             eventDictionary.Add(eventInfo.Name, new List<string>());
-                        }   
+                        }
                         eventDictionary[eventInfo.Name].Add(type.Name);
                     }
                 }

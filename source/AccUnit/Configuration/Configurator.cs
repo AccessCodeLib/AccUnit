@@ -1,9 +1,8 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using AccessCodeLib.Common.Tools.Logging;
-using AccessCodeLib.Common.VBIDETools.Integration;
+﻿using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
+using System;
+using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Configuration
 {
@@ -71,7 +70,7 @@ namespace AccessCodeLib.AccUnit.Configuration
         public void Init(VBProject vbProject)
         {
             _vbProject = vbProject;
-            
+
             //References.EnsureReferencesExistIn(_vbProject);
             //TestSuiteCodeTemplates.EnsureModulesExistIn(_vbProject);
         }
@@ -80,7 +79,7 @@ namespace AccessCodeLib.AccUnit.Configuration
         {
             if (vbProject != null)
                 _vbProject = vbProject;
-            
+
             if (removeTestModules)
             {
                 OfficeApplicationHelper officeApplicationHelper = new VbeOnlyApplicatonHelper(_vbProject.VBE);
@@ -152,7 +151,7 @@ namespace AccessCodeLib.AccUnit.Configuration
         public event DisposeEventHandler Disposed;
 
         bool _disposed;
-        
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
@@ -174,10 +173,7 @@ namespace AccessCodeLib.AccUnit.Configuration
 
             }
 
-            if (Disposed != null)
-            {
-                Disposed(this);
-            }
+            Disposed?.Invoke(this);
 
             // GC-Bereinigung wegen unmanaged res:
             // GC.Collect();

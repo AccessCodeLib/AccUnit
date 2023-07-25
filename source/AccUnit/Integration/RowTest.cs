@@ -12,7 +12,7 @@ namespace AccessCodeLib.AccUnit.Integration
             MethodName = testClassMemberInfo.Name;
             FullName = $"{fixture.Name}.{MethodName}";
             TestClassMemberInfo = testClassMemberInfo;
-            
+
             FillRows();
         }
 
@@ -21,7 +21,7 @@ namespace AccessCodeLib.AccUnit.Integration
             Rows = TestClassMemberInfo.TestRows;
             var paramTests = new List<IParamTest>();
             int i = 0;
-            
+
             foreach (var row in Rows)
             {
                 i++;

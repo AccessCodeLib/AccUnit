@@ -1,11 +1,11 @@
-﻿using System;
+﻿using AccessCodeLib.AccUnit.Tools.Templates;
+using AccessCodeLib.Common.Tools.Logging;
+using AccessCodeLib.Common.VBIDETools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using AccessCodeLib.AccUnit.Tools.Templates;
-using AccessCodeLib.Common.Tools.Logging;
-using AccessCodeLib.Common.VBIDETools;
 
 namespace AccessCodeLib.AccUnit.Tools
 {
@@ -26,8 +26,8 @@ namespace AccessCodeLib.AccUnit.Tools
 
         public void Add(IEnumerable<CodeModuleMember> codeModuleMembers)
         {
-            Add(codeModuleMembers.Select(member => (member is TestCodeModuleMember)
-                                                       ? (TestCodeModuleMember) member
+            Add(codeModuleMembers.Select(member => (member is TestCodeModuleMember testCodeModulMember)
+                                                       ? testCodeModulMember
                                                        : new TestCodeModuleMember(member)
                     ));
         }
@@ -46,7 +46,7 @@ namespace AccessCodeLib.AccUnit.Tools
                 {
                     list.Add(new TestCodeModuleMember(method, stateUnderTest, expectedBehaviour));
                 }
-                
+
             }
             return list;
         }
@@ -108,7 +108,7 @@ namespace AccessCodeLib.AccUnit.Tools
                     // insert row test code
                     code = GetProcedureRowTestString(parameters) + Environment.NewLine + code;
                 }
-                
+
                 return code;
             }
         }
@@ -116,11 +116,11 @@ namespace AccessCodeLib.AccUnit.Tools
         private static string GetProcedureNameForTest(TestCodeModuleMember member)
         {
             // use Get, Let or Set prefix related to the member type
-            var suffix = member.ProcKind == Microsoft.Vbe.Interop.vbext_ProcKind.vbext_pk_Get ? "_Get" 
-                            : member.ProcKind == Microsoft.Vbe.Interop.vbext_ProcKind.vbext_pk_Let ? "_Let" 
+            var suffix = member.ProcKind == Microsoft.Vbe.Interop.vbext_ProcKind.vbext_pk_Get ? "_Get"
+                            : member.ProcKind == Microsoft.Vbe.Interop.vbext_ProcKind.vbext_pk_Let ? "_Let"
                             : member.ProcKind == Microsoft.Vbe.Interop.vbext_ProcKind.vbext_pk_Set ? "_Set" : "";
-       
-            return member.Name +suffix;
+
+            return member.Name + suffix;
         }
 
         public static string GetProcedureRowTestString(string parameters)
@@ -132,17 +132,17 @@ namespace AccessCodeLib.AccUnit.Tools
                 paramString = paramString.Substring(0, paramString.IndexOf(")"));
 
             if (paramString.Contains("("))
-                paramString = paramString.Substring(1, paramString.Length-1);
-          
+                paramString = paramString.Substring(1, paramString.Length - 1);
+
 
             var Params = paramString.Split(',');
-    
+
             for (int i = 0; i < Params.Length; i++)
             {
                 var param = Params[i];
                 if (param.Contains(" As "))
                     param = param.Substring(0, param.IndexOf(" As "));
-                
+
                 Params[i] = param.Trim();
             }
             return @"'AccUnit:Row(" + string.Join(", ", Params).Replace("[]", "()") + ").Name = \"Example row - please replace the parameter names with values)\"";
@@ -182,7 +182,7 @@ namespace AccessCodeLib.AccUnit.Tools
                 }
                 equalSignIndex = procDeclaration.IndexOf("=");
             }
-           
+
             var parameters = procDeclaration.Substring(procDeclaration.IndexOf(procedureName) + procedureName.Length);
             parameters = ConvertReturnValueToExpectedWithParam(parameters);
             return parameters;

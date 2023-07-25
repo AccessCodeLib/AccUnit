@@ -1,10 +1,7 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using AccessCodeLib.AccUnit.Configuration;
-using AccessCodeLib.AccUnit.Interfaces;
-using AccessCodeLib.Common.VBIDETools.Integration;
-using AccessCodeLib.Common.VBIDETools;
+﻿using AccessCodeLib.AccUnit.Interfaces;
 using Microsoft.Vbe.Interop;
+using System;
+using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interop
 {
@@ -13,7 +10,7 @@ namespace AccessCodeLib.AccUnit.Interop
     public interface IVBATestSuite : Interfaces.IVBATestSuite
     {
         #region COM visibility of inherited members
-        
+
         new string Name { get; }
         new VBProject ActiveVBProject { get; set; }
         new object HostApplication { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)] set; }
@@ -26,7 +23,7 @@ namespace AccessCodeLib.AccUnit.Interop
         new IVBATestSuite AddFromVBProject();
         new IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
         new IVBATestSuite Run();
-        
+
         new void Dispose();
 
         #endregion
@@ -76,7 +73,7 @@ namespace AccessCodeLib.AccUnit.Interop
             base.Reset(mode);
             return this;
         }
-        
+
         new public IVBATestSuite Run()
         {
             base.Run();

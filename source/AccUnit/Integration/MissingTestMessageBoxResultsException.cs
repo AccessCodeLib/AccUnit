@@ -1,5 +1,5 @@
-﻿using System;
-using AccessCodeLib.AccUnit.Properties;
+﻿using AccessCodeLib.AccUnit.Properties;
+using System;
 
 namespace AccessCodeLib.AccUnit
 {
@@ -11,7 +11,7 @@ namespace AccessCodeLib.AccUnit
         }
 
         public MissingTestMessageBoxResultsException(string message)
-            :base(message)
+            : base(message)
         {
         }
 

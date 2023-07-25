@@ -7,4 +7,4 @@ namespace AccessCodeLib.AccUnit.Interfaces
         IEnumerable<ITestRow> Rows { get; }
         IEnumerable<IParamTest> ParamTests { get; }
     }
- }
+}

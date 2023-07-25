@@ -1,6 +1,6 @@
-﻿using System;
+﻿using AccessCodeLib.AccUnit.Interfaces;
+using System;
 using System.Text;
-using AccessCodeLib.AccUnit.Interfaces;
 
 namespace AccessCodeLib.AccUnit
 {
@@ -26,7 +26,7 @@ namespace AccessCodeLib.AccUnit
         {
         }
 
-        public TestSummaryFormatter(int separatorMaxLength, char separatorChar, 
+        public TestSummaryFormatter(int separatorMaxLength, char separatorChar,
                                     int fixtureFinishedSeparatorLength = DefaultFixtureFinishedSeparatorLength,
                                     int testCaseResultStartPos = DefaultTestCaseResultStartPos)
         {
@@ -49,7 +49,7 @@ namespace AccessCodeLib.AccUnit
             const int captionLength = 9;
 
             var separatorLine = new string(SeparatorChar, captionLength + summary.Total.ToString().Length);
-            var timeString = String.Format("Time   : {0} ms",  Math.Round(summary.ElapsedTime, 1));
+            var timeString = String.Format("Time   : {0} ms", Math.Round(summary.ElapsedTime, 1));
 
             var sb = new StringBuilder();
             string maxSeparatorLine;
@@ -160,7 +160,7 @@ namespace AccessCodeLib.AccUnit
             {
                 sb.AppendLine(ex.Message);
             }
-            
+
             return sb.ToString();
         }
 
@@ -175,7 +175,7 @@ namespace AccessCodeLib.AccUnit
 
             sb.AppendLine(new string(SeparatorChar, TestFixtureFinishedSeparatorLength));
             sb.AppendLine(String.Format("Finished: {0}", CurrentTimeString));
-            
+
             return sb.ToString();
         }
 

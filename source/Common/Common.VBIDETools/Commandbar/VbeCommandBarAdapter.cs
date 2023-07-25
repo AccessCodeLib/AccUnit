@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using AccessCodeLib.Common.Tools.Logging;
+﻿using AccessCodeLib.Common.Tools.Logging;
 using Microsoft.Office.Core;
 using Microsoft.Vbe.Interop;
+using System;
+using System.Collections.Generic;
 
 namespace AccessCodeLib.Common.VBIDETools.Commandbar
 {
@@ -204,7 +204,7 @@ namespace AccessCodeLib.Common.VBIDETools.Commandbar
             {
                 get { return _clickEventHandler; }
             }
-                    
+
             #region IDisposable Support
 
             bool _disposed;
@@ -249,7 +249,7 @@ namespace AccessCodeLib.Common.VBIDETools.Commandbar
                 Dispose(false);
             }
 
-        #endregion
+            #endregion
         }
     }
 }

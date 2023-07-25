@@ -12,7 +12,7 @@ namespace AccessCodeLib.Common.Tools.Logging
             get { return _instance; }
             set { _instance = value; }
         }
-        
+
         [Conditional("DEBUG")]
         public static void Log(string info, int addNumberStackFrames = 0)
         {

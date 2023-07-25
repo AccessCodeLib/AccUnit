@@ -55,6 +55,6 @@ namespace AccessCodeLib.Common.Tools.Logging
             IndentLevel = 0;
         }
 
-        
+
     }
 }

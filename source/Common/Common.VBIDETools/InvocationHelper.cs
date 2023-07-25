@@ -1,6 +1,6 @@
-﻿using System;
+﻿using AccessCodeLib.Common.Tools.Logging;
+using System;
 using System.Reflection;
-using AccessCodeLib.Common.Tools.Logging;
 
 namespace AccessCodeLib.Common.VBIDETools
 {
@@ -11,10 +11,7 @@ namespace AccessCodeLib.Common.VBIDETools
 
         public InvocationHelper(object target)
         {
-            if (target == null)
-                throw new ArgumentNullException("target");
-
-            _target = target;
+            _target = target ?? throw new ArgumentNullException("target");
             _type = _target.GetType();
         }
 
@@ -45,12 +42,12 @@ namespace AccessCodeLib.Common.VBIDETools
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed) return;
-        
+
             try
             {
                 _target = null;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Log(ex.Message);
             }
@@ -75,6 +72,6 @@ namespace AccessCodeLib.Common.VBIDETools
         }
 
         #endregion
-        
+
     }
 }

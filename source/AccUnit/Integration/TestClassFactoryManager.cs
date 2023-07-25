@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
-using AccessCodeLib.Common.Tools.Logging;
+﻿using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
+using System;
+using System.Linq;
 
 namespace AccessCodeLib.AccUnit
 {
@@ -36,9 +36,9 @@ Option Private Module
                 {
                     try // maybe codemodule was deleted
                     {
-// ReSharper disable UseIndexedProperty
+                        // ReSharper disable UseIndexedProperty
                         _factoryCodeModule.get_Lines(1, 1);
-// ReSharper restore UseIndexedProperty
+                        // ReSharper restore UseIndexedProperty
                     }
                     catch
                     {
@@ -89,7 +89,7 @@ End Function
 
         private static string GetClassNameForNewStatement(string className)
         {
-            return className.Contains(" ") || "_0123456789".Contains(className[0].ToString()) 
+            return className.Contains(" ") || "_0123456789".Contains(className[0].ToString())
                 ? $"[{className}]"
                 : className;
         }
@@ -114,10 +114,7 @@ End Function
         {
             try
             {
-#pragma warning disable 168
-                // ReSharper disable once UnusedVariable
                 var dummyLine = FactoryModule.ProcBodyLine[GetTestClassFactoryMethodName(className), vbext_ProcKind.vbext_pk_Proc];
-#pragma warning restore 168
                 return true;
             }
             catch

@@ -1,5 +1,5 @@
-﻿using System.Runtime.InteropServices;
-using System;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interop
 {
@@ -14,19 +14,19 @@ namespace AccessCodeLib.AccUnit.Interop
         new string Expected { get; }
     }
     */
-    
+
     [ComVisible(true)]
     [Guid("6AB715D1-A0A7-4310-91BA-25921165E716")]
     [ClassInterface(ClassInterfaceType.None)]
     [ProgId(Constants.ProgIdLibName + ".MatchResult")]
     public class MatchResult : AccUnit.Assertions.MatchResult, Assertions.IMatchResult
     {
-        public MatchResult(bool match, string text, object actual, object expected, string infoText = null) 
+        public MatchResult(bool match, string text, object actual, object expected, string infoText = null)
             : base(null, match, text, actual, expected, infoText)
         {
         }
 
-        public MatchResult(AccUnit.Assertions.IMatchResult result) 
+        public MatchResult(AccUnit.Assertions.IMatchResult result)
             : base(null, result.Match, result.Text, result.Actual, result.Expected, result.InfoText)
         {
             //Match = result.Match;
@@ -34,11 +34,11 @@ namespace AccessCodeLib.AccUnit.Interop
         }
 
         new public bool Match { get { return base.Match; } }
-        
+
         new public string Actual { get { return ConvertToString(base.Actual); } }
         new public string Expected { get { return ConvertToString(base.Expected); } }
 
         new public string Text { get { return base.Text; } }
-   
+
     }
 }

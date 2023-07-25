@@ -1,5 +1,5 @@
-﻿using System.Runtime.InteropServices;
-using System;
+﻿using System;
+using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interop
 {
@@ -70,7 +70,8 @@ namespace AccessCodeLib.AccUnit.Interop
 
         new public IConstraintBuilder Empty
         {
-            get {
+            get
+            {
                 return (IConstraintBuilder)base.Empty;
             }
         }

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using AccessCodeLib.Common.Tools.Logging;
+using Microsoft.Vbe.Interop;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
-using AccessCodeLib.Common.Tools.Logging;
-using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.Common.VBIDETools.Templates
 {
@@ -116,10 +116,10 @@ namespace AccessCodeLib.Common.VBIDETools.Templates
                         {
                             deserialized = serializer.Deserialize(stringReader);
                         }
-                        AddRange((CodeTemplateCollection) deserialized);
+                        AddRange((CodeTemplateCollection)deserialized);
                     }
                 }
-            }            
+            }
         }
 
         public void LoadFromFile(string path)

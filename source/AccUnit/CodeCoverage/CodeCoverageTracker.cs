@@ -1,6 +1,5 @@
 ﻿using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
-using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +19,7 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
         }
 
         public void Clear(string codeModuleName = null)
-        { 
+        {
             if (codeModuleName.Length > 0)
             {
                 RemoveCodeCoverageTracker(codeModuleName);
@@ -119,7 +118,7 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
         {
             var codeModule = _vbProject.VBComponents.Item(codeModuleName).CodeModule;
             var cmReader = new CodeModuleReader(codeModule);
-            
+
             const string pattern = @"^(\d+\s+)CodeCoverageTracker.Track[^:]*:(.*)";
             Regex regex = new Regex(pattern, RegexOptions.Singleline);
 
@@ -131,7 +130,7 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
                 if (match.Success)
                 {
                     string newLine = match.Groups[1].Value;
-                    if (match.Groups.Count > 2 && match.Groups[2].Value.Length>0)
+                    if (match.Groups.Count > 2 && match.Groups[2].Value.Length > 0)
                     {
                         newLine += match.Groups[2].Value;
                     }
@@ -173,7 +172,7 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
             _codeModules[codeModulName].Track(procedureName, lineNo);
         }
 
-        public string GetReport(string codeModuleName = "*", string procedureName = "*", bool showCoverageDetails =false)
+        public string GetReport(string codeModuleName = "*", string procedureName = "*", bool showCoverageDetails = false)
         {
             const string SeparatorLine = "------------------------------------------";
             var sb = new StringBuilder();
@@ -191,7 +190,7 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
             }
             return sb.ToString();
         }
-        
+
         #region IDisposable Support
 
         bool _disposed;
@@ -218,7 +217,7 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
             }
             finally
             {
-                
+
             }
 
             GC.Collect();

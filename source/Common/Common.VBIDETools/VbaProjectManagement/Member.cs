@@ -1,6 +1,6 @@
-﻿using System;
+﻿using AccessCodeLib.Common.VBIDETools.CommentAttributes;
+using System;
 using System.Collections.Generic;
-using AccessCodeLib.Common.VBIDETools.CommentAttributes;
 
 namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
 {

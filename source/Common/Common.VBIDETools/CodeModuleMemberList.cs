@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Microsoft.Vbe.Interop;
+﻿using Microsoft.Vbe.Interop;
+using System.Collections.Generic;
 
 namespace AccessCodeLib.Common.VBIDETools
 {
@@ -15,7 +15,7 @@ namespace AccessCodeLib.Common.VBIDETools
         public List<CodeModuleMember> FindAll(bool isPublic, vbext_ProcKind procKind)
         {
             return FindAll(
-                member => (member.IsPublic == isPublic && member.ProcKind == procKind)
+                member => member.IsPublic == isPublic && member.ProcKind == procKind
                 );
         }
 

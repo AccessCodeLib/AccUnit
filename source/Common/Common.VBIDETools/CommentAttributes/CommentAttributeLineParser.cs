@@ -56,7 +56,7 @@ namespace AccessCodeLib.Common.VBIDETools.CommentAttributes
             }
 
             var parser = new ParameterListParser();
-            
+
             return parser.Parse(parameterList);
         }
     }

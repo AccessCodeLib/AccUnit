@@ -7,7 +7,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface ITest : ITestData
     {
-        ITestFixture Fixture { get; } 
+        ITestFixture Fixture { get; }
         string MethodName { get; }
         string DisplayName { get; set; }
         RunState RunState { set; get; }

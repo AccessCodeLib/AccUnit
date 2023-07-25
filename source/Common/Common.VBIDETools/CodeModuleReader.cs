@@ -1,6 +1,6 @@
 ﻿using AccessCodeLib.Common.Tools.Logging;
-using System.Text;
 using Microsoft.Vbe.Interop;
+using System.Text;
 
 namespace AccessCodeLib.Common.VBIDETools
 {
@@ -27,7 +27,7 @@ namespace AccessCodeLib.Common.VBIDETools
             var endLine = _codeModule.ProcBodyLine[procedurename, procKind];
             using (new BlockLogger($"Procedure: {procedurename}, start line: {startLine}, end line: {endLine}"))
             {
-                var header = (startLine == endLine ? string.Empty : _codeModule.Lines[startLine, endLine - startLine]);
+                var header = startLine == endLine ? string.Empty : _codeModule.Lines[startLine, endLine - startLine];
                 //Logger.Log($"header: {header}");
                 return header;
             }
@@ -47,7 +47,7 @@ namespace AccessCodeLib.Common.VBIDETools
 
         public CodeModuleInfo CodeModuleInfo
         {
-            get { return new CodeModuleInfo {Name = _codeModule.Name, Members = Members}; }
+            get { return new CodeModuleInfo { Name = _codeModule.Name, Members = Members }; }
         }
 
         private CodeModuleMemberList _members;
@@ -89,7 +89,7 @@ namespace AccessCodeLib.Common.VBIDETools
                         if (!isPublic)
                             isPublic = tempProcLine.Substring(0, 7).Equals("Friend ", System.StringComparison.InvariantCultureIgnoreCase);
                     }
-                    
+
                     var tempProcDeclaration = GetProcedureDeclaration(tempProcName, tempProcKind);
                     _members.Add(new CodeModuleMember(tempProcName, tempProcKind, isPublic, tempProcDeclaration));
                     currentLine = _codeModule.ProcStartLine[tempProcName, tempProcKind] + _codeModule.ProcCountLines[tempProcName, tempProcKind];
@@ -104,14 +104,14 @@ namespace AccessCodeLib.Common.VBIDETools
             var procCountLines = _codeModule.ProcCountLines[procedureName, procKind];
             var currentLineNumber = procBodyLineNumber;
             var lastLineNumber = procBodyLineNumber + procCountLines;
-          
+
             var sb = new StringBuilder();
             string tempLine;
             do
             {
                 tempLine = _codeModule.Lines[currentLineNumber, 1].TrimEnd();
                 sb.AppendLine(tempLine);
-            } while (tempLine.Substring(tempLine.Length-2).Trim().Equals("_") && currentLineNumber++ <= lastLineNumber);
+            } while (tempLine.Substring(tempLine.Length - 2).Trim().Equals("_") && currentLineNumber++ <= lastLineNumber);
 
             return sb.ToString().TrimEnd();
         }

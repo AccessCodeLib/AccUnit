@@ -1,7 +1,6 @@
-﻿using System;
+﻿using AccessCodeLib.AccUnit.Assertions.Constraints;
+using System;
 using System.Collections.Generic;
-using AccessCodeLib.AccUnit.Assertions.Constraints;
-using AccessCodeLib.AccUnit.Interop;
 
 namespace AccessCodeLib.AccUnit.Assertions
 {
@@ -15,7 +14,7 @@ namespace AccessCodeLib.AccUnit.Assertions
 
         public IConstraintBuilder EqualTo(object expected)
         {
-            AddComparerConstraint("actual = expected", expected, 0); 
+            AddComparerConstraint("actual = expected", expected, 0);
             return this;
         }
 
@@ -52,7 +51,7 @@ namespace AccessCodeLib.AccUnit.Assertions
 
             if (expected == null)
             {
-                if  (expectedComparerResult == 0)
+                if (expectedComparerResult == 0)
                 {
                     AddChild(new NullConstraint());
                     return;
@@ -63,7 +62,7 @@ namespace AccessCodeLib.AccUnit.Assertions
                     return;
                 }
             }
-            
+
             Type myType = GetCompareType(expected);
             var newConstraint = Activator.CreateInstance(myType, compareText, expected, expectedComparerResult);
             AddChild((IConstraint)newConstraint);
@@ -91,12 +90,12 @@ namespace AccessCodeLib.AccUnit.Assertions
             Type T = Type2Compare(v);
             return typeof(ComparerConstraint<>).MakeGenericType(T);
         }
-        
+
         private static bool IsNumeric(Type T)
         {
             return NumericTypes.Contains(Nullable.GetUnderlyingType(T) ?? T);
         }
-        
+
         private static readonly HashSet<Type> NumericTypes = new HashSet<Type>
         {
             typeof(int), typeof(double), typeof(long), typeof(short), typeof(decimal), typeof(float),
@@ -120,7 +119,7 @@ namespace AccessCodeLib.AccUnit.Assertions
         private void AddArrayComparerConstraint(string compareText, Array expected, int expectedComparerResult, int expectedComparerResult2)
         {
             //var newConstraint = new ArrayConstraint(compareText, expected, expectedComparerResult, expectedComparerResult2);
-            
+
             Type T = expected.GetType().GetElementType();
             Type myType = typeof(ArrayConstraint<>).MakeGenericType(T);
             var newConstraint = Activator.CreateInstance(myType, compareText, expected, expectedComparerResult, expectedComparerResult2);
@@ -129,7 +128,8 @@ namespace AccessCodeLib.AccUnit.Assertions
 
         public IConstraintBuilder Null
         {
-            get {
+            get
+            {
                 AddChild(new NullConstraint());
                 return this;
             }
@@ -155,7 +155,8 @@ namespace AccessCodeLib.AccUnit.Assertions
 
         public IConstraintBuilder Not
         {
-            get {
+            get
+            {
                 AddChild(new NotConstraint());
                 return this;
             }

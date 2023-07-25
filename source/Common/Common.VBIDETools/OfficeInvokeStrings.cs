@@ -2,7 +2,7 @@
 
 namespace AccessCodeLib.Common.VBIDETools
 {
-    
+
     public interface IOfficeInvokeStrings
     {
         IOfficeApplicationInvokeStrings Application { get; }
@@ -24,7 +24,7 @@ namespace AccessCodeLib.Common.VBIDETools
     public class AccessInvokeStrings : IOfficeInvokeStrings
     {
         IOfficeApplicationInvokeStrings IOfficeInvokeStrings.Application { get { return ApplicationInvokeStrings; } }
-        
+
         public AccessInvokeStrings()
         {
             ApplicationInvokeStrings = new Application();
@@ -37,7 +37,7 @@ namespace AccessCodeLib.Common.VBIDETools
             string IOfficeApplicationInvokeStrings.Name { get { return Name; } }
             string IOfficeApplicationInvokeStrings.Run { get { return Run; } }
             string IOfficeApplicationInvokeStrings.ActiveDocument { get { return CurrentDb; } }
-            IOfficeActiveDocumentInvokeStrings IOfficeApplicationInvokeStrings.ActiveDocumentInvokeStrings {get { return new DAO.Database(); }}
+            IOfficeActiveDocumentInvokeStrings IOfficeApplicationInvokeStrings.ActiveDocumentInvokeStrings { get { return new DAO.Database(); } }
 
             public const string InvokeString = "Application";
             public const string Name = "Name";
@@ -45,7 +45,7 @@ namespace AccessCodeLib.Common.VBIDETools
             public const string CurrentDb = "CurrentDb";
             public const string GetOption = "GetOption";
             public const string SetOption = "SetOption";
-        
+
             public const string RunCommand = "RunCommand";
             public const string IsCompiled = "IsCompiled";
             public const string DbEngine = "DBEngine";
@@ -61,7 +61,7 @@ namespace AccessCodeLib.Common.VBIDETools
             public class Database : IOfficeActiveDocumentInvokeStrings
             {
                 string IOfficeActiveDocumentInvokeStrings.FullName { get { return Name; } }
-                
+
                 public const string Name = "Name";
             }
         }

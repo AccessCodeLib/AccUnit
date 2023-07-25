@@ -1,6 +1,4 @@
-﻿using AccessCodeLib.AccUnit.Interop;
-
-namespace AccessCodeLib.AccUnit.Assertions.Tests
+﻿namespace AccessCodeLib.AccUnit.Assertions.Tests
 {
     class InteropTestCollector : Interop.IMatchResultCollector
     {

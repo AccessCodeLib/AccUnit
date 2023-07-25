@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System;
-using System.Linq;
+﻿using NUnit.Framework;
+using System.Collections.Generic;
 using System.Reflection;
-using NUnit.Framework;
 
 namespace AccessCodeLib.Common.VbaToolsTests
 {
@@ -17,7 +15,7 @@ namespace AccessCodeLib.Common.VbaToolsTests
 
             Dictionary<string, List<string>> eventDictionary = new Dictionary<string, List<string>>();
 
-            foreach (var type in vbaInteropAssembly.GetTypes()) 
+            foreach (var type in vbaInteropAssembly.GetTypes())
             {
                 if (type.IsClass)
                 {
@@ -29,7 +27,7 @@ namespace AccessCodeLib.Common.VbaToolsTests
                 }
             }
 
-            
+
         }
     }
 }

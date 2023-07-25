@@ -7,7 +7,7 @@ namespace AccessCodeLib.AccUnit
 {
     public class TestClassInfo
     {
-        public TestClassInfo(string name) 
+        public TestClassInfo(string name)
             : this(name, null)
         { }
 
@@ -36,10 +36,7 @@ namespace AccessCodeLib.AccUnit
             {
                 m.GetParent += OnMembersGetParent;
             }
-            if (_tags != null)
-            {
-                _tags.AddRange(Members.Tags);
-            }
+            _tags?.AddRange(Members.Tags);
         }
 
         private void OnMembersGetParent(TestClassMemberInfo sender, ref TestClassInfo parent)
@@ -120,7 +117,7 @@ namespace AccessCodeLib.AccUnit
                 return null;
             }
 
-            
+
             var tagLines = from Match m in TagLineRegex.Matches(text)
                            select m.Groups[1].Value.Trim();
 

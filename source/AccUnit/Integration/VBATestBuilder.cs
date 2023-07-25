@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using AccessCodeLib.AccUnit.Interfaces;
+﻿using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Integration;
 using Microsoft.Vbe.Interop;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AccessCodeLib.AccUnit
 {
@@ -22,10 +22,10 @@ namespace AccessCodeLib.AccUnit
 
         public object HostApplication
         {
-            get { return (OfficeApplicationHelper == null) ? null : OfficeApplicationHelper.Application; }
+            get { return OfficeApplicationHelper?.Application; }
             set
             {
-                OfficeApplicationHelper = ComTools.GetTypeForComObject(value, "Access.Application") != null 
+                OfficeApplicationHelper = ComTools.GetTypeForComObject(value, "Access.Application") != null
                                                 ? new AccessApplicationHelper(value) : new OfficeApplicationHelper(value);
 
                 _vbProject = OfficeApplicationHelper.CurrentVBProject;
@@ -52,8 +52,7 @@ namespace AccessCodeLib.AccUnit
 
         private void CheckTestManagerInterface(object testToAdd, TestClassMemberList memberFilter)
         {
-            var bridge = testToAdd as ITestManagerBridge;
-            if (bridge != null)
+            if (testToAdd is ITestManagerBridge bridge)
             {
                 InitTestManager(bridge, memberFilter);
             }
@@ -91,7 +90,7 @@ namespace AccessCodeLib.AccUnit
 
         private void InitTestManager(ITestManagerBridge testToAdd, TestClassMemberList memberFilter = null)
         {
-            new TestManager(testToAdd, memberFilter) {ActiveVBProject = ActiveVBProject, HostApplication = HostApplication};
+            new TestManager(testToAdd, memberFilter) { ActiveVBProject = ActiveVBProject, HostApplication = HostApplication };
         }
 
         public object CreateObject(string className)
@@ -101,12 +100,11 @@ namespace AccessCodeLib.AccUnit
             if (TestClassFactoryManager.EnsureFactoryMethodExists(className))
             {
                 AccessApplicationHelper accessAppHelper = OfficeApplicationHelper as AccessApplicationHelper;
-                if (accessAppHelper != null)
-                    accessAppHelper.RunCommand(AccessApplicationHelper.AcCommand.AcCmdCompileAndSaveAllModules);
+                accessAppHelper?.RunCommand(AccessApplicationHelper.AcCommand.AcCmdCompileAndSaveAllModules);
             }
 
             var factoryMethodName = TestClassFactoryManager.GetTestClassFactoryMethodName(className);
-            
+
             return RunMethodInOfficeApplication(factoryMethodName);
         }
 
@@ -160,21 +158,14 @@ namespace AccessCodeLib.AccUnit
 
         private object GetOfficeApplication()
         {
-            var app = QueryOfficeApplication();
-            if (app == null)
-            {
-                throw new NullReferenceException("Office application reference");
-            }
+            var app = QueryOfficeApplication() ?? throw new NullReferenceException("Office application reference");
             return app;
         }
 
         private object QueryOfficeApplication()
         {
             object app = null;
-            if (OfficeApplicationReferenceRequired != null)
-            {
-                OfficeApplicationReferenceRequired(ref app);
-            }
+            OfficeApplicationReferenceRequired?.Invoke(ref app);
             return app;
         }
 

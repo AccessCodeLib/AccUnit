@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interfaces
@@ -10,7 +9,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
     public interface ITestResultSummary : ITestResult
     {
         int Count { get; }
-        
+
         [DispId(0)]
         ITestResult Item(int Index);
     }

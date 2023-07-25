@@ -1,7 +1,7 @@
-﻿using System;
-using AccessCodeLib.Common.Tools.Files;
+﻿using AccessCodeLib.Common.Tools.Files;
 using AccessCodeLib.Common.Tools.Logging;
 using Microsoft.Vbe.Interop;
+using System;
 
 namespace AccessCodeLib.Common.VBIDETools
 {

@@ -1,6 +1,5 @@
 using AccessCodeLib.AccUnit.Tools;
 using NUnit.Framework;
-using System.Drawing;
 
 namespace TestGeneratorTests
 {
@@ -16,7 +15,7 @@ namespace TestGeneratorTests
         {
             var baseString = "Public Function Xyz(ByVal x As Long) As String";
             var expected = "Public Function Xyz(ByVal x As Long, ByVal Expected As String)";
-            
+
             var actual = TestCodeGenerator.ConvertReturnValueToExpectedWithParam(baseString);
 
             Assert.AreEqual(expected, actual);

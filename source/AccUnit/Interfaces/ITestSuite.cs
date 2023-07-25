@@ -12,7 +12,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
 
         [ComVisible(false)]
         IEnumerable<ITestFixture> TestFixtures { get; }
-        
+
         [ComVisible(false)]
         ITestSummary Summary { get; }
 
@@ -21,14 +21,14 @@ namespace AccessCodeLib.AccUnit.Interfaces
 
         [ComVisible(false)]
         ITestResultCollector TestResultCollector { get; set; }
-        
+
         ITestSuite Run();
         ITestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
 
         [ComVisible(false)]
         void AddTestClasses(IEnumerable<TestClassInfo> testClasses);
     }
-    
+
     public interface ITestSuiteEvents
     {
         event TestSuiteStartedEventHandler TestSuiteStarted;
@@ -41,7 +41,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
         event MessageEventHandler TestTraceMessage;
         event DisposeEventHandler Disposed;
     }
-    
+
     public delegate void DisposeEventHandler(object sender);
     public delegate void NullReferenceEventHandler(ref object returnedObject);
     public delegate void FinishedEventHandler(ITestResult result);

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using AccessCodeLib.AccUnit.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using AccessCodeLib.AccUnit.Interfaces;
 using VbMsgBoxResult = AccessCodeLib.AccUnit.Interfaces.VbMsgBoxResult;
 
 namespace AccessCodeLib.AccUnit.Common
@@ -12,7 +12,7 @@ namespace AccessCodeLib.AccUnit.Common
         internal delegate void GetParentEventHandler(TestClassMemberInfo sender, ref TestClassInfo parent);
         internal event GetParentEventHandler GetParent;
         private readonly IList<VbMsgBoxResult> _msgBoxResults = new List<VbMsgBoxResult>();
-        
+
         public TestClassMemberInfo(string name)
         {
             Name = name;
@@ -40,10 +40,7 @@ namespace AccessCodeLib.AccUnit.Common
             get
             {
                 TestClassInfo parent = null;
-                if (GetParent != null)
-                {
-                    GetParent(this, ref parent);
-                }
+                GetParent?.Invoke(this, ref parent);
                 return parent;
             }
         }

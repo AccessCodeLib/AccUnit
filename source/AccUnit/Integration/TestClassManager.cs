@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using AccessCodeLib.AccUnit.Common;
-using AccessCodeLib.AccUnit.Configuration;
+﻿using AccessCodeLib.AccUnit.Configuration;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Templates;
 using Microsoft.Vbe.Interop;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AccessCodeLib.AccUnit
 {
@@ -65,13 +64,13 @@ namespace AccessCodeLib.AccUnit
 
         public void RemoveTestClass(string name, bool export = true)
         {
-            RemoveVbComponent(name, export, (export ? ExportDirectory : null) );
+            RemoveVbComponent(name, export, export ? ExportDirectory : null);
             DeleteFactoryCodeModule();
         }
 
         public void RemoveTestComponents(bool export = true, bool removeTestEnvironment = false)
         {
-            var components = (new TestClassReader(ActiveVBProject)).GetTestComponents();
+            var components = new TestClassReader(ActiveVBProject).GetTestComponents();
             RemoveTestComponents(components, export);
 
             if (removeTestEnvironment)
@@ -85,7 +84,7 @@ namespace AccessCodeLib.AccUnit
 
         public void RemoveTestComponents(IEnumerable<CodeModuleInfo> list, bool export = true)
         {
-            var exportDirectory = (export ? ExportDirectory : null);
+            var exportDirectory = export ? ExportDirectory : null;
             foreach (var c in list)
             {
                 if (c.ComponentType == vbext_ComponentType.vbext_ct_Document)
@@ -110,12 +109,11 @@ namespace AccessCodeLib.AccUnit
 
         private void RemoveOfficeDocument(string name, bool export, string exportdirectory)
         {
-            var accessApplication = ApplicationHelper as AccessApplicationHelper;
-            if (accessApplication == null)
+            if (!(ApplicationHelper is AccessApplicationHelper accessApplication))
                 return;
 
             var objectInfo = GetObjectInfo(name);
-            
+
             if (export)
             {
                 var fileName = $"{exportdirectory.TrimEnd(' ', '\\')}\\{name}{objectInfo.FileExtension}";
@@ -158,7 +156,7 @@ namespace AccessCodeLib.AccUnit
                 exportDirectory = ExportDirectory;
             }
 
-            var classNames = (new TestClassReader(ActiveVBProject)).GetTestClasses();
+            var classNames = new TestClassReader(ActiveVBProject).GetTestClasses();
             foreach (var testClassInfo in classNames)
             {
                 ExportTestClass(testClassInfo.Name, exportDirectory);
@@ -172,7 +170,7 @@ namespace AccessCodeLib.AccUnit
         }
 
         private string _exportDir;
-        public string ExportDirectory 
+        public string ExportDirectory
         {
             get
             {
@@ -243,7 +241,7 @@ namespace AccessCodeLib.AccUnit
 
         public void ImportTestComponents(string fileNameFilter = null, string importPath = null, bool overwriteExistingComponent = false)
         {
-            var importDirectory = (importPath ?? ImportDirectory);
+            var importDirectory = importPath ?? ImportDirectory;
             if (fileNameFilter == null)
             {
                 fileNameFilter = "*";
@@ -276,7 +274,7 @@ namespace AccessCodeLib.AccUnit
                 catch (Exception)
                 {
                     // ignored
-                }   
+                }
             }
             else
             {
@@ -292,13 +290,12 @@ namespace AccessCodeLib.AccUnit
             else
             {
                 CodeModuleManager.Generator.Add(importFile);
-            }   
+            }
         }
 
         private void ImportOfficeObject(FileSystemInfo importFile)
         {
-            var accessApplication = ApplicationHelper as AccessApplicationHelper;
-            if (accessApplication == null)
+            if (!(ApplicationHelper is AccessApplicationHelper accessApplication))
                 return;
 
             var name = importFile.Name;
@@ -356,20 +353,18 @@ namespace AccessCodeLib.AccUnit
                     testClassReader = new TestClassReader(ActiveVBProject);
                 }
 
-                return  testClassReader.GetTestComponents();
+                return testClassReader.GetTestComponents();
             }
         }
 
         private void RaiseScanningForTestModules()
         {
-            if (ScanningForTestModules != null)
-                ScanningForTestModules(this, EventArgs.Empty);
+            ScanningForTestModules?.Invoke(this, EventArgs.Empty);
         }
 
         private void RaiseRepairActiveVBProjectCOMException()
         {
-            if (RepairActiveVBProjectCOMException != null)
-                RepairActiveVBProjectCOMException(this, EventArgs.Empty);
+            RepairActiveVBProjectCOMException?.Invoke(this, EventArgs.Empty);
         }
 
         public TestClassList GetTestClassListFromVBProject(bool readMemberInfo)
@@ -452,7 +447,7 @@ namespace AccessCodeLib.AccUnit
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed) return;
-            
+
             try
             {
                 if (disposing)

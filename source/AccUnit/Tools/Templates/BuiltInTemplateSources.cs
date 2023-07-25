@@ -2,7 +2,8 @@
 
 namespace AccessCodeLib.AccUnit.Tools.Templates
 {
-    static class BuiltInTemplateSources {
+    static class BuiltInTemplateSources
+    {
         static BuiltInTemplateSources()
         {
             using (new BlockLogger())

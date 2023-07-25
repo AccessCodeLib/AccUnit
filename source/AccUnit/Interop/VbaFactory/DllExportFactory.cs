@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-namespace AccessCodeLib.AccUnit.Interop
+﻿namespace AccessCodeLib.AccUnit.Interop
 {
     /*
     static class UnmanagedExports

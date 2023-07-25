@@ -18,9 +18,9 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
         protected override IMatchResult Compare(object actual)
         {
             IMatchResult result;
-            if (actual is IMatchResult)
+            if (actual is IMatchResult matchResult)
             {
-                result = (IMatchResult)actual;
+                result = matchResult;
             }
             else
             {

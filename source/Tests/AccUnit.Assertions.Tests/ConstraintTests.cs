@@ -11,7 +11,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             // Is.All
             // Is.EquivalentTo
             // Is.InRange
-           
+
         }
 
         private static Assertions NewTestAssert(TestCollector testCollector)
@@ -39,7 +39,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             var testCollector = new TestCollector();
             var assert = NewTestAssert(testCollector);
             var Iz = new ConstraintBuilder();
-            
+
             assert.That(actual, Iz.EqualTo(expected));
             var result = testCollector.Result;
 
@@ -64,7 +64,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
         {
             var testCollector = new TestCollector();
             var assert = NewTestAssert(testCollector);
-            
+
             assert.AreEqual(expected, actual);
             var result = testCollector.Result;
 
@@ -88,7 +88,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             var testCollector = new TestCollector();
             var assert = NewTestAssert(testCollector);
             var Iz = new ConstraintBuilder();
-            
+
             assert.That(actual, Iz.Not.Not.Not.EqualTo(expected));
             var result = testCollector.Result;
 
@@ -111,10 +111,10 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             var testCollector = new TestCollector();
             var assert = NewTestAssert(testCollector);
             var Iz = new ConstraintBuilder();
-            
+
             assert.That(actual, Iz.LessThan(expected));
             var result = testCollector.Result;
-            
+
             Assert.That(result.Match, Is.EqualTo(expectedResult));
         }
 
@@ -134,10 +134,10 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             var testCollector = new TestCollector();
             var assert = NewTestAssert(testCollector);
             var Iz = new ConstraintBuilder();
-            
+
             assert.That(actual, Iz.LessThanOrEqualTo(expected));
             var result = testCollector.Result;
-            
+
             Assert.That(result.Match, Is.EqualTo(expectedResult));
         }
 
@@ -157,10 +157,10 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             var testCollector = new TestCollector();
             var assert = NewTestAssert(testCollector);
             var Iz = new ConstraintBuilder();
-            
+
             assert.That(actual, Iz.GreaterThan(expected));
             var result = testCollector.Result;
-            
+
             Assert.That(result.Match, Is.EqualTo(expectedResult), result.Text);
         }
 
@@ -183,10 +183,10 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             var testCollector = new TestCollector();
             var assert = NewTestAssert(testCollector);
             var Iz = new ConstraintBuilder();
-            
+
             assert.That(actual, Iz.GreaterThanOrEqualTo(expected));
             var result = testCollector.Result;
-            
+
             Assert.That(result.Match, Is.EqualTo(expectedResult), result.Text);
         }
 
@@ -198,10 +198,10 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             var testCollector = new TestCollector();
             var assert = NewTestAssert(testCollector);
             var Iz = new ConstraintBuilder();
-            
+
             assert.That(actual, Iz.Null);
             var result = testCollector.Result;
-            
+
             Assert.That(result.Match, Is.EqualTo(expectedResult), result.Text);
         }
 
@@ -211,10 +211,10 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             var testCollector = new TestCollector();
             var assert = NewTestAssert(testCollector);
             var Iz = new ConstraintBuilder();
-            
+
             assert.That(DBNull.Value, Iz.Null);
             var result = testCollector.Result;
-            
+
             Assert.That(result.Match, Is.EqualTo(false), result.Text);
         }
 
@@ -224,10 +224,10 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             var testCollector = new TestCollector();
             var assert = NewTestAssert(testCollector);
             var Iz = new ConstraintBuilder();
-            
+
             assert.That(DBNull.Value, Iz.DBNull);
             var result = testCollector.Result;
-            
+
             Assert.That(result.Match, Is.EqualTo(true), result.Text);
         }
 
@@ -237,13 +237,13 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             var testCollector = new TestCollector();
             var assert = NewTestAssert(testCollector);
             var Iz = new ConstraintBuilder();
-            
+
             assert.That(DBNull.Value, Iz.EqualTo(DBNull.Value));
             var result = testCollector.Result;
-            
+
             Assert.That(result.Match, Is.EqualTo(true), result.Text);
         }
-        
+
         [Test]
         public void DbNullEqualToNumericTest()
         {
@@ -264,8 +264,8 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             var assert = NewTestAssert(testCollector);
             var Iz = new ConstraintBuilder();
 
-            int[] expected = new int[] {1, 2, 3};
-            int[] actual = new int[] {1, 2, 3};
+            int[] expected = new int[] { 1, 2, 3 };
+            int[] actual = new int[] { 1, 2, 3 };
 
             assert.That(actual, Iz.EqualTo(expected));
             var result = testCollector.Result;
@@ -290,7 +290,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
         }
 
         [Test]
-        public void IntArrayIsNotEqual_DifferentLength ()
+        public void IntArrayIsNotEqual_DifferentLength()
         {
             var testCollector = new TestCollector();
             var assert = NewTestAssert(testCollector);

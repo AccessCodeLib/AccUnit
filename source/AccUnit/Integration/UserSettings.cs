@@ -1,7 +1,7 @@
-﻿using System;
-using System.ComponentModel;
-using AccessCodeLib.AccUnit.Properties;
+﻿using AccessCodeLib.AccUnit.Properties;
 using AccessCodeLib.Common.Tools.Logging;
+using System;
+using System.ComponentModel;
 
 namespace AccessCodeLib.AccUnit
 {
@@ -32,25 +32,24 @@ namespace AccessCodeLib.AccUnit
             }
             set
             {
-                if (value == null) throw new ArgumentNullException();
-                _current = value;
+                _current = value ?? throw new ArgumentNullException();
             }
         }
 
         #endregion
 
         private UserSettings()
-        { 
+        {
         }
 
         public UserSettings Clone()
         {
             var clone = new UserSettings
-                            {
-                                ImportExportFolder = ImportExportFolder,
-                                SeparatorChar = SeparatorChar,
-                                SeparatorMaxLength = SeparatorMaxLength
-                            };
+            {
+                ImportExportFolder = ImportExportFolder,
+                SeparatorChar = SeparatorChar,
+                SeparatorMaxLength = SeparatorMaxLength
+            };
             return clone;
         }
 
@@ -94,16 +93,16 @@ namespace AccessCodeLib.AccUnit
         [Category("Text output")]
         [DefaultValue(60)]
         [Description("")]
-// ReSharper disable MemberCanBePrivate.Global
+        // ReSharper disable MemberCanBePrivate.Global
         public int SeparatorMaxLength { get; set; }
-// ReSharper restore MemberCanBePrivate.Global
+        // ReSharper restore MemberCanBePrivate.Global
 
         [Category("Text output")]
         [DefaultValue('-')]
         [Description("")]
-// ReSharper disable MemberCanBePrivate.Global
+        // ReSharper disable MemberCanBePrivate.Global
         public char SeparatorChar { get; set; }
-// ReSharper restore MemberCanBePrivate.Global
+        // ReSharper restore MemberCanBePrivate.Global
 
 
         #endregion

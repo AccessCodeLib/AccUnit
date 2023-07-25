@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
-using AccessCodeLib.Common.Tools.Files;
+﻿using AccessCodeLib.Common.Tools.Files;
 using AccessCodeLib.Common.Tools.Logging;
 using Microsoft.Vbe.Interop;
+using System;
+using System.Linq;
 
 namespace AccessCodeLib.Common.VBIDETools
 {
@@ -12,10 +12,10 @@ namespace AccessCodeLib.Common.VBIDETools
         private InvocationHelper _invocationHelper;
 
         public object Application { get { return _application; } }
-        protected InvocationHelper InvocationHelper {get { return _invocationHelper;} }
+        protected InvocationHelper InvocationHelper { get { return _invocationHelper; } }
 
         private string _officeApplicationName;
-        public string  Name
+        public string Name
         {
             get
             {
@@ -28,16 +28,13 @@ namespace AccessCodeLib.Common.VBIDETools
 
         public OfficeApplicationHelper(object application)
         {
-            if (application == null)
-                throw new ArgumentNullException();
-
-            _application = application;
+            _application = application ?? throw new ArgumentNullException();
             _invocationHelper = new InvocationHelper(application);
         }
 
-        public virtual VBE VBE 
-        { 
-            get { return (VBE) _invocationHelper.InvokePropertyGet("VBE"); }
+        public virtual VBE VBE
+        {
+            get { return (VBE)_invocationHelper.InvokePropertyGet("VBE"); }
         }
 
         public VBProject CurrentVBProject
@@ -45,7 +42,7 @@ namespace AccessCodeLib.Common.VBIDETools
             get
             {
                 var checkedVbProject = GetCheckedVbProject();
-                return (checkedVbProject ?? VBE.ActiveVBProject);
+                return checkedVbProject ?? VBE.ActiveVBProject;
             }
         }
 
@@ -117,12 +114,12 @@ namespace AccessCodeLib.Common.VBIDETools
         protected virtual void Dispose(bool disposing)
         {
             if (_disposed) return;
-            
+
             try
             {
                 if (disposing)
                 {
-                    if (_invocationHelper!=null)
+                    if (_invocationHelper != null)
                     {
                         _invocationHelper.Dispose();
                         _invocationHelper = null;

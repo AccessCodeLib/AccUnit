@@ -6,7 +6,8 @@
 
         public static VbaConstantsDictionary ConstantsDictionary
         {
-            get {
+            get
+            {
                 if (_VbaConstantsDictionary == null)
                 {
                     _VbaConstantsDictionary = new VbaConstantsDictionary();

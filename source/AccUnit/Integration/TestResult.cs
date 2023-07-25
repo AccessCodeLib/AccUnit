@@ -51,6 +51,6 @@ namespace AccessCodeLib.AccUnit.Integration
         }
 
         public double ElapsedTime { get; set; }
-        
+
     }
 }

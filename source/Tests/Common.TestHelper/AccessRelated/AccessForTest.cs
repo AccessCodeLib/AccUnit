@@ -1,13 +1,13 @@
+using Microsoft.Office.Interop.Access;
+using Microsoft.Office.Interop.Access.Dao;
+using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Microsoft.Office.Interop.Access;
 using System.Threading;
-using Microsoft.Vbe.Interop;
-using Microsoft.Office.Interop.Access.Dao;
 
 namespace AccessCodeLib.Common.TestHelpers.AccessRelated
 {
@@ -200,7 +200,7 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
         {
             get { return (Database)Application.CurrentDb(); }
         }
-        
+
         public bool IsDatabaseOpen { get { return Application.CurrentDb() != null; } }
 
         public bool IsLockFilePresent { get; private set; }
@@ -260,25 +260,25 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
 
             public void Create()
             {
-            using (var databaseWrapper = new ComWrapper<Database>(_getDatabase()))
-            {
-                var database = databaseWrapper.ComReference;
-                var newTable = database.CreateTableDef(_tableName);
-                if (_fieldNames.Count == 0)
+                using (var databaseWrapper = new ComWrapper<Database>(_getDatabase()))
                 {
-                    _fieldNames.Add("dummy");
+                    var database = databaseWrapper.ComReference;
+                    var newTable = database.CreateTableDef(_tableName);
+                    if (_fieldNames.Count == 0)
+                    {
+                        _fieldNames.Add("dummy");
+                    }
+                    foreach (var fieldName in _fieldNames)
+                    {
+                        var theField = newTable.CreateField(fieldName, DataTypeEnum.dbLong);
+                        newTable.Fields.Append(theField);
+                    }
+                    using (var tableDefsWrapper = new ComWrapper<TableDefs>(database.TableDefs))
+                    {
+                        tableDefsWrapper.ComReference.Append(newTable);
+                        tableDefsWrapper.ComReference.Refresh();
+                    }
                 }
-                foreach (var fieldName in _fieldNames)
-                {
-                    var theField = newTable.CreateField(fieldName, DataTypeEnum.dbLong);
-                    newTable.Fields.Append(theField);
-                }
-                using (var tableDefsWrapper = new ComWrapper<TableDefs>(database.TableDefs))
-                {
-                    tableDefsWrapper.ComReference.Append(newTable);
-                    tableDefsWrapper.ComReference.Refresh();
-                }
-            }
             }
 
             public TableBuilder AndField(string fieldName)

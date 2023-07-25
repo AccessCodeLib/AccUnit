@@ -35,7 +35,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             var Iz = new AccUnit.Interop.ConstraintBuilder();
             assert.That(actual, Iz.EqualTo(expected));
             var result = testCollector.Result;
-            
+
             Assert.That(result.Match, Is.EqualTo(expectedResult), result.Text);
         }
     }

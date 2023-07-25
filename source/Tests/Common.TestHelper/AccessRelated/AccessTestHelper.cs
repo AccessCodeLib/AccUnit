@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Runtime.InteropServices;
+﻿using Microsoft.Office.Interop.Access;
 using Microsoft.Office.Interop.Access.Dao;
 using Microsoft.Vbe.Interop;
-using System.IO;
-using System.Diagnostics;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
-using Microsoft.Office.Interop.Access;
 
 namespace AccessCodeLib.Common.TestHelpers.AccessRelated
 {
@@ -30,7 +30,7 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
 
         public AccessTestHelper(string filePath) : this(";LANGID=0x0409;CP=1252;COUNTRY=0", filePath)
         { }
-            
+
         public int EnsureAccessKilledWaitInterval { get; set; }
 
         ~AccessTestHelper()
@@ -70,9 +70,9 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
 
         public dynamic Application { get; private set; }
 
-        public Database CurrentDb { get { return (Database) Application.CurrentDb(); } }
+        public Database CurrentDb { get { return (Database)Application.CurrentDb(); } }
         public ADODB.Connection CurrentConnection { get { return (ADODB.Connection)Application.CurrentProject.Connection; } }
-        public CurrentProject CurrentProject { get { return (CurrentProject) Application.CurrentProject; } }
+        public CurrentProject CurrentProject { get { return (CurrentProject)Application.CurrentProject; } }
 
         public VBE VBE
         {
@@ -116,7 +116,9 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
         private string TempDbFileName { get; set; }
 
         private _DBEngine _dbEngine;
-        public _DBEngine DBEngine { get
+        public _DBEngine DBEngine
+        {
+            get
             {
                 if (_dbEngine == null)
                 {
@@ -161,7 +163,7 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
 
         private string CreateTestDb()
         {
-            var tempDbFileName = (string.IsNullOrEmpty(_path)) ? GetTempFileName() : _path;
+            var tempDbFileName = string.IsNullOrEmpty(_path) ? GetTempFileName() : _path;
             CreateTempDatabase(tempDbFileName);
             return tempDbFileName;
         }

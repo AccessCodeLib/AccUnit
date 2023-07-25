@@ -11,7 +11,7 @@ namespace AccessCodeLib.AccUnit
         }
 
         public OfficeApplicationRunException(string message)
-            :base(message)
+            : base(message)
         {
             _parameters = new object[0];
         }
@@ -24,7 +24,7 @@ namespace AccessCodeLib.AccUnit
 
         public OfficeApplicationRunException(Exception innerException, object[] parameters)
             : base(
-                string.Format("An exception occurred while calling method {0} via Application.Run()", (parameters != null ? parameters[0] : null)),
+                string.Format("An exception occurred while calling method {0} via Application.Run()", parameters?[0]),
                 innerException)
         {
             if (parameters != null && parameters.Length > 0)

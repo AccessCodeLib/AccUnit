@@ -1,5 +1,4 @@
-﻿using AccessCodeLib.AccUnit.Interfaces;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interop
@@ -18,7 +17,7 @@ namespace AccessCodeLib.AccUnit.Interop
         void TestFinished(ITestResult Result);
         void TestFixtureFinished(ITestResult Result);
         */
-        
+
         //void TestSuiteReset(ResetMode Mode, bool Cancel);
         // void Disposed([MarshalAs(UnmanagedType.IDispatch)] object sender);
     }

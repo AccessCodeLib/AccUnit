@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.Vbe.Interop;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
 {
@@ -52,8 +52,7 @@ namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
             var startLine = codeModule.CountOfDeclarationLines + 1;
             while (startLine < codeModule.CountOfLines)
             {
-                vbext_ProcKind procKind;
-                var procedureName = codeModule.get_ProcOfLine(startLine, out procKind);
+                var procedureName = codeModule.get_ProcOfLine(startLine, out vbext_ProcKind procKind);
                 if (procKind == vbext_ProcKind.vbext_pk_Proc)
                 {
                     var methodDeclaration = GetMethodDeclaration(codeModule, procedureName, procKind);
@@ -78,13 +77,13 @@ namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
             var isPublic = match.Groups[1].Value == "Public ";
             var parameterList = match.Groups[4].Value;
             return new Member
-                   {
-                       Module = this,
-                       IsPublic = isPublic,
-                       Type = memberType,
-                       Name = procedureName,
-                       ParameterList = parameterList
-                   };
+            {
+                Module = this,
+                IsPublic = isPublic,
+                Type = memberType,
+                Name = procedureName,
+                ParameterList = parameterList
+            };
         }
 
         private string GetMethodDeclaration(_CodeModule codeModule, string procedureName, vbext_ProcKind procKind)
@@ -161,7 +160,7 @@ namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
 
         private string GetIndent()
         {
-            return new string(' ', 3*_indentLevel);
+            return new string(' ', 3 * _indentLevel);
         }
 
         public void Indent()
@@ -181,17 +180,16 @@ namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
         {
             if (_commentLinesUntilFirstProcedure == null)
                 ReadCommentLinesUntilFirstProcedure();
-// ReSharper disable AssignNullToNotNullAttribute
+            // ReSharper disable AssignNullToNotNullAttribute
             return _commentLinesUntilFirstProcedure.Any(l => l.Contains(headerTag));
-// ReSharper restore AssignNullToNotNullAttribute
+            // ReSharper restore AssignNullToNotNullAttribute
         }
 
         private void ReadCommentLinesUntilFirstProcedure()
         {
             var declarationLines = new List<string>();
             var codeModule = _getCodeModuleFunc();
-            vbext_ProcKind procKind;
-            var procName = codeModule.get_ProcOfLine(codeModule.CountOfDeclarationLines+1, out procKind);
+            var procName = codeModule.get_ProcOfLine(codeModule.CountOfDeclarationLines + 1, out vbext_ProcKind procKind);
             var sectionEndLine = (procName != null)
                                      ? codeModule.ProcBodyLine[procName, procKind]
                                      : codeModule.CountOfDeclarationLines;

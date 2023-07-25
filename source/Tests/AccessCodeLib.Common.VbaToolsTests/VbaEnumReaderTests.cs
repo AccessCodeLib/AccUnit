@@ -1,13 +1,12 @@
-﻿using System;
+﻿using AccessCodeLib.AccUnit.Tools.VBA;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using AccessCodeLib.AccUnit.Tools.VBA;
-using NUnit.Framework;
 
-namespace AccessCodeLib.Common.VBIDETools.Tests
+namespace AccessCodeLib.Common.VbaToolsTests
 {
     [TestFixture]
     public class VbaEnumReaderTests
@@ -40,7 +39,7 @@ namespace AccessCodeLib.Common.VBIDETools.Tests
         public void ReadAllEnums()
         {
             Assembly vbaInteropAssembly = Assembly.Load("Interop.VBA");
-            
+
             Dictionary<string, Dictionary<string, int>> enumDictionary = new Dictionary<string, Dictionary<string, int>>();
 
             foreach (Type type in vbaInteropAssembly.GetTypes())

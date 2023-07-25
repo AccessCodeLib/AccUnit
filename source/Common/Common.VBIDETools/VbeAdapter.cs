@@ -1,8 +1,8 @@
-﻿using System;
+﻿using AccessCodeLib.Common.Tools.Logging;
+using Microsoft.Vbe.Interop;
+using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using AccessCodeLib.Common.Tools.Logging;
-using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.Common.VBIDETools
 {

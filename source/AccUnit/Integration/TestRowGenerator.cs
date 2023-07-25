@@ -1,14 +1,14 @@
-﻿using System;
+﻿using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.AccUnit.Tools.VBA;
+using AccessCodeLib.Common.Tools.Logging;
+using AccessCodeLib.Common.VBIDETools;
+using Microsoft.Vbe.Interop;
+using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using AccessCodeLib.AccUnit.Interfaces;
-using AccessCodeLib.AccUnit.Tools.VBA;
-using AccessCodeLib.Common.Tools.Logging;
-using AccessCodeLib.Common.VBIDETools;
-using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit
 {
@@ -141,7 +141,7 @@ namespace AccessCodeLib.AccUnit
             if (match.Success)
             {
                 var nameString = match.Groups[2].Value;
-                if (nameString.IndexOf("\"", StringComparison.Ordinal) != 0) 
+                if (nameString.IndexOf("\"", StringComparison.Ordinal) != 0)
                     nameString = "\"" + nameString.TrimEnd();
 
                 if (nameString.LastIndexOf("\"", StringComparison.Ordinal) == 0)
@@ -153,7 +153,7 @@ namespace AccessCodeLib.AccUnit
                         nameString = nameString.Substring(0, commentStartIndex - 1) + "\" " + nameString.Substring(commentStartIndex);
                     }
                     else
-                        nameString = nameString + "\"";
+                        nameString += "\"";
                 }
 
                 paramstring = match.Groups[1] + "Name=" + nameString;
@@ -178,7 +178,7 @@ namespace AccessCodeLib.AccUnit
             Logger.Log(string.Format("Fill params, replace constants"));
 
             var tempString = ConstantStringRegex.Replace(paramstring,
-                                                            m => 
+                                                            m =>
                                                             string.Format("{0}{1}{2}", m.Groups[1].Value,
                                                                              ReplaceParamConstantStringWithValue(m.Groups[2].Value), m.Groups[3].Value));
             Logger.Log("completed");
@@ -191,7 +191,7 @@ namespace AccessCodeLib.AccUnit
 
             var parts = paramstring.Split('.');
             object value = null;
-            
+
             switch (parts.Length)
             {
                 case 1:
@@ -201,7 +201,7 @@ namespace AccessCodeLib.AccUnit
                         value = (int)enumValue;
                         break;
                     }
-                    value =  VbaTools.ConstantsDictionary.GetConstantValue(parts[0]);
+                    value = VbaTools.ConstantsDictionary.GetConstantValue(parts[0]);
                     break;
                 case 2:
                     value = VbaTools.ConstantsDictionary.GetEnumValue(parts[0], parts[1]) ?? VbaTools.ConstantsDictionary.GetConstantValue(parts[0], parts[1]);

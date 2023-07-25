@@ -1,6 +1,6 @@
-﻿using System;
-using AccessCodeLib.AccUnit.Tools.Templates;
+﻿using AccessCodeLib.AccUnit.Tools.Templates;
 using AccessCodeLib.Common.Tools.Logging;
+using System;
 
 namespace AccessCodeLib.AccUnit.Tools
 {
@@ -31,8 +31,7 @@ namespace AccessCodeLib.AccUnit.Tools
             }
             set
             {
-                if (value == null) throw new ArgumentNullException();
-                _current = value;
+                _current = value ?? throw new ArgumentNullException();
             }
         }
 
@@ -45,12 +44,12 @@ namespace AccessCodeLib.AccUnit.Tools
         public UserSettings Clone()
         {
             var clone = new UserSettings
-                            {
-                                TemplateFolder = TemplateFolder,
-                                TestTemplates = TestTemplates,
-                                UserDefinedTemplates = UserDefinedTemplates,
-                                TestMethodTemplate = TestMethodTemplate
-                            };
+            {
+                TemplateFolder = TemplateFolder,
+                TestTemplates = TestTemplates,
+                UserDefinedTemplates = UserDefinedTemplates,
+                TestMethodTemplate = TestMethodTemplate
+            };
             return clone;
         }
 
@@ -90,7 +89,7 @@ namespace AccessCodeLib.AccUnit.Tools
         #region Setting Properties
 
         private string _templateFolder;
-        public string TemplateFolder 
+        public string TemplateFolder
         {
             get
             {

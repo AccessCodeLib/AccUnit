@@ -1,10 +1,10 @@
 ﻿using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.VBIDETools;
+using Microsoft.Vbe.Interop;
+using Microsoft.VisualBasic;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualBasic;
-using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit
 {
@@ -13,7 +13,7 @@ namespace AccessCodeLib.AccUnit
         private readonly object _testClassInstance;
         private readonly IList<ITest> _tests = new List<ITest>();
         private readonly TestFixtureMembers _fixtureMembers = new TestFixtureMembers();
-        
+
         public TestFixture(object testClassInstance)
         {
             _testClassInstance = testClassInstance;
@@ -46,12 +46,12 @@ namespace AccessCodeLib.AccUnit
             var vbc = vbProject.VBComponents.Item(Name);
             var codeReader = new CodeModuleReader(vbc.CodeModule);
             var members = codeReader.Members.FindAll(true).FindAll(m => m.ProcKind == vbext_ProcKind.vbext_pk_Proc);
-            
-            foreach(var member in members)
+
+            foreach (var member in members)
             {
                 var fixtureMember = GetTestFixtureMember(vbProject, Name, member.Name);
                 _fixtureMembers.Add(fixtureMember);
-                
+
                 if (fixtureMember.IsFixtureSetup)
                 {
                     HasFixtureSetup = true;
@@ -74,10 +74,10 @@ namespace AccessCodeLib.AccUnit
         public static ITestFixtureMember GetTestFixtureMember(VBProject vbProject, string fixtureName, string memberName)
         {
             var fixtureMember = new TestFixtureMember(memberName);
-            
+
             var testClassReader = new TestClassReader(vbProject);
             fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
-            
+
             return fixtureMember;
         }
 
@@ -94,9 +94,9 @@ namespace AccessCodeLib.AccUnit
 
         public IEnumerable<ITest> Tests
         {
-            get 
+            get
             {
-                return _tests; 
+                return _tests;
             }
         }
 

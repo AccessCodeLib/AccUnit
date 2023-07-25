@@ -6,11 +6,14 @@
         protected string CompareText { get; set; }
 
         protected IConstraint _child;
-        public IConstraint Child { get
+        public IConstraint Child
+        {
+            get
             {
                 return Child;
             }
-            set {
+            set
+            {
                 if (FirstChild == null)
                 {
                     FirstChild = value;

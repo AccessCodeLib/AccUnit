@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AccessCodeLib.AccUnit.Interfaces
+﻿namespace AccessCodeLib.AccUnit.Interfaces
 {
     public interface ITestListener
     {

@@ -56,7 +56,7 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
         {
             var sb = new StringBuilder();
             var maxLineNoLength = TotalProcedureCount.ToString().Length;
-            
+
             var procedureKeys = _procedures.Keys.Where(k => (procedureName ?? "*") == "*" || k == procedureName).OrderBy(k => k);
 
             foreach (var key in procedureKeys)

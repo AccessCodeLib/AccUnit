@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interop
@@ -36,13 +35,14 @@ namespace AccessCodeLib.AccUnit.Interop
     [ClassInterface(ClassInterfaceType.None)]
     [ProgId(Constants.ProgIdLibName + ".Assert")]
     public class Assert : AccUnit.Assertions.Assertions, IAssert
-    { 
-        new public IMatchResultCollector MatchResultCollector {
-            get 
+    {
+        new public IMatchResultCollector MatchResultCollector
+        {
+            get
             {
                 return (IMatchResultCollector)base.MatchResultCollector;
             }
-            set 
+            set
             {
                 base.MatchResultCollector = new MatchResultCollectorBridge(value);
             }
@@ -62,12 +62,12 @@ namespace AccessCodeLib.AccUnit.Interop
         {
             MatchResultCollector?.Add(result, infoText);
         }
-        
+
         #region IDisposable Support
 
         bool _disposed;
 
-        
+
         protected override void Dispose(bool disposing)
         {
             if (_disposed) return;
@@ -107,7 +107,7 @@ namespace AccessCodeLib.AccUnit.Interop
         {
             //_hostApplication = null;
         }
-        
+
         ~Assert()
         {
             Dispose(false);

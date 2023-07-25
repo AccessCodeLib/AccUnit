@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using AccessCodeLib.Common.Tools.Logging;
+﻿using AccessCodeLib.Common.Tools.Logging;
 using Microsoft.Vbe.Interop;
+using System;
+using System.Linq;
 
 namespace AccessCodeLib.Common.VBIDETools
 {
@@ -21,7 +21,7 @@ namespace AccessCodeLib.Common.VBIDETools
 
         public CodeModule Add(vbext_ComponentType type,
                               string name,
-                              string sourcecode = null, 
+                              string sourcecode = null,
                               bool removeStandardLines = false)
         {
             var vbcomponent = AddComponent(name, type);
@@ -32,7 +32,7 @@ namespace AccessCodeLib.Common.VBIDETools
 
             if (sourcecode != null)
                 codemodule.InsertLines(1, sourcecode);
-           
+
             return codemodule;
         }
 

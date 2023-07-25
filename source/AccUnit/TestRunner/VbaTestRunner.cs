@@ -1,12 +1,11 @@
-﻿using AccessCodeLib.AccUnit.Assertions.Interfaces;
-using AccessCodeLib.AccUnit.Assertions;
+﻿using AccessCodeLib.AccUnit.Assertions;
+using AccessCodeLib.AccUnit.Assertions.Interfaces;
 using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.TestRunner
 {
@@ -20,7 +19,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
         public event FinishedEventHandler TestFinished;
 
         private readonly VBProject _vbProject;
-        
+
         public VbaTestRunner()
         {
         }
@@ -29,7 +28,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
         {
             _vbProject = vbProject;
         }
-        
+
         public ITestResult Run(ITestSuite testSuite, ITestResultCollector testResultCollector)
         {
             RaiseTestSuiteStarted(testSuite);
@@ -40,7 +39,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
                 var result = Run(tests, testResultCollector);
                 results.Add(result);
             }
-            
+
             RaiseTestSuiteFinished(results);
 
             return results;
@@ -102,7 +101,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
             var result = Run(test);
             testResultCollector?.Add(result);
         }
-        
+
         private ITest CreateTest(ITestFixture testFixture, string testMethodName)
         {
             var memberInfo = TestFixture.GetTestFixtureMember(_vbProject, testFixture.Name, testMethodName).TestClassMemberInfo;
@@ -119,7 +118,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
         public ITestResult Run(IRowTest test)
         {
             var results = new TestResultCollection(test);
-            foreach(var paramTest in test.ParamTests)
+            foreach (var paramTest in test.ParamTests)
             {
                 var result = Run(paramTest);
                 results.Add(result);
@@ -139,7 +138,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
                 RaiseTestFinished(ignoreTestResult);
                 return ignoreTestResult;
             }
-            
+
             if (test is IRowTest rowTest)
             {
                 return Run(rowTest);

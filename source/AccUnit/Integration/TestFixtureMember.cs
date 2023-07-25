@@ -1,10 +1,8 @@
-﻿using AccessCodeLib.AccUnit.Interfaces;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit
 {
-    
+
     public class TestFixtureMembers : List<ITestFixtureMember>, ITestFixtureMembers
     {
         public ITestFixtureMember FixtureSetup
@@ -14,7 +12,7 @@ namespace AccessCodeLib.AccUnit
                 return Find(m => m.IsSetup);
             }
         }
-        
+
         public ITestFixtureMember Setup
         {
             get
@@ -22,7 +20,7 @@ namespace AccessCodeLib.AccUnit
                 return Find(m => m.IsSetup);
             }
         }
-        
+
         public ITestFixtureMember Teardown
         {
             get
@@ -62,7 +60,7 @@ namespace AccessCodeLib.AccUnit
 
     public class TestFixtureMember : ITestFixtureMember
     {
-        public TestFixtureMember (string name)
+        public TestFixtureMember(string name)
         {
             Name = name;
             SetType();

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using AccessCodeLib.AccUnit.Interfaces;
+﻿using AccessCodeLib.AccUnit.Interfaces;
 using Microsoft.Vbe.Interop;
+using System;
+using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interop
 {
@@ -30,7 +30,7 @@ namespace AccessCodeLib.AccUnit.Interop
 
         ITestClassGenerator TestClassGenerator { get; }
     }
-    
+
     [ComVisible(true)]
     [Guid("9F96EBE4-7FE4-4232-9510-A0818F9906FB")]
     [ClassInterface(ClassInterfaceType.None)]
@@ -88,5 +88,5 @@ namespace AccessCodeLib.AccUnit.Interop
             }
         }
     }
-    
+
 }

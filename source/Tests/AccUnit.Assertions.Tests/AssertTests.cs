@@ -18,7 +18,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
                 assert.That(actual, Iz.EqualTo(expected));
             });
         }
-        
+
         [Test]
         [Ignore("only to check NUnit behaviour")]
         public void NunitEqualToTest()

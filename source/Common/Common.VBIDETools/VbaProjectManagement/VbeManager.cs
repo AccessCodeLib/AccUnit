@@ -1,8 +1,8 @@
-﻿using System;
+﻿using AccessCodeLib.Common.Tools.Logging;
+using Microsoft.Vbe.Interop;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using AccessCodeLib.Common.Tools.Logging;
-using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
 {
@@ -13,10 +13,7 @@ namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
 
         public VbeManager(VBProject vbProject)
         {
-            if (vbProject == null)
-                throw new ArgumentNullException("vbProject");
-
-            _vbProject = vbProject;
+            _vbProject = vbProject ?? throw new ArgumentNullException("vbProject");
             Logger.Log(string.Format("Name of VBProject: \"{0}\"", _vbProject.Name));
         }
 

@@ -1,6 +1,6 @@
-﻿using System;
-using AccessCodeLib.Common.Tools.Logging;
+﻿using AccessCodeLib.Common.Tools.Logging;
 using Microsoft.Vbe.Interop;
+using System;
 
 namespace AccessCodeLib.Common.VBIDETools.Integration
 {
@@ -18,7 +18,7 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
                     isAccessApplication = false;
                     return null;
                 }
-                isAccessApplication = (progID.Equals(AccessApplicationProgID, StringComparison.CurrentCultureIgnoreCase));
+                isAccessApplication = progID.Equals(AccessApplicationProgID, StringComparison.CurrentCultureIgnoreCase);
                 try
                 {
                     return ComTools.GetOfficeComObjectByProgIDAndVBE(progID, vbe);
@@ -98,7 +98,7 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
                 }
                 else
                 {
-                    isAccessApplication = (GetAccessApplicationTypeForComObject(hostApplication) != null);
+                    isAccessApplication = GetAccessApplicationTypeForComObject(hostApplication) != null;
                 }
 
                 return hostApplication == null ? new VbeOnlyApplicatonHelper(vbe) : GetOfficeApplicationHelper(hostApplication, isAccessApplication);

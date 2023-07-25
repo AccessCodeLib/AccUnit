@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.Vbe.Interop;
+using System;
 using System.Linq;
-using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit.Configuration
 {

@@ -68,7 +68,7 @@ namespace AccessCodeLib.AccUnit.Integration
                 else if (testResult.IsSuccess)
                 {
                     IsSuccessCount++;
-                }   
+                }
             }
 
             if (IsSuccessCount == ExecutedCount)
@@ -80,13 +80,13 @@ namespace AccessCodeLib.AccUnit.Integration
                 IsSuccess = false;
             }
 
-            Message += "\n" +  testResult.Message;
+            Message += "\n" + testResult.Message;
             ElapsedTime += testResult.ElapsedTime;
         }
-        
+
         public ITestResult Item(int index)
         {
-           return base[index];
+            return base[index];
         }
 
         public void Reset()
@@ -127,11 +127,11 @@ namespace AccessCodeLib.AccUnit.Integration
         public IEnumerable<ITestResult> TestResults => throw new NotImplementedException();
 
         public int Total { get { return ExecutedCount; } }
-        
+
         public int Passed { get { return IsSuccessCount; } }
 
         public int Failed { get { return IsFailureCount; } }
-        
+
         public int Error { get { return IsErrorCount; } }
 
         public int Ignored { get { return IsIgnoredCount; } }

@@ -2,7 +2,7 @@ using AccessCodeLib.Common.TestHelpers.AccessRelated;
 using NUnit.Framework;
 using Access = Microsoft.Office.Interop.Access;
 
-namespace AccessCodeLib.Common.VBIDETools.Tests 
+namespace AccessCodeLib.Common.VBIDETools.Tests
 {
     public class AccessApplicationHelperTests
     {
@@ -12,7 +12,7 @@ namespace AccessCodeLib.Common.VBIDETools.Tests
             // Is.All
             // Is.EquivalentTo
             // Is.InRange
-           
+
         }
 
         [Test]

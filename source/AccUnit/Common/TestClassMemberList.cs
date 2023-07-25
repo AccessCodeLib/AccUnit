@@ -8,7 +8,7 @@ namespace AccessCodeLib.AccUnit.Common
         public TestClassMemberList Filter(TagList tags)
         {
             var list = new TestClassMemberList();
-            list.AddRange(FindAll(x => (x.IsMatch(tags))));
+            list.AddRange(FindAll(x => x.IsMatch(tags)));
             return list;
         }
 

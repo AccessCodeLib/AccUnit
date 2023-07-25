@@ -5,8 +5,8 @@ namespace AccessCodeLib.Common.Tools.Logging
 {
     public abstract class LoggerBase : ILogger
     {
-        private readonly AdaptiveFormatter _timingFormatter = new AdaptiveFormatter("{{0,{0}:#,##0.0}}ms"){CurrentInfoLength = 8};
-        private readonly AdaptiveFormatter _contextFormatter = new AdaptiveFormatter("{{0,-{0}}}"){CurrentInfoLength = 60};
+        private readonly AdaptiveFormatter _timingFormatter = new AdaptiveFormatter("{{0,{0}:#,##0.0}}ms") { CurrentInfoLength = 8 };
+        private readonly AdaptiveFormatter _contextFormatter = new AdaptiveFormatter("{{0,-{0}}}") { CurrentInfoLength = 60 };
 
         private static DateTime? PrecedingEventTimestamp { get; set; }
 
@@ -27,7 +27,7 @@ namespace AccessCodeLib.Common.Tools.Logging
 
         private static string GetContextInfoInternal(int addNumberStackFrames)
         {
-            var stackFrame = new StackTrace().GetFrame(4+addNumberStackFrames);
+            var stackFrame = new StackTrace().GetFrame(4 + addNumberStackFrames);
             var method = stackFrame.GetMethod();
             var methodName = method.Name;
             var typeName = method.DeclaringType.Name;

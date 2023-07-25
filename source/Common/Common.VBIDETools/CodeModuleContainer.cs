@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using AccessCodeLib.Common.Tools.Logging;
 using Microsoft.Vbe.Interop;
-using AccessCodeLib.Common.Tools.Logging;
+using System;
+using System.Linq;
 
 namespace AccessCodeLib.Common.VBIDETools
 {
@@ -44,7 +44,7 @@ namespace AccessCodeLib.Common.VBIDETools
 
         public bool Exists(string name)
         {
-            return (TryGetCodeModule(name) != null);
+            return TryGetCodeModule(name) != null;
         }
 
         public void Remove(string name)

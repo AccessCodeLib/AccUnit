@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
-using AccessCodeLib.AccUnit.Common;
+﻿using AccessCodeLib.AccUnit.Common;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using VBA;
 using VbMsgBoxResult = AccessCodeLib.AccUnit.Interfaces.VbMsgBoxResult;
 
@@ -85,18 +85,17 @@ namespace AccessCodeLib.AccUnit
                                    object title = null, object helpFile = null, object context = null)
         {
             var msgBoxResult = (int)NextMsgBoxResult;
-            if (Displayed != null)
-                Displayed(prompt, buttons, title, helpFile, context, ref msgBoxResult);
+            Displayed?.Invoke(prompt, buttons, title, helpFile, context, ref msgBoxResult);
 
             _messageBoxDataList.Add(new MessageBoxData
-                                     {
-                                         Prompt = prompt,
-                                         Buttons = buttons,
-                                         Title = title,
-                                         HelpFile = helpFile,
-                                         Context = context,
-                                         MsgBoxResult = msgBoxResult
-                                     });
+            {
+                Prompt = prompt,
+                Buttons = buttons,
+                Title = title,
+                HelpFile = helpFile,
+                Context = context,
+                MsgBoxResult = msgBoxResult
+            });
             return msgBoxResult;
         }
 

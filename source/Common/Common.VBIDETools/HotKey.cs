@@ -1,6 +1,6 @@
-﻿using System;
+﻿using AccessCodeLib.Common.Tools.Logging;
+using System;
 using System.Runtime.InteropServices;
-using AccessCodeLib.Common.Tools.Logging;
 
 namespace AccessCodeLib.Common.VBIDETools
 {
@@ -18,8 +18,7 @@ namespace AccessCodeLib.Common.VBIDETools
         public event EventHandler<HotKeyEventArgs> Pressed;
         internal void RaisePressed()
         {
-            if (Pressed != null)
-                Pressed(this, new HotKeyEventArgs(Modifiers, Key));
+            Pressed?.Invoke(this, new HotKeyEventArgs(Modifiers, Key));
         }
 
         private IntPtr _hwnd;

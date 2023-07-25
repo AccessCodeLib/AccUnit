@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using AccessCodeLib.AccUnit.Interfaces;
+﻿using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Integration;
 using Microsoft.Vbe.Interop;
 using Microsoft.VisualBasic;
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Exception = System.Exception;
 using ITest = AccessCodeLib.AccUnit.Interfaces.ITest;
 using VbMsgBoxResult = AccessCodeLib.AccUnit.Interfaces.VbMsgBoxResult;
@@ -47,8 +47,8 @@ namespace AccessCodeLib.AccUnit
         }
 
         private string _TestName;
-        public string TestName 
-        { 
+        public string TestName
+        {
             get { return _TestName; }
             set
             {
@@ -59,7 +59,7 @@ namespace AccessCodeLib.AccUnit
 
         public object HostApplication
         {
-            get { return (_officeApplicationHelper == null) ? null : _officeApplicationHelper.Application; }
+            get { return _officeApplicationHelper?.Application; }
             set
             {
                 _officeApplicationHelper = ComTools.GetTypeForComObject(value, "Access.Application") != null
@@ -153,7 +153,7 @@ namespace AccessCodeLib.AccUnit
         private TestClassMemberInfo FindTestClassMemberInfo(string name)
         {
             return _memberFilter.Find(
-                m => (m.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase))
+                m => m.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)
                 );
         }
 
@@ -209,7 +209,7 @@ namespace AccessCodeLib.AccUnit
                         if (member.TestRows.Count > 0)
                             TestMessageBox = GetTestMessageBox(member.TestRows, testcase.Name);
                     }
-                    
+
                 }
                 catch (Exception ex)
                 {
@@ -261,13 +261,13 @@ namespace AccessCodeLib.AccUnit
 
             return msgbox;
         }
-        
+
         private static ITestFixture GetTestFixtureFromTest(ITest testcase)
         {
             return testcase.Fixture;
         }
-        
-        
+
+
         private static bool IsRowTest(ITest test, ITest testcase)
         {
             return test.Name.Equals(testcase.MethodName, StringComparison.CurrentCultureIgnoreCase);

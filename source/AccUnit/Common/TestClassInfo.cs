@@ -6,7 +6,7 @@ namespace AccessCodeLib.AccUnit.Common
 {
     public class TestClassInfo
     {
-        public TestClassInfo(string name) 
+        public TestClassInfo(string name)
             : this(name, null, null)
         { }
 
@@ -15,7 +15,7 @@ namespace AccessCodeLib.AccUnit.Common
         { }
 
         public TestClassInfo(string name, string source)
-            : this (name, source, null)
+            : this(name, source, null)
         { }
 
         public TestClassInfo(string name, string source, TestClassMemberList members)
@@ -33,10 +33,7 @@ namespace AccessCodeLib.AccUnit.Common
             {
                 m.GetParent += OnMembersGetParent;
             }
-            if (_tags != null)
-            {
-                _tags.AddRange(Members.Tags);
-            }
+            _tags?.AddRange(Members.Tags);
         }
 
         private void OnMembersGetParent(TestClassMemberInfo sender, ref TestClassInfo parent)

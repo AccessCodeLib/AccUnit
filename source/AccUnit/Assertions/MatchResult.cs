@@ -1,5 +1,4 @@
-﻿using AccessCodeLib.AccUnit.Interfaces;
-using System;
+﻿using System;
 
 namespace AccessCodeLib.AccUnit.Assertions
 {
@@ -23,7 +22,7 @@ namespace AccessCodeLib.AccUnit.Assertions
             {
                 return infoText;
             }
-            
+
             var compareText = "Expected: " + ConvertToString(expected) + " but was: " + ConvertToString(actual);
             return $"{text} ({compareText})" + (infoText == null ? "" : $", {infoText}");
         }

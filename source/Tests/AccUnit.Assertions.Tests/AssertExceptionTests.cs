@@ -1,5 +1,4 @@
-﻿using AccessCodeLib.AccUnit.Interop;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 
 namespace AccessCodeLib.AccUnit.Assertions.Tests
@@ -18,9 +17,9 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             {
                 var assert = new Assertions();
                 var Iz = new ConstraintBuilder();
-                
+
                 int actual = 1;
-                var expected =2;
+                var expected = 2;
 
                 assert.That(actual, Iz.EqualTo(expected));
             });
@@ -48,10 +47,10 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             {
                 var assert = new Assertions();
                 var Iz = new ConstraintBuilder();
-                
+
                 int actual = 1;
                 short expected = 1;
-                
+
                 assert.That(actual, Iz.EqualTo(expected));
             });
         }
@@ -64,7 +63,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             {
                 var assert = new Assertions();
                 var Iz = new ConstraintBuilder();
-                
+
                 double actual = 1.1;
                 int expected = 1;
 
@@ -86,7 +85,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
 
                 var actual = 1;
                 var expected = 0;
-                
+
                 assert.That(actual, Iz.EqualTo(expected));
             });
         }
@@ -94,7 +93,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
         [Test]
         public void RaiseDivideByZeroExceptionAndNotAssertionException()
         {
-            try 
+            try
             {
                 var assert = new Assertions();
                 var Iz = new ConstraintBuilder();
@@ -102,7 +101,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
                 int actual = 1;
                 var expected = 1;
 
-                actual = actual / 0;
+                actual /= 0;
 
                 assert.That(actual, Iz.EqualTo(expected));
             }
@@ -113,6 +112,6 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             }
         }
 
-        
+
     }
 }

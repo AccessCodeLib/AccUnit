@@ -1,9 +1,9 @@
-﻿using System;
+﻿using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.Common.Tools.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using AccessCodeLib.AccUnit.Interfaces;
-using AccessCodeLib.Common.Tools.Logging;
 
 namespace AccessCodeLib.AccUnit
 {
@@ -12,7 +12,7 @@ namespace AccessCodeLib.AccUnit
         internal delegate void GetParentEventHandler(TestClassMemberInfo sender, ref TestClassInfo parent);
         internal event GetParentEventHandler GetParent;
         private readonly IList<VbMsgBoxResult> _msgBoxResults = new List<VbMsgBoxResult>();
-        
+
         public TestClassMemberInfo(string name)
         {
             Name = name;
@@ -40,10 +40,7 @@ namespace AccessCodeLib.AccUnit
             get
             {
                 TestClassInfo parent = null;
-                if (GetParent != null)
-                {
-                    GetParent(this, ref parent);
-                }
+                GetParent?.Invoke(this, ref parent);
                 return parent;
             }
         }
@@ -155,7 +152,7 @@ namespace AccessCodeLib.AccUnit
 
         private readonly List<ITestRow> _testRows = new List<ITestRow>();
         public List<ITestRow> TestRows { get { return _testRows; } }
-        
+
         public IList<VbMsgBoxResult> MsgBoxResults { get { return _msgBoxResults; } }
 
         public string ShowAs { get; private set; }

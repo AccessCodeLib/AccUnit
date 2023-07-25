@@ -1,15 +1,15 @@
-﻿using System;
-using AccessCodeLib.AccUnit.Interfaces;
+﻿using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
+using System;
 
 namespace AccessCodeLib.AccUnit
 {
     public interface IAccessTestSuite : IVBATestSuite
     {
     }
-    
+
     public class AccessTestSuite : VBATestSuite, IAccessTestSuite
     {
         public enum VbaErrorTrapping : short
@@ -21,12 +21,12 @@ namespace AccessCodeLib.AccUnit
 
         private object _hostApplication;
         public override object HostApplication
-        { 
-            get 
+        {
+            get
             {
                 return _hostApplication;
             }
-            set 
+            set
             {
                 _hostApplication = value;
                 ActiveVBProject = GetCurrentVBProject(_hostApplication);
@@ -154,9 +154,9 @@ namespace AccessCodeLib.AccUnit
                 }
                 DisposeUnmanagedResources();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Logger.Log(ex);   
+                Logger.Log(ex);
             }
             finally
             {
@@ -186,5 +186,5 @@ namespace AccessCodeLib.AccUnit
         #endregion
 
     }
-    
+
 }

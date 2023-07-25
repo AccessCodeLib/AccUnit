@@ -1,10 +1,8 @@
-﻿using AccessCodeLib.Common.VBIDETools;
-using Microsoft.Vbe.Interop;
+﻿using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace AccessCodeLib.AccUnit.Interop
 {
@@ -52,7 +50,7 @@ namespace AccessCodeLib.AccUnit.Interop
 
         public ITestMethodGenerator InsertTestMethod(string MethodNameUnderTest, string stateUnderTest, string expectedBehaviour)
         {
-            InsertTestMethods(_testClassName, new string[] {MethodNameUnderTest}, stateUnderTest, expectedBehaviour);
+            InsertTestMethods(_testClassName, new string[] { MethodNameUnderTest }, stateUnderTest, expectedBehaviour);
             return this;
         }
 

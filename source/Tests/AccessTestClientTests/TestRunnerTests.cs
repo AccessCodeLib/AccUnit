@@ -2,8 +2,8 @@
 using AccessCodeLib.Common.TestHelpers.AccessRelated;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
-using System.Linq;
 using NUnit.Framework;
+using System.Linq;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
 {
@@ -42,7 +42,7 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
         [Test]
         public void CreateTestFromExistingFactoryMethode()
         {
-            var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
 public Function TestMethod() as Long
    TestMethod = 123      
 End Function
@@ -58,7 +58,7 @@ End Function
         [Test]
         public void FindAndRunTestMethodesFromTestClass()
         {
-            var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
 public Function TestMethod1() as Long
    TestMethod1 = 123      
 End Function
@@ -71,7 +71,7 @@ End Function
 ");
             var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
             Assert.That(fixture, Is.Not.Null);
-            
+
             var result = new TestResultCollector();
             var testRunner = new Interop.TestRunner(_testBuilder.ActiveVBProject);
             testRunner.Run(fixture, "*", result);
@@ -79,13 +79,13 @@ End Function
             var actual = result.Results.Count();
 
             Assert.That(actual, Is.EqualTo(2));
-            
+
         }
 
         [Test]
         public void FindAndRunTestMethodesFromTestClassWithSetupAndTeardown()
         {
-            var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
 private m_Value as Long
 
 public sub Setup()
@@ -115,7 +115,7 @@ End Function
             testRunner.Run(fixture, "*", result);
 
             var resultCount = result.Results.Count();
-            
+
             Assert.That(resultCount, Is.EqualTo(2));
 
             foreach (var testResult in result.Results)
@@ -123,7 +123,7 @@ End Function
                 var res = testResult as TestResult;
                 Assert.That(res.IsSuccess, Is.EqualTo(true), res.Message);
             }
-           
+
 
             var invocHelper = new InvocationHelper(fixture);
             var ValueAfterTeardowns = invocHelper.InvokeMethod("TestMethod1");
@@ -162,7 +162,7 @@ End Function
 
             foreach (var member in publicMembers)
             {
-                Assert.That(member.Name.Substring(0,10), Is.EqualTo("TestMethod"));
+                Assert.That(member.Name.Substring(0, 10), Is.EqualTo("TestMethod"));
             }
 
         }
@@ -199,9 +199,11 @@ End Function
             var testClassReader = new TestClassReader(_testBuilder.ActiveVBProject);
             fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
 
-            var rowGenerator = new TestRowGenerator();
-            rowGenerator.ActiveVBProject = _testBuilder.ActiveVBProject;
-            rowGenerator.TestName = fixtureName;
+            var rowGenerator = new TestRowGenerator
+            {
+                ActiveVBProject = _testBuilder.ActiveVBProject,
+                TestName = fixtureName
+            };
             var testRows = rowGenerator.GetTestRows(memberName);
 
             Assert.That(testRows.Count, Is.EqualTo(1));
@@ -226,7 +228,7 @@ End Function
         [Test]
         public void RunRowTest_ArrayParam()
         {
-            var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
 private m_Check as Long
 
 'AccUnit:Row(New Integer() {1, 2})
@@ -249,16 +251,18 @@ End Function
             var testClassReader = new TestClassReader(_testBuilder.ActiveVBProject);
             fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
 
-            var rowGenerator = new TestRowGenerator();
-            rowGenerator.ActiveVBProject = _testBuilder.ActiveVBProject;
-            rowGenerator.TestName = fixtureName;
+            var rowGenerator = new TestRowGenerator
+            {
+                ActiveVBProject = _testBuilder.ActiveVBProject,
+                TestName = fixtureName
+            };
             var testRows = rowGenerator.GetTestRows(memberName);
 
             /*
             Assert.That(testRows.Count, Is.EqualTo(1));
             Assert.That(testRows[0].Args[0], Is.EqualTo( new int[] {1, 2} ));
             */
-            
+
             var invocHelper = new InvocationHelper(fixture);
             var returnValue = invocHelper.InvokeMethod("TestMethod1", testRows[0].Args.ToArray());
             Assert.That(returnValue, Is.EqualTo(1));
@@ -271,10 +275,10 @@ End Function
             Assert.That(valueAfterTestRun, Is.EqualTo(2));
         }
 
-        [Test] 
+        [Test]
         public void VbNullstringTest()
         {
-            var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
 public Function TestMethod() as String
    dim s as String
    s = """"
@@ -286,7 +290,7 @@ End Function
 
             var invocHelper = new InvocationHelper(fixture);
             var returnValue = invocHelper.InvokeMethod("TestMethod");
-            
+
             Assert.That(returnValue, Is.Empty);
             // vbNullString is null!
         }
@@ -294,7 +298,7 @@ End Function
         [Test]
         public void RunRowTest_WithVbaConstant()
         {
-            var classCodeModule = AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
 private m_Check as Long
 
 'AccUnit:Row(vbsunday)
@@ -317,9 +321,11 @@ End Function
             var testClassReader = new TestClassReader(_testBuilder.ActiveVBProject);
             fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
 
-            var rowGenerator = new TestRowGenerator();
-            rowGenerator.ActiveVBProject = _testBuilder.ActiveVBProject;
-            rowGenerator.TestName = fixtureName;
+            var rowGenerator = new TestRowGenerator
+            {
+                ActiveVBProject = _testBuilder.ActiveVBProject,
+                TestName = fixtureName
+            };
             var testRows = rowGenerator.GetTestRows(memberName);
 
             /*

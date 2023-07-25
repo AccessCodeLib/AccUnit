@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace AccessCodeLib.AccUnit.Assertions.Interfaces
+﻿namespace AccessCodeLib.AccUnit.Assertions.Interfaces
 {
     interface IMatchResultCollectorBridge : IMatchResultCollector
     {

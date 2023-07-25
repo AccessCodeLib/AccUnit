@@ -16,8 +16,7 @@ namespace AccessCodeLib.Common.VBIDETools.CommentAttributes
 
         public short GetVb6Integer()
         {
-            short value;
-            if (!short.TryParse(Text, out value))
+            if (!short.TryParse(Text, out short value))
                 throw new TypeMismatchException();
 
             return value;
@@ -25,8 +24,7 @@ namespace AccessCodeLib.Common.VBIDETools.CommentAttributes
 
         public int GetVb6Long()
         {
-            int value;
-            if (!int.TryParse(Text, out value))
+            if (!int.TryParse(Text, out int value))
                 throw new TypeMismatchException();
 
             return value;
@@ -52,22 +50,22 @@ namespace AccessCodeLib.Common.VBIDETools.CommentAttributes
 
         public bool Equals(Parameter other)
         {
-            if (ReferenceEquals(null, other)) return false;
+            if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
             return Equals(other._text, _text);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof (Parameter)) return false;
-            return Equals((Parameter) obj);
+            if (obj.GetType() != typeof(Parameter)) return false;
+            return Equals((Parameter)obj);
         }
 
         public override int GetHashCode()
         {
-            return (_text != null ? _text.GetHashCode() : 0);
+            return _text != null ? _text.GetHashCode() : 0;
         }
 
         #endregion

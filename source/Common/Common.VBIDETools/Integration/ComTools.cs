@@ -1,9 +1,9 @@
-﻿using System;
+﻿using AccessCodeLib.Common.Tools.Logging;
+using Microsoft.Vbe.Interop;
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
-using AccessCodeLib.Common.Tools.Logging;
-using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.Common.VBIDETools.Integration
 {
@@ -19,8 +19,7 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
         {
             get
             {
-                IRunningObjectTable runningObjectTable;
-                if (GetRunningObjectTable(0, out runningObjectTable) != 0 || runningObjectTable == null)
+                if (GetRunningObjectTable(0, out IRunningObjectTable runningObjectTable) != 0 || runningObjectTable == null)
                 {
                     return null;
                 }
@@ -100,23 +99,19 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
                 if (runningObjectTable == null)
                     return null;
 
-                IEnumMoniker monikerList;
-                runningObjectTable.EnumRunning(out monikerList);
+                runningObjectTable.EnumRunning(out IEnumMoniker monikerList);
 
                 var monikerContainer = new IMoniker[1];
                 var pointerFetchedMonikers = IntPtr.Zero;
                 monikerList.Reset();
                 while (monikerList.Next(1, monikerContainer, pointerFetchedMonikers) == 0)
                 {
-                    string displayName;
-                    IBindCtx binder;
-                    CreateBindCtx(0, out binder);
+                    CreateBindCtx(0, out IBindCtx binder);
 
-                    monikerContainer[0].GetDisplayName(binder, null, out displayName);
+                    monikerContainer[0].GetDisplayName(binder, null, out string displayName);
                     Logger.Log($"displayName: {displayName}");
 
-                    object comInstance;
-                    runningObjectTable.GetObject(monikerContainer[0], out comInstance);
+                    runningObjectTable.GetObject(monikerContainer[0], out object comInstance);
                     if (GetTypeForComObject(comInstance, progID) == null) continue;
                     object appVbe;
                     try
@@ -183,8 +178,7 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
                         }
 
                         // query supportability of current interface on object
-                        IntPtr ipointer;
-                        Marshal.QueryInterface(iunkwn, ref iid, out ipointer);
+                        Marshal.QueryInterface(iunkwn, ref iid, out IntPtr ipointer);
 
                         if (ipointer != IntPtr.Zero)
                         {

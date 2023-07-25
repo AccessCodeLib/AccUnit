@@ -5,5 +5,5 @@ namespace AccessCodeLib.AccUnit.Interfaces
     public interface IParamTest : ITest
     {
         IEnumerable<object> Parameters { get; }
-    }    
- }
+    }
+}

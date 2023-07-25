@@ -1,5 +1,5 @@
-﻿using System.IO;
-using Microsoft.Vbe.Interop;
+﻿using Microsoft.Vbe.Interop;
+using System.IO;
 
 namespace AccessCodeLib.Common.VBIDETools
 {

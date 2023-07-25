@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AccessCodeLib.AccUnit.Assertions.Constraints
+﻿namespace AccessCodeLib.AccUnit.Assertions.Constraints
 {
     class NullConstraint : ConstraintBase
     {

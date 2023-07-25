@@ -31,22 +31,22 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
             if (actual == null)
             {
                 if (Expected == null)
-                { 
-                    if (ExpectedComparerResult == 0 || UseOr == true && ExpectedComparerResult2 == 0)
+                {
+                    if (ExpectedComparerResult == 0 || (UseOr == true && ExpectedComparerResult2 == 0))
                     {
                         return new MatchResult(CompareText, true, null, actual, Expected);
                     }
                     return new MatchResult(CompareText, false, "actual is Nothing, expected is Nothing", actual, Expected);
                 }
-               
+
                 return new MatchResult(CompareText, false, "actual is Nothing and expected is not Nothing", actual, Expected);
             }
-           
+
             if (actual == DBNull.Value)
             {
                 if (Expected.Equals(DBNull.Value))
                 {
-                    if (ExpectedComparerResult == 0 || UseOr == true && ExpectedComparerResult2 == 0)
+                    if (ExpectedComparerResult == 0 || (UseOr == true && ExpectedComparerResult2 == 0))
                     {
                         return new MatchResult(CompareText, true, null, actual, Expected);
                     }
@@ -94,7 +94,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
 
             return new MatchResult(CompareText, false, compareInfo, actual, Expected);
         }
-        
+
         private static string FormattedTypeDescription(Type type)
         {
             return type == typeof(double) ? "numeric type" : type.Name;

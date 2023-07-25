@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Assertions.Interfaces
@@ -19,7 +18,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Interfaces
     public class AssertionException : Exception, IAssertionException
     {
         public IMatchResult Result { [return: MarshalAs(UnmanagedType.IDispatch)] get; private set; }
-        
+
         public AssertionException(string message) : base(message)
         {
         }

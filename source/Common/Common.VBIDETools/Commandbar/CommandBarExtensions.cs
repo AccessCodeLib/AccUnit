@@ -1,6 +1,6 @@
-using System;
 using AccessCodeLib.Common.Tools.Logging;
 using Microsoft.Office.Core;
+using System;
 
 namespace AccessCodeLib.Common.VBIDETools.Commandbar
 {

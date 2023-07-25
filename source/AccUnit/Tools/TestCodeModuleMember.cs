@@ -10,14 +10,14 @@ namespace AccessCodeLib.AccUnit.Tools
         private const string DefaultExpectedBehaviourText = @"ExpectedBehaviour";
 
         public TestCodeModuleMember(CodeModuleMember memberUnderTest,
-                                    string stateUnderTest = DefaultStateUnderTestText, 
+                                    string stateUnderTest = DefaultStateUnderTestText,
                                     string expectedBehaviour = DefaultExpectedBehaviourText)
             : this(memberUnderTest.Name, memberUnderTest.ProcKind, memberUnderTest.IsPublic, memberUnderTest.DeclarationString, stateUnderTest, expectedBehaviour)
         {
         }
 
         public TestCodeModuleMember(string methodUnderTest,
-                                    string stateUnderTest = DefaultStateUnderTestText, 
+                                    string stateUnderTest = DefaultStateUnderTestText,
                                     string expectedBehaviour = DefaultExpectedBehaviourText,
                                     string declarationString = "")
             : this(methodUnderTest, vbext_ProcKind.vbext_pk_Proc, true, declarationString, stateUnderTest, expectedBehaviour)

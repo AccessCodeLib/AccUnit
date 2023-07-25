@@ -20,13 +20,13 @@ namespace AccessCodeLib.AccUnit.Common
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
                 return false;
             if (ReferenceEquals(this, obj))
                 return true;
-            if (obj.GetType() != typeof (TestItemTag))
+            if (obj.GetType() != typeof(TestItemTag))
                 return false;
-            var other = (TestItemTag) obj;
+            var other = (TestItemTag)obj;
             return Equals(other.Name, Name);
         }
 

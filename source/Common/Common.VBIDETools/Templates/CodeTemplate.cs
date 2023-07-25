@@ -1,9 +1,9 @@
-﻿using System.ComponentModel;
+﻿using AccessCodeLib.Common.Tools.Logging;
+using Microsoft.Vbe.Interop;
+using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing.Design;
 using System.Xml.Serialization;
-using AccessCodeLib.Common.Tools.Logging;
-using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.Common.VBIDETools.Templates
 {
@@ -23,10 +23,10 @@ namespace AccessCodeLib.Common.VBIDETools.Templates
         {
             using (new BlockLogger())
             {
-                Name       = name;
-                Type       = type;
+                Name = name;
+                Type = type;
                 SourceCode = sourceCode;
-                IsBuiltIn  = isBuiltIn;
+                IsBuiltIn = isBuiltIn;
 
                 Caption = caption ?? name;
             }
@@ -43,7 +43,7 @@ namespace AccessCodeLib.Common.VBIDETools.Templates
         [Browsable(false)]
         [XmlAttribute("type")]
         [DefaultValue(vbext_ComponentType.vbext_ct_ClassModule)]
-        public vbext_ComponentType Type { get { return _type; } set { _type = (value != 0 ? value : vbext_ComponentType.vbext_ct_ClassModule); } }
+        public vbext_ComponentType Type { get { return _type; } set { _type = value != 0 ? value : vbext_ComponentType.vbext_ct_ClassModule; } }
 
         [Category("Templates")]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
@@ -56,7 +56,7 @@ namespace AccessCodeLib.Common.VBIDETools.Templates
 
         public void EnsureExists(VBProject vbProject)
         {
-            using(var codeModuleManager = new CodeModuleContainer(vbProject))
+            using (var codeModuleManager = new CodeModuleContainer(vbProject))
             {
                 if (!codeModuleManager.Exists(Name))
                     AddToVBProject(vbProject);
