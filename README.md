@@ -1,7 +1,10 @@
 # AccUnit
 **AccUnit - Test your VBA/Access code**
 
-For more informations see https://accunit.access-codelib.net/
+For more informations see [Wiki](https://github.com/AccessCodeLib/AccUnit/wiki) and https://accunit.access-codelib.net/
+
+### Installation
+[How-to: Install-AccUnit](https://github.com/AccessCodeLib/AccUnit/wiki/How-to:-Install-AccUnit)
 
 ### Notes
 * For 32 and 64 Bit Office/Access
