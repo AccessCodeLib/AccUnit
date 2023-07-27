@@ -31,7 +31,7 @@ namespace AccessCodeLib.AccUnit.Tools.Templates
             {
                 using (new BlockLogger())
                 {
-                    return Path.Combine(GetCheckedTestTemplateFolder(UserSettings.Current.TemplateFolder), UserTemplatesFileName);
+                    return Path.Combine(GetCheckedTestTemplateFolder(TemplatesUserSettings.Current.TemplateFolder), UserTemplatesFileName);
                 }
             }
         }

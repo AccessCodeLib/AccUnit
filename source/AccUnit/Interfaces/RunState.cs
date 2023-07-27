@@ -1,5 +1,11 @@
-﻿namespace AccessCodeLib.AccUnit.Interfaces
+﻿using System.Runtime.InteropServices;
+using System;
+
+namespace AccessCodeLib.AccUnit.Interfaces
 {
+    [ComVisible(true)]
+    [Guid("997CA0A7-ADBA-464C-9C0E-D0DCA85BED1E")]
+    [Flags]
     public enum RunState
     {
         Runnable = 0,

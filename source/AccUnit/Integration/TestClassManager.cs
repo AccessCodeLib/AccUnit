@@ -176,11 +176,11 @@ namespace AccessCodeLib.AccUnit
             {
                 if (string.IsNullOrEmpty(_exportDir))
                 {
-                    _exportDir = UserSettings.Current.ImportExportFolder;
+                    _exportDir = TestSuiteUserSettings.Current.ImportExportFolder;
                     if (string.IsNullOrEmpty(_exportDir))
                     {
                         _exportDir = DefaultExportDir;
-                        UserSettings.Current.ImportExportFolder = _exportDir;
+                        TestSuiteUserSettings.Current.ImportExportFolder = _exportDir;
                     }
                 }
                 return GetCheckedFolder(_exportDir);

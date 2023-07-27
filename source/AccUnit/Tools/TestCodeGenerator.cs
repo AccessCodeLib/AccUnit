@@ -199,6 +199,6 @@ namespace AccessCodeLib.AccUnit.Tools
         }
 
         internal static string TestClassHeader { get { return TestTemplateSources.TestClassHeader; } }
-        private static string TestMethodTemplate { get { return UserSettings.Current.TestMethodTemplate; } }
+        private static string TestMethodTemplate { get { return TemplatesUserSettings.Current.TestMethodTemplate; } }
     }
 }

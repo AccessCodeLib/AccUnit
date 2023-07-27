@@ -2,9 +2,9 @@
 using AccessCodeLib.Common.Tools.Logging;
 using System;
 
-namespace AccessCodeLib.AccUnit.Tools
+namespace AccessCodeLib.AccUnit.Tools.Templates
 {
-    public class UserSettings
+    public class TemplatesUserSettings
     {
         #region Static members
 
@@ -17,14 +17,14 @@ namespace AccessCodeLib.AccUnit.Tools
             _current = null;
         }
 
-        private static UserSettings _current;
-        public static UserSettings Current
+        private static TemplatesUserSettings _current;
+        public static TemplatesUserSettings Current
         {
             get
             {
                 if (_current == null)
                 {
-                    _current = new UserSettings();
+                    _current = new TemplatesUserSettings();
                     _current.Load();
                 }
                 return _current;
@@ -37,13 +37,13 @@ namespace AccessCodeLib.AccUnit.Tools
 
         #endregion
 
-        private UserSettings()
+        private TemplatesUserSettings()
         {
         }
 
-        public UserSettings Clone()
+        public TemplatesUserSettings Clone()
         {
-            var clone = new UserSettings
+            var clone = new TemplatesUserSettings
             {
                 TemplateFolder = TemplateFolder,
                 TestTemplates = TestTemplates,

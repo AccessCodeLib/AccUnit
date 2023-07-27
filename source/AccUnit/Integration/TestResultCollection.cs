@@ -124,7 +124,7 @@ namespace AccessCodeLib.AccUnit.Integration
 
         public double ElapsedTime { get; set; }
 
-        public IEnumerable<ITestResult> TestResults => throw new NotImplementedException();
+        public IEnumerable<ITestResult> TestResults { get { return this; } }
 
         public int Total { get { return ExecutedCount; } }
 

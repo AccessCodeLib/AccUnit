@@ -1,3 +1,4 @@
+/*
 using AccessCodeLib.Common.Tools.Logging;
 using System;
 using System.Drawing;
@@ -94,3 +95,4 @@ namespace AccessCodeLib.AccUnit.Common
         }
     }
 }
+*/

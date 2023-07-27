@@ -5,7 +5,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
 {
     [ComVisible(true)]
     [Guid("DAEE570F-DD0F-4C31-AEA5-64875C557FD0")]
-    [FlagsAttribute]
+    [Flags]
     public enum ResetMode
     {
         None = 0,

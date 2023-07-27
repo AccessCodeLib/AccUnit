@@ -1,4 +1,5 @@
-﻿using AccessCodeLib.Common.VBIDETools;
+﻿/*
+using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit.Common
@@ -15,3 +16,4 @@ namespace AccessCodeLib.AccUnit.Common
 
     }
 }
+*/

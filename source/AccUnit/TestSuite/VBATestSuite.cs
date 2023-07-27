@@ -15,7 +15,7 @@ namespace AccessCodeLib.AccUnit
         {
             using (new BlockLogger())
             {
-                SummaryFormatter = new TestSummaryFormatter(UserSettings.Current.SeparatorMaxLength, UserSettings.Current.SeparatorChar);
+                SummaryFormatter = new TestSummaryFormatter(TestSuiteUserSettings.Current.SeparatorMaxLength, TestSuiteUserSettings.Current.SeparatorChar);
                 _testBuilder.OfficeApplicationReferenceRequired += OnOfficeApplicationReferenceRequired;
             }
         }

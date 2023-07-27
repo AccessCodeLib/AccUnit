@@ -19,8 +19,8 @@ namespace AccessCodeLib.AccUnit.Configuration
         public static void UnloadCurrent()
         {
             _current = null;
-            AccUnit.UserSettings.UnloadCurrent();
-            Tools.UserSettings.UnloadCurrent();
+            TestSuiteUserSettings.UnloadCurrent();
+            TemplatesUserSettings.UnloadCurrent();
         }
 
         private static UserSettings _current;
@@ -43,8 +43,8 @@ namespace AccessCodeLib.AccUnit.Configuration
 
         #endregion
 
-        private AccUnit.UserSettings _testSuiteUserSettings;
-        private Tools.UserSettings _toolsUserSettings;
+        private TestSuiteUserSettings _testSuiteUserSettings;
+        private TemplatesUserSettings _toolsUserSettings;
 
         private UserSettings()
         {
@@ -56,8 +56,8 @@ namespace AccessCodeLib.AccUnit.Configuration
             {
                 var clone = new UserSettings
                 {
-                    _testSuiteUserSettings = AccUnit.UserSettings.Current.Clone(),
-                    _toolsUserSettings = Tools.UserSettings.Current.Clone(),
+                    _testSuiteUserSettings = TestSuiteUserSettings.Current.Clone(),
+                    _toolsUserSettings = TemplatesUserSettings.Current.Clone(),
                     TestClassNameFormat = Settings.Default.TestClassNameFormat,
                 };
                 return clone;
@@ -70,18 +70,18 @@ namespace AccessCodeLib.AccUnit.Configuration
         {
             using (new BlockLogger())
             {
-                _testSuiteUserSettings = AccUnit.UserSettings.Current.Clone();
-                _toolsUserSettings = Tools.UserSettings.Current.Clone();
+                _testSuiteUserSettings = TestSuiteUserSettings.Current.Clone();
+                _toolsUserSettings = TemplatesUserSettings.Current.Clone();
                 TestClassNameFormat = Settings.Default.TestClassNameFormat;
             }
         }
 
         public void Save()
         {
-            AccUnit.UserSettings.Current = _testSuiteUserSettings;
-            AccUnit.UserSettings.Current.Save();
-            Tools.UserSettings.Current = _toolsUserSettings;
-            Tools.UserSettings.Current.Save();
+            TestSuiteUserSettings.Current = _testSuiteUserSettings;
+            TestSuiteUserSettings.Current.Save();
+            TemplatesUserSettings.Current = _toolsUserSettings;
+            TemplatesUserSettings.Current.Save();
 
             Settings.Default.TestClassNameFormat = TestClassNameFormat;
         }

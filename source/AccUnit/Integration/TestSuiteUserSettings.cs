@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace AccessCodeLib.AccUnit
 {
-    public class UserSettings
+    public class TestSuiteUserSettings
     {
         #region Static members
 
@@ -18,14 +18,14 @@ namespace AccessCodeLib.AccUnit
             _current = null;
         }
 
-        private static UserSettings _current;
-        public static UserSettings Current
+        private static TestSuiteUserSettings _current;
+        public static TestSuiteUserSettings Current
         {
             get
             {
                 if (_current == null)
                 {
-                    _current = new UserSettings();
+                    _current = new TestSuiteUserSettings();
                     _current.Load();
                 }
                 return _current;
@@ -38,13 +38,13 @@ namespace AccessCodeLib.AccUnit
 
         #endregion
 
-        private UserSettings()
+        private TestSuiteUserSettings()
         {
         }
 
-        public UserSettings Clone()
+        public TestSuiteUserSettings Clone()
         {
-            var clone = new UserSettings
+            var clone = new TestSuiteUserSettings
             {
                 ImportExportFolder = ImportExportFolder,
                 SeparatorChar = SeparatorChar,

@@ -83,7 +83,6 @@
     <Reference Include="System" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assertions\Assertions.cs" />
@@ -105,18 +104,10 @@
     <Compile Include="Assertions\AssertThrowsContainer.cs" />
     <Compile Include="CodeCoverage\CodeModuleTracker.cs" />
     <Compile Include="CodeCoverage\ProcedureTracker.cs" />
-    <Compile Include="Common\CodeModuleMemberWithMarker.cs" />
-    <Compile Include="Common\CompareTypeHelper.cs" />
-    <Compile Include="Common\IgnoreInfo.cs" />
-    <Compile Include="Common\MessageBoxData.cs" />
-    <Compile Include="Common\MessageStrings.Designer.cs" />
-    <Compile Include="Common\TagList.cs" />
-    <Compile Include="Common\TestClassInfo.cs" />
-    <Compile Include="Common\TestClassMemberInfo.cs" />
-    <Compile Include="Common\TestClassMemberList.cs" />
-    <Compile Include="Common\TestItemTag.cs" />
-    <Compile Include="Common\UITools.cs" />
-    <Compile Include="Common\UserControls.Designer.cs" />
+    <Compile Include="~trash\CodeModuleMemberWithMarker.cs" />
+    <Compile Include="~trash\CompareTypeHelper.cs" />
+    <Compile Include="Integration\MessageBoxData.cs" />
+    <Compile Include="~trash\UITools.cs" />
     <Compile Include="Configuration\AccUnitLoaderAddInCodeTemplates.cs" />
     <Compile Include="Interop\TestClassGenerator.cs" />
     <Compile Include="Configuration\TestClassTemplate.cs" />
@@ -126,8 +117,7 @@
     <Compile Include="Interop\CodeCoverageTracker.cs" />
     <Compile Include="Interop\ITestSummaryPrinter.cs" />
     <Compile Include="TestSuite\AccessTestSuite.cs" />
-    <Compile Include="Common\StringTools.cs" />
-    <Compile Include="Common\TestResultEventArgs.cs" />
+    <Compile Include="~trash\StringTools.cs" />
     <Compile Include="Configuration\AccUnitVBAReference.cs" />
     <Compile Include="Configuration\AccUnitVBAReferences.cs" />
     <Compile Include="Configuration\Configurator.cs" />
@@ -164,7 +154,7 @@
     <Compile Include="Integration\TestRow.cs" />
     <Compile Include="Integration\TestRowGenerator.cs" />
     <Compile Include="Integration\TestSummaryFormatter.cs" />
-    <Compile Include="Integration\UserSettings.cs" />
+    <Compile Include="Integration\TestSuiteUserSettings.cs" />
     <Compile Include="Integration\VBATestBuilder.cs" />
     <Compile Include="TestSuite\VBATestSuite.cs" />
     <Compile Include="Interfaces\IParamTest.cs" />
@@ -173,7 +163,7 @@
     <Compile Include="Interfaces\ITestFixture.cs" />
     <Compile Include="Interfaces\ITestList.cs" />
     <Compile Include="Interfaces\ITestListener.cs" />
-    <Compile Include="Common\Interfaces\ITestMessageBox.cs" />
+    <Compile Include="Interfaces\ITestMessageBox.cs" />
     <Compile Include="Interfaces\ITestResult.cs" />
     <Compile Include="Interfaces\ITestResultCollector.cs" />
     <Compile Include="Interfaces\ITestRow.cs" />
@@ -218,7 +208,7 @@
     <Compile Include="Tools\TestClassGenerator.cs" />
     <Compile Include="Tools\TestCodeGenerator.cs" />
     <Compile Include="Tools\TestCodeModuleMember.cs" />
-    <Compile Include="Tools\UserSettings.cs" />
+    <Compile Include="Tools\Templates\TemplatesUserSettings.cs" />
     <Compile Include="Tools\VBA\VbaConstantsDictionary.cs" />
     <Compile Include="Tools\VBA\VbaTools.cs" />
   </ItemGroup>
@@ -233,24 +223,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Common\MessageStrings.resx" />
-    <EmbeddedResource Include="Common\UserControls.de.resx" />
-    <EmbeddedResource Include="Common\UserControls.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="VBIDE">
-      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
-      <VersionMajor>5</VersionMajor>
-      <VersionMinor>3</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.Tools\AccessCodeLib.Common.Tools.csproj">
@@ -261,6 +237,26 @@
       <Project>{9fa679c2-82c0-42dc-a34f-f78a9012eeeb}</Project>
       <Name>AccessCodeLib.Common.VBIDETools</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="VBIDE">
+      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>5</VersionMajor>
+      <VersionMinor>3</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

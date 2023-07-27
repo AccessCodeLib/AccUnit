@@ -1,10 +1,14 @@
-﻿namespace AccessCodeLib.AccUnit
+﻿using System;
+
+namespace AccessCodeLib.AccUnit
 {
     public class TestItemTag
     {
 
         public TestItemTag(string name)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException("name");
             Name = name;
         }
 
