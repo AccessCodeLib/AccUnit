@@ -1,4 +1,5 @@
 using AccessCodeLib.AccUnit.Tools;
+using AccessCodeLib.Common.VBIDETools;
 using NUnit.Framework;
 
 namespace TestGeneratorTests
@@ -74,6 +75,48 @@ namespace TestGeneratorTests
             var expected = "'AccUnit:Row(s, x(), Expected).Name = \"Example row - please replace the parameter names with values)\"";
 
             var actual = TestCodeGenerator.GetProcedureRowTestString(parameters);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GenerateProcedureCode_WithoutParam_ReturnExpectedDeclarationInBody()
+        {
+            var codeModuleMember = new CodeModuleMember("Method1", Microsoft.Vbe.Interop.vbext_ProcKind.vbext_pk_Proc, true, "Public Function Method1() As String");
+            var expected = @"Public Sub Method1()
+" + "\t" + @"' Arrange
+" + "\t" + @"Err.Raise vbObjectError, ""Method1"", ""Test not implemented""
+" + "\t" + @"Const Expected As Variant = ""expected value""
+" + "\t" + @"Dim Actual As Variant
+" + "\t" + @"' Act
+" + "\t" + @"Actual = ""actual value""
+" + "\t" + @"' Assert
+" + "\t" + @"Assert.That Actual, Iz.EqualTo(Expected)
+End Sub
+";
+
+            var actual = TestCodeGenerator.GenerateProcedureCode(codeModuleMember, "", "");
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void GenerateProcedureCode_WithParam_ReturnWithoutExpectedDeclarationInBody()
+        {
+            var codeModuleMember = new CodeModuleMember("Method1", Microsoft.Vbe.Interop.vbext_ProcKind.vbext_pk_Proc, true, "Public Function Method1(ByVal x As Long) As String");
+            var expected = @"'AccUnit:Row(x, Expected).Name = ""Example row - please replace the parameter names with values)""
+Public Sub Method1(ByVal x As Long, ByVal Expected As String)
+" + "\t" + @"' Arrange
+" + "\t" + @"Err.Raise vbObjectError, ""Method1"", ""Test not implemented""
+" + "\t" + @"Dim Actual As Variant
+" + "\t" + @"' Act
+" + "\t" + @"Actual = ""actual value""
+" + "\t" + @"' Assert
+" + "\t" + @"Assert.That Actual, Iz.EqualTo(Expected)
+End Sub
+";
+
+            var actual = TestCodeGenerator.GenerateProcedureCode(codeModuleMember, "", "");
 
             Assert.AreEqual(expected, actual);
         }

@@ -102,8 +102,8 @@ namespace AccessCodeLib.AccUnit.Tools
                 code = code.Replace(ParamsPlaceholder, parameters);
                 if (parameters.Length > 2) // () is the shortest possible parameter string
                 {
-                    // replace expected declareation in code
-                    code = code.Replace("   Const Expected As Variant = \"expected value\"", "");
+                    // replace expected declaration in code
+                    code = code.Replace("\r\n\tConst Expected As Variant = \"expected value\"", "");
 
                     // insert row test code
                     code = GetProcedureRowTestString(parameters) + Environment.NewLine + code;

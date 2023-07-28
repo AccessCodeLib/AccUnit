@@ -1,11 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net35</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
 
     <IsPackable>false</IsPackable>
 
     <Platforms>AnyCPU;x86;x64</Platforms>
+
+    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
+
+    <IsPublishable>False</IsPublishable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +20,19 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\AccUnit\AccessCodeLib.AccUnit.csproj" />
+    <ProjectReference Include="..\..\Common\Common.VBIDETools\AccessCodeLib.Common.VBIDETools.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+  <COMReference Include="VBIDE">
+    <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
+    <VersionMajor>5</VersionMajor>
+    <VersionMinor>3</VersionMinor>
+    <Lcid>0</Lcid>
+    <WrapperTool>primary</WrapperTool>
+    <Isolated>False</Isolated>
+    <EmbedInteropTypes>False</EmbedInteropTypes>
+  </COMReference>
   </ItemGroup>
 
 </Project>
