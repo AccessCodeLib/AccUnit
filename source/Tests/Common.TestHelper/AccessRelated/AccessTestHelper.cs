@@ -120,7 +120,7 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
         {
             get
             {
-                if (_dbEngine == null)
+                if (_dbEngine is null)
                 {
                     _dbEngine = (DBEngine)Application.DBEngine;
                 }
@@ -234,7 +234,7 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
 
         private void ShutDownAccess()
         {
-            if (Application == null)
+            if (Application is null)
                 return;
 
             try
@@ -308,7 +308,7 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
             Debug.Assert(ProcessId != 0, "********** Cannot kill the process because I don't know its ID.");
 
             var accessProcess = GetProcessByIdOrDefault(ProcessId);
-            if (accessProcess == null)
+            if (accessProcess is null)
             {
                 Trace.WriteLine(
                     string.Format("********** This is thread \"{0}\". Cannot kill Access with process id #{1} because there is no process with this id.",

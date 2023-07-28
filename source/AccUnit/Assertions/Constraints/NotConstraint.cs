@@ -27,7 +27,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
                 throw new NotImplementedException();
             }
 
-            string expectedText = result.Expected == null ? "Nothing" : result.Expected.ToString();
+            string expectedText = result.Expected is null ? "Nothing" : result.Expected.ToString();
             expectedText = "Not " + expectedText;
 
             result = !result.Match ? new MatchResult(CompareText, true, null, result.Actual, expectedText)

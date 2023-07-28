@@ -18,7 +18,7 @@ namespace AccessCodeLib.AccUnit.Tools.VBA
             var assemblyName = new AssemblyName("Interop.VBA");
             var assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == assemblyName.Name);
 
-            if (assembly == null)
+            if (assembly is null)
             {
                 byte[] interopVbaBytes = Resources.InteropVBA;
                 assembly = Assembly.Load(interopVbaBytes);

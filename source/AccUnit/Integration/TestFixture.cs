@@ -38,7 +38,7 @@ namespace AccessCodeLib.AccUnit
 
         public void FillInstanceMembers(VBProject vbProject)
         {
-            if (_testClassInstance == null)
+            if (_testClassInstance is null)
             {
                 return;
             }

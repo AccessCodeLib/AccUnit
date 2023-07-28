@@ -28,7 +28,7 @@ namespace AccessCodeLib.AccUnit.Configuration
         {
             get
             {
-                if (_current == null)
+                if (_current is null)
                 {
                     _current = new UserSettings();
                     _current.Load();

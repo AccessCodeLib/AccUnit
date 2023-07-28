@@ -37,7 +37,7 @@ namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
         {
             get
             {
-                if (_methods == null)
+                if (_methods is null)
                     ReadMethods();
 
                 return _methods;
@@ -146,7 +146,7 @@ namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
 
         private void EnsureStringBuilderExists()
         {
-            if (_stringBuilder == null)
+            if (_stringBuilder is null)
             {
                 _stringBuilder = new StringBuilder();
             }
@@ -178,7 +178,7 @@ namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
 
         public bool ContainsHeaderTag(string headerTag)
         {
-            if (_commentLinesUntilFirstProcedure == null)
+            if (_commentLinesUntilFirstProcedure is null)
                 ReadCommentLinesUntilFirstProcedure();
             // ReSharper disable AssignNullToNotNullAttribute
             return _commentLinesUntilFirstProcedure.Any(l => l.Contains(headerTag));

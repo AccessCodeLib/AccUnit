@@ -37,7 +37,7 @@ namespace AccessCodeLib.AccUnit.Assertions
             if (ExpectedErrorNumber == 0)
                 return false;
 
-            if (ex == null)
+            if (ex is null)
             {
                 testResult.IsSuccess = false;
                 testResult.IsFailure = true;

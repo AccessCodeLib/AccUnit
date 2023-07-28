@@ -151,7 +151,7 @@ namespace AccessCodeLib.AccUnit
 
         public void ExportTestClasses(string exportDirectory = null)
         {
-            if (exportDirectory == null)
+            if (exportDirectory is null)
             {
                 exportDirectory = ExportDirectory;
             }
@@ -242,7 +242,7 @@ namespace AccessCodeLib.AccUnit
         public void ImportTestComponents(string fileNameFilter = null, string importPath = null, bool overwriteExistingComponent = false)
         {
             var importDirectory = importPath ?? ImportDirectory;
-            if (fileNameFilter == null)
+            if (fileNameFilter is null)
             {
                 fileNameFilter = "*";
             }
@@ -306,14 +306,14 @@ namespace AccessCodeLib.AccUnit
 
         private IEnumerable<FileInfo> GetTestFilesFromDirectory(string path = null, string fileNameSeachPattern = "*")
         {
-            if (path == null)
+            if (path is null)
                 path = ImportDirectory;
             return TestClassReader.GetTestFilesFromDirectory(path, fileNameSeachPattern);
         }
 
         public IEnumerable<CodeModuleInfo> GetTestModulesFromDirectory(string path = null, string fileNameSeachPattern = "*")
         {
-            if (path == null)
+            if (path is null)
                 path = ImportDirectory;
 
             return from FileInfo file in GetTestFilesFromDirectory(path, fileNameSeachPattern)
@@ -331,7 +331,7 @@ namespace AccessCodeLib.AccUnit
         {
             using (new BlockLogger())
             {
-                if (ActiveVBProject == null)
+                if (ActiveVBProject is null)
                 {
                     Logger.Log("ActiveVBProject is null, raise RepairActiveVBProjectCOMException");
                     RaiseRepairActiveVBProjectCOMException();
@@ -371,7 +371,7 @@ namespace AccessCodeLib.AccUnit
         {
             using (new BlockLogger())
             {
-                if (ActiveVBProject == null)
+                if (ActiveVBProject is null)
                 {
                     Logger.Log("ActiveVBProject is null, raise RepairActiveVBProjectCOMException");
                     RaiseRepairActiveVBProjectCOMException();

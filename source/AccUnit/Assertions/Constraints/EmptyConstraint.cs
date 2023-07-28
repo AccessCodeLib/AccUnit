@@ -25,7 +25,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
                     return new MatchResult(CompareText, false, "Is not Empty", actual, string.Empty);
                 }
             }
-            else if (actual == null)
+            else if (actual is null)
             {
                 return new MatchResult(CompareText, true, null, actual, string.Empty);
             }

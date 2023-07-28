@@ -9,7 +9,7 @@
 
         protected override IMatchResult Compare(object actual)
         {
-            if (actual == null)
+            if (actual is null)
             {
                 return new MatchResult(CompareText, true, null, actual, null);
             }

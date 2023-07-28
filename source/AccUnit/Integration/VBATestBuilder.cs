@@ -37,7 +37,7 @@ namespace AccessCodeLib.AccUnit
         {
             get
             {
-                if (_vbProject == null && HostApplication != null)
+                if (_vbProject is null && HostApplication != null)
                 {
                     _vbProject = OfficeApplicationHelper.CurrentVBProject;
                 }
@@ -122,7 +122,7 @@ namespace AccessCodeLib.AccUnit
         {
             var modules = new CodeModuleContainer(ActiveVBProject);
             var module = modules.TryGetCodeModule(className);
-            if (module == null)
+            if (module is null)
                 return;
 
             if (!TestMessageBox.UsedInCodeModule(module)) return;
@@ -150,7 +150,7 @@ namespace AccessCodeLib.AccUnit
 
         private void EnsureOfficeApplicationExists()
         {
-            if (HostApplication == null)
+            if (HostApplication is null)
             {
                 HostApplication = GetOfficeApplication();
             }

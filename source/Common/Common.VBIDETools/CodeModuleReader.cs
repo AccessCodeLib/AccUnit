@@ -55,7 +55,7 @@ namespace AccessCodeLib.Common.VBIDETools
         {
             get
             {
-                if (_members == null)
+                if (_members is null)
                     FillMembers();
                 return _members;
             }

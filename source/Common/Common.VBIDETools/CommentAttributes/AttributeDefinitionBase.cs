@@ -32,7 +32,7 @@ namespace AccessCodeLib.Common.VBIDETools.CommentAttributes
 
         public CommentAttribute CreateAttribute(IList<Parameter> parameters)
         {
-            if (parameters == null)
+            if (parameters is null)
                 throw new ArgumentNullException("parameters");
 
             if (RequiredParameterCount.HasValue)

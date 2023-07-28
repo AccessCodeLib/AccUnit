@@ -19,7 +19,7 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
         {
             get
             {
-                if (GetRunningObjectTable(0, out IRunningObjectTable runningObjectTable) != 0 || runningObjectTable == null)
+                if (GetRunningObjectTable(0, out IRunningObjectTable runningObjectTable) != 0 || runningObjectTable is null)
                 {
                     return null;
                 }
@@ -76,7 +76,7 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
         private static object GetOfficeComObjectByProgIDAndVBEfromFirstObjectInROT(string progID, VBE vbe)
         {
             var comInstance = Marshal.GetActiveObject(progID);
-            if (comInstance == null)
+            if (comInstance is null)
                 return null;
 
             try
@@ -96,7 +96,7 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
             using (new BlockLogger())
             {
                 var runningObjectTable = RunningObjectTable;
-                if (runningObjectTable == null)
+                if (runningObjectTable is null)
                     return null;
 
                 runningObjectTable.EnumRunning(out IEnumMoniker monikerList);
@@ -112,7 +112,7 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
                     Logger.Log($"displayName: {displayName}");
 
                     runningObjectTable.GetObject(monikerContainer[0], out object comInstance);
-                    if (GetTypeForComObject(comInstance, progID) == null) continue;
+                    if (GetTypeForComObject(comInstance, progID) is null) continue;
                     object appVbe;
                     try
                     {
@@ -135,7 +135,7 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
                         }
                     }
 
-                    if (appVbe == null || !vbe.Equals(appVbe)) continue;
+                    if (appVbe is null || !vbe.Equals(appVbe)) continue;
 
                     Logger.Log($"found: {comInstance}");
                     return comInstance;

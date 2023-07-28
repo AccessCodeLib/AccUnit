@@ -64,7 +64,7 @@ namespace AccessCodeLib.AccUnit
                 using (new BlockLogger())
                 {
 
-                    if ((_vbMsgBoxResults == null) || (_vbMsgBoxResults.Count == 0))
+                    if ((_vbMsgBoxResults is null) || (_vbMsgBoxResults.Count == 0))
                         throw new MissingTestMessageBoxResultsException();
 
                     try

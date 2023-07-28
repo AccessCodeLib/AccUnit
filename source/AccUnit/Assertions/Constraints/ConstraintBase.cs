@@ -14,7 +14,7 @@
             }
             set
             {
-                if (FirstChild == null)
+                if (FirstChild is null)
                 {
                     FirstChild = value;
                     _child = value;

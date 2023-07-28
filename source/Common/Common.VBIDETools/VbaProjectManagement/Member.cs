@@ -17,7 +17,7 @@ namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
         {
             get
             {
-                if (_parameters == null)
+                if (_parameters is null)
                 {
                     _parameters = new ParameterListParser().Parse(ParameterList);
                 }
@@ -30,7 +30,7 @@ namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
 
         public IEnumerable<CommentAttribute> GetCommentAttributes(IEnumerable<Domain> domains)
         {
-            if (_commentAttributes == null)
+            if (_commentAttributes is null)
             {
                 ReadCommentAttributes(domains);
             }

@@ -20,7 +20,7 @@ namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
         {
             get
             {
-                if (_text == null)
+                if (_text is null)
                     ReadText();
 
                 return _text;

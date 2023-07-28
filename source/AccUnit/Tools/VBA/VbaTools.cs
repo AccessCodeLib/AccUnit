@@ -8,7 +8,7 @@
         {
             get
             {
-                if (_VbaConstantsDictionary == null)
+                if (_VbaConstantsDictionary is null)
                 {
                     _VbaConstantsDictionary = new VbaConstantsDictionary();
                 }

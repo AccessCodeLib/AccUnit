@@ -18,19 +18,20 @@ namespace AccessCodeLib.AccUnit.Assertions
 
         protected static string FormatResultText(string text, object actual, object expected, string infoText = null)
         {
-            if (text == null)
+            if (text is null)
             {
                 return infoText;
             }
 
-            var compareText = "Expected: " + ConvertToString(expected) + " but was: " + ConvertToString(actual);
-            return $"{text} ({compareText})" + (infoText == null ? "" : $", {infoText}");
+            var typeOfValue = expected?.GetType() ?? actual?.GetType();
+            var compareText = "Expected: " + ConvertToString(expected, typeOfValue) + " but was: " + ConvertToString(actual, typeOfValue);
+            return $"{text} ({compareText})" + (string.IsNullOrEmpty(infoText) ? "" : $", {infoText}");
         }
 
-        protected static string ConvertToString(object value)
+        protected static string ConvertToString(object value, Type typeOfValue = null)
         {
-            if (value == null)
-                return "Nothing";
+            if (value is null)
+                return typeOfValue == typeof(string) ? "vbNullString" : "Nothing";
 
             if (value == DBNull.Value)
                 return "Null";

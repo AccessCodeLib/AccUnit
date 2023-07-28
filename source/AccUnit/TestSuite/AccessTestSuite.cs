@@ -42,7 +42,7 @@ namespace AccessCodeLib.AccUnit
 
         private VBProject GetCurrentVBProject(object app)
         {
-            return app == null ? null : ApplicationHelper.CurrentVBProject;
+            return app is null ? null : ApplicationHelper.CurrentVBProject;
         }
 
         protected override void OnTestStarted(TestClassMemberInfo testClassMemberInfo)
@@ -67,7 +67,7 @@ namespace AccessCodeLib.AccUnit
 
         protected override void OnTestFinished(ITestResult result)
         {
-            if (TransactionManager == null) return;
+            if (TransactionManager is null) return;
 
             try
             {

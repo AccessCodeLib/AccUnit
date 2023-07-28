@@ -19,7 +19,7 @@ namespace AccessCodeLib.AccUnit
             foreach (var tag in
                 from tag in tags
                 let match = Find(x => x.Name == tag.Name)
-                where match == null
+                where match is null
                 select tag)
             {
                 Add(tag);

@@ -25,7 +25,7 @@ namespace AccessCodeLib.AccUnit
         {
             get
             {
-                if (_tags == null)
+                if (_tags is null)
                     FillTagList();
                 return _tags;
             }

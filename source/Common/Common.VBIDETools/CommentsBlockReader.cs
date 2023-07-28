@@ -7,7 +7,7 @@ namespace AccessCodeLib.Common.VBIDETools
     {
         public IEnumerable<string> Read(string commentsBlock)
         {
-            if (commentsBlock == null)
+            if (commentsBlock is null)
                 return null;
 
             if (commentsBlock == "")

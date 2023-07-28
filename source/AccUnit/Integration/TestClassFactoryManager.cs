@@ -28,7 +28,7 @@ Option Private Module
         {
             get
             {
-                if (_factoryCodeModule == null)
+                if (_factoryCodeModule is null)
                 {
                     _factoryCodeModule = GetFactoryModule();
                 }
@@ -133,7 +133,7 @@ End Function
         private void WipeFactoryCodeModule()
         {
             var vbc = FindFactoryVbComponent();
-            if (vbc == null)
+            if (vbc is null)
                 return;
 
             var cm = vbc.CodeModule;
