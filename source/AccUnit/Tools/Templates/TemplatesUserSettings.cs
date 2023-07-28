@@ -22,7 +22,7 @@ namespace AccessCodeLib.AccUnit.Tools.Templates
         {
             get
             {
-                if (_current == null)
+                if (_current is null)
                 {
                     _current = new TemplatesUserSettings();
                     _current.Load();

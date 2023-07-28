@@ -22,7 +22,7 @@ namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
             var vbComponent = _vbProject.VBComponents.Cast<VBComponent>()
                 .Where(vbc => vbc.Name == module.Name)
                 .SingleOrDefault();
-            if (vbComponent == null)
+            if (vbComponent is null)
             {
                 vbComponent = _vbProject.VBComponents.Add(vbext_ComponentType.vbext_ct_ClassModule);
                 vbComponent.Name = module.Name;
@@ -45,7 +45,7 @@ namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
         {
             get
             {
-                if (_modules == null)
+                if (_modules is null)
                 {
                     _modules = GetModules();
                 }

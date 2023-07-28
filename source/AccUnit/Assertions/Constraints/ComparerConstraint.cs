@@ -28,7 +28,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
 
         protected override IMatchResult Compare(object actual)
         {
-            if (actual == null)
+            if (actual is null)
             {
                 if (Expected == null)
                 {
@@ -37,6 +37,12 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
                         return new MatchResult(CompareText, true, null, actual, Expected);
                     }
                     return new MatchResult(CompareText, false, "actual is Nothing, expected is Nothing", actual, Expected);
+                }
+
+                var typeOfValue = Expected?.GetType();
+                if (typeOfValue == typeof(string))
+                {
+                    return new MatchResult(CompareText, false, "actual is vbNullstring and expected is not vbNullString", actual, Expected);
                 }
 
                 return new MatchResult(CompareText, false, "actual is Nothing and expected is not Nothing", actual, Expected);

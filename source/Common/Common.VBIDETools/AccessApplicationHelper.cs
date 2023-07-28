@@ -99,7 +99,7 @@ namespace AccessCodeLib.Common.VBIDETools
         public CurrentDb(object accessApplication)
         {
             _currentDb = new InvocationHelper(accessApplication).InvokeMethod(AccessInvokeStrings.Application.CurrentDb, null);
-            if (_currentDb == null)
+            if (_currentDb is null)
                 throw new InvalidOperationException("No database loaded into this Access.Application.");
             _invocationHelper = new InvocationHelper(_currentDb);
         }

@@ -23,7 +23,7 @@ namespace AccessCodeLib.AccUnit
         {
             get
             {
-                if (_current == null)
+                if (_current is null)
                 {
                     _current = new TestSuiteUserSettings();
                     _current.Load();

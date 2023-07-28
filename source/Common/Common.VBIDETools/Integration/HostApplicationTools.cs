@@ -13,7 +13,7 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
             using (new BlockLogger())
             {
                 var progID = FindApplicationProgIdFromVBE(vbe);
-                if (progID == null)
+                if (string.IsNullOrEmpty(progID))
                 {
                     isAccessApplication = false;
                     return null;
@@ -92,7 +92,7 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
             using (new BlockLogger())
             {
                 bool isAccessApplication;
-                if (hostApplication == null)
+                if (hostApplication is null)
                 {
                     hostApplication = FindHostApplicationFromVBE(vbe, out isAccessApplication);
                 }
@@ -101,7 +101,7 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
                     isAccessApplication = GetAccessApplicationTypeForComObject(hostApplication) != null;
                 }
 
-                return hostApplication == null ? new VbeOnlyApplicatonHelper(vbe) : GetOfficeApplicationHelper(hostApplication, isAccessApplication);
+                return hostApplication is null ? new VbeOnlyApplicatonHelper(vbe) : GetOfficeApplicationHelper(hostApplication, isAccessApplication);
             }
         }
 

@@ -38,39 +38,8 @@ namespace AccessCodeLib.AccUnit
         {
             using (new BlockLogger(testSuite.Name))
             {
-                /* ???
-                var memberinfo = GetMemberInfo(testSuite);
-                if (memberinfo != null)
-                {
-                    if (memberinfo.IgnoreInfo.Ignore)
-                    {
-                        var test = (ITest) testSuite;
-                        test.RunState = RunState.Ignored;
-                    }
-                }
-                */
-
                 RaiseTestSuiteStarted(testSuite, tags);
             }
-        }
-
-        private TestClassMemberInfo GetMemberInfo(ITestSuite testSuite)
-        {
-            TestClassMemberInfo memberinfo;
-
-            var test = (ITest)testSuite;
-            var parent = test.Fixture;
-            if (parent == null)
-            {
-                memberinfo = null;
-            }
-            else
-            {
-                var classname = parent.Name;
-                var membername = test.Name;
-                memberinfo = GetMemberInfo(classname, membername);
-            }
-            return memberinfo;
         }
 
         private TestClassMemberInfo GetMemberInfo(string classname, string membername)
@@ -193,7 +162,7 @@ namespace AccessCodeLib.AccUnit
         {
             var member = testManager.Members.Find(
                             m => m.Name.Equals(testCase.Fixture.Name, StringComparison.CurrentCultureIgnoreCase));
-            if (member == null)
+            if (member is null)
                 return null;
 
             var row =
@@ -342,7 +311,7 @@ namespace AccessCodeLib.AccUnit
         {
             get
             {
-                if (_testRunner == null)
+                if (_testRunner is null)
                 {
                     _testRunner = new VbaTestRunner(_testBuilder.ActiveVBProject);
                 }
@@ -474,7 +443,7 @@ namespace AccessCodeLib.AccUnit
         public virtual IVBATestSuite Run()
         {
             Cancel = false;
-            if (TestResultCollector == null)
+            if (TestResultCollector is null)
             {
                 TestResultCollector = new TestResultCollection(this);
             }

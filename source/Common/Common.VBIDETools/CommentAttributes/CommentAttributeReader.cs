@@ -33,11 +33,11 @@ namespace AccessCodeLib.Common.VBIDETools.CommentAttributes
                 return;
 
             var domain = Domains.Find(d => d.Identifier == parsedLine.DomainIdentifier);
-            if (domain == null)
+            if (domain is null)
                 return;
 
             var attributeDefinition = domain.AttributeDefinitions.Find(ad => ad.Identifier == parsedLine.AttributeIdentifier);
-            if (attributeDefinition == null)
+            if (attributeDefinition is null)
                 return;
 
             var attribute = attributeDefinition.CreateAttribute(parsedLine.Parameters);

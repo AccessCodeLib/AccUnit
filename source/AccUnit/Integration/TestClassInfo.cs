@@ -31,7 +31,7 @@ namespace AccessCodeLib.AccUnit
         public void InitMembers(TestClassMemberList members)
         {
             Members = members;
-            if (members == null) return;
+            if (members is null) return;
             foreach (var m in members)
             {
                 m.GetParent += OnMembersGetParent;
@@ -63,7 +63,7 @@ namespace AccessCodeLib.AccUnit
         {
             get
             {
-                if (_tags == null)
+                if (_tags is null)
                     FillTagList();
                 return _tags;
             }
@@ -92,7 +92,7 @@ namespace AccessCodeLib.AccUnit
                 members = members.Filter(tags);
             }
 
-            if (members == null || members.Count == 0)
+            if (members is null || members.Count == 0)
             {
                 return null;
             }
@@ -101,7 +101,7 @@ namespace AccessCodeLib.AccUnit
 
         public bool IsMatch(IEnumerable<TestItemTag> tags)
         {
-            if (_tags == null && _classtags == null && Members == null)
+            if (_tags is null && _classtags is null && Members is null)
             {
                 return false;
             }

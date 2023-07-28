@@ -194,7 +194,7 @@ namespace AccessCodeLib.AccUnit
             using (new BlockLogger("InitTestMessageBox"))
             {
 
-                if (_officeApplicationHelper == null)
+                if (_officeApplicationHelper is null)
                     throw new NullReferenceException("OfficeApplicationHelper");
 
                 try
@@ -216,10 +216,10 @@ namespace AccessCodeLib.AccUnit
                     Logger.Log(ex);
                 }
 
-                if (TestMessageBox == null)
+                if (TestMessageBox is null)
                     TestMessageBox = GetTestMessageBoxFromMethod(testcase.MethodName);
 
-                if (TestMessageBox == null)
+                if (TestMessageBox is null)
                     return;
 
                 TestMessageBox.ActivateTestMessageBox(_officeApplicationHelper, TestMessageBox);
@@ -250,7 +250,7 @@ namespace AccessCodeLib.AccUnit
             var memberInfo = reader.GetTestClassMemberInfo(TestName, name);
             var results = memberInfo.MsgBoxResults;
 
-            if (results == null || results.Count == 0)
+            if (results is null || results.Count == 0)
             {
                 Logger.Log("0 MsgBoxResults");
                 return null;

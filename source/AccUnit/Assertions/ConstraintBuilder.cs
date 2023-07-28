@@ -49,7 +49,7 @@ namespace AccessCodeLib.AccUnit.Assertions
                 return;
             }
 
-            if (expected == null)
+            if (expected is null)
             {
                 if (expectedComparerResult == 0)
                 {
@@ -167,7 +167,7 @@ namespace AccessCodeLib.AccUnit.Assertions
 
         private void AddChild(IConstraint constraint)
         {
-            if (_firstchild == null)
+            if (_firstchild is null)
             {
                 _firstchild = constraint;
             }

@@ -25,7 +25,7 @@ namespace AccessCodeLib.AccUnit.Integration
             foreach (var row in Rows)
             {
                 i++;
-                if (row.Name == null)
+                if (row.Name is null)
                 {
                     row.Name = i.ToString();
                 }

@@ -31,7 +31,7 @@ namespace AccessCodeLib.AccUnit.Tools
         private IEnumerable<CodeModuleMember> GetTestCodeModuleMemberFromCodeModule(string codeModuleToTest, string stateUnderTest = null, string expectedBehaviour = null)
         {
             var codeModule = new CodeModuleContainer(_vbProject).TryGetCodeModule(codeModuleToTest);
-            if (codeModule == null)
+            if (codeModule is null)
             {
                 return new TestCodeModuleMember[] { };
             }

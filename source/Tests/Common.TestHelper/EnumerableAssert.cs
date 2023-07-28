@@ -8,15 +8,15 @@ namespace AccessCodeLib.Common.TestHelpers
     {
         public static void AreEqual<T>(IEnumerable<T> expectedEnumerable, IEnumerable<T> actualEnumerable)
         {
-            if (actualEnumerable == null)
+            if (actualEnumerable is null)
             {
-                if (expectedEnumerable == null)
+                if (expectedEnumerable is null)
                 {
                     return;
                 }
                 Assert.Fail("The actual enumerable is null while the expected is not.");
             }
-            if (expectedEnumerable == null)
+            if (expectedEnumerable is null)
             {
                 Assert.Fail("The actual enumerable is not null while the expected is.");
             }
@@ -44,15 +44,15 @@ namespace AccessCodeLib.Common.TestHelpers
 
         public static void AreOfSpecificTypes<T>(IEnumerable<Type> expectedTypeEnumerable, IEnumerable<T> actualEnumerable)
         {
-            if (actualEnumerable == null)
+            if (actualEnumerable is null)
             {
-                if (expectedTypeEnumerable == null)
+                if (expectedTypeEnumerable is null)
                 {
                     return;
                 }
                 Assert.Fail("The actual enumerable is null while the expected is not.");
             }
-            if (expectedTypeEnumerable == null)
+            if (expectedTypeEnumerable is null)
             {
                 Assert.Fail("The actual enumerable is not null while the expected is.");
             }
