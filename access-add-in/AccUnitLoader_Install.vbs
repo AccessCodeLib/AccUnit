@@ -15,7 +15,7 @@ Select Case MsgBox("Should the add-in be used as ACCDE?" + chr(13) & _
       end if
    case 7 ' vbNo
       DeleteAddInFiles
-      if FileCopy(GetSourceFileFullName, GetDestFileFullName) Then
+      if CopyFileAndRundPrecompileProc(GetSourceFileFullName, GetDestFileFullName) Then
 	  MsgBox "File was copied.", , MsgBoxTitle
       else
 	  MsgBox "Error! File was not copied.", , MsgBoxTitle
@@ -87,16 +87,35 @@ Function DeleteFile(fso, File2Delete)
    end if
 End Function
 
+Function CopyFileAndRundPrecompileProc(SourceFilePath, DestFilePath)
+
+   IF Not FileCopy(SourceFilePath, DestFilePath) Then
+      Exit Function
+   End If
+
+   Set AccessApp = CreateObject("Access.Application") 	
+   If Not RunPrecompileProcedure(AccessApp, DestFilePath) Then
+      Exit Function
+   End If
+
+   CopyFileAndRundPrecompileProc = True
+ 
+End Function
+
 Function CreateMde(SourceFilePath, DestFilePath)
 	
    Set fso = CreateObject("Scripting.FileSystemObject")
    DeleteAddInFilesFso fso
 
    FileToCompile = DestFilePath & ".accdb"
-   FileCopy SourceFilePath, FileToCompile
+   If Not FileCopy(SourceFilePath, FileToCompile) Then
+      Exit Function
+   End If
   
    Set AccessApp = CreateObject("Access.Application") 
-   RunPrecompileProcedure AccessApp, FileToCompile
+   If Not RunPrecompileProcedure(AccessApp, FileToCompile) Then
+      Exit Function
+   End If
    AccessApp.SysCmd 603, (FileToCompile), (DestFilePath)
    
    DeleteFile fso, FileToCompile
@@ -119,5 +138,7 @@ Function RunPrecompileProcedure(AccessApp, SourceFilePath)
    AccessApp.OpenCurrentDatabase SourceFilePath
    AccessApp.Run "CheckAccUnitTypeLibFile"
    AccessApp.CloseCurrentDatabase
+
+   RunPrecompileProcedure = True
 
 End Function

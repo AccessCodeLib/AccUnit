@@ -11,7 +11,8 @@ namespace AccessCodeLib.AccUnit
         public const string Failure = "Failure";
         public const string Ignored = "Ignored";
         public const string Error = "Error";
-        public const string Marker = "***";
+        public const string FailedMarker = "***";
+        public const string IgoreMarker = "~~~";
     }
 
     internal class TestSummaryFormatter : ITestSummaryFormatter
@@ -109,15 +110,15 @@ namespace AccessCodeLib.AccUnit
             }
             else if (result.IsFailure)
             {
-                sb.AppendFormat("{0} {1}", TestResultText.Failure, TestResultText.Marker);
+                sb.AppendFormat("{0} {1}", TestResultText.Failure, TestResultText.FailedMarker);
             }
             else if (result.IsIgnored)
             {
-                sb.Append(TestResultText.Ignored);
+                sb.AppendFormat("{0} {1}", TestResultText.Ignored, TestResultText.IgoreMarker);
             }
             else if (result.IsError)
             {
-                sb.AppendFormat("{0} {1}", TestResultText.Error, TestResultText.Marker);
+                sb.AppendFormat("{0} {1}", TestResultText.Error, TestResultText.FailedMarker);
             }
 
             try
