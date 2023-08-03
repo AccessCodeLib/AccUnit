@@ -29,7 +29,8 @@ namespace AccessCodeLib.AccUnit.Integration
                 {
                     row.Name = i.ToString();
                 }
-                var paramTest = new ParamTest(Fixture, TestClassMemberInfo, row.Name, row.Args);
+                var paramTestClassMemberInfo = new TestClassMemberInfo(TestClassMemberInfo, row.IgnoreInfo);
+                var paramTest = new ParamTest(Fixture, paramTestClassMemberInfo, row.Name, row.Args);
                 paramTests.Add(paramTest);
             }
 

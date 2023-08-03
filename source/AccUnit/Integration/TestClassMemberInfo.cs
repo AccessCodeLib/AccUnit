@@ -25,6 +25,17 @@ namespace AccessCodeLib.AccUnit
             ReadProcHeader(procHeader);
         }
 
+        public TestClassMemberInfo(ITestClassMemberInfo memberInfo, IgnoreInfo newIgnoreInfo)
+        {
+            Name = memberInfo.Name;
+            _ignoreInfo = newIgnoreInfo;
+            _testRowFilter = new List<int>(memberInfo.TestRowFilter);
+            Tags = memberInfo.Tags;
+            DoAutoRollback = memberInfo.DoAutoRollback;
+            _msgBoxResults = new List<VbMsgBoxResult>(memberInfo.MsgBoxResults);
+            ShowAs = memberInfo.ShowAs;
+        }
+
         private void ReadProcHeader(string procHeader)
         {
             SetIgnoreStateFromProcHeader(procHeader);

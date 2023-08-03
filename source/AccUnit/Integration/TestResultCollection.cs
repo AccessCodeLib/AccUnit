@@ -116,7 +116,7 @@ namespace AccessCodeLib.AccUnit.Integration
                 resultBuilder.Append("Executed: " + ExecutedCount);
                 resultBuilder.Append(" Success: " + IsSuccessCount);
                 resultBuilder.Append(" Failure: " + IsFailureCount);
-                resultBuilder.Append(" Error: " + IsErrorCount);
+                resultBuilder.Append(" Error:   " + IsErrorCount);
                 resultBuilder.Append(" Ignored: " + IsIgnoredCount);
                 return resultBuilder.ToString();
             }

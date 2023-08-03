@@ -103,9 +103,8 @@ namespace AccessCodeLib.AccUnit
 
         private void EnsureErrorTrappingForTests()
         {
-            var errorTrappingBeforeRun = GetAccessErrorTrapping();
-            if (errorTrappingBeforeRun != (Int16)ErrorTrapping)
-                SetAccessErrorTrapping((Int16)ErrorTrapping);
+            if (GetAccessErrorTrapping() != (short)ErrorTrapping)
+                SetAccessErrorTrapping((short)ErrorTrapping);
         }
 
         private VbaErrorTrapping _errorTrapping = VbaErrorTrapping.BreakOnUnhandledErrors;
@@ -116,13 +115,13 @@ namespace AccessCodeLib.AccUnit
         }
 
         private const string ErrorTrappingOptionName = "Error Trapping";
-        private Int16 GetAccessErrorTrapping()
+        private short GetAccessErrorTrapping()
         {
-            var errorTrapping = (Int16)ApplicationHelper.GetOption(ErrorTrappingOptionName);
+            var errorTrapping = (short)ApplicationHelper.GetOption(ErrorTrappingOptionName);
             return errorTrapping;
         }
 
-        private void SetAccessErrorTrapping(Int16 errortrapping)
+        private void SetAccessErrorTrapping(short errortrapping)
         {
             ApplicationHelper.SetOption(ErrorTrappingOptionName, errortrapping);
         }

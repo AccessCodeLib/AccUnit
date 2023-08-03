@@ -345,5 +345,52 @@ End Function
             Assert.That(valueAfterTestRun, Is.EqualTo(1));
         }
 
+        [Test]
+        public void RunRowTest_IgnoreRow_CheckValueIs0()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+private m_Check as Long
+
+'AccUnit:Row(1).Ignore(""test"")
+public Function TestMethod1(ByVal x as Long) as Long
+   m_Check = x
+   TestMethod1 = x
+End Function
+
+public Function GetCheckValue() as long
+   GetCheckValue = m_Check
+End Function
+");
+            var fixtureName = "clsAccUnitTestClass";
+            var fixture = _testBuilder.CreateTest(fixtureName);
+            Assert.That(fixture, Is.Not.Null);
+
+            var memberName = "TestMethod1";
+            var fixtureMember = new TestFixtureMember(memberName);
+
+            var testClassReader = new TestClassReader(_testBuilder.ActiveVBProject);
+            fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
+
+            Assert.That(fixtureMember.TestClassMemberInfo.TestRows[0].IgnoreInfo.Ignore, Is.True);
+//            Assert.That(fixtureMember.TestClassMemberInfo.IgnoreInfo.Ignore, Is.True);
+
+            var rowGenerator = new TestRowGenerator
+            {
+                ActiveVBProject = _testBuilder.ActiveVBProject,
+                TestName = fixtureName
+            };
+            var testRows = rowGenerator.GetTestRows(memberName);
+
+            Assert.That(testRows[0].IgnoreInfo.Ignore, Is.True);
+
+            var invocHelper = new InvocationHelper(fixture);
+
+            var result = new TestResultCollector();
+            var testRunner = new Interop.TestRunner(_testBuilder.ActiveVBProject);
+            testRunner.Run(fixture, "TestMethod1", result);
+
+            var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
+            Assert.That(valueAfterTestRun, Is.EqualTo(0));
+        }
     }
 }
