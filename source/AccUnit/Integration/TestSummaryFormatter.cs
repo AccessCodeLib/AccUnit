@@ -104,7 +104,7 @@ namespace AccessCodeLib.AccUnit
             else
                 sb.Append(" ");
 
-            if (result.IsSuccess)
+            if (result.IsPassed)
             {
                 sb.Append(TestResultText.Success);
             }

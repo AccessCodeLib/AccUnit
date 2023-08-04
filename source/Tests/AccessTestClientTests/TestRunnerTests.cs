@@ -121,7 +121,7 @@ End Function
             foreach (var testResult in result.Results)
             {
                 var res = testResult as TestResult;
-                Assert.That(res.IsSuccess, Is.EqualTo(true), res.Message);
+                Assert.That(res.IsPassed, Is.EqualTo(true), res.Message);
             }
 
 

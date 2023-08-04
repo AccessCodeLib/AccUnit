@@ -19,7 +19,7 @@ namespace AccessCodeLib.AccUnit.Integration
 
         public bool IsIgnored { get; set; }
 
-        public bool IsSuccess { get; set; }
+        public bool IsPassed { get; set; }
 
         public string Message { get; set; }
 
@@ -39,7 +39,7 @@ namespace AccessCodeLib.AccUnit.Integration
                 {
                     return "Ignored";
                 }
-                else if (IsSuccess)
+                else if (IsPassed)
                 {
                     return "Success";
                 }
