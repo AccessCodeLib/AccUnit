@@ -191,7 +191,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
                 {
                     invocationHelper.InvokeMethod(test.MethodName);
                 }
-                testResult.IsSuccess = true;
+                testResult.IsPassed = true;
             }
             catch (Exception ex)
             {
@@ -228,7 +228,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
                         }
                         testResult.Message += messageException.Message;
                     }
-                    testResult.IsSuccess = false;
+                    testResult.IsPassed = false;
                 }
             }
             finally

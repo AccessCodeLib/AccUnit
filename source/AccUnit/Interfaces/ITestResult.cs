@@ -13,7 +13,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
         bool IsError { get; }
         bool IsFailure { get; }
         bool IsIgnored { get; }
-        bool IsSuccess { get; }
+        bool IsPassed { get; }
         string Message { get; }
 
         string Result { get; }

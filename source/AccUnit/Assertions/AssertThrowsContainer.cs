@@ -39,7 +39,7 @@ namespace AccessCodeLib.AccUnit.Assertions
 
             if (ex is null)
             {
-                testResult.IsSuccess = false;
+                testResult.IsPassed = false;
                 testResult.IsFailure = true;
                 testResult.Message = "Expected error number " + ExpectedErrorNumber.ToString() + " was not thrown.";
                 Clear();
@@ -69,13 +69,13 @@ namespace AccessCodeLib.AccUnit.Assertions
 
             if (errorCode == ErrorNumber || errorCode == ExpectedErrorNumber)
             {
-                testResult.IsSuccess = true;
+                testResult.IsPassed = true;
                 testResult.IsFailure = false;
                 //testResult.Message = "Expected error number " + ExpectedErrorNumber.ToString() + " was thrown.";
             }
             else
             {
-                testResult.IsSuccess = false;
+                testResult.IsPassed = false;
                 testResult.IsFailure = true;
                 testResult.Message = "Expected error number " + ExpectedErrorNumber.ToString() + " was not thrown. Error was: (" + errorCode.ToString() + ") " + ex.ToString();
             }

@@ -19,5 +19,8 @@ namespace AccessCodeLib.AccUnit.Interfaces
         int Error { get; }
         int Ignored { get; }
         void Reset();
+        // bool get info about test success
+        bool Success { get; }
+
     }
 }
