@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AccessCodeLib.AccUnit
+namespace AccessCodeLib.AccUnit.Configuration
 {
 
     public class TestClassManager : IDisposable
