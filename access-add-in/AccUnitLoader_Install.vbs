@@ -136,6 +136,7 @@ End Function
 Function RunPrecompileProcedure(AccessApp, SourceFilePath)
 
    AccessApp.OpenCurrentDatabase SourceFilePath
+   AccessApp.Visible = True
    AccessApp.Run "CheckAccUnitTypeLibFile"
    AccessApp.CloseCurrentDatabase
 
