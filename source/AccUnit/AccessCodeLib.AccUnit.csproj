@@ -141,10 +141,10 @@
     <Compile Include="Interfaces\IVBATestSuite.cs" />
     <Compile Include="Integration\MissingTestMessageBoxResultsException.cs" />
     <Compile Include="Integration\TagList.cs" />
-    <Compile Include="Integration\TestClassFactoryManager.cs" />
+    <Compile Include="Configuration\TestClassFactoryManager.cs" />
     <Compile Include="Integration\TestClassInfo.cs" />
     <Compile Include="Integration\TestClassList.cs" />
-    <Compile Include="Integration\TestClassManager.cs" />
+    <Compile Include="Configuration\TestClassManager.cs" />
     <Compile Include="Integration\TestClassMemberInfo.cs" />
     <Compile Include="Integration\TestClassMemberList.cs" />
     <Compile Include="Integration\TestClassReader.cs" />
