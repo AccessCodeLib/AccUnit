@@ -64,13 +64,15 @@ namespace AccessCodeLib.AccUnit
             Array.Copy(row.Args.ToArray(), 1, args, 0, arrayLength);
             databuilder.Use(ref arg, args).TestName(GetTestFixtureRowName(row));
         }
-        */
+        
 
         private static string GetTestFixtureRowName(ITestRow row)
         {
             //return row.Name != null ? string.Format("Row{0}{1} {2}", row.Index + 1, RowNameDelimiter, row.Name) : string.Format("Row{0}", row.Index + 1);
             return row.TestFixtureRowName;
         }
+
+        */
 
         private Queue<ITestRow> _rowCollection = new Queue<ITestRow>();
 

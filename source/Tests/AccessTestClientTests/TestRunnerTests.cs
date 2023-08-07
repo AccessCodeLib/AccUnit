@@ -372,7 +372,7 @@ End Function
             fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
 
             Assert.That(fixtureMember.TestClassMemberInfo.TestRows[0].IgnoreInfo.Ignore, Is.True);
-//            Assert.That(fixtureMember.TestClassMemberInfo.IgnoreInfo.Ignore, Is.True);
+            //            Assert.That(fixtureMember.TestClassMemberInfo.IgnoreInfo.Ignore, Is.True);
 
             var rowGenerator = new TestRowGenerator
             {
