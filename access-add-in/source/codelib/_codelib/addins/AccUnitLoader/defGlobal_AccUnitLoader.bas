@@ -80,7 +80,7 @@ Public Property Get AccUnitFileNames() As Variant()
                         "AccessCodeLib.Common.VBIDETools.dll", _
                         "AccessCodeLib.Common.VBIDETools.XmlSerializers.dll", _
                         "Microsoft.Vbe.Interop.dll")
-
+   '                       "Interop.VBA.dll"
 End Property
 
 Public Sub ExportAccUnitFiles(Optional ByVal lBit As Long = 0)
@@ -88,6 +88,8 @@ Public Sub ExportAccUnitFiles(Optional ByVal lBit As Long = 0)
    Dim accFileName As Variant
    Dim sBit As String
    Dim DllPath As String
+   
+On Error GoTo HandleErr
    
    If lBit = 0 Then
       lBit = GetCurrentAccessBitSystem
@@ -101,6 +103,15 @@ Public Sub ExportAccUnitFiles(Optional ByVal lBit As Long = 0)
          .CreateAppFile accFileName, DllPath & accFileName, "BitInfo", sBit
       Next
    End With
+   
+ExitHere:
+   Exit Sub
+   
+HandleErr:
+   If accFileName = "AccessCodeLib.AccUnit.tlb" Then
+      Resume Next
+   End If
+   Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
 
 End Sub
 

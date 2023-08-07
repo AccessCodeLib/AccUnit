@@ -35,7 +35,7 @@ namespace AccessCodeLib.AccUnit.Interop
     [Guid("9F96EBE4-7FE4-4232-9510-A0818F9906FB")]
     [ClassInterface(ClassInterfaceType.None)]
     [ComSourceInterfaces(typeof(ITestSuiteComEvents))]
-    [ProgIdAttribute("AccUnit.AccessTestSuite")]
+    [ProgId("AccUnit.AccessTestSuite")]
     public class AccessTestSuite : AccUnit.AccessTestSuite, IAccessTestSuite
     {
         ITestRunner IAccessTestSuite.TestRunner

@@ -47,7 +47,7 @@ On Error Resume Next
 
 End Sub
 
-Public Property Get AccUnitFactory() As Object 'AccUnit.AccUnitFactory
+Public Property Get AccUnitFactory() As AccUnit.AccUnitFactory
    If m_AccUnitFactory Is Nothing Then
       InitAccUnitFactory
    End If
@@ -94,11 +94,6 @@ Public Function NewDebugPrintTestResultCollector() As DebugPrintTestResultCollec
    Set NewDebugPrintTestResultCollector = New DebugPrintTestResultCollector
 End Function
 
-Public Property Get TestBuilder() As Object 'AccUnit.TestBuilder
-    Set TestBuilder = AccUnitFactory.TestBuilder
-    Set TestBuilder.HostApplication = Application
-End Property
-
 Public Property Get TestRunner() As Object 'AccUnit.TestRunner
     
     SetErrorTrappingToBreakOnUnhandledErrors
@@ -134,13 +129,24 @@ Public Sub RunTest(ByVal testClassInstance As Object, Optional ByVal MethodName 
 End Sub
 
 Public Property Get Configurator() As Object 'AccUnit.Configurator
-   Set Configurator = AccUnitFactory.Configurator
+   Set Configurator = AccUnitFactory.Configurator(CurrentVbProject)
 End Property
 
-Public Property Get VbaTestSuite() As AccUnit.VbaTestSuite
+Public Property Get VbaTestSuite() As Object 'AccUnit.VbaTestSuite
    Set VbaTestSuite = AccUnitFactory.VbaTestSuite
    
    With VbaTestSuite
+      Set .HostApplication = Application
+      Set .ActiveVBProject = CurrentVbProject
+      Set .TestRunner = TestRunner
+   End With
+   
+End Property
+
+Public Property Get AccessTestSuite() As Object 'AccUnit.AccessTestSuite
+   Set AccessTestSuite = AccUnitFactory.AccessTestSuite
+   
+   With AccessTestSuite
       Set .HostApplication = Application
       Set .ActiveVBProject = CurrentVbProject
       Set .TestRunner = TestRunner
@@ -153,11 +159,11 @@ Public Property Get DebugPrintTestSuite() As DebugPrintTestSuite
    Set DebugPrintTestSuite = New DebugPrintTestSuite
    
    With DebugPrintTestSuite
-      .Init VbaTestSuite, NewDebugPrintTestResultCollector
+      .Init AccessTestSuite, NewDebugPrintTestResultCollector
    End With
    
 End Property
 
-Public Property Get CodeCoverageTracker() As AccUnit.CodeCoverageTracker
+Public Property Get CodeCoverageTracker() As Object 'AccUnit.CodeCoverageTracker
     Set CodeCoverageTracker = AccUnitFactory.CodeCoverageTracker(CurrentVbProject)
 End Property

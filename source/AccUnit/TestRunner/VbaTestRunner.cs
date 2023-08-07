@@ -64,7 +64,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
             foreach (var test in testFixture.Tests)
             {
                 var testResult = Run(test);
-                testResultCollector.Add(testResult);
+                testResultCollector?.Add(testResult);
                 results.Add(testResult);
             }
 
