@@ -18,5 +18,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
 
         string Result { get; }
         double ElapsedTime { set; get; }
+
+        bool Success { get; }
     }
 }
