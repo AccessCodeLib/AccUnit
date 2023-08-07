@@ -28,9 +28,9 @@ Attribute VB_Exposed = True
 Option Compare Database
 Option Explicit
 
-Implements AccUnit.IVBATestSuite
+Implements AccUnit.IAccessTestSuite
 
-Private WithEvents m_TestSuite As AccUnit.VbaTestSuite
+Private WithEvents m_TestSuite As AccUnit.AccessTestSuite
 Attribute m_TestSuite.VB_VarHelpID = -1
 Private m_TestResultCollector As DebugPrintTestResultCollector
 Private m_CodeCoverageTracker As AccUnit.CodeCoverageTracker
@@ -45,26 +45,28 @@ Private Sub Class_Terminate()
    Set m_TestSuite = Nothing
 End Sub
 
-Public Sub Init(ByVal NewTestSuite As AccUnit.VbaTestSuite, _
+Public Sub Init(ByVal NewTestSuite As AccUnit.AccessTestSuite, _
                 ByVal NewTestResultCollector As DebugPrintTestResultCollector)
    Set m_TestSuite = NewTestSuite
    Set m_TestResultCollector = NewTestResultCollector
    Set m_TestSuite.TestResultCollector = m_TestResultCollector
 End Sub
 
-Public Property Get TestSuite() As AccUnit.VbaTestSuite
+Public Property Get TestSuite() As AccUnit.AccessTestSuite
    Set TestSuite = m_TestSuite
 End Property
 
 Private Sub m_TestSuite_TestTraceMessage(ByVal Message As String)
    If Message Like "* [*][*][*]*" Then
       Message = Replace(Message, vbNewLine, vbTab)
+   ElseIf Message Like "* ~~~*" Then
+      Message = Replace(Message, vbNewLine, vbTab)
    End If
    Debug.Print Message
    
    If Not (m_CodeCoverageTracker Is Nothing) Then
    If Message Like "*Total*" Then
-      Debug.Print m_CodeCoverageTracker.GetReport
+      Debug.Print m_CodeCoverageTracker.GetReport()
    End If
    End If
 End Sub
@@ -78,19 +80,19 @@ Public Property Set CodeCoverageTracker(ByVal NewRef As Object)
 End Property
 
 '####################################
-' IVBATestSuite
+' IAccessTestSuite
 '
-Private Function IVBATestSuite_Reset(Optional ByVal mode As AccUnit.ResetMode = 1&) As AccUnit.IVBATestSuite
+Private Function IAccessTestSuite_Reset(Optional ByVal mode As AccUnit.ResetMode = 1&) As AccUnit.IAccessTestSuite
    m_TestSuite.Reset mode
-   Set IVBATestSuite_Reset = Me
+   Set IAccessTestSuite_Reset = Me
 End Function
 
-Private Property Set IVBATestSuite_ActiveVBProject(ByVal RHS As VBIDE.VBProject)
+Private Property Set IAccessTestSuite_ActiveVBProject(ByVal RHS As VBIDE.VBProject)
    Set m_TestSuite.ActiveVBProject = RHS
 End Property
 
-Private Property Get IVBATestSuite_ActiveVBProject() As VBIDE.VBProject
-   Set IVBATestSuite_ActiveVBProject = m_TestSuite.ActiveVBProject
+Private Property Get IAccessTestSuite_ActiveVBProject() As VBIDE.VBProject
+   Set IAccessTestSuite_ActiveVBProject = m_TestSuite.ActiveVBProject
 End Property
 
 Public Function Add(ByVal testToAdd As Object) As DebugPrintTestSuite
@@ -98,8 +100,8 @@ Public Function Add(ByVal testToAdd As Object) As DebugPrintTestSuite
    Set Add = Me
 End Function
 
-Private Function IVBATestSuite_Add(ByVal testToAdd As Object) As AccUnit.IVBATestSuite
-   Set IVBATestSuite_Add = Add(testToAdd)
+Private Function IAccessTestSuite_Add(ByVal testToAdd As Object) As AccUnit.IAccessTestSuite
+   Set IAccessTestSuite_Add = Add(testToAdd)
 End Function
 
 Public Function AddByClassName(ByVal className As String) As DebugPrintTestSuite
@@ -107,8 +109,8 @@ Public Function AddByClassName(ByVal className As String) As DebugPrintTestSuite
    Set AddByClassName = Me
 End Function
 
-Private Function IVBATestSuite_AddByClassName(ByVal className As String) As AccUnit.IVBATestSuite
-   Set IVBATestSuite_AddByClassName = AddByClassName(className)
+Private Function IAccessTestSuite_AddByClassName(ByVal className As String) As AccUnit.IAccessTestSuite
+   Set IAccessTestSuite_AddByClassName = AddByClassName(className)
 End Function
 
 Public Function AddFromVBProject() As DebugPrintTestSuite
@@ -116,24 +118,24 @@ Public Function AddFromVBProject() As DebugPrintTestSuite
    Set AddFromVBProject = Me
 End Function
 
-Private Function IVBATestSuite_AddFromVBProject() As AccUnit.IVBATestSuite
-   Set IVBATestSuite_AddFromVBProject = AddFromVBProject()
+Private Function IAccessTestSuite_AddFromVBProject() As AccUnit.IAccessTestSuite
+   Set IAccessTestSuite_AddFromVBProject = AddFromVBProject()
 End Function
 
-Private Sub IVBATestSuite_Dispose()
+Private Sub IAccessTestSuite_Dispose()
    m_TestSuite.Dispose
 End Sub
 
-Private Property Set IVBATestSuite_HostApplication(ByVal RHS As Object)
+Private Property Set IAccessTestSuite_HostApplication(ByVal RHS As Object)
    Set m_TestSuite.HostApplication = RHS
 End Property
 
-Private Property Get IVBATestSuite_HostApplication() As Object
-   Set IVBATestSuite_HostApplication = m_TestSuite.HostApplication
+Private Property Get IAccessTestSuite_HostApplication() As Object
+   Set IAccessTestSuite_HostApplication = m_TestSuite.HostApplication
 End Property
 
-Private Property Get IVBATestSuite_Name() As String
-   IVBATestSuite_Name = "DebugPrintTestSuite"
+Private Property Get IAccessTestSuite_Name() As String
+   IAccessTestSuite_Name = "DebugPrintTestSuite"
 End Property
 
 Public Function Run() As DebugPrintTestSuite
@@ -141,26 +143,30 @@ Public Function Run() As DebugPrintTestSuite
    Set Run = Me
 End Function
 
-Private Function IVBATestSuite_Run() As AccUnit.IVBATestSuite
-   Set IVBATestSuite_Run = Run()
+Private Function IAccessTestSuite_Run() As AccUnit.IAccessTestSuite
+   Set IAccessTestSuite_Run = Run()
 End Function
 
-Private Property Get IVBATestSuite_Summary() As AccUnit.ITestSummary
-   Set IVBATestSuite_Summary = m_TestSuite.Summary
+Private Property Get IAccessTestSuite_Summary() As AccUnit.ITestSummary
+   Set IAccessTestSuite_Summary = m_TestSuite.Summary
 End Property
 
-Private Property Set IVBATestSuite_TestResultCollector(ByVal RHS As AccUnit.ITestResultCollector)
+Private Property Set IAccessTestSuite_TestResultCollector(ByVal RHS As AccUnit.ITestResultCollector)
    Set m_TestSuite.TestResultCollector = RHS
 End Property
 
-Private Property Get IVBATestSuite_TestResultCollector() As AccUnit.ITestResultCollector
-   Set IVBATestSuite_TestResultCollector = m_TestSuite.TestResultCollector
+Private Property Get IAccessTestSuite_TestResultCollector() As AccUnit.ITestResultCollector
+   Set IAccessTestSuite_TestResultCollector = m_TestSuite.TestResultCollector
 End Property
 
-Private Property Set IVBATestSuite_TestRunner(ByVal RHS As AccUnit.ITestRunner)
+Private Property Set IAccessTestSuite_TestRunner(ByVal RHS As AccUnit.ITestRunner)
    Set m_TestSuite.TestRunner = RHS
 End Property
 
-Private Property Get IVBATestSuite_TestRunner() As AccUnit.ITestRunner
-   Set IVBATestSuite_TestRunner = m_TestSuite.TestRunner
+Private Property Get IAccessTestSuite_TestRunner() As AccUnit.ITestRunner
+   Set IAccessTestSuite_TestRunner = m_TestSuite.TestRunner
+End Property
+
+Private Property Get IAccessTestSuite_TestClassGenerator() As AccUnit.ITestClassGenerator
+   Set IAccessTestSuite_TestClassGenerator = m_TestSuite.TestClassGenerator
 End Property

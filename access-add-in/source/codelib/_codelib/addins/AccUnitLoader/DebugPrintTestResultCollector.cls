@@ -58,7 +58,7 @@ Public Sub PrintSummary(Optional ByVal PrintTestResults As Boolean = False)
 End Sub
 
 Private Property Get ITestSummaryPrinter_Name() As String
-
+   ITestSummaryPrinter_Name = "DebugPrintTestResultCollector"
 End Property
 
 Private Sub ITestSummaryPrinter_PrintSummary(Optional ByVal PrintTestResults As Boolean = False)

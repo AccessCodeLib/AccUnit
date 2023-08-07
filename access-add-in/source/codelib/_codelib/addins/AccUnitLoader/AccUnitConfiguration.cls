@@ -154,6 +154,10 @@ Public Property Get AccUnitDllPath() As String
       End If
    End If
    
+   If Len(m_AccUnitDllPath) = 0 Then
+      m_AccUnitDllPath = DefaultAccUnitDllPath
+   End If
+   
    AccUnitDllPath = m_AccUnitDllPath
 
 End Property
@@ -168,6 +172,10 @@ Public Property Let AccUnitDllPath(ByVal NewPath As String)
    m_AccUnitDllPath = NewPath
    SetACLibGlobalProperty PROPNAME_ACCUNITDLLPATH, m_AccUnitDllPath
   
+End Property
+
+Private Property Get DefaultAccUnitDllPath() As String
+   DefaultAccUnitDllPath = DefaultAccUnitLibFolder & "\"
 End Property
 
 Private Function GetACLibGlobalProperty(ByRef PropertyName As String) As String

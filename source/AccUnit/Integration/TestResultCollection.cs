@@ -136,6 +136,6 @@ namespace AccessCodeLib.AccUnit.Integration
 
         public int Ignored { get { return IsIgnoredCount; } }
 
-        public bool Success {get { return (IsFailureCount + IsErrorCount) == 0; } }
+        public bool Success { get { return (IsFailureCount + IsErrorCount) == 0; } }
     }
 }

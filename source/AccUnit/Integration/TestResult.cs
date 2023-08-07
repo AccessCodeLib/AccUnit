@@ -52,5 +52,6 @@ namespace AccessCodeLib.AccUnit.Integration
 
         public double ElapsedTime { get; set; }
 
+        public bool Success { get { return IsPassed || IsIgnored; } }
     }
 }

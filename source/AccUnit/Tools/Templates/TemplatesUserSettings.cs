@@ -1,5 +1,4 @@
-﻿using AccessCodeLib.AccUnit.Tools.Templates;
-using AccessCodeLib.Common.Tools.Logging;
+﻿using AccessCodeLib.Common.Tools.Logging;
 using System;
 
 namespace AccessCodeLib.AccUnit.Tools.Templates

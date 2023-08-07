@@ -25,12 +25,16 @@ Option Explicit
 
 Private Const EXTENSION_KEY_APPFILE As String = "AppFile"
 
+Public Property Get DefaultAccUnitLibFolder() As String
+   DefaultAccUnitLibFolder = CodeProject.Path & "\lib"
+End Property
+
 Public Sub CheckAccUnitTypeLibFile()
 
    Dim LibPath As String
    Dim LibFile As String
    
-   LibPath = CodeProject.Path & "\lib\"
+   LibPath = DefaultAccUnitLibFolder & "\"
    LibFile = LibPath & ACCUNIT_TYPELIB_FILE
    
    FileTools.CreateDirectory LibPath

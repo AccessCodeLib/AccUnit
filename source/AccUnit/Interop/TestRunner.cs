@@ -1,4 +1,5 @@
-﻿using Microsoft.Vbe.Interop;
+﻿using AccessCodeLib.AccUnit.Interfaces;
+using Microsoft.Vbe.Interop;
 using System;
 using System.Runtime.InteropServices;
 
@@ -13,7 +14,7 @@ namespace AccessCodeLib.AccUnit.Interop
          * Run(TestClassInstance, "MethodenName")       ... Nur einen bestimmten Test ausführen
          * TODO: Run(TestClassInstance, "*Filter*Text*") ... Nur Test, die dem Filterausdruck entsprechen, ausführen
          */
-        void Run([MarshalAs(UnmanagedType.IDispatch)] object TestFixtureInstance, string TestMethodName = "*", Interfaces.ITestResultCollector TestResultCollector = null);
+        ITestResult Run([MarshalAs(UnmanagedType.IDispatch)] object TestFixtureInstance, string TestMethodName = "*", Interfaces.ITestResultCollector TestResultCollector = null);
     }
 
     [ComVisible(true)]
