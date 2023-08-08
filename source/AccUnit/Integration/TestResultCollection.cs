@@ -21,7 +21,7 @@ namespace AccessCodeLib.AccUnit.Integration
         private int IsErrorCount { get; set; }
         private int IsFailureCount { get; set; }
         private int IsIgnoredCount { get; set; }
-        private int IsSuccessCount { get; set; }
+        private int IsPassedCount { get; set; }
 
         new public void Add(ITestResult testResult)
         {
@@ -45,7 +45,7 @@ namespace AccessCodeLib.AccUnit.Integration
                     IsIgnoredCount += testSummary.Ignored;
                     IsIgnored = true;
                 }
-                IsSuccessCount += testSummary.Passed;
+                IsPassedCount += testSummary.Passed;
             }
             else
             {
@@ -65,19 +65,19 @@ namespace AccessCodeLib.AccUnit.Integration
                     IsIgnoredCount++;
                     IsIgnored = true;
                 }
-                else if (testResult.IsSuccess)
+                else if (testResult.IsPassed)
                 {
-                    IsSuccessCount++;
+                    IsPassedCount++;
                 }
             }
 
-            if (IsSuccessCount == ExecutedCount)
+            if (IsPassedCount == ExecutedCount)
             {
-                IsSuccess = true;
+                IsPassed = true;
             }
             else
             {
-                IsSuccess = false;
+                IsPassed = false;
             }
 
             Message += "\n" + testResult.Message;
@@ -104,7 +104,7 @@ namespace AccessCodeLib.AccUnit.Integration
 
         public bool IsIgnored { get; private set; }
 
-        public bool IsSuccess { get; private set; }
+        public bool IsPassed { get; private set; }
 
         public string Message { get; private set; }
 
@@ -114,7 +114,7 @@ namespace AccessCodeLib.AccUnit.Integration
             {
                 var resultBuilder = new StringBuilder();
                 resultBuilder.Append("Executed: " + ExecutedCount);
-                resultBuilder.Append(" Success: " + IsSuccessCount);
+                resultBuilder.Append(" Success: " + IsPassedCount);
                 resultBuilder.Append(" Failure: " + IsFailureCount);
                 resultBuilder.Append(" Error:   " + IsErrorCount);
                 resultBuilder.Append(" Ignored: " + IsIgnoredCount);
@@ -128,12 +128,14 @@ namespace AccessCodeLib.AccUnit.Integration
 
         public int Total { get { return ExecutedCount; } }
 
-        public int Passed { get { return IsSuccessCount; } }
+        public int Passed { get { return IsPassedCount; } }
 
         public int Failed { get { return IsFailureCount; } }
 
         public int Error { get { return IsErrorCount; } }
 
         public int Ignored { get { return IsIgnoredCount; } }
+
+        public bool Success { get { return (IsFailureCount + IsErrorCount) == 0; } }
     }
 }

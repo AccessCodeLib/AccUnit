@@ -104,7 +104,7 @@ namespace AccessCodeLib.AccUnit
             else
                 sb.Append(" ");
 
-            if (result.IsSuccess)
+            if (result.IsPassed)
             {
                 sb.Append(TestResultText.Success);
             }
@@ -173,10 +173,8 @@ namespace AccessCodeLib.AccUnit
         public string GetTestSuiteFinishedText(ITestResult result)
         {
             var sb = new StringBuilder();
-
             sb.AppendLine(new string(SeparatorChar, TestFixtureFinishedSeparatorLength));
-            sb.AppendLine(String.Format("Finished: {0}", CurrentTimeString));
-
+            sb.AppendLine(String.Format("Finished: {0} {1}", CurrentTimeString, result.Success ? TestResultText.Success : TestResultText.Failure));
             return sb.ToString();
         }
 

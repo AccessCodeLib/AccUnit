@@ -36,6 +36,10 @@ Private Function AccUnitLoaderFactory() As Object
    Set AccUnitLoaderFactory = m_AccUnitLoaderFactory
 End Function
 
+Public Function NewDebugPrintMatchResultCollector(Optional ByVal ShowPassedText As Boolean = False, Optional ByVal UseRaiseErrorForFailedMatch As Boolean = True) As Object
+   Set NewDebugPrintMatchResultCollector = AccUnitLoaderFactory.NewDebugPrintMatchResultCollector(ShowPassedText, UseRaiseErrorForFailedMatch)
+End Function
+
 #If USE_ACCUNIT_TYPELIB Then
 Private Property Get AccUnitFactory() As AccUnit.AccUnitFactory
 #Else
@@ -63,22 +67,6 @@ Public Property Get Iz() As Object
 #End If
     Set Iz = AccUnitLoaderFactory.ConstraintBuilder
 End Property
-
-#If USE_ACCUNIT_TYPELIB Then
-Public Property Get TestBuilder() As AccUnit.TestBuilder
-#Else
-Public Property Get TestBuilder() As Object
-#End If
-    Set TestBuilder = AccUnitLoaderFactory.TestBuilder
-End Property
-
-Public Function NewDebugPrintMatchResultCollector(Optional ByVal ShowPassedText As Boolean = False, Optional ByVal UseRaiseErrorForFailedMatch As Boolean = True) As Object
-   Set NewDebugPrintMatchResultCollector = AccUnitLoaderFactory.NewDebugPrintMatchResultCollector(ShowPassedText, UseRaiseErrorForFailedMatch)
-End Function
-
-Public Function NewDebugPrintTestResultCollector() As Object
-   Set NewDebugPrintTestResultCollector = AccUnitLoaderFactory.NewDebugPrintTestResultCollector
-End Function
 
 #If USE_ACCUNIT_TYPELIB Then
 Public Property Get TestRunner() As AccUnit.TestRunner

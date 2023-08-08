@@ -64,7 +64,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
             foreach (var test in testFixture.Tests)
             {
                 var testResult = Run(test);
-                testResultCollector.Add(testResult);
+                testResultCollector?.Add(testResult);
                 results.Add(testResult);
             }
 
@@ -83,7 +83,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
             TestFixtureFinished?.Invoke(result);
         }
 
-        public void Run(object testFixtureInstance, string testMethodName, ITestResultCollector testResultCollector = null)
+        public ITestResult Run(object testFixtureInstance, string testMethodName, ITestResultCollector testResultCollector = null)
         {
             var testFixture = new TestFixture(testFixtureInstance);
 
@@ -91,8 +91,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
             {
                 testFixture.FillInstanceMembers(_vbProject);
                 testFixture.FillTestListFromTestClassInstance(_vbProject);
-                Run(testFixture, testResultCollector);
-                return;
+                return Run(testFixture, testResultCollector);
             }
 
             var test = CreateTest(testFixture, testMethodName);
@@ -100,6 +99,9 @@ namespace AccessCodeLib.AccUnit.TestRunner
 
             var result = Run(test);
             testResultCollector?.Add(result);
+
+            return result;
+
         }
 
         private ITest CreateTest(ITestFixture testFixture, string testMethodName)
@@ -191,7 +193,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
                 {
                     invocationHelper.InvokeMethod(test.MethodName);
                 }
-                testResult.IsSuccess = true;
+                testResult.IsPassed = true;
             }
             catch (Exception ex)
             {
@@ -228,7 +230,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
                         }
                         testResult.Message += messageException.Message;
                     }
-                    testResult.IsSuccess = false;
+                    testResult.IsPassed = false;
                 }
             }
             finally

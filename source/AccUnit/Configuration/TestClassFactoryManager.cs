@@ -4,7 +4,7 @@ using Microsoft.Vbe.Interop;
 using System;
 using System.Linq;
 
-namespace AccessCodeLib.AccUnit
+namespace AccessCodeLib.AccUnit.Configuration
 {
     public class TestClassFactoryManager : IDisposable
     {

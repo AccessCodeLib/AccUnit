@@ -121,7 +121,7 @@ End Function
             foreach (var testResult in result.Results)
             {
                 var res = testResult as TestResult;
-                Assert.That(res.IsSuccess, Is.EqualTo(true), res.Message);
+                Assert.That(res.IsPassed, Is.EqualTo(true), res.Message);
             }
 
 
@@ -372,7 +372,7 @@ End Function
             fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
 
             Assert.That(fixtureMember.TestClassMemberInfo.TestRows[0].IgnoreInfo.Ignore, Is.True);
-//            Assert.That(fixtureMember.TestClassMemberInfo.IgnoreInfo.Ignore, Is.True);
+            //            Assert.That(fixtureMember.TestClassMemberInfo.IgnoreInfo.Ignore, Is.True);
 
             var rowGenerator = new TestRowGenerator
             {

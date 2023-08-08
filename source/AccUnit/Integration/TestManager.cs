@@ -22,9 +22,8 @@ namespace AccessCodeLib.AccUnit
         public const string RowNameDelimiter = TestRow.RowNameDelimiter;
 
         private readonly ITestManagerBridge _testObject;
-        private readonly TestClassMemberList _memberFilter;
         private readonly TestRowGenerator _testRowGenerator = new TestRowGenerator();
-
+        //private readonly TestClassMemberList _memberFilter;
         private readonly TestClassMemberList _members = new TestClassMemberList();
         private OfficeApplicationHelper _officeApplicationHelper;
 
@@ -41,7 +40,7 @@ namespace AccessCodeLib.AccUnit
             }
             catch (Exception ex) { Logger.Log(ex.Message); }
 
-            _memberFilter = memberFilter;
+            //_memberFilter = memberFilter;
             _testObject = testmanagerbridge;
             _testObject.InitTestManager(this);
         }
@@ -77,6 +76,8 @@ namespace AccessCodeLib.AccUnit
                 _testRowGenerator.ActiveVBProject = value;
             }
         }
+
+        public TestClassMemberList Members { get { return _members; } }
 
         public void AddTests(ITestFixture testFixture)
         {
@@ -126,7 +127,7 @@ namespace AccessCodeLib.AccUnit
             */
         }
 
-        public TestClassMemberList Members { get { return _members; } }
+        /*
 
         private static bool IsSetupOrTeardown(string memberName, ITestFixture testFixtureInfo)
         {
@@ -149,13 +150,14 @@ namespace AccessCodeLib.AccUnit
             }
             return true;
         }
-
+        
         private TestClassMemberInfo FindTestClassMemberInfo(string name)
         {
             return _memberFilter.Find(
                 m => m.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)
                 );
         }
+            */
 
         #region row test data
 
@@ -266,13 +268,6 @@ namespace AccessCodeLib.AccUnit
         {
             return testcase.Fixture;
         }
-
-
-        private static bool IsRowTest(ITest test, ITest testcase)
-        {
-            return test.Name.Equals(testcase.MethodName, StringComparison.CurrentCultureIgnoreCase);
-        }
-
     }
 
     [ComVisible(true)]

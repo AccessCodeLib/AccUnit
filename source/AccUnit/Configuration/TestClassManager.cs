@@ -1,5 +1,4 @@
-﻿using AccessCodeLib.AccUnit.Configuration;
-using AccessCodeLib.Common.Tools.Logging;
+﻿using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Templates;
 using Microsoft.Vbe.Interop;
@@ -9,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AccessCodeLib.AccUnit
+namespace AccessCodeLib.AccUnit.Configuration
 {
 
     public class TestClassManager : IDisposable
