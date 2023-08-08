@@ -8,8 +8,15 @@ namespace AccessCodeLib.AccUnit.Assertions
     {
         private IConstraint _firstchild;
 
+        private readonly bool _strict = false;
+
         public ConstraintBuilder()
         {
+        }
+
+        public ConstraintBuilder(bool strict)
+        {
+            _strict = strict;
         }
 
         public IConstraintBuilder EqualTo(object expected)
@@ -63,8 +70,8 @@ namespace AccessCodeLib.AccUnit.Assertions
                 }
             }
 
-            Type myType = GetCompareType(expected);
-            var newConstraint = Activator.CreateInstance(myType, compareText, expected, expectedComparerResult);
+            Type myType = GetCompareType(expected, _strict);
+            var newConstraint = Activator.CreateInstance(myType, compareText, expected, expectedComparerResult, _strict);
             AddChild((IConstraint)newConstraint);
         }
 
@@ -76,18 +83,21 @@ namespace AccessCodeLib.AccUnit.Assertions
             AddChild((IConstraint)newConstraint);
         }
 
-        public static Type Type2Compare(object v)
+        public static Type Type2Compare(object v, bool strict = false)
         {
             Type T = v.GetType();
-            if (IsNumeric(T))
-                T = typeof(double);  // should all numeric types be compared as double?
-
+            if (!strict)
+            {
+                if (IsNumeric(T))
+                    T = typeof(double);  // should all numeric types be compared as double?
+            }
+            
             return T;
         }
 
-        private static Type GetCompareType(object v)
+        private static Type GetCompareType(object v, bool strict = false)
         {
-            Type T = Type2Compare(v);
+            Type T = Type2Compare(v, strict);
             return typeof(ComparerConstraint<>).MakeGenericType(T);
         }
 
@@ -112,7 +122,7 @@ namespace AccessCodeLib.AccUnit.Assertions
 
             Type T = expected.GetType();
             Type myType = typeof(ComparerConstraint<>).MakeGenericType(T);
-            var newConstraint = Activator.CreateInstance(myType, compareText, expected, expectedComparerResult, expectedComparerResult2);
+            var newConstraint = Activator.CreateInstance(myType, compareText, expected, expectedComparerResult, expectedComparerResult2, _strict);
             AddChild((IConstraint)newConstraint);
         }
 

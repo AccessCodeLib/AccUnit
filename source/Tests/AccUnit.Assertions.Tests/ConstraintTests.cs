@@ -14,9 +14,9 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
 
         }
 
-        private static Assertions NewTestAssert(TestCollector testCollector)
+        private static Assertions NewTestAssert(TestCollector testCollector, bool strict = false)
         {
-            return new Assertions
+            return new Assertions(strict)
             {
                 MatchResultCollector = testCollector
             };
@@ -304,5 +304,37 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
 
             Assert.That(result.Match, Is.EqualTo(false), result.Text);
         }
+
+        [Test]
+        public void StrictConstraintBuilder_Int32IsNotDouble()
+        {
+            var testCollector = new TestCollector();
+            var assert = NewTestAssert(testCollector);
+            var Iz = new ConstraintBuilder(true);
+
+            int expected = 1;
+            double actual = 1;
+
+            assert.That(actual, Iz.EqualTo(expected));
+            var result = testCollector.Result;
+
+            Assert.That(result.Match, Is.EqualTo(false), result.Text);
+        }
+
+        [Test]
+        public void StrictAssertEqual_Int32IsNotDouble()
+        {
+            var testCollector = new TestCollector();
+            var assert = NewTestAssert(testCollector, true);
+            
+            int expected = 1;
+            double actual = 1;
+
+            assert.AreEqual(expected, actual);
+            var result = testCollector.Result;
+
+            Assert.That(result.Match, Is.EqualTo(false), result.Text);
+        }
+
     }
 }

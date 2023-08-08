@@ -1,34 +1,52 @@
-﻿using System;
+﻿using AccessCodeLib.AccUnit.Assertions;
+using System;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interop
 {
     [ComVisible(true)]
     [Guid("7DF6AA14-DCBB-4D66-91E4-C4FB7D6CCF5C")]
-    public interface IAssert : AccUnit.Assertions.IAssertionsBuilder
+    public interface IAssert : AccUnit.Assertions.IAssertionsBuilder, IAssertComparerMethods
     {
         new IMatchResultCollector MatchResultCollector { get; set; }
 
         void That(object Actual, IConstraintBuilder Constraint, string InfoText = null);
         new void Dispose();
 
-        void AreEqual(object Expected, object Actual, string InfoText = null);
-        void AreNotEqual(object Expected, object Actual, string InfoText = null);
+        IAssertComparerMethods Strict { get; }
+
+        new void AreEqual(object Expected, object Actual, string InfoText = null);
+        new void AreNotEqual(object Expected, object Actual, string InfoText = null);
         //void AreSame( [MarshalAs(UnmanagedType.IDispatch)]object Expected, [MarshalAs(UnmanagedType.IDispatch)] object Actual, string InfoText = null);
         //void AreNotSame([MarshalAs(UnmanagedType.IDispatch)] object Expected, [MarshalAs(UnmanagedType.IDispatch)] object Actual, string InfoText = null);
-        void Greater(object Arg1, object Arg2, string InfoText = null);
-        void GreaterOrEqual(object Arg1, object Arg2, string InfoText = null);
-        void Less(object Arg1, object Arg2, string InfoText = null);
-        void LessOrEqual(object Arg1, object Arg2, string InfoText = null);
-        void IsTrue(bool Condition, string InfoText = null);
-        void IsFalse(bool Condition, string InfoText = null);
-        void IsEmpty(object Actual, string InfoText = null);
-        void IsNull(object Actual, string InfoText = null);
-        void IsNotNull(object Actual, string InfoText = null);
-        void IsNothing([MarshalAs(UnmanagedType.IDispatch)] object Actual, string InfoText = null);
-        void IsNotNothing([MarshalAs(UnmanagedType.IDispatch)] object Actual, string InfoText = null);
-        void Throws(int ErrorNumber, string InfoText = null);
+        new void Greater(object Arg1, object Arg2, string InfoText = null);
+        new void GreaterOrEqual(object Arg1, object Arg2, string InfoText = null);
+        new void Less(object Arg1, object Arg2, string InfoText = null);
+        new void LessOrEqual(object Arg1, object Arg2, string InfoText = null);
+        new void IsTrue(bool Condition, string InfoText = null);
+        new void IsFalse(bool Condition, string InfoText = null);
+        new void IsEmpty(object Actual, string InfoText = null);
+        new void IsNull(object Actual, string InfoText = null);
+        new void IsNotNull(object Actual, string InfoText = null);
+        new void IsNothing([MarshalAs(UnmanagedType.IDispatch)] object Actual, string InfoText = null);
+        new void IsNotNothing([MarshalAs(UnmanagedType.IDispatch)] object Actual, string InfoText = null);
+        new void Throws(int ErrorNumber, string InfoText = null);
     }
+
+    [ComVisible(true)]
+    [Guid("A13F3E07-8DE6-4670-844B-B71A946D974C")]
+    public interface IAssertComparerMethods : AccUnit.Assertions.IAssertionsComparerMethods
+    {
+        new void AreEqual(object Expected, object Actual, string InfoText = null);
+        new void AreNotEqual(object Expected, object Actual, string InfoText = null);
+        //void AreSame( [MarshalAs(UnmanagedType.IDispatch)]object Expected, [MarshalAs(UnmanagedType.IDispatch)] object Actual, string InfoText = null);
+        //void AreNotSame([MarshalAs(UnmanagedType.IDispatch)] object Expected, [MarshalAs(UnmanagedType.IDispatch)] object Actual, string InfoText = null);
+        new void Greater(object Arg1, object Arg2, string InfoText = null);
+        new void GreaterOrEqual(object Arg1, object Arg2, string InfoText = null);
+        new void Less(object Arg1, object Arg2, string InfoText = null);
+        new void LessOrEqual(object Arg1, object Arg2, string InfoText = null);
+    }
+
 
     [ComVisible(true)]
     [Guid("0F16F260-A02D-4B8A-9E3D-6E24419D2F0C")]
@@ -36,6 +54,15 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId(Constants.ProgIdLibName + ".Assert")]
     public class Assert : AccUnit.Assertions.Assertions, IAssert
     {
+
+        public Assert() : base(false)
+        {
+        }
+
+        public Assert(bool strict) : base(strict)
+        {
+        }
+
         new public IMatchResultCollector MatchResultCollector
         {
             get
@@ -47,6 +74,8 @@ namespace AccessCodeLib.AccUnit.Interop
                 base.MatchResultCollector = new MatchResultCollectorBridge(value);
             }
         }
+
+        public IAssertComparerMethods Strict { get { return new Assert(true); } }
 
         public void That(object actual, IConstraintBuilder constraint, string infoText = null)
         {

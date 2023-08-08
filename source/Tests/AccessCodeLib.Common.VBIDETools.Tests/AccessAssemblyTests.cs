@@ -9,6 +9,7 @@ namespace AccessCodeLib.Common.VBIDETools.Tests
     public class AccessAssemblyTests
     {
         [Test]
+        [Ignore("Only to check event names")]
         public void ReadAllEventsFromAccessLib()
         {
             Assembly vbaInteropAssembly = Assembly.Load(@"Microsoft.Office.Interop.Access");
