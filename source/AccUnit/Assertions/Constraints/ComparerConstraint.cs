@@ -10,20 +10,24 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
         protected int ExpectedComparerResult2;
         protected bool UseOr = false;
 
-        public ComparerConstraint(string compareText, T expected, int expectedComparerResult)
+        protected readonly bool Strict = false;
+
+        public ComparerConstraint(string compareText, T expected, int expectedComparerResult, bool strict = false)
         {
             CompareText = compareText;
             Expected = expected;
             ExpectedComparerResult = expectedComparerResult;
+            Strict = strict;
         }
 
-        public ComparerConstraint(string compareText, T expected, int expectedComparerResult, int expectedComparerResult2)
+        public ComparerConstraint(string compareText, T expected, int expectedComparerResult, int expectedComparerResult2, bool strict = false)
         {
             CompareText = compareText;
             Expected = expected;
             ExpectedComparerResult = expectedComparerResult;
             ExpectedComparerResult2 = expectedComparerResult2;
             UseOr = true;
+            Strict = strict;
         }
 
         protected override IMatchResult Compare(object actual)
@@ -63,11 +67,11 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
             }
 
             // Check type
-            var actualType = ConstraintBuilder.Type2Compare(actual);
-            var expectedType = ConstraintBuilder.Type2Compare(Expected);
+            var actualType = ConstraintBuilder.Type2Compare(actual, Strict);
+            var expectedType = ConstraintBuilder.Type2Compare(Expected, Strict);
             if (actualType != expectedType)
             {
-                var returnText = "actual (" + actual.GetType().Name + ") is not of type " + FormattedTypeDescription(expectedType);
+                var returnText = "actual (" + actual.GetType().Name + ") is not of type " + FormattedTypeDescription(expectedType, Strict) ;
                 return new MatchResult(CompareText, false, returnText, actual, Expected);
             }
 
@@ -101,9 +105,9 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
             return new MatchResult(CompareText, false, compareInfo, actual, Expected);
         }
 
-        private static string FormattedTypeDescription(Type type)
+        private static string FormattedTypeDescription(Type type, bool strict = false)
         {
-            return type == typeof(double) ? "numeric type" : type.Name;
+            return (!strict && type == typeof(double)) ? "numeric type" : type.Name;
         }
     }
 }

@@ -3,11 +3,18 @@ using System;
 
 namespace AccessCodeLib.AccUnit.Assertions
 {
-    public class Assertions : IAssertionsBuilder
+    public class Assertions : IAssertionsBuilder, IAssertionsComparerMethods
     {
         public Assertions()
         {
         }
+
+        public Assertions(bool strict)
+        {
+            _strict = strict;
+        }
+
+        private readonly bool _strict = false;
 
         public IMatchResultCollector MatchResultCollector { get; set; }
 
@@ -30,67 +37,67 @@ namespace AccessCodeLib.AccUnit.Assertions
         #region Compare-Methoden
         public void AreEqual(object expected, object actual, string infoText = null)
         {
-            That(actual, new ConstraintBuilder().EqualTo(expected), infoText);
+            That(actual, new ConstraintBuilder(_strict).EqualTo(expected), infoText);
         }
 
         public void AreNotEqual(object expected, object actual, string infoText = null)
         {
-            That(actual, new ConstraintBuilder().Not.EqualTo(expected), infoText);
+            That(actual, new ConstraintBuilder(_strict).Not.EqualTo(expected), infoText);
         }
 
         public void Greater(object arg1, object arg2, string infoText = null)
         {
-            That(arg2, new ConstraintBuilder().GreaterThan(arg1), infoText);
+            That(arg2, new ConstraintBuilder(_strict).GreaterThan(arg1), infoText);
         }
 
         public void GreaterOrEqual(object arg1, object arg2, string infoText = null)
         {
-            That(arg2, new ConstraintBuilder().GreaterThanOrEqualTo(arg1), infoText);
+            That(arg2, new ConstraintBuilder(_strict).GreaterThanOrEqualTo(arg1), infoText);
         }
 
         public void Less(object arg1, object arg2, string infoText = null)
         {
-            That(arg2, new ConstraintBuilder().LessThan(arg1), infoText);
+            That(arg2, new ConstraintBuilder(_strict).LessThan(arg1), infoText);
         }
 
         public void LessOrEqual(object arg1, object arg2, string infoText = null)
         {
-            That(arg2, new ConstraintBuilder().LessThanOrEqualTo(arg1), infoText);
+            That(arg2, new ConstraintBuilder(_strict).LessThanOrEqualTo(arg1), infoText);
         }
 
         public void IsTrue(bool condition, string infoText = null)
         {
-            That(condition, new ConstraintBuilder().EqualTo(true), infoText);
+            That(condition, new ConstraintBuilder(_strict).EqualTo(true), infoText);
         }
 
         public void IsFalse(bool condition, string infoText = null)
         {
-            That(condition, new ConstraintBuilder().EqualTo(false), infoText);
+            That(condition, new ConstraintBuilder(_strict).EqualTo(false), infoText);
         }
 
         public void IsEmpty(object actual, string infoText = null)
         {
-            That(actual, new ConstraintBuilder().Empty, infoText);
+            That(actual, new ConstraintBuilder(_strict).Empty, infoText);
         }
 
         public void IsNull(object actual, string infoText = null)
         {
-            That(actual, new ConstraintBuilder().DBNull, infoText);
+            That(actual, new ConstraintBuilder(_strict).DBNull, infoText);
         }
 
         public void IsNotNull(object actual, string infoText = null)
         {
-            That(actual, new ConstraintBuilder().Not.DBNull, infoText);
+            That(actual, new ConstraintBuilder(_strict).Not.DBNull, infoText);
         }
 
         public void IsNothing(object actual, string infoText = null)
         {
-            That(actual, new ConstraintBuilder().Not.Null, infoText);
+            That(actual, new ConstraintBuilder(_strict).Not.Null, infoText);
         }
 
         public void IsNotNothing(object actual, string infoText = null)
         {
-            That(actual, new ConstraintBuilder().Not.Null, infoText);
+            That(actual, new ConstraintBuilder(_strict).Not.Null, infoText);
         }
 
         #endregion

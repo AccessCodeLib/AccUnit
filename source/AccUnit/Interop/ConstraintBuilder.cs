@@ -7,6 +7,9 @@ namespace AccessCodeLib.AccUnit.Interop
     [Guid("0011016E-BF37-4CB7-9A62-58DD78292550")]
     public interface IConstraintBuilder : AccUnit.Assertions.IConstraintBuilder
     {
+
+        IConstraintBuilder Strict { get; }
+
         new IConstraintBuilder EqualTo(object Expected);
         new IConstraintBuilder LessThan(object Expected);
         new IConstraintBuilder LessThanOrEqualTo(object Expected);
@@ -27,6 +30,11 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId(Constants.ProgIdLibName + ".IsConstraints")]
     public class ConstraintBuilder : AccUnit.Assertions.ConstraintBuilder, IConstraintBuilder
     {
+        public ConstraintBuilder() : base() { } 
+        public ConstraintBuilder(bool strict) : base(strict) { }
+
+        public IConstraintBuilder Strict { get { return new ConstraintBuilder(true); } }
+
         public new IConstraintBuilder EqualTo(object expected)
         {
             return (IConstraintBuilder)base.EqualTo(expected);

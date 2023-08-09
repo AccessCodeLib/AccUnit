@@ -19,7 +19,7 @@ namespace AccessCodeLib.AccUnit
                 _testBuilder.OfficeApplicationReferenceRequired += OnOfficeApplicationReferenceRequired;
             }
         }
-
+        
         private readonly List<ITestManagerBridge> _accUnitTests = new List<ITestManagerBridge>();
         private readonly List<ITestFixture> _testFixtures = new List<ITestFixture>();
 
