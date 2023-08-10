@@ -78,10 +78,10 @@ namespace AccessCodeLib.Common.VBIDETools
 
             try
             {
-                //if (disposing)
-                //{
-                //    DisposeManagedResources();
-                //}
+                if (disposing)
+                {
+                    DisposeManagedResources();
+                }
                 DisposeUnmanagedResources();
                 _disposed = true;
             }
@@ -91,9 +91,9 @@ namespace AccessCodeLib.Common.VBIDETools
             }
         }
 
-        //void DisposeManagedResources()
-        //{
-        //}
+        void DisposeManagedResources()
+        {
+        }
 
         void DisposeUnmanagedResources()
         {

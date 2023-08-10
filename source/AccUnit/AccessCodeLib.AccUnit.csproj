@@ -104,6 +104,9 @@
     <Compile Include="Assertions\AssertThrowsContainer.cs" />
     <Compile Include="CodeCoverage\CodeModuleTracker.cs" />
     <Compile Include="CodeCoverage\ProcedureTracker.cs" />
+    <Compile Include="Interfaces\ITestItemTag.cs" />
+    <Compile Include="Interfaces\ITagList.cs" />
+    <Compile Include="Interfaces\ITestClassMemberList.cs" />
     <Compile Include="~trash\CodeModuleMemberWithMarker.cs" />
     <Compile Include="~trash\CompareTypeHelper.cs" />
     <Compile Include="Integration\MessageBoxData.cs" />

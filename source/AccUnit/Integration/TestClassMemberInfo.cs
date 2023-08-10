@@ -25,12 +25,22 @@ namespace AccessCodeLib.AccUnit
             ReadProcHeader(procHeader);
         }
 
-        public TestClassMemberInfo(ITestClassMemberInfo memberInfo, IgnoreInfo newIgnoreInfo)
+        public TestClassMemberInfo(ITestClassMemberInfo memberInfo, IgnoreInfo newIgnoreInfo, ITagList newTagList)
         {
             Name = memberInfo.Name;
             _ignoreInfo = newIgnoreInfo;
             _testRowFilter = new List<int>(memberInfo.TestRowFilter);
-            Tags = memberInfo.Tags;
+
+            Tags = newTagList;
+            if (memberInfo.Tags != null && memberInfo.Tags.Any())
+            {
+                if (Tags == null)
+                {
+                    Tags = new TagList();
+                }
+                Tags.AddRange(memberInfo.Tags);
+            }
+
             DoAutoRollback = memberInfo.DoAutoRollback;
             _msgBoxResults = new List<VbMsgBoxResult>(memberInfo.MsgBoxResults);
             ShowAs = memberInfo.ShowAs;
@@ -62,20 +72,20 @@ namespace AccessCodeLib.AccUnit
         private readonly List<int> _testRowFilter;
         public IList<int> TestRowFilter { get { return _testRowFilter; } }
 
-        public TagList Tags { get; private set; }
+        public ITagList Tags { get; private set; }
 
         public bool DoAutoRollback { get; private set; }
 
         private static readonly Regex TagLineRegex = new Regex(@"^\s*'\s*AccUnit:Tags\(([^']*)\)\s*$", RegexOptions.CultureInvariant | RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase);
-        private static TagList GetTagsFromProcHeader(string procHeader)
+        private static ITagList GetTagsFromProcHeader(string procHeader)
         {
             var tagLines = from Match m in TagLineRegex.Matches(procHeader)
                            select m.Groups[1].Value.Trim();
 
             var tags = new TagList();
-            tags.AddRange(from line in tagLines
+            tags.AddRange((IEnumerable<ITestItemTag>)(from line in tagLines
                           from tagName in line.Split(',', ';', '|')
-                          select new TestItemTag(tagName.Trim('"', ' ')));
+                          select new TestItemTag(tagName.Trim('"', ' '))));
             return tags;
         }
 
@@ -156,7 +166,7 @@ namespace AccessCodeLib.AccUnit
             throw new Exception(string.Format("'{0}' is not a valid VbMsgBoxResult", resultString));
         }
 
-        public bool IsMatch(IEnumerable<TestItemTag> tags)
+        public bool IsMatch(IEnumerable<ITestItemTag> tags)
         {
             return Tags != null && Tags.IsMatch(tags);
         }

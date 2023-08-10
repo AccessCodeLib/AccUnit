@@ -91,7 +91,7 @@ namespace AccessCodeLib.AccUnit.Assertions
                 if (IsNumeric(T))
                     T = typeof(double);  // should all numeric types be compared as double?
             }
-            
+
             return T;
         }
 

@@ -19,7 +19,7 @@ namespace AccessCodeLib.AccUnit
                 _testBuilder.OfficeApplicationReferenceRequired += OnOfficeApplicationReferenceRequired;
             }
         }
-        
+
         private readonly List<ITestManagerBridge> _accUnitTests = new List<ITestManagerBridge>();
         private readonly List<ITestFixture> _testFixtures = new List<ITestFixture>();
 
@@ -34,7 +34,7 @@ namespace AccessCodeLib.AccUnit
 
         #region TestSuite Events
 
-        private void OnTestSuiteStarted(ITestSuite testSuite, TagList tags)
+        private void OnTestSuiteStarted(ITestSuite testSuite,ITagList tags)
         {
             using (new BlockLogger(testSuite.Name))
             {
@@ -90,7 +90,7 @@ namespace AccessCodeLib.AccUnit
 
         public bool Cancel { get; set; }
 
-        void OnTestSuiteTestStarted(ITest test, IgnoreInfo ignoreInfo, TagList tags)
+        void OnTestSuiteTestStarted(ITest test, IgnoreInfo ignoreInfo, ITagList tags)
         {
             if (Cancel)
             {
@@ -258,7 +258,7 @@ namespace AccessCodeLib.AccUnit
 
         #region Event-Invocators
 
-        private void RaiseTestSuiteStarted(ITestSuite testSuite, TagList tags)
+        private void RaiseTestSuiteStarted(ITestSuite testSuite, ITagList tags)
         {
             TestSuiteStarted?.Invoke(testSuite, tags);
         }
@@ -278,7 +278,7 @@ namespace AccessCodeLib.AccUnit
             TestFixtureStarted?.Invoke(fixture);
         }
 
-        private void RaiseTestStarted(ITest testcase, IgnoreInfo ignoreInfo, TagList tags)
+        private void RaiseTestStarted(ITest testcase, IgnoreInfo ignoreInfo, ITagList tags)
         {
             TestStarted?.Invoke(testcase, ignoreInfo, tags);
         }
@@ -385,6 +385,16 @@ namespace AccessCodeLib.AccUnit
             Reset(ResetMode.RemoveTests);
             AddToTestSuite(_testBuilder.CreateTestsFromVBProject());
             return this;
+        }
+
+        public ITestSuite Filter(IEnumerable<string> memberFilter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ITestSuite Filter(IEnumerable<ITestItemTag> filterTags)
+        {
+            throw new NotImplementedException();
         }
 
         private object _hostApplication;

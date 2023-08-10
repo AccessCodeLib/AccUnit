@@ -2,6 +2,7 @@
 using AccessCodeLib.Common.Tools.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using VbMsgBoxResult = AccessCodeLib.AccUnit.Interfaces.VbMsgBoxResult;
 
 namespace AccessCodeLib.AccUnit
@@ -80,5 +81,18 @@ namespace AccessCodeLib.AccUnit
             }
             return this;
         }
+
+        private readonly ITagList _tags = new TagList();
+        public ITagList Tags { get { return _tags; } }
+
+        public ITestRow AddTags(params string[] args)
+        {
+            foreach (var arg in args)
+            {
+                (_tags as TagList).Add(new TestItemTag(arg));
+            }   
+            return this;
+        }
+
     }
 }

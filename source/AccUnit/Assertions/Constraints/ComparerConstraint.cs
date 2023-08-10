@@ -71,7 +71,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
             var expectedType = ConstraintBuilder.Type2Compare(Expected, Strict);
             if (actualType != expectedType)
             {
-                var returnText = "actual (" + actual.GetType().Name + ") is not of type " + FormattedTypeDescription(expectedType, Strict) ;
+                var returnText = "actual (" + actual.GetType().Name + ") is not of type " + FormattedTypeDescription(expectedType, Strict);
                 return new MatchResult(CompareText, false, returnText, actual, Expected);
             }
 

@@ -30,7 +30,7 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId(Constants.ProgIdLibName + ".IsConstraints")]
     public class ConstraintBuilder : AccUnit.Assertions.ConstraintBuilder, IConstraintBuilder
     {
-        public ConstraintBuilder() : base() { } 
+        public ConstraintBuilder() : base() { }
         public ConstraintBuilder(bool strict) : base(strict) { }
 
         public IConstraintBuilder Strict { get { return new ConstraintBuilder(true); } }

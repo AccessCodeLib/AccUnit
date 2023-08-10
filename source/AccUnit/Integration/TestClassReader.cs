@@ -62,9 +62,9 @@ namespace AccessCodeLib.AccUnit
         {
             var list = new TestClassMemberList();
             list.AddRange(
-                    from CodeModuleMember member in reader.Members.FindAll(true, vbext_ProcKind.vbext_pk_Proc)
+                    (from CodeModuleMember member in reader.Members.FindAll(true, vbext_ProcKind.vbext_pk_Proc)
                     where IsSetupOrTeardown(member) == false
-                    select GetTestClassMemberInfo(member, reader)
+                    select GetTestClassMemberInfo(member, reader))
             );
             return list;
         }
