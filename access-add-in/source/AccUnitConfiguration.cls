@@ -21,8 +21,7 @@ Attribute VB_Description = "Konfigurationseinstellungen der CodeLib verwalten"
 '**/
 '---------------------------------------------------------------------------------------
 '<codelib>
-'  <file>_codelib/addins/AccUnitLoader/AccUnitConfiguration.cls</file>
-'  <license>_codelib/license.bas</license>
+'  <file>%AppFolder%/source/AccUnitConfiguration.cls</file>
 '  <use>base/ApplicationHandler.cls</use>
 '  <use>data/SqlTools.bas</use>
 '  <use>file/FileTools.bas</use>
