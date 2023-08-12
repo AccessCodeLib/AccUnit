@@ -11,12 +11,11 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
     {
         private AccessTestHelper _accessTestHelper;
         private Interop.ITestBuilder _testBuilder;
-        private int i;
 
         [SetUp]
         public void TestBuilderTestsSetup()
         {
-            _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper(i++);
+            _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper();
             _testBuilder = new Interop.TestBuilder
             {
                 HostApplication = _accessTestHelper.Application

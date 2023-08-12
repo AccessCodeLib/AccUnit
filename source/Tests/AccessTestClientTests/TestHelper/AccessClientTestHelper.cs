@@ -6,6 +6,8 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
 {
     internal static class AccessClientTestHelper
     {
+        private static int staticClientCounter;
+
         public static CodeModule CreateTestCodeModule(AccessTestHelper accessTestHelper, string name, vbext_ComponentType type, string source)
         {
             var vbcCol = accessTestHelper.ActiveVBProject.VBComponents;
@@ -22,9 +24,9 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
             return codeModule;
         }
 
-        public static AccessTestHelper NewAccessTestHelper(int cnt)
+        public static AccessTestHelper NewAccessTestHelper()
         {
-            var testHelper = new AccessTestHelper(@"C:\test\Test_" + cnt.ToString() + ".accdb");
+            var testHelper = new AccessTestHelper(@"C:\test\Test_" + (staticClientCounter++).ToString() + ".accdb");
             testHelper.Application.Visible = true;
 
             return testHelper;

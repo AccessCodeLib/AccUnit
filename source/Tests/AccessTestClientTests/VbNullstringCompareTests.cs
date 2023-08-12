@@ -9,12 +9,11 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
     internal class VbNullstringCompareTests
     {
         private AccessTestHelper _accessTestHelper;
-        private int i;
 
         [SetUp]
         public void AccessClientTestsSetup()
         {
-            _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper(i++);
+            _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper();
         }
 
         [TearDown]

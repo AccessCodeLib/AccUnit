@@ -110,13 +110,12 @@ namespace AccessCodeLib.AccUnit
 
         /// @todo use enum for AccUnit attributes
         private static readonly Regex TagLineRegex = new Regex(@"^\s*'\s*AccUnit:TestClass:Tags\(([^']*)\)\s*$", RegexOptions.CultureInvariant | RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase);
-        private static TagList GetTagsFromSourceCode(string text)
+        public static TagList GetTagsFromSourceCode(string text)
         {
             if (string.IsNullOrEmpty(text))
             {
                 return null;
             }
-
 
             var tagLines = from Match m in TagLineRegex.Matches(text)
                            select m.Groups[1].Value.Trim();

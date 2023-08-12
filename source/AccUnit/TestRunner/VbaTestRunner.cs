@@ -92,6 +92,10 @@ namespace AccessCodeLib.AccUnit.TestRunner
                                IEnumerable<ITestItemTag> filterTags = null)
         {
             var testFixture = new TestFixture(testFixtureInstance);
+            if (filterTags != null)
+            {
+                testFixture.FillFixtureTags(_vbProject);
+            }
 
             if (testMethodName == "*")
             {
@@ -112,7 +116,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
 
         private ITest CreateTest(ITestFixture testFixture, string testMethodName)
         {
-            var memberInfo = TestFixture.GetTestFixtureMember(_vbProject, testFixture.Name, testMethodName).TestClassMemberInfo;
+            var memberInfo = TestFixture.GetTestFixtureMember(_vbProject, testFixture, testMethodName).TestClassMemberInfo;
 
             if (memberInfo.TestRows.Count > 0)
             {
@@ -145,7 +149,6 @@ namespace AccessCodeLib.AccUnit.TestRunner
         private static bool AllFilterTagsExists(IEnumerable<ITestItemTag> testTags, IEnumerable<ITestItemTag> filterTags)
         {
             return filterTags.All(tag => testTags.Any(testTag => testTag.Name == tag.Name));
-            //return filterTags.All(tag => testTags.Any(testTag => testTag == tag));
         }
 
         public ITestResult Run(ITest test, IEnumerable<ITestItemTag> filterTags = null)

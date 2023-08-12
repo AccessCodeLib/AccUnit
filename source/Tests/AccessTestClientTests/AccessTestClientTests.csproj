@@ -97,9 +97,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessClientTest.cs" />
-    <Compile Include="AccessClientTestHelper.cs" />
+    <Compile Include="TestHelper\AccessClientTestHelper.cs" />
     <Compile Include="ArrayAssertTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TagFilterTests.cs" />
     <Compile Include="TestBuilderTests.cs" />
     <Compile Include="TestHelper\TestCollector.cs" />
     <Compile Include="TestResultCollector.cs" />

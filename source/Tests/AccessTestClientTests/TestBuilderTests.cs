@@ -10,12 +10,11 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
     {
         private AccessTestHelper _accessTestHelper;
         private Interop.ITestBuilder _testBuilder;
-        private int i;
 
         [SetUp]
         public void TestBuilderTestsSetup()
         {
-            _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper(i++);
+            _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper();
             _testBuilder = new Interop.TestBuilder
             {
                 HostApplication = _accessTestHelper.Application
@@ -25,17 +24,11 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
         [TearDown]
         public void TestBuilderTestsCleanup()
         {
-            if (_testBuilder != null)
-            {
-                _testBuilder.Dispose();
-                _testBuilder = null;
-            }
+            _testBuilder?.Dispose();
+            _testBuilder = null;
 
-            if (_accessTestHelper != null)
-            {
-                _accessTestHelper.Dispose();
-                _accessTestHelper = null;
-            }
+            _accessTestHelper?.Dispose();
+            _accessTestHelper = null;
         }
 
         [Test]
