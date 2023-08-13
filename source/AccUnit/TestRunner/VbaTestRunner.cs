@@ -61,7 +61,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
             RaiseTestFixtureStarted(testFixture);
 
             var results = new TestResultCollection(testFixture);
-
+            
             foreach (var test in testFixture.Tests)
             {
                 if (methodFilter != null && !methodFilter.Contains(test.Name))
@@ -92,11 +92,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
                                IEnumerable<ITestItemTag> filterTags = null)
         {
             var testFixture = new TestFixture(testFixtureInstance);
-            if (filterTags != null)
-            {
-                testFixture.FillFixtureTags(_vbProject);
-            }
-
+            
             if (testMethodName == "*")
             {
                 testFixture.FillInstanceMembers(_vbProject);
@@ -139,7 +135,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
                         continue;
                     }
                 }
-                
+
                 var result = Run(paramTest);
                 results.Add(result);
             }
@@ -148,7 +144,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
 
         private static bool AllFilterTagsExists(IEnumerable<ITestItemTag> testTags, IEnumerable<ITestItemTag> filterTags)
         {
-            return filterTags.All(tag => testTags.Any(testTag => testTag.Name == tag.Name));
+            return filterTags.All(tag => testTags.Any(testTag => testTag.Name.ToLower() == tag.Name.ToLower()));
         }
 
         public ITestResult Run(ITest test, IEnumerable<ITestItemTag> filterTags = null)
@@ -169,7 +165,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
                 return Run(rowTest, filterTags);
             }
 
-            if (filterTags != null)
+            if (filterTags != null && filterTags.Any())
             {
                 if (!AllFilterTagsExists(test.TestClassMemberInfo.Tags, filterTags))
                 {

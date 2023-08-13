@@ -67,5 +67,21 @@ End Function
             Assert.That(retType.FullName, Is.EqualTo("System.String"));
             Assert.That(ret, Is.EqualTo(""));
         }
+
+
+        [Test]
+        public void AssertTest()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "modAccUnitFactory", vbext_ComponentType.vbext_ct_StdModule, @"
+public Function Test(ByRef ReturnValue as String)
+   ReturnValue = """"      
+End Function
+");
+            string ret = "abc";
+            _accessTestHelper.Application.Run("Test", ref ret);
+
+            var assert = new Interop.Assert();
+            assert.AreEqual(ret, "");
+        }
     }
 }

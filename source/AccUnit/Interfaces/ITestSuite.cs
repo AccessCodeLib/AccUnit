@@ -24,12 +24,9 @@ namespace AccessCodeLib.AccUnit.Interfaces
 
         ITestSuite Run();
         ITestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
-
+        
         [ComVisible(false)]
         void AddTestClasses(IEnumerable<TestClassInfo> testClasses);
-
-        [ComVisible(false)]
-        ITestSuite Filter(IEnumerable<string> memberFilter);
 
         [ComVisible(false)]
         ITestSuite Filter(IEnumerable<ITestItemTag> filterTags);

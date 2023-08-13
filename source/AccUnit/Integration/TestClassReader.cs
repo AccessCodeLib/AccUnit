@@ -119,7 +119,8 @@ namespace AccessCodeLib.AccUnit
 
         public static bool IsTestClassCodeModul(_CodeModule codeModule)
         {
-            return CodeModuleHeaderMatchesRegex(codeModule, @"^\s*'\s*AccUnit:TestClass\s*$");
+            var isTestClass = CodeModuleHeaderMatchesRegex(codeModule, @"^\s*'\s*AccUnit:TestClass");
+            return isTestClass;
         }
 
         private static int GetLinesBeforeFirstProcBody(_CodeModule codeModule)

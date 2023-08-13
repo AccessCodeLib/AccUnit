@@ -31,14 +31,12 @@ namespace AccessCodeLib.AccUnit
             _ignoreInfo = newIgnoreInfo;
             _testRowFilter = new List<int>(memberInfo.TestRowFilter);
 
-            Tags = newTagList;
-            if (memberInfo.Tags != null && memberInfo.Tags.Any())
+            Tags = new TagList();
+            Tags.AddRange(memberInfo.Tags); 
+
+            if (newTagList != null && newTagList.Any())
             {
-                if (Tags == null)
-                {
-                    Tags = new TagList();
-                }
-                Tags.AddRange(memberInfo.Tags);
+                Tags.AddRange(newTagList);
             }
 
             DoAutoRollback = memberInfo.DoAutoRollback;
@@ -83,9 +81,11 @@ namespace AccessCodeLib.AccUnit
                            select m.Groups[1].Value.Trim();
 
             var tags = new TagList();
-            tags.AddRange((IEnumerable<ITestItemTag>)(from line in tagLines
-                          from tagName in line.Split(',', ';', '|')
-                          select new TestItemTag(tagName.Trim('"', ' '))));
+            foreach(var tag in tagLines)
+            {
+                var testTag = new TestItemTag(tag);
+                tags.Add(testTag);
+            }
             return tags;
         }
 

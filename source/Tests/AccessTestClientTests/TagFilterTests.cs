@@ -2,6 +2,7 @@
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using NUnit.Framework;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
@@ -29,6 +30,43 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
 
             _accessTestHelper?.Dispose();
             _accessTestHelper = null;
+        }
+
+        [Test]
+        public void GenerateEnumarableTagsFormString_CheckTags()
+        {
+            object tagString = "abc";
+            var tags = Interop.TestRunner.GetFilterTagEnumerableFromObject(tagString);
+            Assert.That(tags.Count(), Is.EqualTo(1));
+            Assert.That(tags.First().Name, Is.EqualTo(tagString));  
+        }
+
+        [Test]
+        public void RunSimpleTest_WithoutTagTestNotRun_CheckTagAndCheckValue0()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+private m_Check as Long
+
+public Function TestMethod1()
+   m_Check = 2
+End Function
+
+public Function GetCheckValue() as long
+   GetCheckValue = m_Check
+End Function
+");
+            var fixtureName = "clsAccUnitTestClass";
+            var fixture = _testBuilder.CreateTest(fixtureName);
+            var memberName = "TestMethod1";
+
+            var invocHelper = new InvocationHelper(fixture);
+
+            var result = new TestResultCollector();
+            var testRunner = new Interop.TestRunner(_testBuilder.ActiveVBProject);
+            testRunner.Run(fixture, memberName, result, "abc");
+
+            var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
+            Assert.That(valueAfterTestRun, Is.EqualTo(2));
         }
 
         [Test]
@@ -197,6 +235,75 @@ End Function
 
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
             Assert.That(valueAfterTestRun, Is.EqualTo(2));
+        }
+
+        [Test]
+        [TestCase("abc", 6)]
+        [TestCase("ABC,XYZ", 2)]
+        [TestCase("123", 24)]
+        [TestCase("123,XYZ", 8)]
+        [TestCase("XYZ", 10)]
+        public void TagInClassHeaderAndRow_AddFromVBProject_CheckSumValue(string tagFilter, int valueToCheck)
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "modAccUnitTestClass", vbext_ComponentType.vbext_ct_StdModule, @"
+
+public m_Check as Long
+");
+
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+
+'AccUnit:TestClass:Tags(""ABC"")
+
+
+'AccUnit:Row(1)
+'AccUnit:Row(2).Tags(""XYZ"")
+'AccUnit:Row(3)
+public Function TestMethod1(ByVal x as Long) as Long
+   m_Check = m_Check + x
+   TestMethod1 = x
+End Function
+
+public Function GetCheckValue() as long
+   GetCheckValue = m_Check
+End Function
+");
+
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass2", vbext_ComponentType.vbext_ct_ClassModule, @"
+'AccUnit:TestClass:Tags(""123"")
+
+'AccUnit:Row(7)
+'AccUnit:Row(8).Tags(""XYZ"")
+'AccUnit:Row(9)
+public Function TestMethod1(ByVal x as Long) as Long
+   m_Check = m_Check + x
+   TestMethod1 = x
+End Function
+
+public Function GetCheckValue() as long
+   GetCheckValue = m_Check
+End Function
+");
+
+            var testSuite = new VBATestSuite();
+            testSuite.ActiveVBProject = _testBuilder.ActiveVBProject;
+            testSuite.HostApplication = _accessTestHelper.Application;
+
+            var tagFilters = tagFilter.Split(',');
+            var tagList = new List<ITestItemTag>();
+            foreach (var tag in tagFilters)
+            {
+                tagList.Add(new TestItemTag(tag));
+            }   
+
+            testSuite.AddFromVBProject();
+            testSuite.Filter(tagList);
+            testSuite.Run();
+
+            var fixtureName = "clsAccUnitTestClass";
+            var fixture = _testBuilder.CreateTest(fixtureName);
+            var invocHelper = new InvocationHelper(fixture);
+            var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
+            Assert.That(valueAfterTestRun, Is.EqualTo(valueToCheck));
         }
     }
 }

@@ -31,7 +31,7 @@ namespace AccessCodeLib.AccUnit
         {
             using (new BlockLogger("TestRow.SetName"))
             {
-                Name = name + 'x';
+                Name = name;
                 Logger.Log(string.Format("Name: {0}", name));
             }
             return this;

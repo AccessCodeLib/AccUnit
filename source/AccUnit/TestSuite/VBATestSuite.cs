@@ -22,6 +22,7 @@ namespace AccessCodeLib.AccUnit
 
         private readonly List<ITestManagerBridge> _accUnitTests = new List<ITestManagerBridge>();
         private readonly List<ITestFixture> _testFixtures = new List<ITestFixture>();
+        private IEnumerable<ITestItemTag> _filterTags = null;
 
         public IEnumerable<ITestFixture> TestFixtures { get { return _testFixtures; } }
 
@@ -356,6 +357,7 @@ namespace AccessCodeLib.AccUnit
                 _accUnitTests.Add(testToAdd as ITestManagerBridge);
 
             var fixture = new TestFixture(testToAdd);
+            fixture.FillFixtureTags(_testBuilder.ActiveVBProject);
             fixture.FillInstanceMembers(_testBuilder.ActiveVBProject);
             fixture.FillTestListFromTestClassInstance(_testBuilder.ActiveVBProject);
             _testFixtures.Add(fixture);
@@ -387,14 +389,10 @@ namespace AccessCodeLib.AccUnit
             return this;
         }
 
-        public ITestSuite Filter(IEnumerable<string> memberFilter)
-        {
-            throw new NotImplementedException();
-        }
-
         public ITestSuite Filter(IEnumerable<ITestItemTag> filterTags)
         {
-            throw new NotImplementedException();
+            _filterTags = new List<ITestItemTag>(filterTags);
+            return this;
         }
 
         private object _hostApplication;
@@ -457,7 +455,7 @@ namespace AccessCodeLib.AccUnit
             {
                 TestResultCollector = new TestResultCollection(this);
             }
-            var testResult = TestRunner.Run(this, TestResultCollector);
+            var testResult = TestRunner.Run(this, TestResultCollector, null, _filterTags);
             _testSummary = testResult as ITestSummary;
 
             RaiseTraceMessage(SummaryFormatter.GetTestSummaryText(Summary));

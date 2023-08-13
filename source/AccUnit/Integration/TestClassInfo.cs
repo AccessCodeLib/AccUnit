@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -121,11 +122,23 @@ namespace AccessCodeLib.AccUnit
                            select m.Groups[1].Value.Trim();
 
             var tags = new TagList();
-            tags.AddRange((IEnumerable<ITestItemTag>)(from line in tagLines
-                          from tagName in line.Split(',', ';', '|')
-                          select new TestItemTag(tagName.Trim('"', ' '))));
+
+            foreach (var tagLine in tagLines) { 
+                var tagList = GetTagsFromTagLine(tagLine);  
+                tags.AddRange(tagList);
+            }
             return tags;
         }
 
+        private static IEnumerable<ITestItemTag> GetTagsFromTagLine(string tagLine)
+        {
+            var tags = new TagList();
+            foreach (var tagName in tagLine.Split(',', ';', '|'))
+            {
+                tags.Add(new TestItemTag(tagName.Trim('"', ' ')));
+                //tags.Add(new TestItemTag(tagName.Trim()));
+            }
+            return tags;
+        }
     }
 }
