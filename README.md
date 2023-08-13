@@ -17,7 +17,7 @@ For more informations see [Wiki](https://github.com/AccessCodeLib/AccUnit/wiki) 
 * Code coverage tests ([Video](https://accunit.access-codelib.net/videos/examples/CodeCoverageTest.mp4))
 * Generate test classes with TestClassGenerator (write TestSuite.TestClassGenerator in VBA immediate window) ([Video](https://accunit.access-codelib.net/videos/examples/NW2-UnitTests.mp4
 ))
-
+* Tag filter: `TestSuite.Add(...).Filter("abc,xyz").Run`
 
 ### Remarks
 Examples see [./examples/msaccess/](https://github.com/AccessCodeLib/AccUnit/blob/main/examples/msaccess/)
