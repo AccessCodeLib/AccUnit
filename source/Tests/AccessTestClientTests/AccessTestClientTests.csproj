@@ -103,7 +103,7 @@
     <Compile Include="TagFilterTests.cs" />
     <Compile Include="TestBuilderTests.cs" />
     <Compile Include="TestHelper\TestCollector.cs" />
-    <Compile Include="TestResultCollector.cs" />
+    <Compile Include="TestHelper\TestResultCollector.cs" />
     <Compile Include="TestRunnerTests.cs" />
     <Compile Include="VbNullstringCompareTests.cs" />
   </ItemGroup>

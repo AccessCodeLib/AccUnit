@@ -66,7 +66,7 @@ End Function
             testRunner.Run(fixture, memberName, result, "abc");
 
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
-            Assert.That(valueAfterTestRun, Is.EqualTo(2));
+            Assert.That(valueAfterTestRun, Is.EqualTo(0));
         }
 
         [Test]
@@ -253,7 +253,6 @@ public m_Check as Long
             AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
 
 'AccUnit:TestClass:Tags(""ABC"")
-
 
 'AccUnit:Row(1)
 'AccUnit:Row(2).Tags(""XYZ"")

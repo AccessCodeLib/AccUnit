@@ -93,6 +93,11 @@ namespace AccessCodeLib.AccUnit.TestRunner
         {
             var testFixture = new TestFixture(testFixtureInstance);
 
+            if (filterTags != null && filterTags.Any())
+            {
+                testFixture.FillFixtureTags(_vbProject);
+            }   
+            
             if (testMethodName == "*")
             {
                 testFixture.FillInstanceMembers(_vbProject);
@@ -107,7 +112,6 @@ namespace AccessCodeLib.AccUnit.TestRunner
             testResultCollector?.Add(result);
 
             return result;
-
         }
 
         private ITest CreateTest(ITestFixture testFixture, string testMethodName)

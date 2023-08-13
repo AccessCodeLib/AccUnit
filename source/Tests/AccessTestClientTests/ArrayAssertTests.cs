@@ -4,6 +4,7 @@ using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
+using System;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
 {
@@ -126,8 +127,7 @@ End Function
             var assert = NewTestAssert(testCollector);
             var Iz = new ConstraintBuilder();
 
-            //Array expected = new object[] { 1, 2, 3 };
-            var expected = invocHelper.InvokeMethod("TestMethod");
+            var expected = new object[] { (short)1, (short)2, (short)3 };
 
             assert.That(actual, Iz.EqualTo(expected));
             var result = testCollector.Result;

@@ -6,6 +6,8 @@ using System;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
 {
+    [TestFixture]
+    [Ignore("Only for checking the behavior of the vbNullString passing in C#.")]
     internal class VbNullstringCompareTests
     {
         private AccessTestHelper _accessTestHelper;
@@ -68,20 +70,5 @@ End Function
             Assert.That(ret, Is.EqualTo(""));
         }
 
-
-        [Test]
-        public void AssertTest()
-        {
-            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "modAccUnitFactory", vbext_ComponentType.vbext_ct_StdModule, @"
-public Function Test(ByRef ReturnValue as String)
-   ReturnValue = """"      
-End Function
-");
-            string ret = "abc";
-            _accessTestHelper.Application.Run("Test", ref ret);
-
-            var assert = new Interop.Assert();
-            assert.AreEqual(ret, "");
-        }
     }
 }
