@@ -31,7 +31,7 @@ namespace AccessCodeLib.AccUnit
         {
         }
 
-        public TestManager(ITestManagerBridge testmanagerbridge, TestClassMemberList memberFilter = null)
+        public TestManager(ITestManagerBridge testmanagerbridge, IEnumerable<TestClassMemberInfo> memberFilter = null)
             : this()
         {
             try

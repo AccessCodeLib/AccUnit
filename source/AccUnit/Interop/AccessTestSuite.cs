@@ -1,6 +1,7 @@
 ﻿using AccessCodeLib.AccUnit.Interfaces;
 using Microsoft.Vbe.Interop;
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interop
@@ -23,6 +24,8 @@ namespace AccessCodeLib.AccUnit.Interop
         new IAccessTestSuite AddFromVBProject();
         new IAccessTestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
         new IAccessTestSuite Run();
+
+        IAccessTestSuite Filter(object FilterTags);
 
         new void Dispose();
 
@@ -80,6 +83,13 @@ namespace AccessCodeLib.AccUnit.Interop
             return this;
         }
 
+        public IAccessTestSuite Filter(object FilterTags)
+        {
+            IEnumerable<ITestItemTag> tags = Interop.TestRunner.GetFilterTagEnumerableFromObject(FilterTags);
+            base.Filter(tags);
+            return this;
+        }
+
         public ITestClassGenerator TestClassGenerator
         {
             get
@@ -88,5 +98,4 @@ namespace AccessCodeLib.AccUnit.Interop
             }
         }
     }
-
 }

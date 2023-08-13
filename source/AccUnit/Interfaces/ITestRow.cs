@@ -9,6 +9,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
         int Index { get; set; }
         IList<object> Args { get; }
         string Name { get; set; }
+        ITagList Tags { get; }
         ITestRow SetName(string name);
         ITestRow ClickingMsgBox(params VbMsgBoxResult[] args);
         ITestMessageBox TestMessageBox { get; set; }

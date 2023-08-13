@@ -2,17 +2,17 @@
 
 namespace AccessCodeLib.AccUnit
 {
-    public class TestClassMemberList : List<TestClassMemberInfo>
+    public class TestClassMemberList : List<TestClassMemberInfo>, ITestClassMemberList
     {
 
-        public TestClassMemberList Filter(TagList tags)
+        public ITestClassMemberList Filter(IEnumerable<ITestItemTag> tags)
         {
             var list = new TestClassMemberList();
             list.AddRange(FindAll(x => x.IsMatch(tags)));
             return list;
         }
 
-        public TagList Tags
+        public ITagList Tags
         {
             get
             {

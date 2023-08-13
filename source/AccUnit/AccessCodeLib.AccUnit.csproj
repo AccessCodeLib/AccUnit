@@ -104,6 +104,9 @@
     <Compile Include="Assertions\AssertThrowsContainer.cs" />
     <Compile Include="CodeCoverage\CodeModuleTracker.cs" />
     <Compile Include="CodeCoverage\ProcedureTracker.cs" />
+    <Compile Include="Interfaces\ITestItemTag.cs" />
+    <Compile Include="Interfaces\ITagList.cs" />
+    <Compile Include="Interfaces\ITestClassMemberList.cs" />
     <Compile Include="~trash\CodeModuleMemberWithMarker.cs" />
     <Compile Include="~trash\CompareTypeHelper.cs" />
     <Compile Include="Integration\MessageBoxData.cs" />
@@ -186,7 +189,7 @@
     <Compile Include="Assertions\ConstraintBuilder.cs" />
     <Compile Include="Assertions\MatchResult.cs" />
     <Compile Include="Interop\TestRunner.cs" />
-    <Compile Include="Interop\TestSuite.cs" />
+    <Compile Include="Interop\ITestSuiteComEvents.cs" />
     <Compile Include="Interop\VbaTestSuite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

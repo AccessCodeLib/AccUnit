@@ -326,7 +326,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
         {
             var testCollector = new TestCollector();
             var assert = NewTestAssert(testCollector, true);
-            
+
             int expected = 1;
             double actual = 1;
 

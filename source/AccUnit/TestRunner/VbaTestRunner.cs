@@ -5,6 +5,7 @@ using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AccessCodeLib.AccUnit.TestRunner
@@ -29,14 +30,14 @@ namespace AccessCodeLib.AccUnit.TestRunner
             _vbProject = vbProject;
         }
 
-        public ITestResult Run(ITestSuite testSuite, ITestResultCollector testResultCollector)
+        public ITestResult Run(ITestSuite testSuite, ITestResultCollector testResultCollector, IEnumerable<string> methodFilter = null, IEnumerable<ITestItemTag> filterTags = null)
         {
             RaiseTestSuiteStarted(testSuite);
             var results = new TestResultCollection(testSuite);
 
             foreach (var tests in testSuite.TestFixtures)
             {
-                var result = Run(tests, testResultCollector);
+                var result = Run(tests, testResultCollector, methodFilter, filterTags);
                 results.Add(result);
             }
 
@@ -55,7 +56,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
             TestSuiteFinished?.Invoke(testResult);
         }
 
-        public ITestResult Run(ITestFixture testFixture, ITestResultCollector testResultCollector)
+        public ITestResult Run(ITestFixture testFixture, ITestResultCollector testResultCollector, IEnumerable<string> methodFilter = null, IEnumerable<ITestItemTag> filterTags = null)
         {
             RaiseTestFixtureStarted(testFixture);
 
@@ -63,7 +64,11 @@ namespace AccessCodeLib.AccUnit.TestRunner
 
             foreach (var test in testFixture.Tests)
             {
-                var testResult = Run(test);
+                if (methodFilter != null && !methodFilter.Contains(test.Name))
+                {
+                    continue;
+                }
+                var testResult = Run(test, filterTags);
                 testResultCollector?.Add(testResult);
                 results.Add(testResult);
             }
@@ -83,30 +88,35 @@ namespace AccessCodeLib.AccUnit.TestRunner
             TestFixtureFinished?.Invoke(result);
         }
 
-        public ITestResult Run(object testFixtureInstance, string testMethodName, ITestResultCollector testResultCollector = null)
+        public ITestResult Run(object testFixtureInstance, string testMethodName, ITestResultCollector testResultCollector = null,
+                               IEnumerable<ITestItemTag> filterTags = null)
         {
             var testFixture = new TestFixture(testFixtureInstance);
 
+            if (filterTags != null && filterTags.Any())
+            {
+                testFixture.FillFixtureTags(_vbProject);
+            }   
+            
             if (testMethodName == "*")
             {
                 testFixture.FillInstanceMembers(_vbProject);
                 testFixture.FillTestListFromTestClassInstance(_vbProject);
-                return Run(testFixture, testResultCollector);
+                return Run(testFixture, testResultCollector, null, filterTags);
             }
 
             var test = CreateTest(testFixture, testMethodName);
             testFixture.Add(test);
 
-            var result = Run(test);
+            var result = Run(test, filterTags);
             testResultCollector?.Add(result);
 
             return result;
-
         }
 
         private ITest CreateTest(ITestFixture testFixture, string testMethodName)
         {
-            var memberInfo = TestFixture.GetTestFixtureMember(_vbProject, testFixture.Name, testMethodName).TestClassMemberInfo;
+            var memberInfo = TestFixture.GetTestFixtureMember(_vbProject, testFixture, testMethodName).TestClassMemberInfo;
 
             if (memberInfo.TestRows.Count > 0)
             {
@@ -117,18 +127,31 @@ namespace AccessCodeLib.AccUnit.TestRunner
             return test;
         }
 
-        public ITestResult Run(IRowTest test)
+        public ITestResult Run(IRowTest test, IEnumerable<ITestItemTag> filterTags = null)
         {
             var results = new TestResultCollection(test);
             foreach (var paramTest in test.ParamTests)
             {
+                if (filterTags != null)
+                {
+                    if (!AllFilterTagsExists(paramTest.TestClassMemberInfo.Tags, filterTags))
+                    {
+                        continue;
+                    }
+                }
+
                 var result = Run(paramTest);
                 results.Add(result);
             }
             return results;
         }
 
-        public ITestResult Run(ITest test)
+        private static bool AllFilterTagsExists(IEnumerable<ITestItemTag> testTags, IEnumerable<ITestItemTag> filterTags)
+        {
+            return filterTags.All(tag => testTags.Any(testTag => testTag.Name.ToLower() == tag.Name.ToLower()));
+        }
+
+        public ITestResult Run(ITest test, IEnumerable<ITestItemTag> filterTags = null)
         {
             if (test.TestClassMemberInfo.IgnoreInfo.Ignore)
             {
@@ -143,7 +166,21 @@ namespace AccessCodeLib.AccUnit.TestRunner
 
             if (test is IRowTest rowTest)
             {
-                return Run(rowTest);
+                return Run(rowTest, filterTags);
+            }
+
+            if (filterTags != null && filterTags.Any())
+            {
+                if (!AllFilterTagsExists(test.TestClassMemberInfo.Tags, filterTags))
+                {
+                    var ignoreTestResult = new TestResult(test)
+                    {
+                        IsIgnored = true,
+                        Message = "Test ignored because of tag filter"
+                    };
+                    RaiseTestFinished(ignoreTestResult);
+                    return ignoreTestResult;
+                }
             }
 
             var testResult = new TestResult(test);
@@ -247,7 +284,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
             }
         }
 
-        void RaiseTestStarted(ITest test, IgnoreInfo ignoreInfo, TagList tags)
+        void RaiseTestStarted(ITest test, IgnoreInfo ignoreInfo, ITagList tags)
         {
             TestStarted?.Invoke(test, ignoreInfo, tags);
         }

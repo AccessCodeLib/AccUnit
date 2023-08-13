@@ -4,10 +4,10 @@ Attribute VB_Name = "_config_Application"
 '---------------------------------------------------------------------------------------
 '---------------------------------------------------------------------------------------
 '<codelib>
-'  <file>_codelib/addins/AccUnitLoader/_config_Application.bas</file>
+'  <file>%AppFolder%/source/_config_Application.bas</file>
 '  <replace>base/_config_Application.bas</replace>
 '  <license>_codelib/license.bas</license>
-'  <use>_codelib/addins/AccUnitLoader/defGlobal_AccUnitLoader.bas</use>
+'  <use>%AppFolder%/source/defGlobal_AccUnitLoader.bas</use>
 '  <use>base/modApplication.bas</use>
 '  <use>base/ApplicationHandler.cls</use>
 '  <use>base/ApplicationHandler_AppFile.cls</use>

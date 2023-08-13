@@ -51,7 +51,7 @@ namespace AccessCodeLib.AccUnit
             }
         }
 
-        private void CheckTestManagerInterface(object testToAdd, TestClassMemberList memberFilter)
+        private void CheckTestManagerInterface(object testToAdd, ITestClassMemberList memberFilter)
         {
             if (testToAdd is ITestManagerBridge bridge)
             {
@@ -64,7 +64,7 @@ namespace AccessCodeLib.AccUnit
             return testClasses.Select(testClass => CreateTest(testClass.Name, testClass.Members));
         }
 
-        public object CreateTest(object testToAdd, TestClassMemberList memberFilter)
+        public object CreateTest(object testToAdd, ITestClassMemberList memberFilter)
         {
             CheckTestManagerInterface(testToAdd, memberFilter);
             return testToAdd;
@@ -75,7 +75,7 @@ namespace AccessCodeLib.AccUnit
             return CreateTest(className, null);
         }
 
-        private object CreateTest(string className, TestClassMemberList memberFilter)
+        private object CreateTest(string className, ITestClassMemberList memberFilter)
         {
             var testToAdd = CreateObject(className);
             CheckTestManagerInterface(testToAdd, memberFilter);
@@ -89,7 +89,7 @@ namespace AccessCodeLib.AccUnit
             return CreateTests(testClasses);
         }
 
-        private void InitTestManager(ITestManagerBridge testToAdd, TestClassMemberList memberFilter = null)
+        private void InitTestManager(ITestManagerBridge testToAdd, ITestClassMemberList memberFilter = null)
         {
             new TestManager(testToAdd, memberFilter) { ActiveVBProject = ActiveVBProject, HostApplication = HostApplication };
         }

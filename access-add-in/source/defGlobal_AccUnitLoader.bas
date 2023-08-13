@@ -13,9 +13,9 @@ Attribute VB_Name = "defGlobal_AccUnitLoader"
 '**/
 '---------------------------------------------------------------------------------------
 '<codelib>
-'  <file>_codelib/addins/AccUnitLoader/defGlobal_AccUnitLoader.bas</file>
+'  <file>%AppFolder%/source/defGlobal_AccUnitLoader.bas</file>
 '  <license>_codelib/license.bas</license>
-'  <use>_codelib/addins/AccUnitLoader/AccUnitConfiguration.cls</use>
+'  <use>%AppFolder%/source/AccUnitConfiguration.cls</use>
 '</codelib>
 '---------------------------------------------------------------------------------------
 '

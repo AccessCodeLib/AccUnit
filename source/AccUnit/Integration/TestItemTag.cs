@@ -2,7 +2,7 @@
 
 namespace AccessCodeLib.AccUnit
 {
-    public class TestItemTag
+    public class TestItemTag : ITestItemTag
     {
 
         public TestItemTag(string name)

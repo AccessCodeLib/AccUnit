@@ -17,7 +17,10 @@ namespace AccessCodeLib.AccUnit.Interfaces
         ITestFixtureMembers Members { get; }
 
         [ComVisible(false)]
-        IEnumerable<ITest> Tests { get; }   // Definition der Testmethoden
+        IEnumerable<ITest> Tests { get; }   // Definition of the test methods
+
+        [ComVisible(false)]
+        IEnumerable<ITestItemTag> Tags { get; }
 
         [ComVisible(false)]
         bool HasFixtureSetup { get; set; }

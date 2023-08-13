@@ -27,6 +27,10 @@ namespace AccessCodeLib.AccUnit.Interfaces
 
         [ComVisible(false)]
         void AddTestClasses(IEnumerable<TestClassInfo> testClasses);
+
+        [ComVisible(false)]
+        ITestSuite Filter(IEnumerable<ITestItemTag> filterTags);
+
     }
 
     public interface ITestSuiteEvents
@@ -45,9 +49,9 @@ namespace AccessCodeLib.AccUnit.Interfaces
     public delegate void DisposeEventHandler(object sender);
     public delegate void NullReferenceEventHandler(ref object returnedObject);
     public delegate void FinishedEventHandler(ITestResult result);
-    public delegate void TestSuiteStartedEventHandler(ITestSuite testSuite, TagList tags);
+    public delegate void TestSuiteStartedEventHandler(ITestSuite testSuite, ITagList tags);
     public delegate void TestFixtureStartedEventHandler(ITestFixture fixture);
-    public delegate void TestStartedEventHandler(ITest test, IgnoreInfo ignoreInfo, TagList tags);
+    public delegate void TestStartedEventHandler(ITest test, IgnoreInfo ignoreInfo, ITagList tags);
     public delegate void MessageEventHandler(string message);
     public delegate void TestSuiteRunFinishedEventHandler(ITestSummary summary);
     public delegate void TestSuiteResetEventHandler(ResetMode resetmode, ref bool cancel);

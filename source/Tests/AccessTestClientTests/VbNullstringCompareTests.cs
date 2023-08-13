@@ -6,15 +6,16 @@ using System;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
 {
+    [TestFixture]
+    [Ignore("Only for checking the behavior of the vbNullString passing in C#.")]
     internal class VbNullstringCompareTests
     {
         private AccessTestHelper _accessTestHelper;
-        private int i;
 
         [SetUp]
         public void AccessClientTestsSetup()
         {
-            _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper(i++);
+            _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper();
         }
 
         [TearDown]
@@ -68,5 +69,6 @@ End Function
             Assert.That(retType.FullName, Is.EqualTo("System.String"));
             Assert.That(ret, Is.EqualTo(""));
         }
+
     }
 }

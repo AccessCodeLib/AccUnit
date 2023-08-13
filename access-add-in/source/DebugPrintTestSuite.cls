@@ -20,7 +20,7 @@ Attribute VB_Exposed = True
 '**/
 '---------------------------------------------------------------------------------------
 '<codelib>
-'  <file>_codelib/addins/AccUnitLoader/DebugPrintTestSuite.cls</file>
+'  <file>%AppFolder%/source/DebugPrintTestSuite.cls</file>
 '  <license>_codelib/license.bas</license>
 '</codelib>
 '---------------------------------------------------------------------------------------

@@ -171,6 +171,7 @@ namespace AccessCodeLib.AccUnit
                                                                string.Format("{0}{1}{2}", m.Groups[1].Value,
                                                                              "DBNull.Value", m.Groups[3].Value));
             tempString = ConvertConstantStringsToVB(tempString);
+            tempString = tempString.Replace(".Tags(", ".AddTags(");
             return "TestManager.AddRow" + tempString;
         }
 

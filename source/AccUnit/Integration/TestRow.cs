@@ -30,7 +30,7 @@ namespace AccessCodeLib.AccUnit
         {
             using (new BlockLogger("TestRow.SetName"))
             {
-                Name = name + 'x';
+                Name = name;
                 Logger.Log(string.Format("Name: {0}", name));
             }
             return this;
@@ -80,5 +80,18 @@ namespace AccessCodeLib.AccUnit
             }
             return this;
         }
+
+        private readonly ITagList _tags = new TagList();
+        public ITagList Tags { get { return _tags; } }
+
+        public ITestRow AddTags(params string[] args)
+        {
+            foreach (var arg in args)
+            {
+                (_tags as TagList).Add(new TestItemTag(arg));
+            }
+            return this;
+        }
+
     }
 }

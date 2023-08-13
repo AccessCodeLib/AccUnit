@@ -9,12 +9,11 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
     public class AccessClientTests
     {
         private AccessTestHelper _accessTestHelper;
-        private int i;
 
         [SetUp]
         public void AccessClientTestsSetup()
         {
-            _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper(i++);
+            _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper();
         }
 
         [TearDown]

@@ -12,7 +12,7 @@ Attribute VB_Name = "modTypeLibCheck"
 '**/
 '---------------------------------------------------------------------------------------
 '<codelib>
-'  <file>_codelib/addins/AccUnitLoader/modTypeLibCheck.bas</file>
+'  <file>%AppFolder%/source/modTypeLibCheck.bas</file>
 '  <license>_codelib/license.bas</license>
 '  <use>file/FileTools.bas</use>
 '</codelib>

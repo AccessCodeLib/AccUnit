@@ -9,9 +9,9 @@ namespace AccessCodeLib.AccUnit
         TestClassInfo Parent { get; }
         IgnoreInfo IgnoreInfo { get; }
         IList<int> TestRowFilter { get; }
-        TagList Tags { get; }
+        ITagList Tags { get; }
         bool DoAutoRollback { get; }
-        bool IsMatch(IEnumerable<TestItemTag> tags);
+        bool IsMatch(IEnumerable<ITestItemTag> tags);
         List<ITestRow> TestRows { get; }
         IList<VbMsgBoxResult> MsgBoxResults { get; }
         string ShowAs { get; }

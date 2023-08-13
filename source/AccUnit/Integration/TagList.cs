@@ -3,18 +3,18 @@ using System.Linq;
 
 namespace AccessCodeLib.AccUnit
 {
-    public class TagList : List<TestItemTag>
+    public class TagList : List<ITestItemTag>, ITagList
     {
         public TagList()
         {
         }
 
-        public TagList(IEnumerable<TestItemTag> tags)
+        public TagList(IEnumerable<ITestItemTag> tags)
         {
             AddRange(tags);
         }
 
-        public new void AddRange(IEnumerable<TestItemTag> tags)
+        public new void AddRange(IEnumerable<ITestItemTag> tags)
         {
             foreach (var tag in
                 from tag in tags
@@ -26,7 +26,7 @@ namespace AccessCodeLib.AccUnit
             }
         }
 
-        public bool IsMatch(IEnumerable<TestItemTag> tags)
+        public bool IsMatch(IEnumerable<ITestItemTag> tags)
         {
             return Count != 0 && tags.Any(tag => Find(x => x.Name == tag.Name) != null);
         }

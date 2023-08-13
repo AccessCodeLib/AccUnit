@@ -13,6 +13,7 @@ namespace AccessCodeLib.AccUnit
         private readonly object _testClassInstance;
         private readonly IList<ITest> _tests = new List<ITest>();
         private readonly TestFixtureMembers _fixtureMembers = new TestFixtureMembers();
+        private readonly List<ITestItemTag> _tags = new List<ITestItemTag>();
 
         public TestFixture(object testClassInstance)
         {
@@ -36,6 +37,22 @@ namespace AccessCodeLib.AccUnit
             }
         }
 
+        // Tags
+        public IEnumerable<ITestItemTag> Tags
+        {
+            get
+            {
+                return _tags;
+            }
+        }
+
+        public void FillFixtureTags(VBProject vbProject)
+        {
+            var vbc = vbProject.VBComponents.Item(Name);
+            var codeReader = new CodeModuleReader(vbc.CodeModule);
+            _tags.AddRange(TestClassInfo.GetTagsFromSourceCode(codeReader.SourceCode));
+        }
+
         public void FillInstanceMembers(VBProject vbProject)
         {
             if (_testClassInstance is null)
@@ -49,7 +66,7 @@ namespace AccessCodeLib.AccUnit
 
             foreach (var member in members)
             {
-                var fixtureMember = GetTestFixtureMember(vbProject, Name, member.Name);
+                var fixtureMember = GetTestFixtureMember(vbProject, this, member.Name);
                 _fixtureMembers.Add(fixtureMember);
 
                 if (fixtureMember.IsFixtureSetup)
@@ -71,12 +88,16 @@ namespace AccessCodeLib.AccUnit
             }
         }
 
-        public static ITestFixtureMember GetTestFixtureMember(VBProject vbProject, string fixtureName, string memberName)
+        public static ITestFixtureMember GetTestFixtureMember(VBProject vbProject, ITestFixture fixture, string memberName)
         {
             var fixtureMember = new TestFixtureMember(memberName);
-
             var testClassReader = new TestClassReader(vbProject);
-            fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
+            fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixture.Name, memberName);
+
+            if (fixture.Tags.Any())
+            {
+                fixtureMember.TestClassMemberInfo.Tags.AddRange(fixture.Tags);
+            }
 
             return fixtureMember;
         }
@@ -111,7 +132,7 @@ namespace AccessCodeLib.AccUnit
 
         public static ITest CreateTest(VBProject vbProject, ITestFixture testFixture, string testMethodName)
         {
-            var memberInfo = TestFixture.GetTestFixtureMember(vbProject, testFixture.Name, testMethodName).TestClassMemberInfo;
+            var memberInfo = GetTestFixtureMember(vbProject, testFixture, testMethodName).TestClassMemberInfo;
 
             if (memberInfo.TestRows.Count > 0)
             {

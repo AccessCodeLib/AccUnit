@@ -89,7 +89,6 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
             var accessProcessesBefore = GetRunningAccessInstancesProcessId();
 
             Application = AccessFactory.CreateApplication();
-            //DBEngine = (DBEngine)Application.DBEngine; // nicht verfügbar?
 
             var accessProcessesAfter = GetRunningAccessInstancesProcessId();
             var differenceProcesses = GetDifference(accessProcessesBefore, accessProcessesAfter);
@@ -107,9 +106,6 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
         {
             TempDbFileName = CreateTestDb();
             Trace.WriteLine(string.Format("Created testdatabase file in {0}", TempDbFileName));
-            //accessApplication.OpenCurrentDatabase(dbFileName);
-            //const string dbFileName = @"C:\Users\pro\AppData\Local\Temp\tmp1400.tmp";
-            //accessApplication.DBEngine.OpenDatabase(dbFileName);
             Application.OpenCurrentDatabase(TempDbFileName);
         }
 
@@ -170,21 +166,9 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
 
         private void CreateTempDatabase(string tempDbFileName)
         {
-            CreateTempDatabase(tempDbFileName, Locale);
-        }
-
-        private void CreateTempDatabase(string tempDbFileName, string locale)
-        {
             var app = Application as Microsoft.Office.Interop.Access.Application;
             app.NewCurrentDatabase(tempDbFileName);
             app.CloseCurrentDatabase();
-            /*
-            using (var db = new ComWrapper<Database>(
-                DBEngine.CreateDatabase(tempDbFileName, locale)))
-            {
-                db.ComReference.Close();
-            }
-            */
         }
 
         private static string GetTempFileName()
@@ -218,7 +202,9 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
             finally
             {
                 if (_dbEngine != null)
+                {
                     Marshal.ReleaseComObject(_dbEngine);
+                }
                 ShutDownAccess();
                 DeleteDatabaseFile();
             }
@@ -262,7 +248,6 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
                 currentDb = (Database)Application.CurrentDb();
                 if (currentDb != null)
                 {
-                    //CloseCurrentDatabaseWithTimeout();
                     Application.CloseCurrentDatabase();
                 }
             }
@@ -351,16 +336,6 @@ namespace AccessCodeLib.Common.TestHelpers.AccessRelated
         {
             return Process.GetProcesses().FirstOrDefault(p => p.Id == processId);
         }
-
-        /*
-        private string GetLockFileName(string dbFileName)
-        {
-            /// @todo: Get lock-file (if existing)
-            //throw new NotImplementedException();
-
-            return null;
-        }
-        */
 
         private void CloseCurrentDatabaseWithTimeout()
         {

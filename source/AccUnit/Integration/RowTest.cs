@@ -29,7 +29,7 @@ namespace AccessCodeLib.AccUnit.Integration
                 {
                     row.Name = i.ToString();
                 }
-                var paramTestClassMemberInfo = new TestClassMemberInfo(TestClassMemberInfo, row.IgnoreInfo);
+                var paramTestClassMemberInfo = new TestClassMemberInfo(TestClassMemberInfo, row.IgnoreInfo, row.Tags);
                 var paramTest = new ParamTest(Fixture, paramTestClassMemberInfo, row.Name, row.Args);
                 paramTests.Add(paramTest);
             }

@@ -12,7 +12,7 @@ Attribute VB_Name = "modVbProject"
 '**/
 '---------------------------------------------------------------------------------------
 '<codelib>
-'  <file>_codelib/addins/AccUnitLoader/modVbProject.bas</file>
+'  <file>%AppFolder%/source/modVbProject.bas</file>
 '  <license>_codelib/license.bas</license>
 '</codelib>
 '---------------------------------------------------------------------------------------

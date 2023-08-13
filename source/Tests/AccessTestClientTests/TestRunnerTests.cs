@@ -11,12 +11,11 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
     {
         private AccessTestHelper _accessTestHelper;
         private Interop.ITestBuilder _testBuilder;
-        private int i;
 
         [SetUp]
         public void TestBuilderTestsSetup()
         {
-            _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper(i++);
+            _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper();
             _testBuilder = new Interop.TestBuilder
             {
                 HostApplication = _accessTestHelper.Application
@@ -258,11 +257,6 @@ End Function
             };
             var testRows = rowGenerator.GetTestRows(memberName);
 
-            /*
-            Assert.That(testRows.Count, Is.EqualTo(1));
-            Assert.That(testRows[0].Args[0], Is.EqualTo( new int[] {1, 2} ));
-            */
-
             var invocHelper = new InvocationHelper(fixture);
             var returnValue = invocHelper.InvokeMethod("TestMethod1", testRows[0].Args.ToArray());
             Assert.That(returnValue, Is.EqualTo(1));
@@ -273,26 +267,6 @@ End Function
 
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
             Assert.That(valueAfterTestRun, Is.EqualTo(2));
-        }
-
-        [Test]
-        public void VbNullstringTest()
-        {
-            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
-public Function TestMethod() as String
-   dim s as String
-   s = """"
-   TestMethod = s      
-End Function
-");
-            var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
-            Assert.That(fixture, Is.Not.Null);
-
-            var invocHelper = new InvocationHelper(fixture);
-            var returnValue = invocHelper.InvokeMethod("TestMethod");
-
-            Assert.That(returnValue, Is.Empty);
-            // vbNullString is null!
         }
 
         [Test]
@@ -327,12 +301,6 @@ End Function
                 TestName = fixtureName
             };
             var testRows = rowGenerator.GetTestRows(memberName);
-
-            /*
-            Assert.That(testRows.Count, Is.EqualTo(1));
-            Assert.That(testRows[0].Args[0], Is.EqualTo( new int[] {1, 2} ));
-            */
-
             var invocHelper = new InvocationHelper(fixture);
             var returnValue = invocHelper.InvokeMethod("TestMethod1", testRows[0].Args.ToArray());
             Assert.That(returnValue, Is.EqualTo(1));
@@ -372,7 +340,6 @@ End Function
             fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
 
             Assert.That(fixtureMember.TestClassMemberInfo.TestRows[0].IgnoreInfo.Ignore, Is.True);
-            //            Assert.That(fixtureMember.TestClassMemberInfo.IgnoreInfo.Ignore, Is.True);
 
             var rowGenerator = new TestRowGenerator
             {
@@ -392,5 +359,6 @@ End Function
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
             Assert.That(valueAfterTestRun, Is.EqualTo(0));
         }
+
     }
 }

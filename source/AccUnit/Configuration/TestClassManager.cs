@@ -404,7 +404,7 @@ namespace AccessCodeLib.AccUnit.Configuration
             var list = GetTestClassListFromVBProject(true);
             if (filterTags != null && list != null)
             {
-                list = new TestClassList(list.Where(c => c.IsMatch(filterTags)));
+                list = new TestClassList(list.Where(c => c.IsMatch((IEnumerable<ITestItemTag>)filterTags)));
             }
             return list;
         }
