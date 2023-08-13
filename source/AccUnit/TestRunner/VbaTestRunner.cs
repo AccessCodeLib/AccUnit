@@ -61,7 +61,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
             RaiseTestFixtureStarted(testFixture);
 
             var results = new TestResultCollection(testFixture);
-            
+
             foreach (var test in testFixture.Tests)
             {
                 if (methodFilter != null && !methodFilter.Contains(test.Name))
@@ -88,11 +88,11 @@ namespace AccessCodeLib.AccUnit.TestRunner
             TestFixtureFinished?.Invoke(result);
         }
 
-        public ITestResult Run(object testFixtureInstance, string testMethodName, ITestResultCollector testResultCollector = null, 
+        public ITestResult Run(object testFixtureInstance, string testMethodName, ITestResultCollector testResultCollector = null,
                                IEnumerable<ITestItemTag> filterTags = null)
         {
             var testFixture = new TestFixture(testFixtureInstance);
-            
+
             if (testMethodName == "*")
             {
                 testFixture.FillInstanceMembers(_vbProject);

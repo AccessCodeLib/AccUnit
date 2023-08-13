@@ -96,7 +96,7 @@ namespace AccessCodeLib.AccUnit
 
             if (fixture.Tags.Any())
             {
-                  fixtureMember.TestClassMemberInfo.Tags.AddRange(fixture.Tags);
+                fixtureMember.TestClassMemberInfo.Tags.AddRange(fixture.Tags);
             }
 
             return fixtureMember;

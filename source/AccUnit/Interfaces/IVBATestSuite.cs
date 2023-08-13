@@ -1,6 +1,5 @@
 ﻿using Microsoft.Vbe.Interop;
 using System;
-using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit.Interfaces
 {

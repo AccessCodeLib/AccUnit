@@ -32,7 +32,7 @@ namespace AccessCodeLib.AccUnit
             _testRowFilter = new List<int>(memberInfo.TestRowFilter);
 
             Tags = new TagList();
-            Tags.AddRange(memberInfo.Tags); 
+            Tags.AddRange(memberInfo.Tags);
 
             if (newTagList != null && newTagList.Any())
             {
@@ -81,7 +81,7 @@ namespace AccessCodeLib.AccUnit
                            select m.Groups[1].Value.Trim();
 
             var tags = new TagList();
-            foreach(var tag in tagLines)
+            foreach (var tag in tagLines)
             {
                 var testTag = new TestItemTag(tag);
                 tags.Add(testTag);

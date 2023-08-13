@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -123,8 +122,9 @@ namespace AccessCodeLib.AccUnit
 
             var tags = new TagList();
 
-            foreach (var tagLine in tagLines) { 
-                var tagList = GetTagsFromTagLine(tagLine);  
+            foreach (var tagLine in tagLines)
+            {
+                var tagList = GetTagsFromTagLine(tagLine);
                 tags.AddRange(tagList);
             }
             return tags;

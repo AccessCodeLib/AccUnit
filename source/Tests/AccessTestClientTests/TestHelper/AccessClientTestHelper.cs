@@ -26,7 +26,7 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
 
         public static AccessTestHelper NewAccessTestHelper()
         {
-            var testHelper = new AccessTestHelper(@"C:\test\Test_" + (staticClientCounter++).ToString() + ".accdb");
+            var testHelper = new AccessTestHelper(@"C:\test\Test_" + staticClientCounter++.ToString() + ".accdb");
             testHelper.Application.Visible = true;
 
             return testHelper;

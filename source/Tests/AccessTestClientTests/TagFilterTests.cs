@@ -38,7 +38,7 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
             object tagString = "abc";
             var tags = Interop.TestRunner.GetFilterTagEnumerableFromObject(tagString);
             Assert.That(tags.Count(), Is.EqualTo(1));
-            Assert.That(tags.First().Name, Is.EqualTo(tagString));  
+            Assert.That(tags.First().Name, Is.EqualTo(tagString));
         }
 
         [Test]
@@ -90,7 +90,7 @@ End Function
             var fixtureName = "clsAccUnitTestClass";
             var fixture = _testBuilder.CreateTest(fixtureName);
             var memberName = "TestMethod1";
-            
+
             var rowGenerator = new TestRowGenerator
             {
                 ActiveVBProject = _testBuilder.ActiveVBProject,
@@ -132,7 +132,7 @@ End Function
             var fixtureName = "clsAccUnitTestClass";
             var fixture = _testBuilder.CreateTest(fixtureName);
             var memberName = "TestMethod1";
-            
+
             var rowGenerator = new TestRowGenerator
             {
                 ActiveVBProject = _testBuilder.ActiveVBProject,
@@ -174,7 +174,7 @@ End Function
             var fixtureName = "clsAccUnitTestClass";
             var fixture = _testBuilder.CreateTest(fixtureName);
             var memberName = "TestMethod1";
-            
+
             var rowGenerator = new TestRowGenerator
             {
                 ActiveVBProject = _testBuilder.ActiveVBProject,
@@ -293,7 +293,7 @@ End Function
             foreach (var tag in tagFilters)
             {
                 tagList.Add(new TestItemTag(tag));
-            }   
+            }
 
             testSuite.AddFromVBProject();
             testSuite.Filter(tagList);

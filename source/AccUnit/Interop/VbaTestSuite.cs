@@ -24,7 +24,7 @@ namespace AccessCodeLib.AccUnit.Interop
         new IVBATestSuite AddFromVBProject();
         new IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
         new IVBATestSuite Run();
-        
+
         IVBATestSuite Filter(object FilterTags);
 
         new void Dispose();
@@ -79,8 +79,8 @@ namespace AccessCodeLib.AccUnit.Interop
 
         public new IVBATestSuite Run()
         {
-           base.Run();
-           return this;
+            base.Run();
+            return this;
         }
 
         public IVBATestSuite Filter(object FilterTags)

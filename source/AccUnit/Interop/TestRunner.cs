@@ -15,8 +15,8 @@ namespace AccessCodeLib.AccUnit.Interop
          * Run(TestClassInstance, "MethodenName")       ... Nur einen bestimmten Test ausführen
          * TODO: Run(TestClassInstance, "*Filter*Text*") ... Nur Test, die dem Filterausdruck entsprechen, ausführen
          */
-        ITestResult Run([MarshalAs(UnmanagedType.IDispatch)] object TestFixtureInstance, 
-                        string TestMethodName = "*", 
+        ITestResult Run([MarshalAs(UnmanagedType.IDispatch)] object TestFixtureInstance,
+                        string TestMethodName = "*",
                         Interfaces.ITestResultCollector TestResultCollector = null,
                         object filterTags = null);
     }
@@ -31,11 +31,11 @@ namespace AccessCodeLib.AccUnit.Interop
         {
         }
 
-        public ITestResult Run([MarshalAs(UnmanagedType.IDispatch)] object TestFixtureInstance, string TestMethodName = "*", 
+        public ITestResult Run([MarshalAs(UnmanagedType.IDispatch)] object TestFixtureInstance, string TestMethodName = "*",
                                 ITestResultCollector TestResultCollector = null,
                                 object FilterTags = null)
         {
-           
+
             IEnumerable<ITestItemTag> tags = FilterTags != null ? GetFilterTagEnumerableFromObject(FilterTags) : null;
             return base.Run(TestFixtureInstance, TestMethodName, TestResultCollector, tags);
         }

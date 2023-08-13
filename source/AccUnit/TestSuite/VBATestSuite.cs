@@ -35,7 +35,7 @@ namespace AccessCodeLib.AccUnit
 
         #region TestSuite Events
 
-        private void OnTestSuiteStarted(ITestSuite testSuite,ITagList tags)
+        private void OnTestSuiteStarted(ITestSuite testSuite, ITagList tags)
         {
             using (new BlockLogger(testSuite.Name))
             {
