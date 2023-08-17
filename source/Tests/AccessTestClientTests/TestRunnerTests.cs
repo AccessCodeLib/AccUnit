@@ -3,6 +3,7 @@ using AccessCodeLib.Common.TestHelpers.AccessRelated;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using System.Linq;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
@@ -119,7 +120,7 @@ End Function
 
             foreach (var testResult in result.Results)
             {
-                var res = testResult as TestResult;
+                var res = testResult as Integration.TestResult;
                 Assert.That(res.IsPassed, Is.EqualTo(true), res.Message);
             }
 
@@ -358,6 +359,76 @@ End Function
 
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
             Assert.That(valueAfterTestRun, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void RunTestMethod_OneMethodOnly_CheckValue()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+private m_Check as Long
+
+public Sub TestMethod1()
+   m_Check = m_Check + 1
+End Sub
+
+public Sub TestMethod2()
+   m_Check = m_Check + 2
+End Sub
+
+public Function GetCheckValue() as long
+   GetCheckValue = m_Check
+End Function
+");
+            var fixtureName = "clsAccUnitTestClass";
+            var fixture = _testBuilder.CreateTest(fixtureName);
+            
+            var invocHelper = new InvocationHelper(fixture);
+
+            var result = new TestResultCollector();
+            var testRunner = new Interop.TestRunner(_testBuilder.ActiveVBProject);
+            testRunner.Run(fixture, "TestMethod2", result);
+
+            var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
+            Assert.That(valueAfterTestRun, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void RunTestMethods_2MethodsAsEnumerable_CheckValue()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+private m_Check as Long
+
+public Sub TestMethod1()
+   m_Check = m_Check + 1
+End Sub
+
+public Sub TestMethod2()
+   m_Check = m_Check + 2
+End Sub
+
+public Sub TestMethod3()
+   m_Check = m_Check + 4
+End Sub
+
+public Function GetCheckValue() as long
+   GetCheckValue = m_Check
+End Function
+");
+            var fixtureName = "clsAccUnitTestClass";
+            var testFixtureInstance = _testBuilder.CreateTest(fixtureName);
+            var testFixture = new AccessCodeLib.AccUnit.TestFixture(testFixtureInstance);
+            testFixture.FillInstanceMembers(_testBuilder.ActiveVBProject);
+            testFixture.FillTestListFromTestClassInstance(_testBuilder.ActiveVBProject);
+
+            var invocHelper = new InvocationHelper(testFixtureInstance);
+
+            var result = new TestResultCollector();
+            var testRunner = new Interop.TestRunner(_testBuilder.ActiveVBProject);
+            var methods = new string[] { "TestMethod1", "TestMethod2" };
+            testRunner.Run(testFixture, result, methods, null);
+            
+            var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
+            Assert.That(valueAfterTestRun, Is.EqualTo(3));
         }
 
     }
