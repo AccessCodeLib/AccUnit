@@ -36,7 +36,7 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
         public void GenerateEnumarableTagsFormString_CheckTags()
         {
             object tagString = "abc";
-            var tags = Interop.TestRunner.GetEnumerableFromFilterObject<ITestItemTag>(tagString);
+            var tags = InteropConverter.GetEnumerableFromFilterObject<ITestItemTag>(tagString);
             Assert.That(tags.Count(), Is.EqualTo(1));
             Assert.That(tags.First().Name, Is.EqualTo(tagString));
         }

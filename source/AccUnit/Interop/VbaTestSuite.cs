@@ -79,14 +79,14 @@ namespace AccessCodeLib.AccUnit.Interop
 
         public IVBATestSuite Run(object MethodFilter = null)
         {
-            var methodFilterEnumerable = Interop.TestRunner.GetEnumerableFromFilterObject<string>(MethodFilter);
+            var methodFilterEnumerable = InteropConverter.GetEnumerableFromFilterObject<string>(MethodFilter);
             base.Run(methodFilterEnumerable);
             return this;
         }
 
         public IVBATestSuite Filter(object FilterTags)
         {
-            IEnumerable<ITestItemTag> tags = Interop.TestRunner.GetEnumerableFromFilterObject<ITestItemTag>(FilterTags);
+            IEnumerable<ITestItemTag> tags = InteropConverter.GetEnumerableFromFilterObject<ITestItemTag>(FilterTags);
             base.Filter(tags);
             return this;
         }
