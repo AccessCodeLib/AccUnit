@@ -40,7 +40,7 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
         }
 
         [Test]
-        public void CallByClassName_Run2MethodsAsEnumerable_CheckSummary()
+        public void CallByClassName_Select2MethodsAsEnumerable_CheckSummary()
         {
             AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
 private m_Check as Long
@@ -67,7 +67,40 @@ End Function
             };
 
             var methods = new string[] { "TestMethod1", "TestMethod3" };
-            var summary = testSuite.AddByClassName("clsAccUnitTestClass").Run(methods).Summary;
+            var summary = testSuite.AddByClassName("clsAccUnitTestClass").Select(methods).Run().Summary;
+
+            Assert.That(summary.Passed, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void CallByClassNameInInteropAccessTestSuite_Select2MethodsAsString_CheckSummary()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+private m_Check as Long
+
+public Sub TestMethod1()
+   m_Check = m_Check + 1
+End Sub
+
+public Sub TestMethod2()
+   m_Check = m_Check + 2
+End Sub
+
+public Sub TestMethod3()
+   m_Check = m_Check + 4
+End Sub
+
+public Function GetCheckValue() as long
+   GetCheckValue = m_Check
+End Function
+");
+            var testSuite = new Interop.AccessTestSuite
+            {
+                HostApplication = _accessTestHelper.Application
+            };
+
+            var testNameFilter = "TestMethod[13]";
+            var summary = testSuite.AddByClassName("clsAccUnitTestClass").SelectTests(testNameFilter).Run().Summary;
 
             Assert.That(summary.Passed, Is.EqualTo(2));
         }

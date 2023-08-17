@@ -22,15 +22,14 @@ namespace AccessCodeLib.AccUnit.Interop
         new IAccessTestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
         new IAccessTestSuite AddByClassName(string className);
         new IAccessTestSuite AddFromVBProject();
+        new IAccessTestSuite Run();
         new IAccessTestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
-        IAccessTestSuite Run(object methodFilter = null);
-
-        IAccessTestSuite Filter(object FilterTags);
-
         new void Dispose();
 
         #endregion
 
+        IAccessTestSuite SelectTests(object TestNameFilter);
+        IAccessTestSuite Filter(object FilterTags);
         ITestClassGenerator TestClassGenerator { get; }
     }
 
@@ -77,10 +76,16 @@ namespace AccessCodeLib.AccUnit.Interop
             return this;
         }
 
-        public IAccessTestSuite Run(object methodFilter = null)
+        public new IAccessTestSuite Run()
         {
-            var methodFilterEnumerable = InteropConverter.GetEnumerableFromFilterObject<string>(methodFilter);
-            base.Run(methodFilterEnumerable);
+            base.Run();
+            return this;
+        }
+
+        public IAccessTestSuite SelectTests(object TestNameFilter)
+        {
+            var testNameFilterEnumerable = InteropConverter.GetEnumerableFromFilterObject<string>(TestNameFilter);
+            base.Select(testNameFilterEnumerable);
             return this;
         }
 
@@ -98,16 +103,5 @@ namespace AccessCodeLib.AccUnit.Interop
                 return new TestClassGenerator(ActiveVBProject);
             }
         }
-
-        string IAccessTestSuite.Name => throw new NotImplementedException();
-
-        VBProject IAccessTestSuite.ActiveVBProject { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        object IAccessTestSuite.HostApplication { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        ITestSummary IAccessTestSuite.Summary => throw new NotImplementedException();
-
-        ITestResultCollector IAccessTestSuite.TestResultCollector { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        ITestClassGenerator IAccessTestSuite.TestClassGenerator => throw new NotImplementedException();
     }
 }

@@ -51,9 +51,13 @@ namespace AccessCodeLib.AccUnit.Interop
             {
                 return (T)(object)new TestItemTag(item);
             }
+            else if(typeof(T) == typeof(string))
+            {
+                return (T)(object)item;
+            }
             else
             {
-                return (T)Activator.CreateInstance(typeof(T), item);
+                throw new ArgumentException("Type not supported");
             }
         }
     }

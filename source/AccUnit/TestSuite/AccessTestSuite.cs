@@ -86,14 +86,14 @@ namespace AccessCodeLib.AccUnit
         }
 
         private short _errorTrappingBeforeRun;
-        public override IVBATestSuite Run(IEnumerable<string> methodFilter = null)
+        public override IVBATestSuite Run()
         {
             using (new BlockLogger())
             {
                 _errorTrappingBeforeRun = GetAccessErrorTrapping();
                 EnsureErrorTrappingForTests();
 
-                base.Run(methodFilter);
+                base.Run();
 
                 if (_errorTrappingBeforeRun != (short)ErrorTrapping)
                     SetAccessErrorTrapping(_errorTrappingBeforeRun);

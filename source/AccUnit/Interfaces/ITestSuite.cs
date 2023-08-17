@@ -23,16 +23,16 @@ namespace AccessCodeLib.AccUnit.Interfaces
         ITestResultCollector TestResultCollector { get; set; }
 
         [ComVisible(false)]
-        ITestSuite Run(IEnumerable<string> methodFilter);
-
-        ITestSuite Run();
-        ITestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
-
-        [ComVisible(false)]
         void AddTestClasses(IEnumerable<TestClassInfo> testClasses);
 
         [ComVisible(false)]
         ITestSuite Filter(IEnumerable<ITestItemTag> filterTags);
+
+        [ComVisible(false)]
+        ITestSuite Select(IEnumerable<string> methodFilter);
+
+        ITestSuite Run();
+        ITestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
 
     }
 

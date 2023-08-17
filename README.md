@@ -18,6 +18,7 @@ For more informations see [Wiki](https://github.com/AccessCodeLib/AccUnit/wiki) 
 * Generate test classes with TestClassGenerator (write TestSuite.TestClassGenerator in VBA immediate window) ([Video](https://accunit.access-codelib.net/videos/examples/NW2-UnitTests.mp4
 ))
 * Tag filter: `TestSuite.Add(...).Filter("abc,xyz").Run`
+* Test filter: `TestSuite.Add(...).SelectTests("xyz*").Run`
 
 ### Remarks
 Examples see [./examples/msaccess/](https://github.com/AccessCodeLib/AccUnit/blob/main/examples/msaccess/)
