@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace AccessCodeLib.AccUnit
 {
-    internal class TestFixture : ITestFixture
+    public class TestFixture : ITestFixture
     {
         private readonly object _testClassInstance;
         private readonly IList<ITest> _tests = new List<ITest>();

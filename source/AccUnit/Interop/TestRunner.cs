@@ -36,45 +36,8 @@ namespace AccessCodeLib.AccUnit.Interop
                                 object FilterTags = null)
         {
 
-            IEnumerable<ITestItemTag> tags = FilterTags != null ? GetFilterTagEnumerableFromObject(FilterTags) : null;
+            IEnumerable<ITestItemTag> tags = FilterTags != null ? InteropConverter.GetEnumerableFromFilterObject<ITestItemTag>(FilterTags) : null;
             return base.Run(TestFixtureInstance, TestMethodName, TestResultCollector, tags);
-        }
-
-        public static IEnumerable<ITestItemTag> GetFilterTagEnumerableFromObject(object FilterTags)
-        {
-            IEnumerable<ITestItemTag> tags = new List<ITestItemTag>();
-            if (FilterTags is string)
-            {
-                if (FilterTags.ToString().Contains(",") || FilterTags.ToString().Contains(";"))
-                {
-                    // split string into array and add to tags
-                    var tagArray = FilterTags.ToString().Split(new char[] { ',', ';' });
-                    foreach (var item in tagArray)
-                    {
-                        ITestItemTag tag = new TestItemTag(item);
-                        (tags as List<ITestItemTag>).Add(tag);
-                    }
-                }
-                else
-                {
-                    ITestItemTag tag = new TestItemTag(FilterTags as string);
-                    (tags as List<ITestItemTag>).Add(tag);
-                }
-            }
-            else if (FilterTags is Array)
-            {
-                foreach (var item in FilterTags as Array)
-                {
-                    var tag = new TestItemTag(item.ToString());
-                    (tags as List<ITestItemTag>).Add(tag);
-                }
-            }
-            else if (FilterTags is IEnumerable<ITestItemTag>)
-            {
-                (tags as List<ITestItemTag>).AddRange(FilterTags as IEnumerable<ITestItemTag>);
-            }
-
-            return tags;
         }
     }
 }

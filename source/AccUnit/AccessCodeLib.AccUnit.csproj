@@ -107,6 +107,7 @@
     <Compile Include="Interfaces\ITestItemTag.cs" />
     <Compile Include="Interfaces\ITagList.cs" />
     <Compile Include="Interfaces\ITestClassMemberList.cs" />
+    <Compile Include="Interop\InteropConverter.cs" />
     <Compile Include="~trash\CodeModuleMemberWithMarker.cs" />
     <Compile Include="~trash\CompareTypeHelper.cs" />
     <Compile Include="Integration\MessageBoxData.cs" />

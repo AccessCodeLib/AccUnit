@@ -23,6 +23,7 @@ namespace AccessCodeLib.AccUnit
         private readonly List<ITestManagerBridge> _accUnitTests = new List<ITestManagerBridge>();
         private readonly List<ITestFixture> _testFixtures = new List<ITestFixture>();
         private IEnumerable<ITestItemTag> _filterTags = null;
+        private IEnumerable<string> _methodFilter = null;
 
         public IEnumerable<ITestFixture> TestFixtures { get { return _testFixtures; } }
 
@@ -389,6 +390,12 @@ namespace AccessCodeLib.AccUnit
             return this;
         }
 
+        public ITestSuite Select(IEnumerable<string> methodFilter)
+        {
+            _methodFilter = new List<string>(methodFilter);
+            return this;
+        }
+
         public ITestSuite Filter(IEnumerable<ITestItemTag> filterTags)
         {
             _filterTags = new List<ITestItemTag>(filterTags);
@@ -455,7 +462,7 @@ namespace AccessCodeLib.AccUnit
             {
                 TestResultCollector = new TestResultCollection(this);
             }
-            var testResult = TestRunner.Run(this, TestResultCollector, null, _filterTags);
+            var testResult = TestRunner.Run(this, TestResultCollector, _methodFilter, _filterTags);
             _testSummary = testResult as ITestSummary;
 
             RaiseTraceMessage(SummaryFormatter.GetTestSummaryText(Summary));

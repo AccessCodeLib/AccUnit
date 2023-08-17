@@ -22,15 +22,14 @@ namespace AccessCodeLib.AccUnit.Interop
         new IAccessTestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
         new IAccessTestSuite AddByClassName(string className);
         new IAccessTestSuite AddFromVBProject();
-        new IAccessTestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
         new IAccessTestSuite Run();
-
-        IAccessTestSuite Filter(object FilterTags);
-
+        new IAccessTestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
         new void Dispose();
 
         #endregion
 
+        IAccessTestSuite SelectTests(object TestNameFilter);
+        IAccessTestSuite Filter(object FilterTags);
         ITestClassGenerator TestClassGenerator { get; }
     }
 
@@ -83,9 +82,16 @@ namespace AccessCodeLib.AccUnit.Interop
             return this;
         }
 
+        public IAccessTestSuite SelectTests(object TestNameFilter)
+        {
+            var testNameFilterEnumerable = InteropConverter.GetEnumerableFromFilterObject<string>(TestNameFilter);
+            base.Select(testNameFilterEnumerable);
+            return this;
+        }
+
         public IAccessTestSuite Filter(object FilterTags)
         {
-            IEnumerable<ITestItemTag> tags = Interop.TestRunner.GetFilterTagEnumerableFromObject(FilterTags);
+            IEnumerable<ITestItemTag> tags = InteropConverter.GetEnumerableFromFilterObject<ITestItemTag>(FilterTags);
             base.Filter(tags);
             return this;
         }
