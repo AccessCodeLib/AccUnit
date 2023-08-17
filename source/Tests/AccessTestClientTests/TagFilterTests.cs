@@ -36,7 +36,7 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
         public void GenerateEnumarableTagsFormString_CheckTags()
         {
             object tagString = "abc";
-            var tags = Interop.TestRunner.GetFilterTagEnumerableFromObject(tagString);
+            var tags = Interop.TestRunner.GetEnumerableFromFilterObject<ITestItemTag>(tagString);
             Assert.That(tags.Count(), Is.EqualTo(1));
             Assert.That(tags.First().Name, Is.EqualTo(tagString));
         }
@@ -283,9 +283,11 @@ public Function GetCheckValue() as long
 End Function
 ");
 
-            var testSuite = new VBATestSuite();
-            testSuite.ActiveVBProject = _testBuilder.ActiveVBProject;
-            testSuite.HostApplication = _accessTestHelper.Application;
+            var testSuite = new VBATestSuite
+            {
+                ActiveVBProject = _testBuilder.ActiveVBProject,
+                HostApplication = _accessTestHelper.Application
+            };
 
             var tagFilters = tagFilter.Split(',');
             var tagList = new List<ITestItemTag>();

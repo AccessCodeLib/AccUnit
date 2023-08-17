@@ -23,7 +23,7 @@ namespace AccessCodeLib.AccUnit.Interop
         new IVBATestSuite AddByClassName(string className);
         new IVBATestSuite AddFromVBProject();
         new IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
-        new IVBATestSuite Run();
+        IVBATestSuite Run(object methodFilter = null);
 
         IVBATestSuite Filter(object FilterTags);
 
@@ -77,15 +77,16 @@ namespace AccessCodeLib.AccUnit.Interop
             return this;
         }
 
-        public new IVBATestSuite Run()
+        public IVBATestSuite Run(object MethodFilter = null)
         {
-            base.Run();
+            var methodFilterEnumerable = Interop.TestRunner.GetEnumerableFromFilterObject<string>(MethodFilter);
+            base.Run(methodFilterEnumerable);
             return this;
         }
 
         public IVBATestSuite Filter(object FilterTags)
         {
-            IEnumerable<ITestItemTag> tags = Interop.TestRunner.GetFilterTagEnumerableFromObject(FilterTags);
+            IEnumerable<ITestItemTag> tags = Interop.TestRunner.GetEnumerableFromFilterObject<ITestItemTag>(FilterTags);
             base.Filter(tags);
             return this;
         }

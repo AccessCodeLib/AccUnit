@@ -3,6 +3,7 @@ using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
+using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit
 {
@@ -85,14 +86,14 @@ namespace AccessCodeLib.AccUnit
         }
 
         private short _errorTrappingBeforeRun;
-        public override IVBATestSuite Run()
+        public override IVBATestSuite Run(IEnumerable<string> methodFilter = null)
         {
             using (new BlockLogger())
             {
                 _errorTrappingBeforeRun = GetAccessErrorTrapping();
                 EnsureErrorTrappingForTests();
 
-                base.Run();
+                base.Run(methodFilter);
 
                 if (_errorTrappingBeforeRun != (short)ErrorTrapping)
                     SetAccessErrorTrapping(_errorTrappingBeforeRun);

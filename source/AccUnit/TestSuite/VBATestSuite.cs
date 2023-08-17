@@ -447,15 +447,16 @@ namespace AccessCodeLib.AccUnit
         }
 
         ITestSuite ITestSuite.Run() { return Run(); }
+        ITestSuite ITestSuite.Run(IEnumerable<string> methodFilter) { return Run(methodFilter); }
 
-        public virtual IVBATestSuite Run()
+        public virtual IVBATestSuite Run(IEnumerable<string> methodFilter = null)
         {
             Cancel = false;
             if (TestResultCollector is null)
             {
                 TestResultCollector = new TestResultCollection(this);
             }
-            var testResult = TestRunner.Run(this, TestResultCollector, null, _filterTags);
+            var testResult = TestRunner.Run(this, TestResultCollector, methodFilter, _filterTags);
             _testSummary = testResult as ITestSummary;
 
             RaiseTraceMessage(SummaryFormatter.GetTestSummaryText(Summary));

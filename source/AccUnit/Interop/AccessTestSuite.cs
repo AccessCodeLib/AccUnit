@@ -23,7 +23,7 @@ namespace AccessCodeLib.AccUnit.Interop
         new IAccessTestSuite AddByClassName(string className);
         new IAccessTestSuite AddFromVBProject();
         new IAccessTestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
-        new IAccessTestSuite Run();
+        IAccessTestSuite Run(object methodFilter = null);
 
         IAccessTestSuite Filter(object FilterTags);
 
@@ -77,15 +77,16 @@ namespace AccessCodeLib.AccUnit.Interop
             return this;
         }
 
-        public new IAccessTestSuite Run()
+        public IAccessTestSuite Run(object methodFilter = null)
         {
-            base.Run();
+            var methodFilterEnumerable = Interop.TestRunner.GetEnumerableFromFilterObject<string>(methodFilter);
+            base.Run(methodFilterEnumerable);
             return this;
         }
 
         public IAccessTestSuite Filter(object FilterTags)
         {
-            IEnumerable<ITestItemTag> tags = Interop.TestRunner.GetFilterTagEnumerableFromObject(FilterTags);
+            IEnumerable<ITestItemTag> tags = Interop.TestRunner.GetEnumerableFromFilterObject<ITestItemTag>(FilterTags);
             base.Filter(tags);
             return this;
         }
@@ -97,5 +98,16 @@ namespace AccessCodeLib.AccUnit.Interop
                 return new TestClassGenerator(ActiveVBProject);
             }
         }
+
+        string IAccessTestSuite.Name => throw new NotImplementedException();
+
+        VBProject IAccessTestSuite.ActiveVBProject { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        object IAccessTestSuite.HostApplication { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        ITestSummary IAccessTestSuite.Summary => throw new NotImplementedException();
+
+        ITestResultCollector IAccessTestSuite.TestResultCollector { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        ITestClassGenerator IAccessTestSuite.TestClassGenerator => throw new NotImplementedException();
     }
 }

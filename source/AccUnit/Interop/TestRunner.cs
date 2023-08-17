@@ -36,45 +36,63 @@ namespace AccessCodeLib.AccUnit.Interop
                                 object FilterTags = null)
         {
 
-            IEnumerable<ITestItemTag> tags = FilterTags != null ? GetFilterTagEnumerableFromObject(FilterTags) : null;
+            IEnumerable<ITestItemTag> tags = FilterTags != null ? GetEnumerableFromFilterObject<ITestItemTag>(FilterTags) : null;
             return base.Run(TestFixtureInstance, TestMethodName, TestResultCollector, tags);
         }
 
-        public static IEnumerable<ITestItemTag> GetFilterTagEnumerableFromObject(object FilterTags)
+        public static IEnumerable<T> GetEnumerableFromFilterObject<T>(object objectToConvert)
         {
-            IEnumerable<ITestItemTag> tags = new List<ITestItemTag>();
-            if (FilterTags is string)
+            if (objectToConvert == null)
+                return null;    
+
+            IEnumerable<T> tags = new List<T>();
+            if (objectToConvert is string)
             {
-                if (FilterTags.ToString().Contains(",") || FilterTags.ToString().Contains(";"))
+                if (objectToConvert.ToString().Contains(",") || objectToConvert.ToString().Contains(";"))
                 {
                     // split string into array and add to tags
-                    var tagArray = FilterTags.ToString().Split(new char[] { ',', ';' });
+                    var tagArray = objectToConvert.ToString().Split(new char[] { ',', ';' });
                     foreach (var item in tagArray)
                     {
-                        ITestItemTag tag = new TestItemTag(item);
-                        (tags as List<ITestItemTag>).Add(tag);
+                        var tag = NewItemFromObject<T>(item);
+                        (tags as List<T>).Add(tag);
                     }
                 }
                 else
                 {
-                    ITestItemTag tag = new TestItemTag(FilterTags as string);
-                    (tags as List<ITestItemTag>).Add(tag);
+                    var tag = NewItemFromObject<T>(objectToConvert as string);
+                    (tags as List<T>).Add(tag);
                 }
             }
-            else if (FilterTags is Array)
+            else if (objectToConvert is Array)
             {
-                foreach (var item in FilterTags as Array)
+                foreach (var item in objectToConvert as Array)
                 {
-                    var tag = new TestItemTag(item.ToString());
-                    (tags as List<ITestItemTag>).Add(tag);
+                    var tag = NewItemFromObject<T>(item.ToString());
+                    (tags as List<T>).Add(tag);
                 }
             }
-            else if (FilterTags is IEnumerable<ITestItemTag>)
+            else if (objectToConvert is IEnumerable<T>)
             {
-                (tags as List<ITestItemTag>).AddRange(FilterTags as IEnumerable<ITestItemTag>);
+                (tags as List<T>).AddRange(objectToConvert as IEnumerable<T>);
             }
 
             return tags;
         }
+
+        private static T NewItemFromObject<T>(string item)
+        {
+            if (typeof(T) == typeof(ITestItemTag))
+            {
+                return (T)(object)new TestItemTag(item);
+                //return (T)Activator.CreateInstance(typeof(TestItemTag), item);
+            }
+                
+            else 
+                return (T)Activator.CreateInstance(typeof(T), item);
+            
+        }
+
+
     }
 }
