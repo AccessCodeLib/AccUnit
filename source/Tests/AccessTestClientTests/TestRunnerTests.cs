@@ -431,5 +431,43 @@ End Function
             Assert.That(valueAfterTestRun, Is.EqualTo(3));
         }
 
+        [Test]
+        public void RunTestMethods_2MethodsAsEnumerableWithPlaceholder_CheckValue()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+private m_Check as Long
+
+public Sub TestMethod1()
+   m_Check = m_Check + 1
+End Sub
+
+public Sub TestMethod2()
+   m_Check = m_Check + 2
+End Sub
+
+public Sub TestMethod3()
+   m_Check = m_Check + 4
+End Sub
+
+public Function GetCheckValue() as long
+   GetCheckValue = m_Check
+End Function
+");
+            var fixtureName = "clsAccUnitTestClass";
+            var testFixtureInstance = _testBuilder.CreateTest(fixtureName);
+            var testFixture = new AccessCodeLib.AccUnit.TestFixture(testFixtureInstance);
+            testFixture.FillInstanceMembers(_testBuilder.ActiveVBProject);
+            testFixture.FillTestListFromTestClassInstance(_testBuilder.ActiveVBProject);
+
+            var invocHelper = new InvocationHelper(testFixtureInstance);
+
+            var result = new TestResultCollector();
+            var testRunner = new Interop.TestRunner(_testBuilder.ActiveVBProject);
+            var methods = new string[] { "Te?t*[13]" };
+            testRunner.Run(testFixture, result, methods, null);
+
+            var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
+            Assert.That(valueAfterTestRun, Is.EqualTo(5));
+        }
     }
 }

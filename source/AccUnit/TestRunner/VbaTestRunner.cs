@@ -64,10 +64,22 @@ namespace AccessCodeLib.AccUnit.TestRunner
 
             foreach (var test in testFixture.Tests)
             {
-                if (methodFilter != null && !methodFilter.Contains(test.Name))
+                // check if there is as string with * or ? in the methodFilter
+                if (methodFilter != null)
                 {
-                    continue;
+                    if (methodFilter.Any(m => m.Contains("*") || m.Contains("?")))
+                    {
+                        if (!CompareTestName(test.Name, methodFilter))
+                        {
+                            continue;
+                        }
+                    }
+                    else if (!methodFilter.Contains(test.Name))
+                    {
+                        continue;
+                    }
                 }
+
                 var testResult = Run(test, filterTags);
                 testResultCollector?.Add(testResult);
                 results.Add(testResult);
@@ -77,6 +89,13 @@ namespace AccessCodeLib.AccUnit.TestRunner
 
             return results;
         }
+
+        private static bool CompareTestName(string testName, IEnumerable<string> methodFilter)
+        {
+            var regExPattern = methodFilter.Aggregate("^", (current, filter) => current + (filter.Replace("*", ".*").Replace("?", ".") + "|"));
+            regExPattern = regExPattern.Substring(0, regExPattern.Length - 1) + "$";
+            return System.Text.RegularExpressions.Regex.IsMatch(testName, regExPattern);    
+        }   
 
         void RaiseTestFixtureStarted(ITestFixture testFixture)
         {
