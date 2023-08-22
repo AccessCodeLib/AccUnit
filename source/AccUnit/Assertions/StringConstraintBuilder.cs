@@ -1,6 +1,5 @@
 ﻿using AccessCodeLib.AccUnit.Assertions.Constraints;
 using System;
-using System.ComponentModel;
 
 namespace AccessCodeLib.AccUnit.Assertions
 {
@@ -8,7 +7,7 @@ namespace AccessCodeLib.AccUnit.Assertions
     {
         readonly StringComparison _stringComparison = StringComparison.InvariantCulture;
 
-        public StringConstraintBuilder(StringComparison compareMethod = StringComparison.InvariantCulture)  : base(false)
+        public StringConstraintBuilder(StringComparison compareMethod = StringComparison.InvariantCulture) : base(false)
         {
             _stringComparison = compareMethod;
         }
@@ -127,7 +126,7 @@ namespace AccessCodeLib.AccUnit.Assertions
 
         protected override void AddArrayComparerConstraint(string compareText, Array expected, int expectedComparerResult, int expectedComparerResult2)
         {
-            var newConstraint =  new ArrayConstraint<string>(compareText, expected, expectedComparerResult, expectedComparerResult2);
+            var newConstraint = new ArrayConstraint<string>(compareText, expected, expectedComparerResult, expectedComparerResult2);
             AddChild(newConstraint);
         }
 

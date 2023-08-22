@@ -6,7 +6,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
     {
         readonly StringComparison _compareMethod;
 
-        public StringComparerConstraint(string compareText, string expected, int expectedComparerResult, StringComparison compareMethod = StringComparison.InvariantCulture) 
+        public StringComparerConstraint(string compareText, string expected, int expectedComparerResult, StringComparison compareMethod = StringComparison.InvariantCulture)
             : base(compareText, expected, expectedComparerResult, false)
         {
             _compareMethod = compareMethod;

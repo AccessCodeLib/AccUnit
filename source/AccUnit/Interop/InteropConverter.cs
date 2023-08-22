@@ -51,7 +51,7 @@ namespace AccessCodeLib.AccUnit.Interop
             {
                 return (T)(object)new TestItemTag(item);
             }
-            else if(typeof(T) == typeof(string))
+            else if (typeof(T) == typeof(string))
             {
                 return (T)(object)item;
             }

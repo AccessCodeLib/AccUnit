@@ -1,10 +1,7 @@
-﻿using AccessCodeLib.AccUnit.Integration;
-using AccessCodeLib.Common.TestHelpers.AccessRelated;
-using AccessCodeLib.Common.VBIDETools;
+﻿using AccessCodeLib.Common.TestHelpers.AccessRelated;
 using Microsoft.Vbe.Interop;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using System.Linq;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
 {

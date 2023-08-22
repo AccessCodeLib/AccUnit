@@ -6,7 +6,7 @@ namespace AccessCodeLib.AccUnit.Assertions
 {
     public class ConstraintBuilder : ConstraintBuilderBase<object>, IConstraintBuilder, IConstraint
     {
-        public ConstraintBuilder()   
+        public ConstraintBuilder()
         {
         }
 
@@ -134,7 +134,7 @@ namespace AccessCodeLib.AccUnit.Assertions
                 return;
             }
 
-            if ((object)expected is null)
+            if (expected is null)
             {
                 if (expectedComparerResult == 0)
                 {

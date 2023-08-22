@@ -1,6 +1,4 @@
-﻿using AccessCodeLib.AccUnit.Interop;
-
-namespace AccessCodeLib.AccUnit.Assertions
+﻿namespace AccessCodeLib.AccUnit.Assertions
 {
     public interface IConstraintBuilderBase<T> : IConstraint
     {

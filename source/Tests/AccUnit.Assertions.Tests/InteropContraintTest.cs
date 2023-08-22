@@ -1,5 +1,5 @@
-﻿using NUnit.Framework;
-using AccessCodeLib.AccUnit.Interfaces;
+﻿using AccessCodeLib.AccUnit.Interfaces;
+using NUnit.Framework;
 
 namespace AccessCodeLib.AccUnit.Assertions.Tests
 {

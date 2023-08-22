@@ -1,5 +1,4 @@
-﻿using AccessCodeLib.AccUnit.Integration;
-using AccessCodeLib.Common.TestHelpers.AccessRelated;
+﻿using AccessCodeLib.Common.TestHelpers.AccessRelated;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using NUnit.Framework;
@@ -381,7 +380,7 @@ End Function
 ");
             var fixtureName = "clsAccUnitTestClass";
             var fixture = _testBuilder.CreateTest(fixtureName);
-            
+
             var invocHelper = new InvocationHelper(fixture);
 
             var result = new TestResultCollector();
@@ -426,7 +425,7 @@ End Function
             var testRunner = new Interop.TestRunner(_testBuilder.ActiveVBProject);
             var methods = new string[] { "TestMethod1", "TestMethod2" };
             testRunner.Run(testFixture, result, methods, null);
-            
+
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
             Assert.That(valueAfterTestRun, Is.EqualTo(3));
         }

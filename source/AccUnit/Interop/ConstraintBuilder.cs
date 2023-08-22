@@ -1,5 +1,4 @@
-﻿using AccessCodeLib.AccUnit.Assertions;
-using AccessCodeLib.AccUnit.Interfaces;
+﻿using AccessCodeLib.AccUnit.Interfaces;
 using System;
 using System.Runtime.InteropServices;
 
@@ -59,7 +58,8 @@ namespace AccessCodeLib.AccUnit.Interop
         public ConstraintBuilder(bool strict) : base(strict) { }
 
         public IConstraintBuilder Strict { get { return new ConstraintBuilder(true); } }
-        public IStringConstraintBuilder StringCompare(StringCompareMode CompareMethod = StringCompareMode.BinaryCompare) {
+        public IStringConstraintBuilder StringCompare(StringCompareMode CompareMethod = StringCompareMode.BinaryCompare)
+        {
 
             StringComparison stringComparison = StringComparison.InvariantCulture;
 
@@ -73,7 +73,7 @@ namespace AccessCodeLib.AccUnit.Interop
                     break;
             }
 
-            return new StringConstraintBuilder(stringComparison); 
+            return new StringConstraintBuilder(stringComparison);
         }
 
         public new IConstraintBuilder EqualTo(object expected)
