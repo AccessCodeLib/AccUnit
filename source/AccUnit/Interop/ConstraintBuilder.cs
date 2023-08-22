@@ -6,8 +6,14 @@ using System.Runtime.InteropServices;
 namespace AccessCodeLib.AccUnit.Interop
 {
     [ComVisible(true)]
+    [Guid("97FA8D8D-0824-485D-B014-0540807CD0F7")]
+    public interface IConstraint : AccUnit.Assertions.IConstraint
+    {
+    }
+
+    [ComVisible(true)]
     [Guid("0011016E-BF37-4CB7-9A62-58DD78292550")]
-    public interface IConstraintBuilder : AccUnit.Assertions.IConstraintBuilder 
+    public interface IConstraintBuilder : AccUnit.Assertions.IConstraintBuilder, IConstraint
     {
 
         IConstraintBuilder Strict { get; }
@@ -29,18 +35,18 @@ namespace AccessCodeLib.AccUnit.Interop
 
     [ComVisible(true)]
     [Guid("16A0BFAE-49E8-42C7-8AD0-0A340F53264C")]
-    public interface IStringConstraintBuilder : IConstraintBuilder, AccUnit.Assertions.IStringConstraintBuilder
+    public interface IStringConstraintBuilder : AccUnit.Assertions.IStringConstraintBuilder, IConstraint
     {
-        new IConstraintBuilder EqualTo(string Expected);
-        new IConstraintBuilder LessThan(string Expected);
-        new IConstraintBuilder LessThanOrEqualTo(string Expected);
-        new IConstraintBuilder GreaterThan(string Expected);
-        new IConstraintBuilder GreaterThanOrEqualTo(string Expected);
+        new IStringConstraintBuilder EqualTo(string Expected);
+        new IStringConstraintBuilder LessThan(string Expected);
+        new IStringConstraintBuilder LessThanOrEqualTo(string Expected);
+        new IStringConstraintBuilder GreaterThan(string Expected);
+        new IStringConstraintBuilder GreaterThanOrEqualTo(string Expected);
 
-        new IConstraintBuilder Empty { get; }
+        new IStringConstraintBuilder Empty { get; }
 
         new IStringConstraintBuilder Not { get; }
-        new IStringConstraintBuilder IsNot { get; }
+        IStringConstraintBuilder IsNot { get; }
     }
 
     [ComVisible(true)]
@@ -144,62 +150,32 @@ namespace AccessCodeLib.AccUnit.Interop
     {
         public StringConstraintBuilder(StringComparison CompareMethod) : base(CompareMethod) { }
 
-        public new IConstraintBuilder EqualTo(string expected)
+        public new IStringConstraintBuilder EqualTo(string expected)
         {
-            return (IConstraintBuilder)base.EqualTo(expected);
+            return (IStringConstraintBuilder)base.EqualTo(expected);
         }
 
-        public new IConstraintBuilder GreaterThan(string expected)
+        public new IStringConstraintBuilder GreaterThan(string expected)
         {
-            return (IConstraintBuilder)base.GreaterThan(expected);
+            return (IStringConstraintBuilder)base.GreaterThan(expected);
         }
 
-        public new IConstraintBuilder GreaterThanOrEqualTo(string expected)
+        public new IStringConstraintBuilder GreaterThanOrEqualTo(string expected)
         {
-            return (IConstraintBuilder)base.GreaterThanOrEqualTo(expected);
+            return (IStringConstraintBuilder)base.GreaterThanOrEqualTo(expected);
         }
 
-        public new IConstraintBuilder LessThan(string expected)
+        public new IStringConstraintBuilder LessThan(string expected)
         {
-            return (IConstraintBuilder)base.LessThan(expected);
+            return (IStringConstraintBuilder)base.LessThan(expected);
         }
 
-        public new IConstraintBuilder LessThanOrEqualTo(string expected)
+        public new IStringConstraintBuilder LessThanOrEqualTo(string expected)
         {
-            return (IConstraintBuilder)base.LessThanOrEqualTo(expected);
+            return (IStringConstraintBuilder)base.LessThanOrEqualTo(expected);
         }
 
-        public IStringConstraintBuilder StringCompare(StringCompareMode CompareMethod = StringCompareMode.BinaryCompare)
-        {
-            throw new NotImplementedException();
-        }
-
-        IConstraintBuilder IConstraintBuilder.EqualTo(object Expected)
-        {
-            return (IConstraintBuilder)base.EqualTo(Expected.ToString());
-        }
-
-        IConstraintBuilder IConstraintBuilder.LessThan(object Expected)
-        {
-            return (IConstraintBuilder)base.LessThan(Expected.ToString());
-        }
-
-        IConstraintBuilder IConstraintBuilder.LessThanOrEqualTo(object Expected)
-        {
-            return (IConstraintBuilder)base.LessThanOrEqualTo(Expected.ToString());
-        }
-
-        IConstraintBuilder IConstraintBuilder.GreaterThan(object Expected)
-        {
-            return (IConstraintBuilder)base.GreaterThan(Expected.ToString());
-        }
-
-        IConstraintBuilder IConstraintBuilder.GreaterThanOrEqualTo(object Expected)
-        {
-            return (IConstraintBuilder)base.GreaterThanOrEqualTo(Expected.ToString());
-        }
-
-        new public IConstraintBuilder Empty
+        new public IStringConstraintBuilder Empty
         {
             get
             {
@@ -222,14 +198,5 @@ namespace AccessCodeLib.AccUnit.Interop
                 return (IStringConstraintBuilder)base.Not;
             }
         }
-
-        IConstraintBuilder IConstraintBuilder.Strict {  get { return new ConstraintBuilder(true); } }
-
-        IConstraintBuilder IConstraintBuilder.Null { get { return (IConstraintBuilder)base.Null; } }
-        IConstraintBuilder IConstraintBuilder.Nothing { get { return (IConstraintBuilder)base.Null; } }
-
-        IConstraintBuilder IConstraintBuilder.Not { get { return Not; } }
-
-        IConstraintBuilder IConstraintBuilder.IsNot { get { return Not; } }
     }
 }
