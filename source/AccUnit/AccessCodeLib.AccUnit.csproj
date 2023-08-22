@@ -93,6 +93,7 @@
     <Compile Include="Assertions\Constraints\EmptyConstraint.cs" />
     <Compile Include="Assertions\Constraints\NullConstraint.cs" />
     <Compile Include="Assertions\Constraints\NotConstraint.cs" />
+    <Compile Include="Assertions\Constraints\StringComparerConstraint.cs" />
     <Compile Include="Assertions\Interfaces\AssertionException.cs" />
     <Compile Include="Assertions\Interfaces\IAssertion.cs" />
     <Compile Include="Assertions\Interfaces\IAssertionsBuilder.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Assertions\Interfaces\IMatchResultCollector.cs" />
     <Compile Include="Assertions\Interfaces\IMatchResultCollectorBridge.cs" />
     <Compile Include="Assertions\AssertThrowsContainer.cs" />
+    <Compile Include="Assertions\StringConstraintBuilder.cs" />
     <Compile Include="CodeCoverage\CodeModuleTracker.cs" />
     <Compile Include="CodeCoverage\ProcedureTracker.cs" />
     <Compile Include="Interfaces\ITestItemTag.cs" />

@@ -9,17 +9,6 @@ namespace AccessCodeLib.AccUnit.Assertions
         IConstraintBuilderBase<T> LessThanOrEqualTo(T expected);
         IConstraintBuilderBase<T> GreaterThan(T expected);
         IConstraintBuilderBase<T> GreaterThanOrEqualTo(T expected);
-
-        IConstraintBuilderBase<T> Null { get; }
-        IConstraintBuilderBase<T> DBNull { get; }
-        // IConstraintBuilder Nothing { get; } -> Null in interop anzeigen 
-        IConstraintBuilderBase<T> Empty { get; }
-
-        // Is.EquivalentTo
-        // Is.InRange
-
-        IConstraintBuilderBase<T> Not { get; }
-        // Is.All
     }
 
     public interface IConstraintBuilder : IConstraint, IConstraintBuilderBase<object>
@@ -30,27 +19,26 @@ namespace AccessCodeLib.AccUnit.Assertions
         new IConstraintBuilder GreaterThan(object expected);
         new IConstraintBuilder GreaterThanOrEqualTo(object expected);
 
-        new IConstraintBuilder Null { get; }
-        new IConstraintBuilder DBNull { get; }
+        IConstraintBuilder Null { get; }
+        IConstraintBuilder DBNull { get; }
         // IConstraintBuilder Nothing { get; } -> Null in interop anzeigen 
-        new IConstraintBuilder Empty { get; }
+        IConstraintBuilder Empty { get; }
 
         // Is.EquivalentTo
         // Is.InRange
 
-        new IConstraintBuilder Not { get; }
+        IConstraintBuilder Not { get; }
         // Is.All
     }
 
-    public interface IStringConstraintBuilder : IConstraint, IConstraintBuilderBase<string>
+    public interface IStringConstraintBuilder : IConstraint, IConstraintBuilderBase<string>, IConstraintBuilder
     {
-        new IStringConstraintBuilder EqualTo(string expected);
-        new IStringConstraintBuilder LessThan(string expected);
-        new IStringConstraintBuilder LessThanOrEqualTo(string expected);
-        new IStringConstraintBuilder GreaterThan(string expected);
-        new IStringConstraintBuilder GreaterThanOrEqualTo(string expected);
+        new IConstraintBuilder EqualTo(string expected);
+        new IConstraintBuilder LessThan(string expected);
+        new IConstraintBuilder LessThanOrEqualTo(string expected);
+        new IConstraintBuilder GreaterThan(string expected);
+        new IConstraintBuilder GreaterThanOrEqualTo(string expected);
 
-        new IStringConstraintBuilder Empty { get; }
         new IStringConstraintBuilder Not { get; }
     }
 

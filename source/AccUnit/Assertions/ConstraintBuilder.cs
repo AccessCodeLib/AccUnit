@@ -4,102 +4,6 @@ using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit.Assertions
 {
-    public class StringConstraintBuilder : ConstraintBuilderBase<string>, IStringConstraintBuilder, IConstraint
-    {
-
-        readonly StringComparison _stringComparison = StringComparison.InvariantCulture;
-
-        public StringConstraintBuilder(StringComparison compareMethod = StringComparison.InvariantCulture)  : base(false)
-        {
-            _stringComparison = compareMethod;
-        }
-
-        public new IStringConstraintBuilder EqualTo(string expected)
-        {
-            AddComparerConstraint("actual = expected", expected, 0);
-            return this;
-        }
-
-        public new IStringConstraintBuilder LessThan(string expected)
-        {
-            AddComparerConstraint("actual < expected", expected, -1);
-            return this;
-        }
-
-        public new IStringConstraintBuilder LessThanOrEqualTo(string expected)
-        {
-            AddComparerConstraint("actual <= expected", expected, -1, 0);
-            return this;
-        }
-
-        public new IStringConstraintBuilder GreaterThan(string expected)
-        {
-            AddComparerConstraint("actual > expected", expected, +1);
-            return this;
-        }
-
-        public new IStringConstraintBuilder GreaterThanOrEqualTo(string expected)
-        {
-            AddComparerConstraint("actual >= expected", expected, +1, 0);
-            return this;
-        }
-
-        public new IStringConstraintBuilder Null
-        {
-            get
-            {
-                AddChild(new NullConstraint());
-                return this;
-            }
-        }
-
-        public new IStringConstraintBuilder DBNull
-        {
-            get
-            {
-                AddChild(new DBNullConstraint());
-                return this;
-            }
-        }
-
-        public new IStringConstraintBuilder Empty
-        {
-            get
-            {
-                AddChild(new EmptyConstraint());
-                return this;
-            }
-        }
-
-        public new IStringConstraintBuilder Not
-        {
-            get
-            {
-                AddChild(new NotConstraint());
-                return this;
-            }
-        }
-
-        protected override void AddComparerConstraint(string compareText, object expected, int expectedComparerResult, int expectedComparerResult2)
-        {
-            if (expected is Array expectedArray)
-            {
-                AddArrayComparerConstraint(compareText, expectedArray, expectedComparerResult, expectedComparerResult2);
-                return;
-            }
-
-            var newConstraint = new StringComparerConstraint(compareText, (string)expected, expectedComparerResult, _stringComparison);
-            AddChild(newConstraint);
-        }
-
-        protected override void AddArrayComparerConstraint(string compareText, Array expected, int expectedComparerResult, int expectedComparerResult2)
-        {
-            var newConstraint =  new ArrayConstraint<string>(compareText, expected, expectedComparerResult, expectedComparerResult2);
-            AddChild(newConstraint);
-        }
-    }
-
-
     public class ConstraintBuilder : ConstraintBuilderBase<object>, IConstraintBuilder, IConstraint
     {
         public ConstraintBuilder()   
@@ -222,7 +126,7 @@ namespace AccessCodeLib.AccUnit.Assertions
             return this;
         }
 
-        protected void AddComparerConstraint(string compareText, T expected, int expectedComparerResult)
+        protected virtual void AddComparerConstraint(string compareText, object expected, int expectedComparerResult)
         {
             if (expected is Array expectedArray)
             {
@@ -249,7 +153,7 @@ namespace AccessCodeLib.AccUnit.Assertions
             AddChild((IConstraint)newConstraint);
         }
 
-        private void AddArrayComparerConstraint(string compareText, Array expected, int expectedComparerResult)
+        protected virtual void AddArrayComparerConstraint(string compareText, Array expected, int expectedComparerResult)
         {
             Type T = expected.GetType().GetElementType();
             Type myType = typeof(ArrayConstraint<>).MakeGenericType(T);

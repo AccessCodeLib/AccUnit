@@ -336,5 +336,23 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
             Assert.That(result.Match, Is.EqualTo(false), result.Text);
         }
 
+        [Test]
+        public void StringConstraintBuilder_StringCompareAisa()
+        {
+            var testCollector = new TestCollector();
+            var assert = NewTestAssert(testCollector);
+            var Iz = new StringConstraintBuilder(StringComparison.InvariantCultureIgnoreCase);
+
+            string expected = "A";
+            string actual = "a";
+
+            assert.That(actual, Iz.EqualTo(expected));
+            var result = testCollector.Result;
+
+            Assert.That(result.Match, Is.EqualTo(true), result.Text);
+        }
+
+
+
     }
 }
