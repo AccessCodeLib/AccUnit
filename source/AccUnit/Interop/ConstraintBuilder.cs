@@ -62,6 +62,13 @@ namespace AccessCodeLib.AccUnit.Interop
         {
 
             StringComparison stringComparison = StringComparison.InvariantCulture;
+            bool vbNullStringEqualEmptyString = false;
+
+            if ((CompareMethod & StringCompareMode.vbNullStringEqualEmptyString) == StringCompareMode.vbNullStringEqualEmptyString)
+            {
+                vbNullStringEqualEmptyString = true;
+                CompareMethod -= StringCompareMode.vbNullStringEqualEmptyString;
+            }
 
             switch (CompareMethod)
             {
@@ -73,7 +80,7 @@ namespace AccessCodeLib.AccUnit.Interop
                     break;
             }
 
-            return new StringConstraintBuilder(stringComparison);
+            return new StringConstraintBuilder(stringComparison, vbNullStringEqualEmptyString);
         }
 
         public new IConstraintBuilder EqualTo(object expected)
@@ -148,7 +155,7 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId(Constants.ProgIdLibName + ".ConstraintBuilder")]
     public class StringConstraintBuilder : AccUnit.Assertions.StringConstraintBuilder, IStringConstraintBuilder
     {
-        public StringConstraintBuilder(StringComparison CompareMethod) : base(CompareMethod) { }
+        public StringConstraintBuilder(StringComparison CompareMethod, bool vbNullStringEqualEmptyString) : base(CompareMethod, vbNullStringEqualEmptyString) { }
 
         public new IStringConstraintBuilder EqualTo(string expected)
         {

@@ -6,10 +6,12 @@ namespace AccessCodeLib.AccUnit.Assertions
     public class StringConstraintBuilder : ConstraintBuilderBase<string>, IStringConstraintBuilder, IConstraint
     {
         readonly StringComparison _stringComparison = StringComparison.InvariantCulture;
+        readonly bool _vbNullStringEqualEmptyString = false;
 
-        public StringConstraintBuilder(StringComparison compareMethod = StringComparison.InvariantCulture) : base(false)
+        public StringConstraintBuilder(StringComparison compareMethod = StringComparison.InvariantCulture, bool vbNullStringEqualEmptyString = false) : base(false)
         {
             _stringComparison = compareMethod;
+            _vbNullStringEqualEmptyString = vbNullStringEqualEmptyString;
         }
 
         public new IConstraintBuilder EqualTo(string expected)
@@ -88,7 +90,7 @@ namespace AccessCodeLib.AccUnit.Assertions
                 return;
             }
 
-            if (expected is null)
+            if (expected is null && !_vbNullStringEqualEmptyString)
             {
                 if (expectedComparerResult == 0)
                 {
@@ -102,7 +104,7 @@ namespace AccessCodeLib.AccUnit.Assertions
                 }
             }
 
-            var newConstraint = new StringComparerConstraint(compareText, (string)expected, expectedComparerResult, _stringComparison);
+            var newConstraint = new StringComparerConstraint(compareText, (string)expected, expectedComparerResult, _stringComparison, _vbNullStringEqualEmptyString);
             AddChild(newConstraint);
         }
 
@@ -120,7 +122,7 @@ namespace AccessCodeLib.AccUnit.Assertions
                 return;
             }
 
-            var newConstraint = new StringComparerConstraint(compareText, (string)expected, expectedComparerResult, expectedComparerResult2, _stringComparison);
+            var newConstraint = new StringComparerConstraint(compareText, (string)expected, expectedComparerResult, expectedComparerResult2, _stringComparison, _vbNullStringEqualEmptyString);
             AddChild(newConstraint);
         }
 

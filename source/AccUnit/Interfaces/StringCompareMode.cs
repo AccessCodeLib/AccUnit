@@ -9,7 +9,8 @@ namespace AccessCodeLib.AccUnit.Interfaces
     public enum StringCompareMode
     {
         BinaryCompare = 0,
-        TextCompare = 1
+        TextCompare = 1,
+        vbNullStringEqualEmptyString = 4
     }
 }
 
