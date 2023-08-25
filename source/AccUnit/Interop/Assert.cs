@@ -9,7 +9,7 @@ namespace AccessCodeLib.AccUnit.Interop
     {
         new IMatchResultCollector MatchResultCollector { get; set; }
 
-        void That(object Actual, IConstraintBuilder Constraint, string InfoText = null);
+        void That(object Actual, IConstraint Constraint, string InfoText = null);
         new void Dispose();
 
         IAssertComparerMethods Strict { get; }
@@ -76,7 +76,7 @@ namespace AccessCodeLib.AccUnit.Interop
 
         public IAssertComparerMethods Strict { get { return new Assert(true); } }
 
-        public void That(object actual, IConstraintBuilder constraint, string infoText = null)
+        public void That(object actual, IConstraint constraint, string infoText = null)
         {
             base.That(actual, constraint, infoText);
         }

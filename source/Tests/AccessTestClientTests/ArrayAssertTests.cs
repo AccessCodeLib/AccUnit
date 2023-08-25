@@ -4,7 +4,6 @@ using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using System;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
 {

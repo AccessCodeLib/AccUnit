@@ -93,7 +93,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
         {
             var regExPattern = methodFilter.Aggregate("^", (current, filter) => current + filter.Replace("*", ".*").Replace("?", ".") + "|");
             regExPattern = regExPattern.Substring(0, regExPattern.Length - 1) + "$";
-            return System.Text.RegularExpressions.Regex.IsMatch(testName, regExPattern);    
+            return System.Text.RegularExpressions.Regex.IsMatch(testName, regExPattern);
         }
 
         void RaiseTestFixtureStarted(ITestFixture testFixture)
@@ -114,8 +114,8 @@ namespace AccessCodeLib.AccUnit.TestRunner
             if (filterTags != null && filterTags.Any())
             {
                 testFixture.FillFixtureTags(_vbProject);
-            }   
-            
+            }
+
             if (testMethodName == "*")
             {
                 testFixture.FillInstanceMembers(_vbProject);

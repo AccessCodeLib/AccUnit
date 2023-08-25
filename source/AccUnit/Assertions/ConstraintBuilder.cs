@@ -4,51 +4,129 @@ using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit.Assertions
 {
-    public class ConstraintBuilder : IConstraintBuilder, IConstraint
+    public class ConstraintBuilder : ConstraintBuilderBase<object>, IConstraintBuilder, IConstraint
     {
-        private IConstraint _firstchild;
-
-        private readonly bool _strict = false;
-
         public ConstraintBuilder()
         {
         }
 
-        public ConstraintBuilder(bool strict)
+        public ConstraintBuilder(bool strict) : base(strict)
         {
-            _strict = strict;
         }
 
-        public IConstraintBuilder EqualTo(object expected)
+        public new IConstraintBuilder EqualTo(object expected)
         {
             AddComparerConstraint("actual = expected", expected, 0);
             return this;
         }
 
-        public IConstraintBuilder LessThan(object expected)
+        public new IConstraintBuilder LessThan(object expected)
         {
             AddComparerConstraint("actual < expected", expected, -1);
             return this;
         }
 
-        public IConstraintBuilder LessThanOrEqualTo(object expected)
+        public new IConstraintBuilder LessThanOrEqualTo(object expected)
         {
             AddComparerConstraint("actual <= expected", expected, -1, 0);
             return this;
         }
 
-        public IConstraintBuilder GreaterThan(object expected)
+        public new IConstraintBuilder GreaterThan(object expected)
         {
             AddComparerConstraint("actual > expected", expected, +1);
             return this;
         }
-        public IConstraintBuilder GreaterThanOrEqualTo(object expected)
+
+        public new IConstraintBuilder GreaterThanOrEqualTo(object expected)
         {
             AddComparerConstraint("actual >= expected", expected, +1, 0);
             return this;
         }
 
-        private void AddComparerConstraint(string compareText, object expected, int expectedComparerResult)
+        public new IConstraintBuilder Null
+        {
+            get
+            {
+                AddChild(new NullConstraint());
+                return this;
+            }
+        }
+
+        public new IConstraintBuilder DBNull
+        {
+            get
+            {
+                AddChild(new DBNullConstraint());
+                return this;
+            }
+        }
+
+        public new IConstraintBuilder Empty
+        {
+            get
+            {
+                AddChild(new EmptyConstraint());
+                return this;
+            }
+        }
+
+        public new IConstraintBuilder Not
+        {
+            get
+            {
+                AddChild(new NotConstraint());
+                return this;
+            }
+        }
+
+    }
+
+    public abstract class ConstraintBuilderBase<T> : IConstraintBuilderBase<T>, IConstraint
+    {
+        private IConstraint _firstchild;
+
+        private readonly bool _strict = false;
+
+        public ConstraintBuilderBase()
+        {
+        }
+
+        public ConstraintBuilderBase(bool strict)
+        {
+            _strict = strict;
+        }
+
+        public IConstraintBuilderBase<T> EqualTo(T expected)
+        {
+            AddComparerConstraint("actual = expected", expected, 0);
+            return this;
+        }
+
+        public IConstraintBuilderBase<T> LessThan(T expected)
+        {
+            AddComparerConstraint("actual < expected", expected, -1);
+            return this;
+        }
+
+        public IConstraintBuilderBase<T> LessThanOrEqualTo(T expected)
+        {
+            AddComparerConstraint("actual <= expected", expected, -1, 0);
+            return this;
+        }
+
+        public IConstraintBuilderBase<T> GreaterThan(T expected)
+        {
+            AddComparerConstraint("actual > expected", expected, +1);
+            return this;
+        }
+        public IConstraintBuilderBase<T> GreaterThanOrEqualTo(T expected)
+        {
+            AddComparerConstraint("actual >= expected", expected, +1, 0);
+            return this;
+        }
+
+        protected virtual void AddComparerConstraint(string compareText, object expected, int expectedComparerResult)
         {
             if (expected is Array expectedArray)
             {
@@ -75,7 +153,7 @@ namespace AccessCodeLib.AccUnit.Assertions
             AddChild((IConstraint)newConstraint);
         }
 
-        private void AddArrayComparerConstraint(string compareText, Array expected, int expectedComparerResult)
+        protected virtual void AddArrayComparerConstraint(string compareText, Array expected, int expectedComparerResult)
         {
             Type T = expected.GetType().GetElementType();
             Type myType = typeof(ArrayConstraint<>).MakeGenericType(T);
@@ -112,7 +190,7 @@ namespace AccessCodeLib.AccUnit.Assertions
             typeof(byte), typeof(uint), typeof(ulong), typeof(ushort), typeof(sbyte)
         };
 
-        private void AddComparerConstraint(string compareText, object expected, int expectedComparerResult, int expectedComparerResult2)
+        protected virtual void AddComparerConstraint(string compareText, object expected, int expectedComparerResult, int expectedComparerResult2)
         {
             if (expected is Array expectedArray)
             {
@@ -126,7 +204,7 @@ namespace AccessCodeLib.AccUnit.Assertions
             AddChild((IConstraint)newConstraint);
         }
 
-        private void AddArrayComparerConstraint(string compareText, Array expected, int expectedComparerResult, int expectedComparerResult2)
+        protected virtual void AddArrayComparerConstraint(string compareText, Array expected, int expectedComparerResult, int expectedComparerResult2)
         {
             //var newConstraint = new ArrayConstraint(compareText, expected, expectedComparerResult, expectedComparerResult2);
 
@@ -136,7 +214,7 @@ namespace AccessCodeLib.AccUnit.Assertions
             AddChild((IConstraint)newConstraint);
         }
 
-        public IConstraintBuilder Null
+        public IConstraintBuilderBase<T> Null
         {
             get
             {
@@ -145,7 +223,7 @@ namespace AccessCodeLib.AccUnit.Assertions
             }
         }
 
-        public IConstraintBuilder DBNull
+        public IConstraintBuilderBase<T> DBNull
         {
             get
             {
@@ -154,7 +232,7 @@ namespace AccessCodeLib.AccUnit.Assertions
             }
         }
 
-        public IConstraintBuilder Empty
+        public IConstraintBuilderBase<T> Empty
         {
             get
             {
@@ -163,7 +241,7 @@ namespace AccessCodeLib.AccUnit.Assertions
             }
         }
 
-        public IConstraintBuilder Not
+        public IConstraintBuilderBase<T> Not
         {
             get
             {
@@ -174,8 +252,7 @@ namespace AccessCodeLib.AccUnit.Assertions
 
         IConstraint IConstraint.Child { get; set; }
 
-
-        private void AddChild(IConstraint constraint)
+        protected void AddChild(IConstraint constraint)
         {
             if (_firstchild is null)
             {

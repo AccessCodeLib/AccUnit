@@ -46,10 +46,15 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
         }
 
         [Test]
-        [Ignore("only to check NUnit behaviour")]
-        public void NunitEqualToTest()
+        public void EqualToTest_vbNullstringVsEmptyString_CompareAsEqual()
         {
-            Assert.That("1", Is.EqualTo(1));
+            var assert = new Interop.Assert();
+            var Iz = new StringConstraintBuilder(System.StringComparison.InvariantCulture, true);
+
+            object actual = "";
+            string expected = null;
+
+            assert.That(actual, Iz.EqualTo(expected));  
         }
     }
 }

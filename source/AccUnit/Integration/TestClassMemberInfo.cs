@@ -83,7 +83,7 @@ namespace AccessCodeLib.AccUnit
             var tags = new TagList();
             foreach (var tag in tagLines)
             {
-                var testTag = new TestItemTag(tag.Trim('"',' '));
+                var testTag = new TestItemTag(tag.Trim('"', ' '));
                 tags.Add(testTag);
             }
             return tags;

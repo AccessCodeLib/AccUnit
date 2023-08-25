@@ -1,12 +1,21 @@
 ﻿namespace AccessCodeLib.AccUnit.Assertions
 {
-    public interface IConstraintBuilder : IConstraint
+    public interface IConstraintBuilderBase<T> : IConstraint
     {
-        IConstraintBuilder EqualTo(object expected);
-        IConstraintBuilder LessThan(object expected);
-        IConstraintBuilder LessThanOrEqualTo(object expected);
-        IConstraintBuilder GreaterThan(object expected);
-        IConstraintBuilder GreaterThanOrEqualTo(object expected);
+        IConstraintBuilderBase<T> EqualTo(T expected);
+        IConstraintBuilderBase<T> LessThan(T expected);
+        IConstraintBuilderBase<T> LessThanOrEqualTo(T expected);
+        IConstraintBuilderBase<T> GreaterThan(T expected);
+        IConstraintBuilderBase<T> GreaterThanOrEqualTo(T expected);
+    }
+
+    public interface IConstraintBuilder : IConstraint, IConstraintBuilderBase<object>
+    {
+        new IConstraintBuilder EqualTo(object expected);
+        new IConstraintBuilder LessThan(object expected);
+        new IConstraintBuilder LessThanOrEqualTo(object expected);
+        new IConstraintBuilder GreaterThan(object expected);
+        new IConstraintBuilder GreaterThanOrEqualTo(object expected);
 
         IConstraintBuilder Null { get; }
         IConstraintBuilder DBNull { get; }
@@ -19,4 +28,16 @@
         IConstraintBuilder Not { get; }
         // Is.All
     }
+
+    public interface IStringConstraintBuilder : IConstraint, IConstraintBuilderBase<string>, IConstraintBuilder
+    {
+        new IConstraintBuilder EqualTo(string expected);
+        new IConstraintBuilder LessThan(string expected);
+        new IConstraintBuilder LessThanOrEqualTo(string expected);
+        new IConstraintBuilder GreaterThan(string expected);
+        new IConstraintBuilder GreaterThanOrEqualTo(string expected);
+
+        new IStringConstraintBuilder Not { get; }
+    }
+
 }
