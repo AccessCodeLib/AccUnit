@@ -4,7 +4,7 @@
 For more informations see [Wiki](https://github.com/AccessCodeLib/AccUnit/wiki) and https://accunit.access-codelib.net/
 
 ### Installation
-[How-to: Install-AccUnit](https://github.com/AccessCodeLib/AccUnit/wiki/How-to:-Install-AccUnit)
+[How-to: Install-AccUnit](https://github.com/AccessCodeLib/AccUnit/wiki/How%E2%80%90to:-Install-AccUnit)
 
 ### Notes
 * For 32 and 64 Bit Office/Access
