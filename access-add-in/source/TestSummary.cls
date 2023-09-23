@@ -46,7 +46,7 @@ Public Sub SaveResult(ByVal TestResult As AccUnit.ITestResult)
          m_Ignored = m_Ignored + 1
       ElseIf .IsFailure Or .IsError Then
          m_Failed = m_Failed + 1
-      ElseIf .IsSuccess Then
+      ElseIf .IsPassed Then
          m_Passed = m_Passed + 1
       End If
    End With

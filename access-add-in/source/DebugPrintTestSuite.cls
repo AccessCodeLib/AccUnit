@@ -147,6 +147,24 @@ Private Function IAccessTestSuite_Run() As AccUnit.IAccessTestSuite
    Set IAccessTestSuite_Run = Run()
 End Function
 
+Public Function SelectTests(ByVal TestNameFilter As Variant) As DebugPrintTestSuite
+   m_TestSuite.SelectTests TestNameFilter
+   Set SelectTests = Me
+End Function
+
+Private Function IAccessTestSuite_SelectTests(ByVal TestNameFilter As Variant) As AccUnit.IAccessTestSuite
+   Set IAccessTestSuite_SelectTests = SelectTests(TestNameFilter)
+End Function
+
+Public Function Filter(ByVal FilterTags As Variant) As DebugPrintTestSuite
+   m_TestSuite.Filter FilterTags
+   Set Filter = Me
+End Function
+
+Private Function IAccessTestSuite_Filter(ByVal FilterTags As Variant) As AccUnit.IAccessTestSuite
+   Set IAccessTestSuite_Filter = Filter(FilterTags)
+End Function
+
 Private Property Get IAccessTestSuite_Summary() As AccUnit.ITestSummary
    Set IAccessTestSuite_Summary = m_TestSuite.Summary
 End Property
