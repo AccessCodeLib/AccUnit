@@ -130,6 +130,7 @@
     <Compile Include="VbaProjectManagement\VbeManager.cs" />
     <Compile Include="VbeAdapter.cs" />
     <Compile Include="VbeOnlyApplicatonHelper.cs" />
+    <Compile Include="VbProjectOnlyApplicatonHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">

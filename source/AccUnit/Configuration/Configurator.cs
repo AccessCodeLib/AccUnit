@@ -82,7 +82,7 @@ namespace AccessCodeLib.AccUnit.Configuration
 
             if (removeTestModules)
             {
-                OfficeApplicationHelper officeApplicationHelper = new VbeOnlyApplicatonHelper(_vbProject.VBE);
+                OfficeApplicationHelper officeApplicationHelper = new VBProjectOnlyApplicatonHelper(_vbProject);
                 using (var testClassManager = new TestClassManager(officeApplicationHelper))
                 {
                     testClassManager.RemoveTestComponents(exportModulesBeforeRemoving);
@@ -110,7 +110,7 @@ namespace AccessCodeLib.AccUnit.Configuration
             if (vbProject != null)
                 _vbProject = vbProject;
 
-            OfficeApplicationHelper officeApplicationHelper = new VbeOnlyApplicatonHelper(_vbProject.VBE);
+            OfficeApplicationHelper officeApplicationHelper = new VBProjectOnlyApplicatonHelper(_vbProject);
             using (var testClassManager = new TestClassManager(officeApplicationHelper))
             {
                 testClassManager.ExportTestClasses(exportPath);
@@ -119,7 +119,7 @@ namespace AccessCodeLib.AccUnit.Configuration
 
         public void ImportTestClasses(string FileNameFilter = null, string importPath = null, VBProject VBProject = null)
         {
-            OfficeApplicationHelper officeApplicationHelper = new VbeOnlyApplicatonHelper(_vbProject.VBE);
+            OfficeApplicationHelper officeApplicationHelper = new VBProjectOnlyApplicatonHelper(_vbProject);
             using (var testClassManager = new TestClassManager(officeApplicationHelper))
             {
                 testClassManager.ImportTestComponents(FileNameFilter, importPath, true);
