@@ -5,25 +5,35 @@ const MsgBoxTitle = "Update ACLib-AccUnit-Loader"
 MsgBox "Before updating the add-in file, the add-in must not be loaded!" & chr(13) & _
        "For safety, close all Access instances.", , MsgBoxTitle & ": Hinweis"
 
+Dim CompletedMsg
+Dim AddInFileInstalled
+
 Select Case MsgBox("Should the add-in be used as ACCDE?" + chr(13) & _
                    "(Add-In is compiled and copied to the Add-In directory.)", 3, MsgBoxTitle)
    case 6 ' vbYes
       if CreateMde(GetSourceFileFullName, GetDestFileFullName) = True then
-	  MsgBox "Compiled file was created.", , MsgBoxTitle
+	      CompletedMsg = "Compiled file was created."
+		  AddInFileInstalled = True
       else
-          MsgBox "Error! Compiled file was not created.", , MsgBoxTitle
+          CompletedMsg = "Error! Compiled file was not created."
       end if
    case 7 ' vbNo
       DeleteAddInFiles
       if CopyFileAndRundPrecompileProc(GetSourceFileFullName, GetDestFileFullName) Then
-	  MsgBox "File was copied.", , MsgBoxTitle
+	      CompletedMsg = "File was copied."
+		  AddInFileInstalled = True
       else
-	  MsgBox "Error! File was not copied.", , MsgBoxTitle
+	      CompletedMsg = "Error! File was not copied."
       end if
    case else
       
 End Select
 
+if AddInFileInstalled = True then
+   RegisterAddIn GetDestFileFullName()
+end if
+
+MsgBox CompletedMsg, , MsgBoxTitle
 
 '##################################################
 ' Hilfsfunktionen:
@@ -143,3 +153,64 @@ Function RunPrecompileProcedure(AccessApp, SourceFilePath)
    RunPrecompileProcedure = True
 
 End Function
+
+Function RegisterAddIn(AddInFile)
+
+   Dim AddInDb, AccessApp, rst, ItemValue
+   Dim wsh
+
+   Set AccessApp = CreateObject("Access.Application") 
+   Set AddInDb = AccessApp.DBEngine.OpenDatabase(AddInFile)
+    
+   set wsh = CreateObject("WScript.Shell")
+   Set rst = AddInDb.OpenRecordset("select Subkey, ValName, Type, Value from USysRegInfo where ValName > '' Order By ValName", 8) 'dbOpenForwardOnly=8
+   Do While Not rst.EOF
+        ItemValue = rst.Fields("Value").Value
+        If Len(ItemValue) > 0 Then
+        If InStr(1, ItemValue, "|ACCDIR") > 0 Then
+            ItemValue = AddInDb.Name
+        End If
+        End If
+        RegisterMenuAddInItem AccessApp, wsh, rst.Fields("Subkey").Value, rst.Fields("ValName").Value, rst.Fields("Type").Value, ItemValue
+        rst.MoveNext
+   Loop
+   rst.Close
+
+   AddInDb.Close
+	
+
+End Function
+
+Function RegisterMenuAddInItem(AccessApp, wsh, ByVal SubKey, ByVal ItemValName, ByVal RegType, ByVal ItemValue)
+    Dim RegName
+    RegName = GetRegistryPath(SubKey, AccessApp)
+    With wsh
+        If Len(ItemValName) > 0 Then
+            RegName = RegName & "\" & ItemValName
+        End If
+        .RegWrite RegName, ItemValue, GetRegTypeString(RegType)
+    End With
+End Function
+
+Function GetRegTypeString(ByVal RegType)
+    Select Case RegType
+        Case 1
+            GetRegTypeString = "REG_SZ"
+        Case 4
+            GetRegTypeString = "REG_DWORD"
+        Case 0
+            GetRegTypeString = vbNullString
+        Case Else
+            Err.Raise vbObjectError, "GetRegTypeString", "RegType not supported"
+    End Select
+End Function
+
+Function GetRegistryPath(SubKey, AccessApp)
+    GetRegistryPath = Replace(SubKey, "HKEY_CURRENT_ACCESS_PROFILE", HkeyCurrentAccessProfileRegistryPath(AccessApp))
+End Function
+
+Function HkeyCurrentAccessProfileRegistryPath(AccessApp)
+    HkeyCurrentAccessProfileRegistryPath = "HKCU\SOFTWARE\Microsoft\Office\" & AccessApp.Version & "\Access"
+End Function
+
+
