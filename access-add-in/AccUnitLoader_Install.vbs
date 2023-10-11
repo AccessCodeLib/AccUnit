@@ -127,15 +127,6 @@ Function CreateMde(SourceFilePath, DestFilePath)
 
 End Function
 
-Function DeleteDestFiles()
-
-   Set fso = CreateObject("Scripting.FileSystemObject")
-
-   DeleteFile fso, DestFilePath
-   DeleteFile fso, GetAddInLocation() & "\lib\"
-
-End Function
-
 Function RunPrecompileProcedure(AccessApp, SourceFilePath)
 
    AccessApp.OpenCurrentDatabase SourceFilePath
