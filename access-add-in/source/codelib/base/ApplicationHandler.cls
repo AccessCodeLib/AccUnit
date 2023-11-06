@@ -9,16 +9,16 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "Hauptsteuerung der Anwendung"
 '---------------------------------------------------------------------------------------
-' Klassenmodul: ApplicationHandler (Josef Pötzl, 2009-12-11)
+' Class: base.ApplicationHandler
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Hauptsteuerung der Anwendung
-' </summary>
-' <remarks>
-' </remarks>
-'\ingroup base
-'**/
+'
+' Main control of the application
+'
+' Author:
+'     Josef Poetzl
+'
+'---------------------------------------------------------------------------------------
+
 '---------------------------------------------------------------------------------------
 '<codelib>
 '  <file>base/ApplicationHandler.cls</file>
@@ -31,10 +31,10 @@ Option Compare Text
 Option Explicit
 
 Public Enum ApplicationHandlerResumeModes
-                               ' 0 ... keine Antwort
-   AppResumeMode_Completed = 1 ' Anforderung wurde erfolgreich abgearbeitet
-   AppResumeMode_Error = 2     ' Event wurde angenommen, aber es traten Fehler auf
-   AppResumeMode_Cancel = 4    ' Event wurde angenommen, aber Weiterverabeitung soll gestoppt werden
+   [AppResumeMode_NoResponse] = 0   ' 0 ... no answer
+   AppResumeMode_Completed = 1      ' Request was successfully processed
+   AppResumeMode_Error = 2          ' Event was accepted, but errors occurred
+   AppResumeMode_Cancel = 4         ' Event was accepted, but further processing should be stopped
 End Enum
 
 Public Enum ApplicationHandlerLogType
@@ -44,17 +44,18 @@ Public Enum ApplicationHandlerLogType
 End Enum
 
 
-' Integrierte Erweiterungen
+' Integrated extensions
 Private Const EXTENSION_KEY_APPFILE As String = "AppFile"
 
-' Fehlerkennungen
+' Error codes
 Private Const ERR_CLASS_ID As Long = 1000
+
 Public Enum ApplicationHandlerErrors
    AppErr_EventInterfaceMissing = vbObjectError + ERR_CLASS_ID + 1
 
 End Enum
 
-' API-Funktionen
+' API definitions
 Private Const GCL_HBRBACKGROUND As Long = -10
 Private Const RDW_INVALIDATE As Long = &H1
 Private Const RDW_ERASE As Long = &H4
@@ -96,7 +97,7 @@ Private Declare Function GetSysColor Lib "user32" (ByVal Index As Long) As Long
 
 #End If
 
-' Hilfskonstanten
+' Auxiliary constants
 Private Const LOG_FILE As String = "log.txt"
 
 Private Const DBPROPNAME_APPTITLE As String = "AppTitle"
@@ -106,18 +107,17 @@ Private Const DBPROPNAME_STARTUPFORM As String = "StartUpForm"
 Private Const DBPROPNAME_STARTUPMENUBAR As String = "StartUpMenuBar"
 
 
-'Hilfsvariablen
-Private m_AppDb As DAO.Database              ' Ersatz für CurrentDb bzw. CodeDb, siehe Prop: AppDb
+'Auxiliary variables
+Private m_AppDb As DAO.Database              ' Replacement for CurrentDb or CodeDb, see Prop: AppDb
 
-Private m_ApplicationName As String          ' Zwischenspeicher für Anwendungsnamen (kurz)
-Private m_ApplicationFullName As String      ' Zwischenspeicher für Anwendungsnamen (lang)
-
-Private m_APPLICATIONVERSION As String       ' anzuzeigende Versionnummer
+Private m_ApplicationName As String          ' Application name cache (short)
+Private m_ApplicationFullName As String      ' Application name cache (long)
+Private m_APPLICATIONVERSION As String       ' Version number to be displayed
 
 Private m_TransferValue As Variant
-Private m_PublicPath As String               ' Standardverzeichnis für Dateiexplorer
+Private m_PublicPath As String               ' Default directory for file explorer
 
-Private m_ApplicationStartFormName As String ' Formular das in Start-Methode geöffnet wird
+Private m_ApplicationStartFormName As String ' Form that is opened in Start method
 
 Private m_CustomMDIBackgroundColor As Long
 
@@ -165,16 +165,15 @@ Public Event BeforeStartApplication( _
 Public Event AfterStartApplication( _
             ByRef ResumeMode As ApplicationHandlerResumeModes, ByRef ResumeMessage As Variant)
 
-'Tracing-Schnittstelle
+'Tracing interface
 Public Event NewAppLog( _
             ByVal LogType As ApplicationHandlerLogType, ByVal Msg As String, ByVal Args As Variant, _
             ByRef ResumeMode As ApplicationHandlerResumeModes, ByRef ResumeMessage As Variant)
 
-
 Public WriteLogToFileIfNoEventResponse As Boolean
 
 '---------------------------------------------------------------------------------------
-' Dispose-Ablauf
+' Disposable support
 '---------------------------------------------------------------------------------------
 Private m_Disposed As Boolean
 Private Sub Class_Terminate()
@@ -210,18 +209,18 @@ On Error Resume Next
 End Sub
 
 '---------------------------------------------------------------------------------------
-' Function: Start (Josef Pötzl, 2009-12-15)
+' Function: Start
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Start der Anwendung
-' </summary>
-' <returns>Boolean</returns>
-' <remarks>
-' Nicht Verwechseln mit Initialisierung von ApplicationHandler \n
-' Diese Prozedur löst die Startroutine für den Anwender aus.
-' </remarks>
-'**/
+'
+' Application start
+'
+' Returns:
+'     Boolean     - true = success
+'
+' Remarks:
+'     Do not confuse with initialization of ApplicationHandler.
+'     This procedure triggers the startup routine for the user.
+'
 '---------------------------------------------------------------------------------------
 Public Function Start(Optional ByRef ResumeMessage As Variant) As Boolean
    
@@ -229,28 +228,28 @@ Public Function Start(Optional ByRef ResumeMessage As Variant) As Boolean
    Dim EventResumeMode As ApplicationHandlerResumeModes
    Dim EventResumeMessage As Variant
    
-   'Evente-Schnittstelle für Anwendungsstart
-   ' ... ermöglicht z. B. das Durchführen eines Login-Vorgangs
+   'Event interface for application start
+   ' ... enables e.g. the execution of a login process
    RaiseEvent BeforeStartApplication(EventResumeMode, EventResumeMessage)
    Select Case EventResumeMode
       Case ApplicationHandlerResumeModes.AppResumeMode_Cancel
-         'Start abbrechen
+         'Cancel start
          ResumeMessage = EventResumeMessage
          Start = False
          Exit Function
       Case ApplicationHandlerResumeModes.AppResumeMode_Completed
-         'Startprozedur wurde von Erweiterung übernommen
+         'Start procedure was taken over from extension
          Start = EventResumeMessage
          Exit Function
       Case ApplicationHandlerResumeModes.AppResumeMode_Error
-         'Mit Fehlermeldung abbrechen
+         'Cancel with error message
          Err.Raise vbObjectError, "BeforeStartApplication", EventResumeMessage
          Exit Function
       Case Else
-         'weitermachen
+         'continue
    End Select
 
-   'Update prüfen
+   'Check update
    If CheckVersionUpdate Then
       If Me.UpdateApplication Then
          Start = False
@@ -259,18 +258,18 @@ Public Function Start(Optional ByRef ResumeMessage As Variant) As Boolean
       End If
    End If
    
-   'Evente-Schnittstelle für Startformular
-   '... ermöglich das Ändern des Startformulars durch ERweiterungen
-   '    z. B. falls ein benutzerspezifisches Formulare geöffnet werden soll
+   'Event interface for start form
+   '... allows changing the start form by means of extensions
+   '    e.g. if a user-specific form is to be opened
    EventResumeMode = 0
    EventResumeMessage = Empty
    RaiseEvent BeforeOpenStartForm(EventResumeMode, EventResumeMessage)
    Select Case EventResumeMode
       Case ApplicationHandlerResumeModes.AppResumeMode_Cancel
-         'Startform nicht öffnen
+         'Do not open startup form
          CurrentStartFormName = vbNullString
       Case ApplicationHandlerResumeModes.AppResumeMode_Completed
-         'Name des StartFormulars wurde übertragen
+         'Name of the StartForm was transferred
          CurrentStartFormName = Nz(EventResumeMessage, vbNullString)
       Case Else
          CurrentStartFormName = Me.ApplicationStartFormName
@@ -280,7 +279,7 @@ Public Function Start(Optional ByRef ResumeMessage As Variant) As Boolean
       DoCmd.OpenForm CurrentStartFormName
    End If
 
-   'Benachrichtigung über erfolgten Anwendungsstart
+   'Notification about successful application start
    EventResumeMode = 0
    EventResumeMessage = Empty
    RaiseEvent AfterStartApplication(EventResumeMode, EventResumeMessage)
@@ -293,18 +292,15 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Property: ApplicationName
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Name der aktuellen Anwendung
-' </summary>
-' <returns>String</returns>
-' <remarks>
-' Reihenfolge der Namensermittlung:
-' 1. über gesetzten Wert
-' 2. aus Titel-Eigenschaft mit CurrentDb.Properties("AppTitle")
-' 3. aus Dateinamen mit CurrentDb.Name
-' </remarks>
-'**/
+'
+' Name of the current application
+'
+' Remarks:
+'     Sequence of name determination:
+'        1. over set value
+'        2. from title property with AppDb.Properties("AppTitle")
+'        3. from filenames with AppDb.Name
+'
 '---------------------------------------------------------------------------------------
 Public Property Get ApplicationName() As String
    If Len(m_ApplicationName) = 0 Then 'Wert aus Titel-Eigenschaft, da Konstante nicht eingestellt wurde
@@ -318,16 +314,6 @@ Public Property Get ApplicationName() As String
    ApplicationName = m_ApplicationName
 End Property
 
-'---------------------------------------------------------------------------------------
-' Property: ApplicationName
-'---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Name der aktuellen Anwendung einstellen
-' </summary>
-' <param name="appName">Anwendungsname</param>
-'**/
-'---------------------------------------------------------------------------------------
 Public Property Let ApplicationName(ByVal AppName As String)
     m_ApplicationName = AppName
 End Property
@@ -336,17 +322,14 @@ End Property
 '---------------------------------------------------------------------------------------
 ' Property: ApplicationFullName
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Vollständiger Name der aktuellen Anwendung
-' </summary>
-' <returns>String</returns>
-' <remarks>
-' Reihenfolge der Namensermittlung:
-' 1. über gesetzten Wert
-' 2. über ApplicationName
-' </remarks>
-'**/
+'
+' Full name of the current application
+'
+' Remarks:
+'     Sequence of name determination:
+'        1. over set value
+'        2. with ApplicationName property
+'
 '---------------------------------------------------------------------------------------
 Public Property Get ApplicationFullName() As String
    If Len(m_ApplicationFullName) = 0 Then 'Kurzform verwenden
@@ -355,16 +338,6 @@ Public Property Get ApplicationFullName() As String
    ApplicationFullName = m_ApplicationFullName
 End Property
 
-'---------------------------------------------------------------------------------------
-' Property: ApplicationFullName
-'---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Name der aktuellen Anwendung einstellen
-' </summary>
-' <param name="appName">Anwendungsname</param>
-'**/
-'---------------------------------------------------------------------------------------
 Public Property Let ApplicationFullName(ByVal AppName As String)
     m_ApplicationFullName = AppName
 End Property
@@ -372,17 +345,9 @@ End Property
 '---------------------------------------------------------------------------------------
 ' Property: ApplicationVersion
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Vollständiger Name der aktuellen Anwendung
-' </summary>
-' <returns>String</returns>
-' <remarks>
-' Reihenfolge der Namensermittlung:
-' 1. über gesetzten Wert
-' 2. über ApplicationName
-' </remarks>
-'**/
+'
+' Application version
+'
 '---------------------------------------------------------------------------------------
 Public Property Get Version() As String
 
@@ -397,16 +362,6 @@ Public Property Get Version() As String
    
 End Property
 
-'---------------------------------------------------------------------------------------
-' Property: ApplicationFullName
-'---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Name der aktuellen Anwendung einstellen
-' </summary>
-' <param name="appName">Anwendungsname</param>
-'**/
-'---------------------------------------------------------------------------------------
 Public Property Let Version(ByVal AppVersion As String)
     m_APPLICATIONVERSION = AppVersion
 End Property
@@ -414,13 +369,9 @@ End Property
 '---------------------------------------------------------------------------------------
 ' Property: ApplicationStartForm
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Formular, das in der Methode Start geöffnet wird
-' </summary>
-' <remarks>
-' </remarks>
-'**/
+'
+' Form opened in the method <Start>
+'
 '---------------------------------------------------------------------------------------
 Public Property Get ApplicationStartFormName() As String
    If StrPtr(m_ApplicationStartFormName) = 0 Then ' ... aus Properties lesen?
@@ -429,33 +380,16 @@ Public Property Get ApplicationStartFormName() As String
    ApplicationStartFormName = m_ApplicationStartFormName
 End Property
 
-'---------------------------------------------------------------------------------------
-' Property: ApplicationStartForm
-'---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Formular, das in der Methode Start geöffnet wird
-' </summary>
-' <remarks>
-' </remarks>
-'**/
-'---------------------------------------------------------------------------------------
 Public Property Let ApplicationStartFormName(ByVal FormName As String)
     m_ApplicationStartFormName = FormName
 End Property
 
-
 '---------------------------------------------------------------------------------------
-' Property: AppDb (Josef Pötzl, 2009-12-13)
+' Property: AppDb
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Ersatz für CurrentDb bzw. CodeDb (Standard: CodeDb)
-' </summary>
-' <returns>zugewiesene DAO.Database-Instanz</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Replacement for CurrentDb or CodeDb (default: CodeDb).
+'
 '---------------------------------------------------------------------------------------
 Public Property Get AppDb() As DAO.Database
    If m_AppDb Is Nothing Then
@@ -616,7 +550,7 @@ Public Sub WriteLog(ByVal Msg As String, _
    RaiseEvent NewAppLog(LogType, Msg, Args, ResumeMode, EventResumeMessage)
    
    If ResumeMode = 0 And (WriteToFileIfNoEventResponse Or WriteLogToFileIfNoEventResponse Or LogType = AppLogType_Error) Then
-      'niemand hat reagiert bzw. einen Abbruch gemeldet => WriteApplicationLogEntry
+      'no one has reacted or reported an abort => WriteApplicationLogEntry
       Msg = Now() & ": " & Msg
       If Len(LogType) > 0 Then
          Msg = "(" & GetLogTypeString(LogType) & ") " & Msg
@@ -637,59 +571,31 @@ Private Function GetLogTypeString(Optional ByRef LogType As ApplicationHandlerLo
    End Select
 End Function
 
-
-Public Property Get MdiBackColor() As Long
-'/**
-' * @bug Ermitteln der Hintergrundfarbe des MDI-Bereichs Funktioniert nicht unter Access 2007
-'**/
-   If m_CustomMDIBackgroundColor <> 0 Then
-      MdiBackColor = m_CustomMDIBackgroundColor
-   Else
-      MdiBackColor = GetSysColor(SYSCOLOR_COLOR_APPWORKSPACE)
-   End If
-End Property
-
-Friend Property Let MdiBackColor(ByVal Color As Long)
-  
-   Dim NewBrush As Long
-   Dim hMDI As Long
-
-   m_CustomMDIBackgroundColor = Color
-   hMDI = FindWindowEx(Application.hWndAccessApp, 0&, "MDIClient", vbNullString)
-   
-   'Brush erzeugen
-   NewBrush = CreateSolidBrush(m_CustomMDIBackgroundColor)
-   'Brush zuweisen
-   SetClassLong hMDI, GCL_HBRBACKGROUND, NewBrush
-   'Fenster neuzeichnen (gesamtes Fenster inkl. Background)
-   RedrawWindow hMDI, ByVal 0&, ByVal 0&, RDW_INVALIDATE Or RDW_ERASE
-
-End Property
-
-
 '---------------------------------------------------------------------------------------
 ' Function: CreateAppFile
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Datei aus AppFile-Tabelle extrahieren
-' </summary>
-' <param name="sFileID">Kennung in Tabelle</param>
-' <param name="sFileName"></param>
-' <returns>True = Datei wurde gespeichert</returns>
-' <remarks>
-' Erfordert AppFile-Erweiterung (wird über Ereignis-Schnittstelle angesprochen)
-' </remarks>
-'**/
+'
+' Extract file from AppFile table
+'
+' Parameters:
+'     FileID   - Identifier in table
+'     FileName - File name to be created
+'
+' Returns:
+'     Boolean  - True: File was saved
+'
+' Remarks:
+'     Requires extension <base.ApplicationHandler_AppFile> (addressed via event interface)
+'
 '---------------------------------------------------------------------------------------
 Public Function CreateAppFile(ByVal FileID As String, ByVal FileName As String) As Boolean
 
-   Dim EventResumeMode As ApplicationHandlerResumeModes ' Rückgabewert aus Event-Schnittstelle
-   Dim EventResumeMessage As Variant                    ' Nachricht, für Abbruchgrund (wird derzeit noch nicht genutzt)
+   Dim EventResumeMode As ApplicationHandlerResumeModes ' Return value from event interface
+   Dim EventResumeMessage As Variant                    ' Message, for termination reason (currently not used)
 
    '---------------------------------------------------
-   ' Schnittstelle für andere Klassen .. damit wird es möglich,
-   ' dass die Erstellung der Datei eine andere Klasse übernimmt
+   ' Interface for other classes ...
+   ' This makes it possible that the creation of the file takes over another class
    '
    EventResumeMode = 0
    RaiseEvent AppFileBeforeCreateFile(FileID, FileName, EventResumeMode, EventResumeMessage)
@@ -705,26 +611,31 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: SaveAppFile
 '---------------------------------------------------------------------------------------
-'/
-' <summary>
-' Datei in AppFile-Tabelle speichern
-' </summary>
-' <param name="sFileID">Kennung in Tabelle (Feld "id")</param>
-' <param name="sFileName">Dateiname</param>
-' <param name="saveVersion">Version abspeichern</param>
-' <remarks>
-' Erfordert ApplicationHandler_File (wird über Ereignis-Schnittstelle angesprochen)
-' </remarks>
-'/
+'
+' Save file to AppFile table
+'
+' Parameters:
+'     FileID         - Identifier in table
+'     FileName       - File name to be created
+'     SaveVersion    - (optional) Read version from file (e. g. from dll file)
+'     ExtFieldName   - (optional) append additional data to data field: Field name
+'     ExtFieldValue  - (optional) append additional data to data field: Value
+'
+' Returns:
+'     Boolean  - True: File was saved in table
+'
+' Remarks:
+'     Requires extension <base.ApplicationHandler_AppFile> (addressed via event interface)
+'
 '---------------------------------------------------------------------------------------
 Friend Function SaveAppFile(ByVal FileID As String, ByVal FileName As String, Optional ByVal SaveVersion As Boolean = False, _
             Optional ByVal ExtFieldName As String, Optional ByVal ExtFieldValue As Variant) As Boolean
 
-   Dim EventResumeMode As ApplicationHandlerResumeModes ' Rückgabewert aus Event-Schnittstelle
-   Dim EventResumeMessage As Variant                    ' Nachricht, für Abbruchgrund
+   Dim EventResumeMode As ApplicationHandlerResumeModes ' Return value from event interface
+   Dim EventResumeMessage As Variant                    ' Message, for termination reason
 
    '---------------------------------------------------
-   ' Event-Schnittstelle AppFileBeforeSaveFile
+   ' Event interface AppFileBeforeSaveFile
    '
    EventResumeMode = 0
    RaiseEvent AppFileBeforeSaveFile(FileID, FileName, SaveVersion, EventResumeMode, EventResumeMessage, ExtFieldName, ExtFieldValue)
@@ -737,12 +648,53 @@ Friend Function SaveAppFile(ByVal FileID As String, ByVal FileName As String, Op
 
 End Function
 
+Public Function NewerAppVersionExists() As Boolean
 
+   Dim ResumeMode As ApplicationHandlerResumeModes
+   Dim ResumeMessage As Boolean
+   
+   RaiseEvent NewVersionExists(ResumeMode, ResumeMessage)
+
+   NewerAppVersionExists = ResumeMessage
+
+End Function
+
+Private Function CheckVersionUpdate() As Boolean
+' True = Update required
+   
+   Dim EventResumeMode As ApplicationHandlerResumeModes
+   Dim EventResumeMessage As Variant
+
+   RaiseEvent CheckUpdate(EventResumeMode, EventResumeMessage)
+   If EventResumeMode = ApplicationHandlerResumeModes.AppResumeMode_Completed Then
+      CheckVersionUpdate = EventResumeMessage
+   Else
+      CheckVersionUpdate = False
+   End If
+
+End Function
+
+'---------------------------------------------------------------------------------------
+' Property: Extensions
+'---------------------------------------------------------------------------------------
+'
+' Try get Reference from extension over event interface
+'
+' Parameters:
+'     ExtensionKey         - Identifier of extension
+'
+' Returns:
+'     Object  - True: File was saved in table
+'
+' Remarks:
+'     Requires extension <base.ApplicationHandler_AppFile> (addressed via event interface)
+'
+'---------------------------------------------------------------------------------------
 Public Property Get Extensions(ByVal ExtensionKey As String) As Object
-'Anm.: auf Auflistungs-Klasse verzichtet .. der Code ist zwar nicht so elegant, dafür ist eine kaum verwendete Klasse weniger
+'Note: collection class waived .. the code is not so elegant, but one less hardly used class
 
 '/**
-' * @todo sollte man eine Schnittstelle statt Late binding verwenden?
+' * @todo Should you use an interface instead of late binding?
 '**/
 
    Dim ExtRef As Object
@@ -777,12 +729,11 @@ Public Function GetExtensionProperty(ByVal ExtensionKey As String, ByVal Propert
 
 End Function
 
-
 Public Function UpdateApplication() As Boolean
-' True = Anwendung schließen
+' True = Close application
  
-' => Ausgelager an Erweiterung: damit wird die Verwendugn flexibler
-'    und jeder kann sich aussuchen nach welcher Update-Methode vorgegangen werden soll
+' => Outsourced to extension: this makes the usage more flexible
+'    and everyone can choose which update method to follow
 
    Dim EventResumeMode As ApplicationHandlerResumeModes
    Dim EventResumeMessage As Variant
@@ -796,37 +747,19 @@ Public Function UpdateApplication() As Boolean
 
 End Function
 
-Private Function CheckVersionUpdate() As Boolean
-' True = Update erforderlich
-   
-   Dim EventResumeMode As ApplicationHandlerResumeModes
-   Dim EventResumeMessage As Variant
-
-   RaiseEvent CheckUpdate(EventResumeMode, EventResumeMessage)
-   If EventResumeMode = ApplicationHandlerResumeModes.AppResumeMode_Completed Then
-      CheckVersionUpdate = EventResumeMessage
-   Else
-      CheckVersionUpdate = False
-   End If
-
-End Function
-
 '---------------------------------------------------------------------------------------
-' Sub: CallExtensionProcedure (Josef Pötzl, 2010-03-13)
+' Sub: CallExtensionProcedure
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Prozeduren aus Erweiterungen aufrufen
-' </summary>
-' <param name="Key">Extension-Kennung</param>
-' <param name="ProcedureName">Name der zu startenden Prozedur</param>
-' <param name="ResumeMode">Rückgabekennung</param>
-' <param name="ResumeMessage">Antwort</param>
-' <param name="Params">Array für Übergabe- und Rückgabeparameter</param>
-' <returns></returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Calling procedures from extensions
+'
+' Parameters:
+'     Key            - Extension identifier
+'     ProcedureName  - Name of the procedure to start
+'     ResumeMode     - Return identifier
+'     ResumeMessage  - Reply
+'     Params         - Array for pass and return parameters
+'
 '---------------------------------------------------------------------------------------
 Public Sub CallExtensionProcedure(ByVal Key As String, ByVal ProcedureName As String, _
             ByRef ResumeMode As ApplicationHandlerResumeModes, ByRef ResumeMessage As Variant, _
@@ -835,14 +768,3 @@ Public Sub CallExtensionProcedure(ByVal Key As String, ByVal ProcedureName As St
    RaiseEvent ExtensionProcedureCall(Key, ProcedureName, ResumeMode, ResumeMessage, Params)
   
 End Sub
-
-Public Function NewerAppVersionExists() As Boolean
-
-   Dim ResumeMode As ApplicationHandlerResumeModes
-   Dim ResumeMessage As Boolean
-   
-   RaiseEvent NewVersionExists(ResumeMode, ResumeMessage)
-
-   NewerAppVersionExists = ResumeMessage
-
-End Function

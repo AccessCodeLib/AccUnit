@@ -8,17 +8,16 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '---------------------------------------------------------------------------------------
-' Class: WinApiShellTools
+' Class: api.winapi.WinApiShellTools
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' WinAPI-Funktionen: ShellExecuteA & Co.
-' </summary>
-' <remarks>
-' Sammlung von API-Deklarationen, die oft benötigt werden
-' </remarks>
-'\ingroup WinAPI
-'**/
+'
+' WinAPI functions: ShellExecuteA & Co.
+'
+' Author:
+'     Josef Poetzl
+'
+'---------------------------------------------------------------------------------------
+
 '---------------------------------------------------------------------------------------
 '<codelib>
 '  <file>api/winapi/WinApiShellTools.cls</file>
@@ -126,22 +125,23 @@ Private Declare Sub Sleep Lib "kernel32" (ByVal DwMilliseconds As Long)
 
 
 '---------------------------------------------------------------------------------------
-' Kapselungen
+' Encapsulations
 '---------------------------------------------------------------------------------------
 
 '---------------------------------------------------------------------------------------
-' Function: ShellExecuteOpenFile (Josef Pötzl, 2010-04-19)
+' Function: ShellExecuteOpenFile
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Datei mit ShellExecute öffnen
-' </summary>
-' <param name="sFile">vollständiger Dateiname inkl. Verzeichnis</param>
-' <param name="sAPIOperation">"open", "print", ...</param>
-' <returns>Boolean</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Open file with ShellExecute
+'
+' Parameters:
+'     FilePath       - full file name (incl. directory)
+'     ApiOperation   - (optional) "open", "print", ..., Default: vbNullString
+'     ShowCmd        - (optional) VbAppWinStyle, Default: vbNormalFocus
+'
+' Returns:
+'     Boolean
+'
 '---------------------------------------------------------------------------------------
 Public Function Execute(ByVal FilePath As String, _
                Optional ByVal ApiOperation As String = vbNullString, _
@@ -160,14 +160,12 @@ Public Function Execute(ByVal FilePath As String, _
    End If
    
    If Ret = SE_ERR_NOTFOUND Then
-      'Datei nicht gefunden
-      MsgBox "Datei nicht gefunden" & vbNewLine & vbNewLine & _
+      MsgBox "File not found" & vbNewLine & vbNewLine & _
              FilePath
       Execute = False
       Exit Function
    ElseIf Ret = SE_ERR_NOASSOC Then
-      'Wenn die Dateierweiterung noch nicht bekannt ist...
-      'wird der "Öffnen mit..."-Dialog angezeigt.
+      'If the file extension is not yet known, the "Open with..." dialog is displayed.
       Directory = Space$(260)
       Ret = GetSystemDirectory(Directory, Len(Directory))
       Directory = Left$(Directory, Ret)
@@ -182,15 +180,15 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: ExecuteAsAdmin
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Befehl mit erweiterter, administrativer Berechtigung ausführen
-' </summary>
-' <param name="sFile">vollständiger Dateiname inkl. Verzeichnis</param>
-' <returns>Boolean</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Execute command with extended administrative privilege
+'
+' Parameters:
+'     File - full file name incl. directory
+'
+' Returns:
+'     Boolean
+'
 '---------------------------------------------------------------------------------------
 Public Function ExecuteAsAdmin(ByVal File As String) As Boolean
     ExecuteAsAdmin = Me.Execute(File, "runas")
@@ -199,17 +197,17 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: ShellExecuteSendMail
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Email mit Standard-Programm versenden
-' </summary>
-' <param name="sTo">Empfänger-Adresse</param>
-' <param name="sSubject">Betreff-Zeile</param>
-' <param name="sBody">Email-Text</param>
-' <returns>Boolean</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Send email with standard program
+'
+' Parameters:
+'     SendTo   - Recipient address
+'     Subject  - Subject line
+'     Body     - Email text
+'
+' Returns:
+'     Boolean
+'
 '---------------------------------------------------------------------------------------
 Public Function ShellExecuteSendMail(ByVal SendTo As String, _
                                      ByVal Subject As String, _
@@ -239,28 +237,28 @@ Public Function ShellExecuteSendMail(ByVal SendTo As String, _
       lpFile = "mailto:" & SendTo
    End If
 
-   
-   
    Ret = ShellExecuteA(GetDesktopWindow(), "open", lpFile, vbNullString, vbNullString, vbNormalFocus)
    ShellExecuteSendMail = (Ret <> 0)
 
 End Function
 
 '---------------------------------------------------------------------------------------
-' Function: LaunchAppSynchronous (Josef Pötzl, 2010-04-19)
+' Function: LaunchAppSynchronous
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
+'
 ' Anwnedung Synchron ausführen
-' </summary>
-' <param name="strExecutablePathAndName">Ausführbare Datei</param>
-' <param name="sParam">Startparameter der Anwendung</param>
-' <param name="lShowCommand">Fenstermodus</param>
-' <returns>Boolean</returns>
-' <remarks>
-' Code hält so lange an, bis die gestartete Anwendung beendet wurde.
-' </remarks>
-'**/
+'
+' Parameters:
+'     ExecutablePathAndName   - Executable file
+'     Param                   - (optional) Start parameters of the application
+'     ShowCommand             - (optional) window mode, Default: vbNormalFocus
+'
+' Returns:
+'     Boolean
+'
+' Remarks:
+'     Code hält so lange an, bis die gestartete Anwendung beendet wurde.
+'
 '---------------------------------------------------------------------------------------
 Public Function LaunchAppSynchronous(ByVal ExecutablePathAndName As String, _
                      Optional ByVal Param As String = vbNullString, _
@@ -285,7 +283,6 @@ Public Function LaunchAppSynchronous(ByVal ExecutablePathAndName As String, _
 
    'Launch the application by creating a new process
    Response = CreateProcess(vbNullString, ExecutablePathAndName & " " & Param, 0, 0, True, NORMAL_PRIORITY_CLASS, ByVal 0&, vbNullString, StartUpInf, ProcInfo)
-
 
    If Response Then
       'Wait for the application to terminate before moving on

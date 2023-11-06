@@ -1,16 +1,16 @@
 Attribute VB_Name = "modApplication"
 Attribute VB_Description = "Standard-Prozeduren für die Arbeit mit ApplicationHandler"
 '---------------------------------------------------------------------------------------
-' Module: modApplication
+' Package: base.modApplication
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Standard-Prozeduren für die Arbeit mit ApplicationHandler
-' </summary>
-' <remarks>
-' </remarks>
-' \ingroup base
-'**/
+'
+' Standard procedures for working with ApplicationHandler
+'
+' Author:
+'     Josef Poetzl
+'
+'---------------------------------------------------------------------------------------
+
 '---------------------------------------------------------------------------------------
 '<codelib>
 '  <file>base/modApplication.bas</file>
@@ -24,23 +24,17 @@ Option Compare Text
 Option Explicit
 Option Private Module
 
-' Instanz der Hauptsteuerung
+' Instance of the main control
 Private m_ApplicationHandler As ApplicationHandler
-
-' Erweiterungen zu ApplicationHandler (Ansteuerung erfolgt über Ereignisse von ApplicationHandler)
-Private m_Extension As Collection
+Private m_ApplicationName As String  ' Cache for application names
+                                     ' if CurrentApplication.ApplicationName is not running
 
 '---------------------------------------------------------------------------------------
 ' Property: CurrentApplication
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Property für ApplicationHandler-Instanz (diese Property im Code verwenden)
-' </summary>
-' <returns>aktuelle Instanz von ApplicationHandler</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Property for ApplicationHandler instance (use this property in code)
+'
 '---------------------------------------------------------------------------------------
 Public Property Get CurrentApplication() As ApplicationHandler
    If m_ApplicationHandler Is Nothing Then
@@ -50,43 +44,58 @@ Public Property Get CurrentApplication() As ApplicationHandler
 End Property
 
 '---------------------------------------------------------------------------------------
-' Sub: AddApplicationHandlerExtension
+' Property: CurrentApplicationName
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Erweiterung zu Collection hinzufügen
-' </summary>
-' <param name="objRef">Referenz auf Instanz der Erweiterung</param>
-' <remarks>
-' Referenz wird in Collection abgelegt, damit keine zusätzliche (manuelle)
-' Referenzspeicherung notwendig ist.
-' </remarks>
-'**/
+'
+' Name of the current application
+'
+' Remarks:
+'     Uses CurrentApplication.ApplicationName
+'
 '---------------------------------------------------------------------------------------
-Public Sub AddApplicationHandlerExtension(ByRef ObjRef As Object)
-'  --- DEPRECATED ! ---
-' Durch Klasse ApplicationHandler_ExtensionCollection ersetzt.
-Stop
-   If m_Extension Is Nothing Then
-      Set m_Extension = New Collection
-   End If
-   Set ObjRef.ApplicationHandlerRef = CurrentApplication
-   m_Extension.Add ObjRef, ObjRef.ExtensionKey
-End Sub
+Public Property Get CurrentApplicationName() As String
+' incl. emergency error handler if CurrentApplication is not instantiated
 
+On Error GoTo HandleErr
+
+   CurrentApplicationName = CurrentApplication.ApplicationName
+
+ExitHere:
+   Exit Property
+
+HandleErr:
+   CurrentApplicationName = GetApplicationNameFromDb
+   Resume ExitHere
+
+End Property
+
+Private Function GetApplicationNameFromDb() As String
+
+   If Len(m_ApplicationName) = 0 Then
+On Error Resume Next
+'1. Value from title property
+      m_ApplicationName = CodeDb.Properties("AppTitle").Value
+      If Len(m_ApplicationName) = 0 Then
+'2. Value from file name
+         m_ApplicationName = CodeDb.Name
+         m_ApplicationName = Left$(m_ApplicationName, InStrRev(m_ApplicationName, ".") - 1)
+      End If
+   End If
+
+   GetApplicationNameFromDb = m_ApplicationName
+
+End Function
 
 '---------------------------------------------------------------------------------------
 ' Sub: TraceLog
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
+'
 ' TraceLog
-' </summary>
-' <param name="Param"></param>
-' <returns></returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Parameters:
+'     Msg   - Message text
+'     Args  - (ParamArray)
+'
 '---------------------------------------------------------------------------------------
 Public Sub TraceLog(ByRef Msg As String, ParamArray Args() As Variant)
    CurrentApplication.WriteLog Msg, ApplicationHandlerLogType.AppLogType_Tracing, Args
@@ -94,10 +103,7 @@ End Sub
 
 Private Sub InitApplication()
 
-   ' Hauptinstanz erzeugen
    Set m_ApplicationHandler = New ApplicationHandler
-   
-   'Einstellungen initialisieren
    Call InitConfig(m_ApplicationHandler)
 
 End Sub
@@ -106,13 +112,9 @@ End Sub
 '---------------------------------------------------------------------------------------
 ' Sub: DisposeCurrentApplicationHandler
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Instanz von ApplicationHandler und den Erweiterungen zerstören
-' </summary>
-' <remarks>
-' </remarks>
-'**/
+'
+' Destroy instance of ApplicationHandler and the extensions
+'
 '---------------------------------------------------------------------------------------
 Public Sub DisposeCurrentApplicationHandler()
 
@@ -123,19 +125,6 @@ On Error Resume Next
    If Not m_ApplicationHandler Is Nothing Then
       m_ApplicationHandler.Dispose
    End If
-
-   If Not (m_Extension Is Nothing) Then
-      '  --- DEPRECATED ! ---
-      ' Durch Klasse ApplicationHandler_ExtensionCollection ersetzt.
-      Stop
-      WriteApplicationLogEntry "DisposeCurrentApplicationHandler: m_Extension in modApplication durch Klasse ApplicationHandler_ExtensionCollection ersetzt.", AppLogType_Error
-      MaxCnt = m_Extension.Count * 2 'nur zur Sicherheit falls wider Erwarten m_Extension.Remove eine Endlosschleife bringen würde
-      Do While m_Extension.Count > 0 Or CheckCnt > MaxCnt
-         m_Extension.Remove 1
-         CheckCnt = CheckCnt + 1
-      Loop
-      Set m_Extension = Nothing
-   End If
    
    Set m_ApplicationHandler = Nothing
    
@@ -144,7 +133,7 @@ End Sub
 
 '---------------------------------------------------------------------------------------
 '
-' Hilfsprozeduren
+' Auxiliary procedures
 Public Sub WriteApplicationLogEntry(ByVal Msg As String, _
            Optional LogType As ApplicationHandlerLogType, _
            Optional ByVal Args As Variant)

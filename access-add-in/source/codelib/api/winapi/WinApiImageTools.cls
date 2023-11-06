@@ -8,17 +8,16 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '---------------------------------------------------------------------------------------
-' Class: WinApiImageTools
+' Class: api.winapi.WinApiImageTools
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' WinAPI-Funktionen: Image & Co.
-' </summary>
-' <remarks>
-' Sammlung von API-Deklarationen, die oft benötigt werden
-' </remarks>
-'\ingroup WinAPI
-'**/
+'
+' WinAPI functions: Image & Co.
+'
+' Author:
+'     Josef Poetzl
+'
+'---------------------------------------------------------------------------------------
+
 '---------------------------------------------------------------------------------------
 '<codelib>
 '  <file>api/winapi/WinApiImageTools.cls</file>
@@ -72,20 +71,17 @@ Private Declare Function LoadImage Lib "user32" Alias "LoadImageA" ( _
 '---------------------------------------------------------------------------------------
 ' Sub: SetFormIconFromFile
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Spezielles Icon für ein Formular einstellen
-' </summary>
-' <param name="FormRef">Referenz zum Access.Form</param>
-' <param name="IconFilePath">Icon-Datei (vollständige Pfadangabe)</param>
-' <remarks>
 '
-' </remarks>
-'**/
+' Spezielles Icon für ein Formular einstellen
+'
+' Parameters:
+'     FormRef        - Reference to the Access.Form
+'     IconFilePath   - Icon file (full path specification)
+'
 '---------------------------------------------------------------------------------------
 Public Sub SetFormIconFromFile(ByRef FormRef As Access.Form, ByVal IconFilePath As String)
    
-On Error Resume Next ' ... Fehlermeldung würde bei dieser "unwichtigen" Funktion nur stören
+On Error Resume Next ' ... Error message would only interfere with this "unimportant" function
   
    Const ICONPIXELSIZE As Long = 16
    

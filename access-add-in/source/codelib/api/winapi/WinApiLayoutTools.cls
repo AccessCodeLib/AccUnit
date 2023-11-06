@@ -8,16 +8,16 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '---------------------------------------------------------------------------------------
-' Module: WinApiLayoutTools
+' Class: api.winapi.WinApiLayoutTools
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' WinAPI-Funktionen zur Layoutgestaltung
-' </summary>
-' <remarks>
-' </remarks>
-'\ingroup WinAPI
-'**/
+'
+' WinAPI functions for layout design
+'
+' Author:
+'     Josef Poetzl
+'
+'---------------------------------------------------------------------------------------
+
 '---------------------------------------------------------------------------------------
 '<codelib>
 '  <file>api/winapi/WinApiLayoutTools.cls</file>
@@ -101,26 +101,23 @@ Private Declare Function GetDeviceCaps Lib "gdi32" (ByVal DC As Long, ByVal Inde
 '---------------------------------------------------------------------------------------
 ' Sub: SetBackColor
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Hintergrundfarbe eines Fensters einstellen
-' </summary>
-' <param name="Hwnd">Fenster-Handle</param>
-' <param name="Color">Farbnummer</param>
-' <returns></returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Set background color of a window
+'
+' Parameters:
+'     Hwnd  - Window handle
+'     Color - Color number
+'
 '---------------------------------------------------------------------------------------
 Public Sub SetBackColor(ByVal Hwnd As LongPtr, ByVal Color As Long)
   
    Dim NewBrush As LongPtr
    
-   'Brush erzeugen
+   'Create Brush
    NewBrush = CreateSolidBrush(Color)
-   'Brush zuweisen
+   'Assign Brush
    SetClassLong Hwnd, GCL_HBRBACKGROUND, NewBrush
-   'Fenster neuzeichnen (gesamtes Fenster inkl. Background)
+   'Redraw window (entire window incl. background)
    RedrawWindow Hwnd, ByVal 0&, ByVal 0&, RDW_INVALIDATE Or RDW_ERASE
 
 End Sub
@@ -128,16 +125,15 @@ End Sub
 '---------------------------------------------------------------------------------------
 ' Function: TwipsPerPixelX
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Breite eines Pixels in twips
-' </summary>
-' <param name="Param"></param>
-' <returns>Single</returns>
-' <remarks>
-' http://support.microsoft.com/kb/94927/de
-' </remarks>
-'**/
+'
+' Width of a pixel in twips
+'
+' Returns:
+'     Single
+'
+' Remarks:
+'     http://support.microsoft.com/kb/94927
+'
 '---------------------------------------------------------------------------------------
 Public Function TwipsPerPixelX() As Single
    Dim DC As LongPtr
@@ -149,15 +145,15 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: TwipsPerPixelY
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Höhe eines Pixels in twips
-' </summary>
-' <returns>Single</returns>
-' <remarks>
-' http://support.microsoft.com/kb/94927/de
-' </remarks>
-'**/
+'
+' Height of a pixel in twips
+'
+' Returns:
+'     Single
+'
+' Remarks:
+'     http://support.microsoft.com/kb/94927
+'
 '---------------------------------------------------------------------------------------
 Public Function TwipsPerPixelY() As Single
    Dim DC As LongPtr
@@ -169,15 +165,12 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: GetScrollbarWidth
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Breite der Bildlaufleiste
-' </summary>
-' <param name="Param"></param>
-' <returns>Single</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Width of the scroll bar
+'
+' Returns:
+'     Single
+'
 '---------------------------------------------------------------------------------------
 Public Function GetScrollbarWidth() As Single
    GetScrollbarWidth = GetSystemMetrics(SM_CXVSCROLL) * TwipsPerPixelX
@@ -186,16 +179,18 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: GetTwipsFromPixel
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Rechnet Pixel in Twips um
-' </summary>
-' <param name="pixel">Anzahl der Pixel</param>
-' <returns>Long</returns>
-' <remarks>
-' GetTwipsFromPixel = TwipsPerPixelX * pixel
-' </remarks>
-'**/
+'
+' Converts pixels to twips
+'
+' Parameters:
+'     Pixel - Number of pixels
+'
+' Returns:
+'     Long
+'
+' Remarks:
+'     GetTwipsFromPixel = TwipsPerPixelX * pixel
+'
 '---------------------------------------------------------------------------------------
 Public Function GetTwipsFromPixel(ByVal Pixel As Long) As Long
    GetTwipsFromPixel = TwipsPerPixelX * Pixel
@@ -204,16 +199,18 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: GetPixelFromTwips
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Rechnet twips in Pixel um
-' </summary>
-' <param name="twips">Anzahl twips</param>
-' <returns>Long</returns>
-' <remarks>
-'  GetPixelFromTwips = twips / TwipsPerPixelX
-' </remarks>
-'**/
+'
+' Converts twips to pixels
+'
+' Parameters:
+'     Twips - Number of twips
+'
+' Returns:
+'     Long
+'
+' Remarks:
+'  GetPixelFromTwips = Twips / TwipsPerPixelX
+'
 '---------------------------------------------------------------------------------------
 Public Function GetPixelFromTwips(ByVal Twips As Long) As Long
         GetPixelFromTwips = Twips / TwipsPerPixelX

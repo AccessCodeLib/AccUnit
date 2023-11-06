@@ -8,27 +8,29 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '---------------------------------------------------------------------------------------
-' Klassenmodul: ApplicationHandler_ExtensionCollection
+' Class: base.ApplicationHandler_ExtensionCollection
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Einbindung der Erweiterungen für ApplicationHandler-Framework
-' </summary>
-' <remarks>
-' Verwendung im _config_Application-Modul:\n
+'
+' Integration of the extensions for ApplicationHandler framework
+'
+' Author:
+'     Josef Poetzl
+'
+' Remarks:
+'     Use in the _config_Application module:
 ' <code>
 '   Set m_Extensions = New ApplicationHandler_ExtensionCollection
 '   With m_Extensions
 '      Set .ApplicationHandler = oCurrentAppHandler
 '
-'      ' Erweiterungen laden (z. B. ApplicationHandler_DbConnection):
+'      ' Load extensions (e.g. ApplicationHandler_DbConnection):
 '      .Add New ApplicationHandler_DbConnection
 '
 '   End With
 ' </code>
-' </remarks>
-'\ingroup base
-'**/
+'
+'---------------------------------------------------------------------------------------
+
 '---------------------------------------------------------------------------------------
 '<codelib>
 '  <file>base/ApplicationHandler_ExtensionCollection.cls</file>
@@ -46,14 +48,11 @@ Private m_Extension As Collection
 Private m_Disposed As Boolean
 
 '---------------------------------------------------------------------------------------
-' Sub: Extensions
+' Property: Extensions
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Collection der Erweiterungen
-' </summary>
-' <remarks></remarks>
-'**/
+'
+' Collection of extensions
+'
 '---------------------------------------------------------------------------------------
 Public Property Get Extensions() As Collection
    If m_Extension Is Nothing Then
@@ -73,18 +72,17 @@ End Property
 '---------------------------------------------------------------------------------------
 ' Sub: Add
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Erweiterung zu Collection hinzufügen
-' </summary>
-' <param name="objRef">Referenz auf Instanz der Erweiterung</param>
-' <remarks>
-' Referenz wird in Collection abgelegt, damit keine zusätzliche (manuelle)
-' Referenzspeicherung notwendig ist.
-' </remarks>
-'**/
+'
+' Add extension to collection
+'
+' Parameters:
+'     ExtensionRef - Reference to instance of extension
+'
+' Remarks:
+' Reference is stored in Collection so that no additional (manual) reference storage is necessary.
+'
 '---------------------------------------------------------------------------------------
-Public Sub Add(ByRef ExtensionRef As Object)
+Public Sub Add(ByVal ExtensionRef As Object)
    Set ExtensionRef.ApplicationHandlerRef = CurrentApplication
    Extensions.Add ExtensionRef, ExtensionRef.ExtensionKey
 End Sub
@@ -97,7 +95,7 @@ Public Sub Dispose()
 On Error Resume Next
 
    If Not (m_Extension Is Nothing) Then
-      MaxCnt = m_Extension.Count * 2 'nur zur Sicherheit falls wider Erwarten m_Extension.Remove eine Endlosschleife bringen würde
+      MaxCnt = m_Extension.Count * 2 'just to be on the safe side in case m_Extension.Remove would bring an infinite loop against expectations
       Do While m_Extension.Count > 0 Or CheckCnt > MaxCnt
          m_Extension.Remove 1
          CheckCnt = CheckCnt + 1

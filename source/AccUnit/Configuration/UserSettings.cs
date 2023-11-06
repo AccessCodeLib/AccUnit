@@ -5,10 +5,23 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing.Design;
+using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Configuration
 {
-    public class UserSettings
+    [ComVisible(true)]
+    [Guid("4E224321-17E1-43E7-8C37-97B7F09C4D81")]
+    public interface IUserSettings
+    {
+        string TestClassNameFormat { get; set; }
+        string ImportExportFolder { get; set; }
+        string TemplateFolder { get; set; }
+        string TestMethodTemplate { get; set; }
+
+        void Save();
+    }
+
+    public class UserSettings : IUserSettings
     {
         #region Static members
 
@@ -103,7 +116,7 @@ namespace AccessCodeLib.AccUnit.Configuration
         // ReSharper restore MemberCanBePrivate.Global
 
         #region Tools
-
+       
         [Category("Import/Export")]
         [DefaultValue(@"%APPFOLDER%\Tests\%APPNAME%")]
         [Description("Import and export folder for test classes\n%APPFOLDER% ... Path to current mdb/accdb\n%APPNAME% ... Filename of mdb/accdb")]

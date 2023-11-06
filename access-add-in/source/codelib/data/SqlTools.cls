@@ -7,21 +7,23 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-'Attribute VB_PredeclaredId = True
 '---------------------------------------------------------------------------------------
-' Klasse: SqlTools
+' Class: data.sql.SqlTools
 '---------------------------------------------------------------------------------------
-'/**
-' \author       Josef Poetzl
-' <summary>
-' SQL-Hilfsfunktionen
-' </summary>
-' <remarks>Attribute VB_PredeclaredId = True einstellen, damit SqlTools ohne explizite Instanzierung genutzt werden kann</remarks>
+' Functions to build sql strings
 '
-' \warning Nicht vergessen: Parameter für Datumsformat, Boolean und WildCard für das DBMS einstellen
+' Author:
+'     Josef Poetzl
 '
-' \ingroup data
-'**/
+' Remarks:
+'     "Attribute VB_PredeclaredId = True" to enable using SqlTools without explicit instantiation.
+'
+' Warning:
+'
+'|    Don't forget to set parameters for date format, boolean and wildcard for the DBMS.
+'
+'---------------------------------------------------------------------------------------
+
 '---------------------------------------------------------------------------------------
 '<codelib>
 '  <file>data/SqlTools.cls</file>
@@ -39,15 +41,15 @@ Private Enum SqlToolsErrorNumbers
    ERRNR_NOCONFIG = vbObjectError + 1
 End Enum
 
-' Standard-Werte für Methodenparameter
+' Default values for method parameters
 Private Const SQL_DEFAULT_TEXTDELIMITER As String = "'"
-Private Const SQL_DEFAULT_DATEFORMAT As String = ""     ' "" => SqlDateFormat-Eigenschaft wird verwenden.
-                                                        '    Zum Deaktivieren Wert eintragen (z. B. "\#yyyy\-mm\-dd\#"),
-                                                        '    dann wird dieser Wert als Standardeintrag verwendet.
-Private Const SQL_DEFAULT_BOOLTRUESTRING As String = "" ' "" => SqlBooleanTrueString wird verwendet.
-                                                        '    Zum Deaktivieren Wert eintragen (z. B. "True oder 1")
-Private Const SQL_DEFAULT_WILDCARD As String = "%"      ' * = Standardwert,
-                                                        ' benötigte Abweichungen über SqlWildCardString einstellen
+Private Const SQL_DEFAULT_DATEFORMAT As String = ""     ' "" => SqlDateFormat property will use.
+                                                        ' To disable, enter value (e.g. "\#yyyy-mm\-dd\#"),
+                                                        ' then this value will be used as the default entry.
+Private Const SQL_DEFAULT_BOOLTRUESTRING As String = "" ' "" => SqlBooleanTrueString is used.
+                                                        ' Enter value to disable (e.g. "True or 1")
+Private Const SQL_DEFAULT_WILDCARD As String = "%"      ' % = default value,
+                                                        ' set required variations via SqlWildCardString
                                                    
 Private Const SqlAndConcatString As String = " And "
 Private Const SqlOrConcatString As String = " Or "
@@ -88,63 +90,28 @@ Public Enum SqlLogicalOperator
    SQL_CommaSeparator = 3
 End Enum
 
-' SQL-Dialekt-Voreinstellungen
-Public Property Get DAO() As SqlTools
-   Set DAO = Me.Clone("\#yyyy-mm-dd hh:nn:ss\#", "True", "*")
-End Property
-
-Public Property Get TSql() As SqlTools
-   Set TSql = Me.Clone("'yyyymmdd hh:nn:ss'", "1", "%")
-End Property
-
-' Konfiguration für den SQL-Dialekt
-Public Property Get SqlWildCardString() As String
-   If Len(m_SqlWildCardString) > 0 Then
-      SqlWildCardString = m_SqlWildCardString
-   Else
-      SqlWildCardString = SQL_DEFAULT_WILDCARD
-   End If
-End Property
-
-Public Property Let SqlWildCardString(ByVal NewValue As String)
-   m_SqlWildCardString = NewValue
-End Property
-
-Public Property Get SqlDateFormat() As String
-   If Len(m_SqlDateFormat) > 0 Then
-      SqlDateFormat = m_SqlDateFormat
-   Else
-      SqlDateFormat = SQL_DEFAULT_DATEFORMAT
-   End If
-End Property
-
-Public Property Let SqlDateFormat(ByVal NewValue As String)
-   m_SqlDateFormat = NewValue
-End Property
-
-Public Property Get SqlBooleanTrueString() As String
-   If Len(m_SqlBooleanTrueString) > 0 Then
-      SqlBooleanTrueString = m_SqlBooleanTrueString
-   Else
-      SqlBooleanTrueString = SQL_DEFAULT_BOOLTRUESTRING
-   End If
-End Property
-
-Public Property Let SqlBooleanTrueString(ByVal NewValue As String)
-   m_SqlBooleanTrueString = NewValue
-End Property
+'##################################
+' Group: Class support
 
 '---------------------------------------------------------------------------------------
 ' Function: Clone
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Neue Instanz mit Grundeinstellungen der aktuellen Instanz erstellen.
-' </summary>
-' <returns>String</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Create a new instance with basic settings of the current instance.
+'
+' Parameters:
+'
+'     NewSqlDateFormat - use this date format instead of base instance
+'     NewSqlBooleanTrueString - use this text for true instead of base instance
+'     NewSqlWildCardString - use this wildcard string instead of base instance
+'
+' Returns:
+'
+'     SqlTools instance with config form base
+'
+' See Also:
+'     NewInstance
+'
 '---------------------------------------------------------------------------------------
 Public Function Clone(Optional ByVal NewSqlDateFormat As String = SQL_DEFAULT_DATEFORMAT, _
                       Optional ByVal NewSqlBooleanTrueString As String = SQL_DEFAULT_BOOLTRUESTRING, _
@@ -159,6 +126,13 @@ Public Function Clone(Optional ByVal NewSqlDateFormat As String = SQL_DEFAULT_DA
 
 End Function
 
+'---------------------------------------------------------------------------------------
+' Function: NewInstance
+'---------------------------------------------------------------------------------------
+'
+' Create a new instance
+'
+'---------------------------------------------------------------------------------------
 Public Function NewInstance(ByVal NewSqlDateFormat As String, _
                             ByVal NewSqlBooleanTrueString As String, _
                             ByVal NewSqlWildCardString As String) As SqlTools
@@ -176,249 +150,136 @@ Public Function NewInstance(ByVal NewSqlDateFormat As String, _
 
 End Function
 
-'---------------------------------------------------------------------------------------
-' Function: DateToSqlText
-'---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Werte in String für SQL-Anweisung umwandeln, die per VBA zusammengesetzt wird.
-' </summary>
-' <param name="Value">Übergabewert</param>
-' <param name="FieldDataType">Datentyp des zu konvertierenden Wertes</param>
-' <returns>String</returns>
-'**/
-'---------------------------------------------------------------------------------------
-Public Function ConvertToSqlText(ByVal Value As Variant, _
-                                 ByVal FieldDataType As SqlFieldDataType) As String
-                     
-   Select Case FieldDataType
-      Case SqlFieldDataType.SQL_Text
-         ConvertToSqlText = TextToSqlText(Value)
-      Case SqlFieldDataType.SQL_Numeric
-         ConvertToSqlText = NumberToSqlText(Value)
-      Case SqlFieldDataType.SQL_Date
-         ConvertToSqlText = DateToSqlText(Value)
-      Case SqlFieldDataType.SQL_Boolean
-         ConvertToSqlText = BooleanToSqlText(Value)
-      Case Else
-         Err.Raise vbObjectError, "SqlTools.ConvertToSqlText", "FieldDataType '" & FieldDataType & "' not supported"
-   End Select
-   
-End Function
+
+'##################################
+' Group: SQL dialect preferences
 
 '---------------------------------------------------------------------------------------
-' Function: TextToSqlText
+' Property: DAO
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Text für SQL-Anweisung aufbereiten.
-' </summary>
-' <param name="Value">Übergabewert</param>
-' <param name="Delimiter">Begrenzungszeichen für Text-Werte. (In den meisten DBMS wird ' als Begrenzungszeichen verwendet.)</param>
-' <param name="WithoutLeftRightDelim">Nur Begrenzungszeichnen innerhalb des Werte verdoppeln, Eingrenzung jedoch nicht setzen.</param>
-' <returns>String</returns>
-' <remarks>
-' Beispiel: strSQL = "select ... from tabelle where Feld = " & TextToSqlText("ab'cd")
-'        => strSQL = "select ... from tabelle where Feld = 'ab''cd'"
-' </remarks>
-'**/
+'
+' SqlTools instance configured for DAO-SQL (Jet/ACE)
+'
 '---------------------------------------------------------------------------------------
-Public Function TextToSqlText(ByVal Value As Variant, _
-                     Optional ByVal Delimiter As String = SQL_DEFAULT_TEXTDELIMITER, _
-                     Optional ByVal WithoutLeftRightDelim As Boolean = False) As String
-   
-   Dim Result As String
-   
-   If IsNull(Value) Then
-      TextToSqlText = ResultTextIfNull
-      Exit Function
-   End If
-   
-   Result = Replace$(Value, Delimiter, Delimiter & Delimiter)
-   If Not WithoutLeftRightDelim Then
-      Result = Delimiter & Result & Delimiter
-   End If
-   
-   TextToSqlText = Result
-
-End Function
+Public Property Get DAO() As SqlTools
+   Set DAO = Me.NewInstance("\#yyyy-mm-dd hh:nn:ss\#", "True", "*")
+End Property
 
 '---------------------------------------------------------------------------------------
-' Function: DateToSqlText
+' Property: TSql
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Datumswert in String für SQL-Anweisung umwandeln, die per VBA zusammengesetzt wird.
-' </summary>
-' <param name="Value">Übergabewert</param>
-' <param name="FormatString">Datumsformat (von DBMS abhängig!)</param>
-' <returns>String</returns>
-'**/
+'
+' SqlTools instance configured for T-SQL
+'
 '---------------------------------------------------------------------------------------
-Public Function DateToSqlText(ByVal Value As Variant, _
-                     Optional ByVal FormatString As String = SQL_DEFAULT_DATEFORMAT) As String
+Public Property Get TSql() As SqlTools
+   Set TSql = Me.NewInstance("'yyyymmdd hh:nn:ss'", "1", "%")
+End Property
 
-   If IsNull(Value) Then
-      DateToSqlText = ResultTextIfNull
-      Exit Function
-   End If
-   
-   If Not IsDate(Value) Then
-      Err.Raise vbObjectError, "SqlTools.DateToSqlText", "Der Wert '" & Value & "' vom Parameter Value ist kein Datumswert!"
-   End If
-
-   If Len(FormatString) = 0 Then
-      FormatString = SqlDateFormat
-      If Len(FormatString) = 0 Then
-         Err.Raise SqlToolsErrorNumbers.ERRNR_NOCONFIG, "DateToSqlText", "date format is not defined"
-      End If
-   End If
-   
-   DateToSqlText = VBA.Format$(Value, FormatString)
-
-End Function
+' Configuration for SQL dialect
 
 '---------------------------------------------------------------------------------------
-' Function: NumberToSqlText
+' Property: SqlWildCardString
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Zahl für SQL-Text aufbereiten
-' </summary>
-' <param name="Value">Übergabewert</param>
-' <returns>String</returns>
-' <remarks>
-' Durch Str-Funktion wird . statt , verwendet.
-' </remarks>
-'**/
+'
+' Wildcard character for like
+'
 '---------------------------------------------------------------------------------------
-Public Function NumberToSqlText(ByVal Value As Variant) As String
-
-   Dim Result As String
-
-   If IsNull(Value) Then
-      NumberToSqlText = ResultTextIfNull
-      Exit Function
-   End If
-   
-   Value = ConvertToNumeric(Value)
-   
-   Result = Trim$(Str$(Value))
-   If Left(Result, 1) = "." Then
-      Result = "0" & Result
-   End If
-   
-   NumberToSqlText = Result
-   
-End Function
-
-Private Function ConvertToNumeric(ByVal Value As Variant) As Variant
-   
-   Const CheckNumber As Double = 1.23
-   
-   Dim CheckText As String
-   
-   If IsNull(Value) Then
-      ConvertToNumeric = Null
-      Exit Function
-   ElseIf CStr(Value) = vbNullString Then
-      ConvertToNumeric = Null
-      Exit Function
-   End If
-   
-   CheckText = CStr(CheckNumber)
-   If InStr(1, CheckText, ",") > 0 Then
-      If InStr(1, Value, ".") > 0 Then
-         Value = Replace(Value, ".", ",")
-         Do While Value Like "*,*,*"
-            Value = Replace(Value, ",", vbNullString, 1, 1)
-         Loop
-      End If
+Public Property Get SqlWildCardString() As String
+   If Len(m_SqlWildCardString) > 0 Then
+      SqlWildCardString = m_SqlWildCardString
    Else
-      If InStr(1, Value, ",") > 0 Then
-         Value = Replace(Value, ",", ".")
-         Do While Value Like "*.*.*"
-            Value = Replace(Value, ".", vbNullString, 1, 1)
-         Loop
-      End If
+      SqlWildCardString = SQL_DEFAULT_WILDCARD
    End If
-   
-   ConvertToNumeric = CDbl(Value)
-   
-End Function
+End Property
+
+Public Property Let SqlWildCardString(ByVal NewValue As String)
+   m_SqlWildCardString = NewValue
+End Property
 
 '---------------------------------------------------------------------------------------
-' Function: BooleanToSqlText
+' Property: SqlDateFormat
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Boolean für SQL-Text aufbereiten
-' </summary>
-' <param name="Value">Übergabewert</param>
-' <returns>String</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Format for date values
+'
 '---------------------------------------------------------------------------------------
-Public Function BooleanToSqlText(ByVal Value As Variant, _
-                        Optional ByVal TrueString As String = SQL_DEFAULT_BOOLTRUESTRING) As String
-
-   If IsNull(Value) Then
-      BooleanToSqlText = ResultTextIfNull
-      Exit Function
-   End If
-
-   If Value = True Then
-      If Len(TrueString) = 0 Then
-         TrueString = SqlBooleanTrueString
-         If Len(TrueString) = 0 Then
-            Err.Raise SqlToolsErrorNumbers.ERRNR_NOCONFIG, "BooleanToSqlText", "boolean string for true is not defined"
-         End If
-      End If
-      BooleanToSqlText = TrueString
+Public Property Get SqlDateFormat() As String
+   If Len(m_SqlDateFormat) > 0 Then
+      SqlDateFormat = m_SqlDateFormat
    Else
-      BooleanToSqlText = "0"
+      SqlDateFormat = SQL_DEFAULT_DATEFORMAT
    End If
-   
-End Function
+End Property
+
+Public Property Let SqlDateFormat(ByVal NewValue As String)
+   m_SqlDateFormat = NewValue
+End Property
+
+'---------------------------------------------------------------------------------------
+' Property: SqlBooleanTrueString
+'---------------------------------------------------------------------------------------
+'
+' Boolean string in SQL statement
+'
+'---------------------------------------------------------------------------------------
+Public Property Get SqlBooleanTrueString() As String
+   If Len(m_SqlBooleanTrueString) > 0 Then
+      SqlBooleanTrueString = m_SqlBooleanTrueString
+   Else
+      SqlBooleanTrueString = SQL_DEFAULT_BOOLTRUESTRING
+   End If
+End Property
+
+Public Property Let SqlBooleanTrueString(ByVal NewValue As String)
+   m_SqlBooleanTrueString = NewValue
+End Property
+
+'##################################
+' Group: BuildCriteria
 
 '---------------------------------------------------------------------------------------
 ' Function: BuildCriteria
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' SQL-Kriterium erstellen
-' </summary>
-' <param name="FieldName">Feldname in der Datenquelle, die gefiltert werden soll</param>
-' <param name="RelationalOperator">Vergleichsoperator (=, <=, usw.)</param>
-' <param name="FilterValue">Filterwert (kann einzelner Wert oder auch Array mit Werten sein)</param>
-' <param name="FilterValue2">Optionale 2. Filterwert (für Between)</param>
-' <param name="IgnoreValue">Jener Wert, für den keine Filterbedingung erzeugt werden soll. (Array-Übergabe von Werten möglich)</param>
-' <returns>String</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Create SQL criteria string
+'
+' Parameters:
+'     FieldName            - Field name in the data source to be filtered
+'     RelationalOperator   - Relational operator (=, <=, etc.)
+'     FilterValue          - Filter value (can be a single value or an array of values)
+'     FilterValue2         - Optional 2nd filter value (for Between)
+'     IgnoreValue          - The value for which no filter condition is to be created. (Array transfer of values possible)
+'
+' Returns:
+'     SQL criteria string
+'
 '---------------------------------------------------------------------------------------
 Public Function BuildCriteria(ByVal FieldName As String, ByVal FieldDataType As SqlFieldDataType, _
                               ByVal RelationalOperator As SqlRelationalOperators, _
                               ByVal FilterValue As Variant, _
                      Optional ByVal FilterValue2 As Variant = Null, _
-                     Optional ByVal IgnoreValue As Variant = Null, _
+                     Optional ByVal IgnoreValue As Variant, _
                      Optional ByVal DisableIgnoreNullValue As Boolean = False) As String
 
    Dim FilterValueString As String
    Dim OperatorString As String
    Dim Criteria As String
-   Dim Criteria1 As String
-   Dim Criteria2 As String
-   Dim TempArr() As String
-
+   
    If (RelationalOperator And [_IgnoreAll]) = [_IgnoreAll] Then
       Exit Function
    End If
    
+   If IsMissing(IgnoreValue) Then
+      If Not DisableIgnoreNullValue Then
+         DisableIgnoreNullValue = True
+      End If
+      IgnoreValue = Null
+   End If
+   
+   ' Special cases (part 1):
    If Not IsArray(FilterValue) Then
-     
+   
       If FilterValue = "{NULL}" Or FilterValue = "{LEER}" Or FilterValue = "{EMPTY}" Then
          FilterValue = Null
          DisableIgnoreNullValue = True
@@ -432,6 +293,9 @@ Public Function BuildCriteria(ByVal FieldName As String, ByVal FieldDataType As 
       If (RelationalOperator And SQL_AllowSqlDirect) = SQL_AllowSqlDirect Then
          If FilterValue Like "{*@*}" Then ' Idee von Ulrich: Anwender schreibt SQL-Ausdruck
             Criteria = Replace(Mid(FilterValue, 2, Len(FilterValue) - 2), "@", FieldName)
+            If (RelationalOperator And SQL_Not) = SQL_Not Then
+               Criteria = "Not " & Criteria
+            End If
             BuildCriteria = Criteria
             Exit Function
          End If
@@ -451,7 +315,7 @@ Public Function BuildCriteria(ByVal FieldName As String, ByVal FieldDataType As 
       RelationalOperator = RelationalOperator Xor SQL_SplitValueToArray
    End If
    
-   'Sonderfälle:
+   'Special cases (part 2):
    If Not IsArray(FilterValue) Then
      
       If FieldDataType = SQL_Numeric Then
@@ -462,38 +326,10 @@ Public Function BuildCriteria(ByVal FieldName As String, ByVal FieldDataType As 
          End If
          
          If IsNull(FilterValue2) Then
-         
-            FilterValue = Trim(FilterValue)
-            
-            If FilterValue Like "[0-9]*..*[0-9]*" Or FilterValue Like "[+-][0-9]*..*[0-9]*" Then
-               TempArr = Split(FilterValue, "..")
-               BuildCriteria = BuildCriteria(FieldName, FieldDataType, SQL_Between, Trim(TempArr(0)), Trim(TempArr(1)), IgnoreValue, DisableIgnoreNullValue)
+            If TryBuildNumericSpecialCasesCriteria(FieldName, FieldDataType, RelationalOperator, FilterValue, IgnoreValue, DisableIgnoreNullValue, Criteria) Then
+               BuildCriteria = Criteria
                Exit Function
             End If
-         
-            If FilterValue Like "[0-9]*-*[0-9]*" Or FilterValue Like "[+-][0-9]*-*[0-9]*" Then    ' convert to a..b
-               If Left(FilterValue, 1) = "-" Then
-                  FilterValue = "{M}" & Mid(FilterValue, 2)
-               End If
-               FilterValue = Replace(FilterValue, "  ", " ")
-               FilterValue = Replace(FilterValue, "- -", "--")
-               FilterValue = Replace(FilterValue, "--", "-{M}")
-               FilterValue = Replace(FilterValue, "-", "..")
-               FilterValue = Replace(FilterValue, "{M}", "-")
-               
-               TempArr = Split(FilterValue, "..")
-               BuildCriteria = BuildCriteria(FieldName, FieldDataType, SQL_Between, Trim(TempArr(0)), Trim(TempArr(1)), IgnoreValue, DisableIgnoreNullValue)
-               Exit Function
-               
-            End If
-         
-            If FilterValue Like "*[0-9]" & DecimalMarker & "*[*]" Then
-            If (RelationalOperator And SQL_Add_WildCardSuffix) = 0 Then
-               BuildCriteria = BuildCriteria(FieldName, FieldDataType, RelationalOperator + SQL_Add_WildCardSuffix, FilterValue, FilterValue2, IgnoreValue, DisableIgnoreNullValue)
-               Exit Function
-            End If
-            End If
-         
          End If
          
          ConfigNumericSpecials RelationalOperator, FilterValue, FilterValue2
@@ -501,7 +337,6 @@ Public Function BuildCriteria(ByVal FieldName As String, ByVal FieldDataType As 
       End If
       
    End If
-
 
    If TryBuildInCriteria(FieldName, FieldDataType, RelationalOperator, FilterValue, IgnoreValue, Criteria) Then
       BuildCriteria = Criteria
@@ -529,55 +364,9 @@ Public Function BuildCriteria(ByVal FieldName As String, ByVal FieldDataType As 
    End If
 
    If (RelationalOperator And SQL_Add_WildCardSuffix) = SQL_Add_WildCardSuffix Then
-      If (RelationalOperator And SQL_Like) = SQL_Like Then
-         FilterValue = FilterValue & SqlWildCardString
-      ElseIf (FieldDataType And SQL_Date) = SQL_Date Then
-         If (RelationalOperator And SQL_LessThan) = 0 Then ' kein < daher:  >, >= oder nur =
-            If (RelationalOperator And SQL_GreaterThan) = SQL_GreaterThan Then
-               ' nichts ändern => >= DataValue  / SQL_Add_WildCardSuffix ist nicht logisch
-            Else ' ganzen Tag berücksichtigen FieldName >= DateValue and FieldName < DateAdd("d", 1, FilterValue))
-               BuildCriteria = BuildCriteria(FieldName, FieldDataType, SQL_GreaterThan + SQL_Equal, FilterValue) & _
-                               SqlAndConcatString & _
-                               BuildCriteria(FieldName, FieldDataType, SQL_LessThan, DateAdd("d", 1, CDate(CLng(FilterValue))))
-               Exit Function
-            End If
-         Else
-            If (RelationalOperator And SQL_Equal) = SQL_Equal Then
-               RelationalOperator = RelationalOperator - SQL_Equal
-            End If
-            FilterValue = DateAdd("d", 1, CDate(CLng(FilterValue)))
-         End If
-      ElseIf (FieldDataType And SQL_Numeric) = SQL_Numeric Then
-         If (RelationalOperator And SQL_LessThan) = 0 Then ' kein < daher:  >, >= oder nur =
-            If (RelationalOperator And SQL_GreaterThan) = SQL_GreaterThan Then
-               If FilterValue Like "*[,.]*[*]" Then
-                  FilterValue = Replace(FilterValue, "*", 0)
-               ElseIf FilterValue Like "*[*]" Then
-                  FilterValue = Replace(FilterValue, "*", vbNullString)
-               End If
-               ' nichts ändern => >= Zahl  / SQL_Add_WildCardSuffix ist nicht logisch
-            Else ' nachfolgende Dezimalwerte berücksichtigen FieldName >= Zahl and FieldName < (Zahl + x)
-               If FilterValue Like "-*[*]" Then
-                  If FilterValue Like "*[,.]*[*]" Then
-                     FilterValue2 = Replace(FilterValue, "*", 0)
-                  Else
-                     FilterValue2 = Replace(FilterValue, "*", vbNullString)
-                  End If
-                  Criteria1 = BuildCriteria(FieldName, FieldDataType, SQL_GreaterThan, GetNextDigitNumber(FilterValue, True))
-                  Criteria2 = BuildCriteria(FieldName, FieldDataType, SQL_LessThan + SQL_Equal, FilterValue2)
-               Else
-                  Criteria1 = BuildCriteria(FieldName, FieldDataType, SQL_GreaterThan + SQL_Equal, FilterValue)
-                  Criteria2 = BuildCriteria(FieldName, FieldDataType, SQL_LessThan, GetNextDigitNumber(FilterValue))
-               End If
-               BuildCriteria = Criteria1 & SqlAndConcatString & Criteria2
-               Exit Function
-            End If
-         Else
-            If (RelationalOperator And SQL_Equal) = SQL_Equal Then
-               RelationalOperator = RelationalOperator - SQL_Equal
-            End If
-            FilterValue = GetNextDigitNumber(FilterValue)
-         End If
+      If TryBuildWildCardSuffixOrPreBuildParams(FieldName, FieldDataType, RelationalOperator, FilterValue, FilterValue2, IgnoreValue, Criteria) Then
+         BuildCriteria = Criteria
+         Exit Function
       End If
    End If
 
@@ -601,12 +390,234 @@ Public Function BuildCriteria(ByVal FieldName As String, ByVal FieldDataType As 
    OperatorString = GetRelationalOperatorString(RelationalOperator)
 
    Criteria = FieldName & " " & OperatorString & " " & FilterValueString
+
    If (RelationalOperator And SQL_Not) = SQL_Not Then
+      '?: will this line be reached?
       Criteria = "Not " & Criteria
    End If
 
    BuildCriteria = Criteria
 
+End Function
+
+'##################################
+' Group: Convert to SQL
+
+'---------------------------------------------------------------------------------------
+' Function: ConvertToSqlText
+'---------------------------------------------------------------------------------------
+'
+' Convert values to string for SQL statement assembled by VBA.
+'
+' Parameters:
+'     Value          - Value to convert
+'     FieldDataType  - Data type of the value to be converted
+'
+' Returns:
+'     String   - SQL conform string
+'
+'---------------------------------------------------------------------------------------
+Public Function ConvertToSqlText(ByVal Value As Variant, _
+                                 ByVal FieldDataType As SqlFieldDataType) As String
+                     
+   Select Case FieldDataType
+      Case SqlFieldDataType.SQL_Text
+         ConvertToSqlText = TextToSqlText(Value)
+      Case SqlFieldDataType.SQL_Numeric
+         ConvertToSqlText = NumberToSqlText(Value)
+      Case SqlFieldDataType.SQL_Date
+         ConvertToSqlText = DateToSqlText(Value)
+      Case SqlFieldDataType.SQL_Boolean
+         ConvertToSqlText = BooleanToSqlText(Value)
+      Case Else
+         Err.Raise vbObjectError, "SqlTools.ConvertToSqlText", "FieldDataType '" & FieldDataType & "' not supported"
+   End Select
+   
+End Function
+
+'---------------------------------------------------------------------------------------
+' Function: TextToSqlText
+'---------------------------------------------------------------------------------------
+'
+' Prepare text for SQL statement
+'
+' Parameters:
+'     Value                   - Value to convert
+'     Delimiter               - Delimiter for text values. (In most DBMS ' is used as a delimiter).
+'     WithoutLeftRightDelim   - Only double the boundary drawing within the values, but do not set the boundary.
+'
+' Returns:
+'     String
+'
+' Example:
+'        strSQL = "select ... from tabelle where Feld = " & TextToSqlText("ab'cd")
+'     => strSQL = "select ... from tabelle where Feld = 'ab''cd'"
+'
+'---------------------------------------------------------------------------------------
+Public Function TextToSqlText(ByVal Value As Variant, _
+                     Optional ByVal Delimiter As String = SQL_DEFAULT_TEXTDELIMITER, _
+                     Optional ByVal WithoutLeftRightDelim As Boolean = False) As String
+   
+   Dim Result As String
+   
+   If IsNull(Value) Then
+      TextToSqlText = ResultTextIfNull
+      Exit Function
+   End If
+   
+   Result = Replace$(Value, Delimiter, Delimiter & Delimiter)
+   If Not WithoutLeftRightDelim Then
+      Result = Delimiter & Result & Delimiter
+   End If
+   
+   TextToSqlText = Result
+
+End Function
+
+'---------------------------------------------------------------------------------------
+' Function: DateToSqlText
+'---------------------------------------------------------------------------------------
+'
+' Convert date value to string for SQL statement assembled by VBA.
+'
+' Parameters:
+'     Value          - Value to convert
+'     FormatString   - Date format (depends on DBMS!)
+'
+' Returns:
+'     String
+'
+'---------------------------------------------------------------------------------------
+Public Function DateToSqlText(ByVal Value As Variant, _
+                     Optional ByVal FormatString As String = SQL_DEFAULT_DATEFORMAT) As String
+
+   If IsNull(Value) Then
+      DateToSqlText = ResultTextIfNull
+      Exit Function
+   End If
+   
+   If Not IsDate(Value) Then
+      Err.Raise vbObjectError, "SqlTools.DateToSqlText", "Der Wert '" & Value & "' vom Parameter Value ist kein Datumswert!"
+   End If
+
+   If Len(FormatString) = 0 Then
+      FormatString = SqlDateFormat
+      If Len(FormatString) = 0 Then
+         Err.Raise SqlToolsErrorNumbers.ERRNR_NOCONFIG, "DateToSqlText", "date format is not defined"
+      End If
+   End If
+   
+   DateToSqlText = VBA.Format$(Value, FormatString)
+
+End Function
+
+'---------------------------------------------------------------------------------------
+' Function: NumberToSqlText
+'---------------------------------------------------------------------------------------
+'
+' Convert numeric value to string for SQL statement assembled by VBA.
+'
+' Parameters:
+'     Value          - Value to convert
+'     FormatString   - Date format (depends on DBMS!)
+'
+' Returns:
+'     String
+'
+' Remarks:
+'     Str function ensures ".".
+'
+'---------------------------------------------------------------------------------------
+Public Function NumberToSqlText(ByVal Value As Variant) As String
+
+   Dim Result As String
+
+   If IsNull(Value) Then
+      NumberToSqlText = ResultTextIfNull
+      Exit Function
+   End If
+   
+   Value = ConvertToNumeric(Value)
+   
+   Result = Trim$(Str$(Value))
+   If Left(Result, 1) = "." Then
+      Result = "0" & Result
+   End If
+   
+   NumberToSqlText = Result
+   
+End Function
+
+Friend Function ConvertToNumeric(ByVal Value As Variant) As Variant
+   
+   Const CheckNumber As Double = 1.23
+   
+   Dim CheckText As String
+   Dim DecimalSeparatorToReplace As String
+   Dim NewDecimalSeparator As String
+   
+   If IsNull(Value) Then
+      ConvertToNumeric = Null
+      Exit Function
+   ElseIf CStr(Value) = vbNullString Then
+      ConvertToNumeric = Null
+      Exit Function
+   End If
+   
+   CheckText = CStr(CheckNumber)
+   If InStr(1, CheckText, ",") > 0 Then
+      DecimalSeparatorToReplace = "."
+      NewDecimalSeparator = ","
+   Else
+      DecimalSeparatorToReplace = ","
+      NewDecimalSeparator = "."
+   End If
+   
+   If InStr(1, Value, DecimalSeparatorToReplace) > 0 Then
+       Value = Replace(Value, DecimalSeparatorToReplace, NewDecimalSeparator)
+       Do While Value Like "*" & NewDecimalSeparator & "*" & NewDecimalSeparator & "*"
+          Value = Replace(Value, NewDecimalSeparator, vbNullString, 1, 1)
+       Loop
+    End If
+   
+   ConvertToNumeric = CDbl(Value)
+   
+End Function
+
+'---------------------------------------------------------------------------------------
+' Function: BooleanToSqlText
+'---------------------------------------------------------------------------------------
+'
+' Prepare Boolean for SQL text
+'
+' Parameters:
+'     Value          - Value to convert
+'     TrueString   -   String for true value (optional)
+'
+' Returns:
+'     String
+'
+'---------------------------------------------------------------------------------------
+Public Function BooleanToSqlText(ByVal Value As Variant, _
+                        Optional ByVal TrueString As String = SQL_DEFAULT_BOOLTRUESTRING) As String
+
+   If IsNull(Value) Then
+      BooleanToSqlText = ResultTextIfNull
+      Exit Function
+   End If
+
+   If CBool(Value) = True Then ' CBool(Value) to raise error 13 (type mismatch) if Value is not a boolean
+      If Len(TrueString) = 0 Then
+         TrueString = SqlBooleanTrueString
+         If Len(TrueString) = 0 Then
+            Err.Raise SqlToolsErrorNumbers.ERRNR_NOCONFIG, "BooleanToSqlText", "boolean string for true is not defined"
+         End If
+      End If
+      BooleanToSqlText = TrueString
+   Else
+      BooleanToSqlText = "0"
+   End If
+   
 End Function
 
 Private Function ConfigNumericSpecials( _
@@ -665,7 +676,7 @@ Private Function GetNextDigitNumber(ByVal Z As Variant, Optional AddToAbsoluteVa
    End If
    
    KommaPos = InStrRev(TestString, DecimalMarker)
-   If KommaPos = 0 Then ' nächste Ganzzahl
+   If KommaPos = 0 Then ' next integer
       If AddToAbsoluteValue And IsNegativ Then
          GetNextDigitNumber = CDbl(Replace(CStr(Z), "*", vbNullString)) - 1
       Else
@@ -691,11 +702,11 @@ End Function
 Private Property Get DecimalMarker() As String
 
    Static DecChar As String
-   Dim x As String
+   Dim X As String
    
    If Len(DecChar) = 0 Then
-      x = Trim(CStr(1.2))
-      DecChar = Mid(x, 2, 1)
+      X = Trim(CStr(1.2))
+      DecChar = Mid(X, 2, 1)
    End If
    
    DecimalMarker = DecChar
@@ -733,7 +744,6 @@ Friend Function GetRelationalOperatorString(ByRef RelationalOperator As SqlRelat
       GetRelationalOperatorString = OperatorString
       Exit Function
    End If
-   
    
    If (RelationalOperator And SQL_Not) = SQL_Not Then
       
@@ -777,6 +787,113 @@ Friend Function GetRelationalOperatorString(ByRef RelationalOperator As SqlRelat
 
 End Function
 
+Private Function TryBuildWildCardSuffixOrPreBuildParams(ByVal FieldName As String, ByVal FieldDataType As SqlFieldDataType, _
+                                       ByRef RelationalOperator As SqlRelationalOperators, _
+                                       ByRef FilterValue As Variant, _
+                                       ByRef FilterValue2 As Variant, _
+                                       ByRef IgnoreValue As Variant, _
+                                       ByRef Criteria As String) As Boolean
+
+   Dim Criteria1 As String
+   Dim Criteria2 As String
+
+   If (RelationalOperator And SQL_Like) = SQL_Like Then
+      FilterValue = FilterValue & SqlWildCardString
+   ElseIf (FieldDataType And SQL_Date) = SQL_Date Then
+      If (RelationalOperator And SQL_LessThan) = 0 Then ' no < therefore:  >, >= or only =
+         If (RelationalOperator And SQL_GreaterThan) = SQL_GreaterThan Then
+            ' change nothing ... >= DataValue  / SQL_Add_WildCardSuffix is not logical
+         Else ' Consider the whole day ... FieldName >= DateValue and FieldName < DateAdd("d", 1, FilterValue))
+            Criteria = BuildCriteria(FieldName, FieldDataType, SQL_GreaterThan + SQL_Equal, FilterValue, , , False) & _
+                            SqlAndConcatString & _
+                            BuildCriteria(FieldName, FieldDataType, SQL_LessThan, DateAdd("d", 1, CDate(CLng(FilterValue))), , , False)
+            TryBuildWildCardSuffixOrPreBuildParams = True
+            Exit Function
+         End If
+      Else
+         If (RelationalOperator And SQL_Equal) = SQL_Equal Then
+            RelationalOperator = RelationalOperator - SQL_Equal
+         End If
+         FilterValue = DateAdd("d", 1, CDate(CLng(FilterValue)))
+      End If
+   ElseIf (FieldDataType And SQL_Numeric) = SQL_Numeric Then
+      If (RelationalOperator And SQL_LessThan) = 0 Then ' no < daher:  >, >= or only =
+         If (RelationalOperator And SQL_GreaterThan) = SQL_GreaterThan Then
+            If FilterValue Like "*[,.]*[*]" Then
+               FilterValue = Replace(FilterValue, "*", 0)
+            ElseIf FilterValue Like "*[*]" Then
+               FilterValue = Replace(FilterValue, "*", vbNullString)
+            End If
+            ' change nothing => >= Number  / SQL_Add_WildCardSuffix is not logical
+         Else ' Consider following decimal values ... FieldName >= Number and FieldName < (Number + x)
+            If FilterValue Like "-*[*]" Then
+               If FilterValue Like "*[,.]*[*]" Then
+                  FilterValue2 = Replace(FilterValue, "*", 0)
+               Else
+                  FilterValue2 = Replace(FilterValue, "*", vbNullString)
+               End If
+               Criteria1 = BuildCriteria(FieldName, FieldDataType, SQL_GreaterThan, GetNextDigitNumber(FilterValue, True), , Null, False)
+               Criteria2 = BuildCriteria(FieldName, FieldDataType, SQL_LessThan + SQL_Equal, FilterValue2, , Null, False)
+            Else
+               Criteria1 = BuildCriteria(FieldName, FieldDataType, SQL_GreaterThan + SQL_Equal, FilterValue, , Null, False)
+               Criteria2 = BuildCriteria(FieldName, FieldDataType, SQL_LessThan, GetNextDigitNumber(FilterValue), , Null, False)
+            End If
+            Criteria = Criteria1 & SqlAndConcatString & Criteria2
+            TryBuildWildCardSuffixOrPreBuildParams = True
+            Exit Function
+         End If
+      Else
+         If (RelationalOperator And SQL_Equal) = SQL_Equal Then
+            RelationalOperator = RelationalOperator - SQL_Equal
+         End If
+         FilterValue = GetNextDigitNumber(FilterValue)
+      End If
+   End If
+
+End Function
+
+Private Function TryBuildNumericSpecialCasesCriteria(ByRef FieldName As String, ByVal FieldDataType As SqlFieldDataType, _
+                                       ByRef RelationalOperator As SqlRelationalOperators, _
+                                       ByRef FilterValue As Variant, _
+                                       ByRef IgnoreValue As Variant, _
+                                       ByRef DisableIgnoreNullValue As Boolean, _
+                                       ByRef Criteria As String) As Boolean
+
+   Dim CriteriaBuild As Boolean
+   Dim TempArr() As String
+   
+   Const FilterValue2 As Variant = Null
+
+   FilterValue = Trim(FilterValue)
+            
+   If FilterValue Like "[0-9]*..*[0-9]*" Or FilterValue Like "[+-][0-9]*..*[0-9]*" Then
+      TempArr = Split(FilterValue, "..")
+      Criteria = BuildCriteria(FieldName, FieldDataType, SQL_Between, Trim(TempArr(0)), Trim(TempArr(1)), IgnoreValue, DisableIgnoreNullValue)
+      CriteriaBuild = True
+   ElseIf FilterValue Like "[0-9]*-*[0-9]*" Or FilterValue Like "[+-][0-9]*-*[0-9]*" Then    ' convert to a..b
+      If Left(FilterValue, 1) = "-" Then
+         FilterValue = "{M}" & Mid(FilterValue, 2)
+      End If
+      FilterValue = Replace(FilterValue, "  ", " ")
+      FilterValue = Replace(FilterValue, "- -", "--")
+      FilterValue = Replace(FilterValue, "--", "-{M}")
+      FilterValue = Replace(FilterValue, "-", "..")
+      FilterValue = Replace(FilterValue, "{M}", "-")
+      
+      TempArr = Split(FilterValue, "..")
+      Criteria = BuildCriteria(FieldName, FieldDataType, SQL_Between, Trim(TempArr(0)), Trim(TempArr(1)), IgnoreValue, DisableIgnoreNullValue)
+      CriteriaBuild = True
+   ElseIf FilterValue Like "*[0-9]" & DecimalMarker & "*[*]" Then
+      If (RelationalOperator And SQL_Add_WildCardSuffix) = 0 Then
+         Criteria = BuildCriteria(FieldName, FieldDataType, RelationalOperator + SQL_Add_WildCardSuffix, FilterValue, FilterValue2, IgnoreValue, DisableIgnoreNullValue)
+         CriteriaBuild = True
+      End If
+   End If
+   
+   TryBuildNumericSpecialCasesCriteria = CriteriaBuild
+
+End Function
+
 Private Function TryBuildArrayCriteria(ByRef FieldName As String, ByVal FieldDataType As SqlFieldDataType, _
                                        ByRef RelationalOperator As SqlRelationalOperators, _
                                        ByRef FilterValue As Variant, _
@@ -791,9 +908,9 @@ Private Function TryBuildArrayCriteria(ByRef FieldName As String, ByVal FieldDat
       Exit Function
    End If
 
-   'Kriterien über Or verbinden
+   'Connect criteria via Or
    For Each itm In FilterValue
-      ItmCriteria = BuildCriteria(FieldName, FieldDataType, RelationalOperator, itm, , IgnoreValue)
+      ItmCriteria = BuildCriteria(FieldName, FieldDataType, RelationalOperator, itm, , IgnoreValue, False)
       If Len(ItmCriteria) > 0 Then
          Criteria = Criteria & SqlOrConcatString & ItmCriteria
       End If
@@ -821,8 +938,16 @@ Private Function TryBuildInCriteria(ByRef FieldName As String, ByVal FieldDataTy
 
    If IsArray(FilterValue) Then
       FilterValueString = GetValueArrayString(FilterValue, FieldDataType, ",", IgnoreValue)
-   ElseIf VarType(FilterValue) = vbString Then ' Value ist bereits die Auflistung als String
-      FilterValueString = FilterValue
+   ElseIf VarType(FilterValue) = vbString Then
+      If FieldDataType = SQL_Text Then
+         If Left(FilterValue, 1) = "'" Then ' Is already as SQL text in the FilterString
+            FilterValueString = FilterValue
+         Else
+            FilterValueString = ConvertToSqlText(FilterValue, FieldDataType)
+         End If
+      Else
+         FilterValueString = FilterValue ' Value is already in the listing as a string
+      End If
    Else
       FilterValueString = ConvertToSqlText(FilterValue, FieldDataType)
    End If
@@ -864,21 +989,21 @@ Private Function TryBuildBetweenCriteria(ByRef FieldName As String, ByVal FieldD
       Exit Function
    End If
    
-   If (RelationalOperator And SQL_Not) = SQL_Not Then 'Bedingung umdrehen
-      Criteria1 = BuildCriteria(FieldName, FieldDataType, SQL_LessThan, FilterValue, , IgnoreValue)
-      Criteria2 = BuildCriteria(FieldName, FieldDataType, SQL_GreaterThan, FilterValue2, , IgnoreValue)
+   If (RelationalOperator And SQL_Not) = SQL_Not Then 'Reverse condition
+      Criteria1 = BuildCriteria(FieldName, FieldDataType, SQL_LessThan, FilterValue, , IgnoreValue, False)
+      Criteria2 = BuildCriteria(FieldName, FieldDataType, SQL_GreaterThan, FilterValue2, , IgnoreValue, False)
       Criteria = Criteria1 & SqlAndConcatString & Criteria2
       TryBuildBetweenCriteria = True
       Exit Function
    End If
    
    If FieldDataType = SQL_Numeric Then
-      If FilterValue2 Like "<=*" Then 'wegschneiden
+      If FilterValue2 Like "<=*" Then 'cut away
          FilterValue2 = Mid(FilterValue2, 3)
       ElseIf FilterValue2 Like "<*" Then
          FilterValue2 = Mid(FilterValue2, 2)
-         Criteria1 = BuildCriteria(FieldName, FieldDataType, SQL_GreaterThan + SQL_Equal, FilterValue)
-         Criteria2 = BuildCriteria(FieldName, FieldDataType, SQL_LessThan, FilterValue2)
+         Criteria1 = BuildCriteria(FieldName, FieldDataType, SQL_GreaterThan + SQL_Equal, FilterValue, , Null, False)
+         Criteria2 = BuildCriteria(FieldName, FieldDataType, SQL_LessThan, FilterValue2, , Null, False)
          Criteria = Criteria1 & SqlAndConcatString & Criteria2
          TryBuildBetweenCriteria = True
          Exit Function
@@ -892,14 +1017,14 @@ Private Function TryBuildBetweenCriteria(ByRef FieldName As String, ByVal FieldD
       FilterValue = FilterValue2
       FilterValue2 = GetCheckedIgnoreValue(IgnoreValue)
    ElseIf (FieldDataType And SQL_Date) = SQL_Date And (RelationalOperator And SQL_Add_WildCardSuffix) Then
-      Criteria1 = BuildCriteria(FieldName, FieldDataType, SQL_GreaterThan + SQL_Equal, FilterValue)
-      Criteria2 = BuildCriteria(FieldName, FieldDataType, SQL_LessThan + SQL_Equal + SQL_Add_WildCardSuffix, FilterValue2)
+      Criteria1 = BuildCriteria(FieldName, FieldDataType, SQL_GreaterThan + SQL_Equal, FilterValue, , Null, False)
+      Criteria2 = BuildCriteria(FieldName, FieldDataType, SQL_LessThan + SQL_Equal + SQL_Add_WildCardSuffix, FilterValue2, , Null, False)
       Criteria = Criteria1 & SqlAndConcatString & Criteria2
       TryBuildBetweenCriteria = True
       Exit Function
    ElseIf (FieldDataType And SQL_Numeric) = SQL_Numeric And (RelationalOperator And SQL_Add_WildCardSuffix) Then
-      Criteria1 = BuildCriteria(FieldName, FieldDataType, SQL_GreaterThan + SQL_Equal, FilterValue)
-      Criteria2 = BuildCriteria(FieldName, FieldDataType, SQL_LessThan + SQL_Equal + SQL_Add_WildCardSuffix, FilterValue2)
+      Criteria1 = BuildCriteria(FieldName, FieldDataType, SQL_GreaterThan + SQL_Equal, FilterValue, , Null, False)
+      Criteria2 = BuildCriteria(FieldName, FieldDataType, SQL_LessThan + SQL_Equal + SQL_Add_WildCardSuffix, FilterValue2, , Null, False)
       Criteria = Criteria1 & SqlAndConcatString & Criteria2
       TryBuildBetweenCriteria = True
       Exit Function
@@ -920,7 +1045,7 @@ Private Function GetCheckedIgnoreValue(ByVal IgnoreValue As Variant) As Variant
 End Function
 
 Private Function NullFilterOrEmptyFilter(ByVal FieldName As String, ByVal FieldDataType As SqlFieldDataType, _
-                                          ByVal RelationalOperator As SqlRelationalOperators, _
+                                         ByVal RelationalOperator As SqlRelationalOperators, _
                                          ByVal Value As Variant, ByVal IgnoreValue As Variant, _
                                          ByRef NullFilterString As String, _
                                 Optional ByVal DisableIgnoreNullValue As Boolean = False) As Boolean

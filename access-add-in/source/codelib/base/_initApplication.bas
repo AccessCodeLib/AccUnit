@@ -1,22 +1,20 @@
 Attribute VB_Name = "_initApplication"
 '---------------------------------------------------------------------------------------
-' Modul: _initApplication (2009-07-08)
+' Package: base._initApplication
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Initialisierungsaufruf der Anwendung
-' </summary>
-' <remarks>
-' </remarks>
-' \ingroup base
-' @todo StartApplication-Prozedur für allgemeine Verwendung umschreiben => in Klasse verlagern
-'**/
+'
+' Initialising the application
+'
+' Author:
+'     Josef Poetzl
+'
+'---------------------------------------------------------------------------------------
+
 '---------------------------------------------------------------------------------------
 '<codelib>
 '  <file>base/_initApplication.bas</file>
 '  <license>_codelib/license.bas</license>
 '  <use>base/modApplication.bas</use>
-'  <use>base/defGlobal.bas</use>
 '</codelib>
 '---------------------------------------------------------------------------------------
 '
@@ -28,21 +26,19 @@ Option Private Module
 ' Anwendungseinstellungen
 '-------------------------
 '
-' => siehe _config_Application
+' => see _config_Application
 '
 '-------------------------
 
 '---------------------------------------------------------------------------------------
 ' Function: StartApplication
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Prozedur für den Anwendungsstart
-' </summary>
-' <returns>Boolean</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Procedure for application start-up
+'
+' Returns:
+'     Boolean - sucess = true
+'
 '---------------------------------------------------------------------------------------
 Public Function StartApplication() As Boolean
 
@@ -55,7 +51,7 @@ ExitHere:
 
 HandleErr:
    StartApplication = False
-   MsgBox "Anwendung kann nicht gestartet werden.", vbCritical, CurrentApplicationName
+   MsgBox "Application can not be started.", vbCritical, CurrentApplicationName
    Application.Quit acQuitSaveNone
    Resume ExitHere
 
