@@ -40,25 +40,9 @@ Private Const EXTENSION_KEY As String = "AccUnitConfiguration"
 #Const ADODB_EARLYBINDING = 0
 'ADODB wird hier über Late binding eingesetzt, da es nur zum Erstellen der Tabelle genutzt wird
 
+Private m_ACLibConfig As ACLibConfiguration
 
-' Grundeinstellungen
-Private Const ACLIB_CONFIG_ROOTFOLDERNAME As String = "AccessCodeLibrary"
-Private Const ACLIB_CONFIG_DATABASENAME As String = "ACLib_Config"
-Private Const ACLIB_CONFIG_TABLEDEFNAME As String = "ACLib_ConfigTable"
-
-Private Const SQL_CONFIG_TABLE_FIELD_PROPNAME As String = "PropName"
-Private Const SQL_CONFIG_TABLE_FIELD_PROPVALUE As String = "PropValue"
-Private Const SQL_SELECT_PROPERTYVALUE As String = _
-      "select " & SQL_CONFIG_TABLE_FIELD_PROPNAME & ", " & SQL_CONFIG_TABLE_FIELD_PROPVALUE & _
-      " From " & ACLIB_CONFIG_TABLEDEFNAME & " where " & SQL_CONFIG_TABLE_FIELD_PROPNAME & " = [?]"
-      
-Private Const SQL_CREATETABLE_CONFIGTABLE As String = _
-            "CREATE TABLE " & ACLIB_CONFIG_TABLEDEFNAME & _
-            "([PropName] varchar(255) WITH COMPRESSION NOT NULL," & _
-            " [PropValue] varchar(255) WITH COMPRESSION," & _
-            " [PropRemarks] text WITH COMPRESSION," & _
-            " CONSTRAINT PK_" & ACLIB_CONFIG_TABLEDEFNAME & " PRIMARY KEY ([PropName]))"
-
+' Base config
 Private Const PROPNAME_ACCUNITDLLPATH As String = "AccUnitDllPath"
 
 ' Hilfsvariablen
@@ -115,8 +99,16 @@ End Sub
 
 
 '---------------------------------------------------------------------------------------
-' Ergänzungen für Ereiterung: AccUnitConfiguration
+' Ergänzungen für Erweiterung: AccUnitConfiguration
 '---------------------------------------------------------------------------------------
+
+
+Public Property Get ACLibConfig() As ACLibConfiguration
+   If m_ACLibConfig Is Nothing Then
+      Set m_ACLibConfig = New ACLibConfiguration
+   End If
+   Set ACLibConfig = m_ACLibConfig
+End Property
 
 Private Sub GetExtensionPropertyLookup(ByVal PropertyName As String, ByRef ResumeMode As ApplicationHandlerResumeModes, ByRef ResumeMessage As Variant)
 
@@ -140,7 +132,7 @@ End Property
 Public Property Get AccUnitDllPath() As String
 
    If Len(m_AccUnitDllPath) = 0 Then
-      m_AccUnitDllPath = GetACLibGlobalProperty(PROPNAME_ACCUNITDLLPATH)
+      m_AccUnitDllPath = ACLibConfig.GetACLibGlobalProperty(PROPNAME_ACCUNITDLLPATH)
       If Len(m_AccUnitDllPath) > 0 Then
          If Not DirExists(m_AccUnitDllPath) Then
             Err.Raise vbObjectError, "AccUnitConfiguration.AccUnitDllPath", "Das Verzeichnis '" & m_AccUnitDllPath & "' ist nicht vorhanden!"
@@ -148,7 +140,7 @@ Public Property Get AccUnitDllPath() As String
          End If
          If VBA.Right$(m_AccUnitDllPath, 1) <> "\" Then
             m_AccUnitDllPath = m_AccUnitDllPath & "\"
-            SetACLibGlobalProperty PROPNAME_ACCUNITDLLPATH, m_AccUnitDllPath
+            ACLibConfig.SetACLibGlobalProperty PROPNAME_ACCUNITDLLPATH, m_AccUnitDllPath
          End If
       End If
    End If
@@ -169,180 +161,10 @@ Public Property Let AccUnitDllPath(ByVal NewPath As String)
       End If
    End If
    m_AccUnitDllPath = NewPath
-   SetACLibGlobalProperty PROPNAME_ACCUNITDLLPATH, m_AccUnitDllPath
+   ACLibConfig.SetACLibGlobalProperty PROPNAME_ACCUNITDLLPATH, m_AccUnitDllPath
   
 End Property
 
 Private Property Get DefaultAccUnitDllPath() As String
    DefaultAccUnitDllPath = DefaultAccUnitLibFolder & "\"
 End Property
-
-Private Function GetACLibGlobalProperty(ByRef PropertyName As String) As String
-   
-   Dim rst As DAO.Recordset
-   Dim SelectSql As String
-
-   SelectSql = Replace(SQL_SELECT_PROPERTYVALUE, "[?]", DaoSqlTool.TextToSqlText(PropertyName))
-   Set rst = ACLibPropertyDb.OpenRecordset(SelectSql)
-   If Not rst.EOF Then
-      GetACLibGlobalProperty = Nz(rst.Fields(SQL_CONFIG_TABLE_FIELD_PROPVALUE), vbNullString)
-   Else
-      GetACLibGlobalProperty = vbNullString
-   End If
-   rst.Close
-
-End Function
-
-Private Function SetACLibGlobalProperty(ByRef PropertyName As String, ByRef NewValue As String) As String
-   
-   Dim rst As DAO.Recordset
-   Dim SelectSql As String
-
-   SelectSql = Replace(SQL_SELECT_PROPERTYVALUE, "[?]", DaoSqlTool.TextToSqlText(PropertyName))
-   Set rst = ACLibPropertyDb.OpenRecordset(SelectSql)
-   If rst.EOF Then
-      rst.AddNew
-      rst.Fields(SQL_CONFIG_TABLE_FIELD_PROPNAME).Value = PropertyName
-   Else
-      rst.Edit
-   End If
-   rst.Fields(SQL_CONFIG_TABLE_FIELD_PROPVALUE).Value = NewValue
-   rst.Update
-   rst.Close
- 
-End Function
-
-Private Property Get ACLibPropertyDb() As DAO.Database
-
-   If m_ACLibPropertyDb Is Nothing Then
-      If CheckConfigTableDef Then
-         Set m_ACLibPropertyDb = CodeDb
-      End If
-   End If
-   Set ACLibPropertyDb = m_ACLibPropertyDb
- 
-End Property
-
-#If ADODB_EARLYBINDING Then
-Private Function CreateConfigTable(ByRef TargetConnection As ADODB.Connection) As Boolean
-#Else
-Private Function CreateConfigTable(ByRef TargetConnection As Object) As Boolean
-#End If
-      
-   TargetConnection.Execute SQL_CREATETABLE_CONFIGTABLE
-   CreateConfigTable = True
-
-End Function
-
-
-Private Function CheckConfigTableDef() As Boolean
-
-   Dim db As DAO.Database
-   Dim tdf As DAO.TableDef
-
-   Set db = CodeDb
-   
-   If Not TableDefExists(ACLIB_CONFIG_TABLEDEFNAME, db) Then
-   
-      Set tdf = db.CreateTableDef(ACLIB_CONFIG_TABLEDEFNAME)
-      tdf.Connect = ";Database=" & ACLibConfigDatabaseFile
-      tdf.SourceTableName = ACLIB_CONFIG_TABLEDEFNAME
-      db.TableDefs.Append tdf
-      
-   ElseIf Len(VBA.Dir$(VBA.Mid$(db.TableDefs(ACLIB_CONFIG_TABLEDEFNAME).Connect, VBA.Len(";Database=") + 1))) = 0 Then
-   
-      With db.TableDefs(ACLIB_CONFIG_TABLEDEFNAME)
-         .Connect = ";Database=" & ACLibConfigDatabaseFile
-         .RefreshLink
-      End With
-      
-   End If
-   
-   Set db = Nothing
-   
-   CheckConfigTableDef = True
-
-End Function
-
-Public Property Get ACLibConfigDirectory() As String
-   
-   Dim strPath As String
-
-   strPath = VBA.Environ("Appdata") & "\" & ACLIB_CONFIG_ROOTFOLDERNAME & "\"
-   If Len(VBA.Dir$(strPath, vbDirectory)) = 0 Then
-      VBA.MkDir strPath
-   End If
-   
-   ACLibConfigDirectory = strPath
-
-End Property
-
-Private Property Get ACLibConfigDatabaseFile() As String
-   
-   Dim db As DAO.Database
-   Dim strDbFile As String
-   Dim bolCreateConfigTable As Boolean
-   
-#If ADODB_EARLYBINDING = 1 Then
-   Dim cnn As ADODB.Connection
-#Else
-   Dim cnn As Object
-#End If
-
-   strDbFile = CodeDb.Name
-   strDbFile = VBA.Mid$(strDbFile, VBA.InStrRev(strDbFile, "."))
-   If VBA.Left$(strDbFile, 5) = ".accd" Then
-      strDbFile = ".accdu"
-   Else
-      strDbFile = ".mdt"
-   End If
-   strDbFile = ACLibConfigDirectory & ACLIB_CONFIG_DATABASENAME & strDbFile
-   
-   If Len(VBA.Dir$(strDbFile)) = 0 Then
-
-      'Datenbank anlegen
-      If CodeDb.Version = "4.0" Then
-         Set db = DBEngine.CreateDatabase(strDbFile, dbLangGeneral, dbVersion40)
-      Else
-         Set db = DBEngine.CreateDatabase(strDbFile, dbLangGeneral)
-      End If
-      db.Close
-      
-      bolCreateConfigTable = True
-   
-   Else 'Prüfen ob Config-Tabelle vorhanden ist
-      
-      Set db = DBEngine.OpenDatabase(strDbFile)
-      bolCreateConfigTable = Not TableDefExists(ACLIB_CONFIG_TABLEDEFNAME, db)
-      db.Close
-   
-   End If
-   
-   If bolCreateConfigTable Then
-      'Tabelle erstellen
-#If ADODB_EARLYBINDING = 1 Then
-      Set cnn = New ADODB.Connection
-#Else
-      Set cnn = CreateObject("ADODB.Connection")
-#End If
-      cnn.ConnectionString = VBA.Replace(CodeProject.Connection.ConnectionString, CodeDb.Name, strDbFile)
-      cnn.Open
-      CreateConfigTable cnn
-      cnn.Close
-      Set cnn = Nothing
-   End If
-
-   ACLibConfigDatabaseFile = strDbFile
-
-End Property
-
-Private Property Get DaoSqlTool()
-   If m_DaoSqlTools Is Nothing Then
-      Set m_DaoSqlTools = SqlTools.Clone("\#yyyy-mm-dd\#", "True", "*")
-   End If
-   Set DaoSqlTool = m_DaoSqlTools
-End Property
-
-Private Sub Class_Terminate()
-   Set m_DaoSqlTools = Nothing
-End Sub

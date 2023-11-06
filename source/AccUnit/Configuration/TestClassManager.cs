@@ -220,7 +220,9 @@ namespace AccessCodeLib.AccUnit.Configuration
             get
             {
                 var fileInfo = new FileInfo(ActiveVBProject.FileName);
-                return fileInfo.Name;
+                var fileName = fileInfo.Name;
+                fileName = fileName.Substring(0, fileName.Length - fileInfo.Extension.Length);
+                return fileName;
             }
         }
 

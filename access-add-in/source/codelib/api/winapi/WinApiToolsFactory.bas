@@ -1,15 +1,16 @@
 Attribute VB_Name = "WinApiToolsFactory"
 Attribute VB_Description = "Gebräuchliche WinAPI-Funktionen"
 '---------------------------------------------------------------------------------------
-' Modul: WinApiToolsFactory
+' Package: api.winapi.WinApiToolsFactory
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Erzeugt Instanz von WinApiTools
-' </summary>
-' <remarks>
-' </remarks>
-'**/
+'
+' Creates instance of WinApiTools
+'
+' Author:
+'     Josef Poetzl
+'
+'---------------------------------------------------------------------------------------
+
 '---------------------------------------------------------------------------------------
 '<codelib>
 '  <file>api/winapi/WinApiToolsFactory.bas</file>

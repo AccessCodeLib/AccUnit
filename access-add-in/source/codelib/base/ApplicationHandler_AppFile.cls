@@ -9,20 +9,20 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "Erweiterung für ApplicationHandler-Klasse: Anwendungsspezifische Dateien verwalten"
 '---------------------------------------------------------------------------------------
-' Klassenmodul: ApplicationHandler_File (Josef Pötzl, 2009-12-11)
+' Class: base.ApplicationHandler_File
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Erweiterung für ApplicationHandler-Klasse: Anwendungsspezifische Dateien verwalten
-' </summary>
-' <remarks>
-' Aktivierung im _config_Application-Modul:\n
-' <code>modApplication.AddApplicationHandlerExtension New ApplicationHandler_AppFile</code>
-' oder mittels ExtensionCollection:\n
-' <code>ExtensionsCollectionReferenz.Add New ApplicationHandler_AppFile</code>
-' </remarks>
-'\ingroup base
-'**/
+'
+' Extension for ApplicationHandler class: manage application-specific files
+'
+' Author:
+'     Josef Poetzl
+'
+' Remarks:
+'     Activation in the _config_Application module:
+'     <code>ExtensionsCollectionReferenz.Add New ApplicationHandler_AppFile</code>
+'
+'---------------------------------------------------------------------------------------
+
 '---------------------------------------------------------------------------------------
 '<codelib>
 '  <file>base/ApplicationHandler_AppFile.cls</file>
@@ -46,7 +46,7 @@ Private Const TABLE_FIELD_FILE As String = "file"
 
 
 '---------------------------------------------------------------------------------------
-' Standard-Initialisierung von Erweiterungen
+' Standard initialization of extensions
 '---------------------------------------------------------------------------------------
 
 Private WithEvents m_ApplicationHandler As ApplicationHandler
@@ -61,7 +61,7 @@ Public Property Get ExtensionKey() As String
 End Property
 
 '---------------------------------------------------------------------------------------
-' Standard-Ereignisbehandlung von Erweiterungen
+' Standard event handling of extensions
 '---------------------------------------------------------------------------------------
 
 ' CheckExtension
@@ -89,14 +89,13 @@ End Sub
 
 ' AfterDispose
 Private Sub m_ApplicationHandler_AfterDispose(ByRef ResumeMode As ApplicationHandlerResumeModes, ByRef ResumeMessage As Variant)
-'=> Referenz in m_ApplicationHandler auf Nothing setzen
+'=> Set reference in m_ApplicationHandler to Nothing
    Set m_ApplicationHandler = Nothing
 End Sub
 
 
-
 '---------------------------------------------------------------------------------------
-' Ergänzungen für Ereiterung: ApplicationHandler_AppFile
+' Additions for extension: ApplicationHandler_AppFile
 '---------------------------------------------------------------------------------------
 '
 
@@ -122,33 +121,26 @@ Public Property Get AppFileTableName() As String
 End Property
 
 '---------------------------------------------------------------------------------------
-' Function: CreateAppFile (2009-07-30)
+' Function: CreateAppFile
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Datei aus usys_AppFiles extrahieren
-' </summary>
-' <param name="FileID">Datensatzkennung</param>
-' <param name="FileName">zu erzeugender Dateiname</param>
-' <returns>Boolean</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Extract file from usys_AppFiles
+'
+' Parameters:
+'     FileID   - Record identifier
+'     FileName - File name to be created
+'
+' Returns:
+'     Boolean
+'
 '---------------------------------------------------------------------------------------
-Public Function CreateAppFile(ByVal FileID As String, ByVal FileName As String, _
-                     Optional ByVal ExtFilterFieldName As String, Optional ExtFilterValue As Variant) As Boolean
+Public Function CreateAppFile(ByVal FileID As String, ByVal FileName As String) As Boolean
 
    Dim Binfile() As Byte
    Dim FieldSize As Long
    Dim fld As DAO.Field
-   Dim SelectSql As String
 
-   SelectSql = "select " & TABLE_FIELD_FILE & " from " & TABLE_APPFILES & " where " & TABLE_FIELD_ID & "='" & Replace(FileID, "'", "''") & "'"
-   If Len(ExtFilterFieldName) > 0 Then
-      SelectSql = SelectSql & " and " & ExtFilterFieldName & " = '" & Replace(ExtFilterValue, "'", "''") & "'"
-   End If
-
-   With CodeDb.OpenRecordset(SelectSql)
+   With CodeDb.OpenRecordset("select " & TABLE_FIELD_FILE & " from " & TABLE_APPFILES & " where " & TABLE_FIELD_ID & "='" & Replace(FileID, "'", "''") & "'")
       If Not .EOF Then
       
          Set fld = .Fields(0)
@@ -183,16 +175,19 @@ End Sub
 '---------------------------------------------------------------------------------------
 ' Function: SaveAppFile
 '---------------------------------------------------------------------------------------
-'/
-' <summary>
+'
 ' Datei in usys_AppFiles speichern
-' </summary>
-' <param name="sFileID">Kennung in Tabelle (Feld "id")</param>
-' <param name="sFileName">Dateiname</param>
-' <param name="saveVersion">Version abspeichern</param>
-' <remarks>
-' </remarks>
-'/
+'
+' Parameters:
+'     FileID         - Identifier in table
+'     FileName       - File name to be created
+'     SaveVersion    - (optional) Read version from file (e. g. from dll file)
+'     ExtFieldName   - (optional) append additional data to data field: Field name
+'     ExtFieldValue  - (optional) append additional data to data field: Value
+'
+' Returns:
+'     Boolean  - True: File was saved in table
+'
 '---------------------------------------------------------------------------------------
 Public Function SaveAppFile(ByVal FileID As String, ByVal FileName As String, _
                    Optional ByVal SaveVersion As Boolean = False, _
@@ -295,8 +290,9 @@ End Function
 
 
 '---------------------------------------------------------------------------------------
-' Ereignisbehandlung von m_ApplicationHandler
+' Event handling of m_ApplicationHandler
 '
+
 ' AppFileBeforeCreateFile
 Private Sub m_ApplicationHandler_AppFileBeforeCreateFile(ByVal FileID As String, ByVal FileName As String, _
                               ByRef ResumeMode As ApplicationHandlerResumeModes, ByRef ResumeMessage As Variant)
@@ -323,7 +319,7 @@ Private Sub m_ApplicationHandler_AppFileBeforeSaveFile(ByVal FileID As String, B
    Completed = SaveAppFile(FileID, FileName, SaveVersion, ExtFieldName, ExtFieldValue)
    If Completed Then
       ResumeMode = ApplicationHandlerResumeModes.AppResumeMode_Completed
-   Else 'Fehler rückmelden
+   Else 'resume error
       ResumeMode = ApplicationHandlerResumeModes.AppResumeMode_Error
    End If
    

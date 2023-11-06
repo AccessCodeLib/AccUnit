@@ -19,6 +19,8 @@ namespace AccessCodeLib.AccUnit.Configuration
         void RemoveAccUnitLoaderFactoryModule(VBProject VBProject = null);
         void ExportTestClasses(string ExportPath = null, VBProject VBProject = null);
         void ImportTestClasses(string FileNameFilter = null, string ImportPath = null, VBProject VBProject = null);
+
+        IUserSettings UserSettings { get; } 
     }
 
     [ComVisible(true)]
@@ -125,6 +127,14 @@ namespace AccessCodeLib.AccUnit.Configuration
                 testClassManager.ImportTestComponents(FileNameFilter, importPath, true);
             }
         }
+
+        public IUserSettings UserSettings
+        {
+            get
+            {
+                return Configuration.UserSettings.Current;
+            }
+        }   
 
         /*
         public static void CheckAccUnitVBAReferences(VBProject vbProject)

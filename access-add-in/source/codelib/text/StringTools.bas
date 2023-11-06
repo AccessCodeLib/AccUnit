@@ -1,16 +1,20 @@
 Attribute VB_Name = "StringTools"
 Attribute VB_Description = "String-Hilfsfunktionen"
 '---------------------------------------------------------------------------------------
-' Modul: StringTools
+' Package: text.StringTools
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Text-Hilfsfunktionen
-' </summary>
-' <remarks></remarks>
 '
-' \ingroup text
-'**/
+' Text functions
+'
+' Author:
+'     Josef Poetzl, Sten Schmidt
+'
+' Remarks:
+'     Use DisableReplaceVbaStringFunctions = 1 in conditional compilation arguments (in vbe project properties)
+'     to disable replacement of VBA.Format function
+'
+'---------------------------------------------------------------------------------------
+
 '---------------------------------------------------------------------------------------
 '<codelib>
 '  <file>text/StringTools.bas</file>
@@ -26,16 +30,13 @@ Option Private Module
 '---------------------------------------------------------------------------------------
 ' Enum: TrimOption
 '---------------------------------------------------------------------------------------
-'/**                                            '<-- Start Doxygen-Block
-' <summary>
-' Verfügbare Trim-Optionen für die Trim-Funktion
-' </summary>
-' <list type="table">
-'   <item><term>TrimStart (1)</term><description>Führende Leerzeichen aus einer Zeichenfolgenvariablen entfernen</description></item>
-'   <item><term>TrimEnd (2)</term><description>Nachgestellte Leerzeichen aus einer Zeichenfolgenvariablen entfernen</description></item>
-'   <item><term>TrimBoth (3)</term><description>Führende und nachgestellte Leerzeichen entfernen</description></item>
-' </list>
-'**/                                            '<-- Ende Doxygen-Block
+'
+' Available trim options for the trim function
+'
+'  TrimStart - (1) Remove leading spaces from a string variable
+'  TrimEnd   - (2) Remove trailing spaces from a string variable
+'  TrimBoth  - (3) Remove leading and trailing spaces
+'
 '---------------------------------------------------------------------------------------
 Public Enum TrimOption
     TrimStart = 1
@@ -46,15 +47,16 @@ End Enum
 '---------------------------------------------------------------------------------------
 ' Function: IsNullOrEmpty
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Gibt an, ob der übergebene Wert Null oder eine leere Zeichenfolge ist.
-' </summary>
-' <param name="ValueToTest">Zu prüfender Wert</param>
-' <param name="IgnoreSpaces">Leerzeichen am Anfang u. Ende ignorieren</param>
-' <returns>Boolean</returns>
-' <remarks></remarks>
-'**/
+'
+' Specifies whether the passed value is null or an empty string
+'
+' Parameters:
+'     ValueToTest    - Value to be checked
+'     IgnoreSpaces   - Ignore spaces at the beginning and end
+'
+' Returns:
+'     Boolean
+'
 '---------------------------------------------------------------------------------------
 Public Function IsNullOrEmpty(ByVal ValueToTest As Variant, Optional ByVal IgnoreSpaces As Boolean = False) As Boolean
    
@@ -78,15 +80,16 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: FormatText
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Fügt in den Platzhalter des Formattextes die übergebenen Parameter ein
-' </summary>
-' <param name="FormatString">Textformat mit Platzhalter ... Beispiel: "XYZ{0}, {1}"</param>
-' <param name="Args">übergabeparameter in passender Reihenfolge</param>
-' <returns>String</returns>
-' <remarks></remarks>
-'**/
+'
+' Inserts the passed parameters into the placeholder {0..n} of the format text
+'
+' Parameters:
+'     FormatString   - Text format with placeholder ... Example: "XYZ{0}, {1}"
+'     Args           - Passing parameters in suitable order
+'
+' Returns:
+'     String
+'
 '---------------------------------------------------------------------------------------
 Public Function FormatText(ByVal FormatString As String, ParamArray Args() As Variant) As String
 
@@ -111,21 +114,29 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: Format
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Ersetzt die VBA-Formatfunktion
-' Erweiterung: [h] bzw. [hh] für Stundenanzeige über 24
-' </summary>
-' <param name="Expression"></param>
-' <param name="FormatString">Ein gültiger benannter oder benutzerdefinierter Formatausdruck inkl. Erweiterung für Stundenanzeige über 24 (Standard-Formatanweisungen siehe VBA.Format)</param>
-' <param name="FirstDayOfWeek">Wird an VBA.Format weitergereicht</param>
-' <param name="FirstWeekOfYear">Wird an VBA.Format weitergereicht</param>
-' <returns>String</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Replaces the VBA format function
+' Extension: [h] or [hh] for hour display over 24
+'
+' Parameters:
+'     Expression        - The value to format
+'     FormatString      - A valid named or user-defined format expression incl. extension for hours display over 24 (for standard format instructions see VBA.Format)
+'     FirstDayOfWeek    - Passed on to VBA.Format
+'     FirstWeekOfYear   - Passed on to VBA.Format
+'
+' Returns:
+'     String
+'
 '---------------------------------------------------------------------------------------
+#If DisableReplaceVbaStringFunctions = 0 Then
 Public Function Format(ByVal Expression As Variant, Optional ByVal FormatString As Variant, _
+              Optional ByVal FirstDayOfWeek As VbDayOfWeek = vbSunday, _
+              Optional ByVal FirstWeekOfYear As VbFirstWeekOfYear = vbFirstJan1) As String
+   Format = FormatX(Expression, FormatString, FirstDayOfWeek, FirstWeekOfYear)
+End Function
+#End If
+
+Public Function FormatX(ByVal Expression As Variant, Optional ByVal FormatString As Variant, _
               Optional ByVal FirstDayOfWeek As VbDayOfWeek = vbSunday, _
               Optional ByVal FirstWeekOfYear As VbFirstWeekOfYear = vbFirstJan1) As String
 
@@ -152,25 +163,27 @@ Public Function Format(ByVal Expression As Variant, Optional ByVal FormatString 
       End If
    End If
    
-   Format = VBA.Format$(Expression, FormatString, FirstDayOfWeek, FirstWeekOfYear)
+   FormatX = VBA.Format$(Expression, FormatString, FirstDayOfWeek, FirstWeekOfYear)
 
 End Function
 
 '---------------------------------------------------------------------------------------
 ' Function: PadLeft
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Linksbündiges Auffüllen eines Strings
-' </summary>
-' <param name="value">String der augefüllt werden soll</param>
-' <param name="totalWidth">Gesamtlänge der resultierenen Zeichenfolge</param>
-' <param name="padChar">Zeichen mit dem aufgefüllt werden soll</param>
-' <returns>String</returns>
-' <remarks>
-' Wenn die Länge von value größer oder gleich totalWidth ist, wird das Resultat auf totalWidth Zeichen begrenzt
-' </remarks>
-'**/
+'
+' Left padding of a string
+'
+' Parameters:
+'     Value       - String to be filled in
+'     TotalWidth  - Total length of the resulting string
+'     PadChar     - (optional) Character to be padded with; Default: " "
+'
+' Returns:
+'     String
+'
+' Remarks:
+'     If the length of value is greater than or equal to totalWidth, the result is limited to totalWidth characters
+'
 '---------------------------------------------------------------------------------------
 Public Function PadLeft(ByVal Value As String, ByVal TotalWidth As Integer, Optional ByVal PadChar As String = " ") As String
     PadLeft = VBA.Right$(VBA.String$(TotalWidth, PadChar) & Value, TotalWidth)
@@ -179,18 +192,20 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: PadRight
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Rechtsbündiges Auffüllen eines Strings
-' </summary>
-' <param name="value">String der augefüllt werden soll</param>
-' <param name="totalWidth">Gesamtlänge der resultierenen Zeichenfolge</param>
-' <param name="padChar">Zeichen mit dem aufgefüllt werden soll</param>
-' <returns>String</returns>
-' <remarks>
-' Wenn die Länge von Value größer oder gleich totalWidth ist, wird das Resultat auf TotalWidth Zeichen begrenzt
-' </remarks>
-'**/
+'
+' Right padding of a string
+'
+' Parameters:
+'     Value       - String to be filled in
+'     TotalWidth  - Total length of the resulting string
+'     PadChar     - (optional) Character to be padded with; Default: " "
+'
+' Returns:
+'     String
+'
+' Remarks:
+'     If the length of value is greater than or equal to totalWidth, the result is limited to totalWidth characters
+'
 '---------------------------------------------------------------------------------------
 Public Function PadRight(ByVal Value As String, ByVal TotalWidth As Integer, Optional ByVal PadChar As String = " ") As String
     PadRight = VBA.Left$(Value & VBA.String$(TotalWidth, PadChar), TotalWidth)
@@ -199,17 +214,19 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: Contains
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Gibt an ob searchValue in der Zeichenfolge checkValue vorkommt.
-' </summary>
-' <param name="checkValue">Zeichenfolge die durchsucht werden soll</param>
-' <param name="searchValue">Zeichenfolge nach der gesucht werden soll</param>
-' <returns>Boolean</returns>
-' <remarks>
-' Ergibt True, wenn searchValue in checkValue enthalten ist oder searchValue den Wert vbNullString hat
-' </remarks>
-'**/
+'
+' Indicates whether SearchValue occurs in the CheckValue string
+'
+' Parameters:
+'     CheckValue  - String to be searched
+'     SearchValue - String to be searched for
+'
+' Returns:
+'     Boolean
+'
+' Remarks:
+'     Returns True if SearchValue is contained in CheckValue or SearchValue has the value vbNullString
+'
 '---------------------------------------------------------------------------------------
 Public Function Contains(ByVal CheckValue As String, ByVal SearchValue As String) As Boolean
     Contains = VBA.InStr(1, CheckValue, SearchValue, vbTextCompare) > 0
@@ -218,16 +235,16 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: EndsWith
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Gibt an ob die Zeichenfolge CheckValue mit SearchValue endet.
-' </summary>
-' <param name="CheckValue">Zeichenfolge die durchsucht werden soll</param>
-' <param name="SearchValue">Zeichenfolge nach der gesucht werden soll</param>
-' <returns>Boolean</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Indicates whether the string CheckValue ends with SearchValue
+'
+' Parameters:
+'     CheckValue  - String to be searched
+'     SearchValue - String to be searched for
+'
+' Returns:
+'     Boolean
+'
 '---------------------------------------------------------------------------------------
 Public Function EndsWith(ByVal CheckValue As String, ByVal SearchValue As String) As Boolean
     EndsWith = VBA.Right$(CheckValue, VBA.Len(SearchValue)) = SearchValue
@@ -236,16 +253,16 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: StartsWith
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Gibt an ob die Zeichenfolge CheckValue mit SearchValue beginnt.
-' </summary>
-' <param name="CheckValue">Zeichenfolge die durchsucht werden soll</param>
-' <param name="Searchvalue">Zeichenfolge nach der gesucht werden soll</param>
-' <returns>Boolean</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Indicates whether the string CheckValue starts with SearchValue
+'
+' Parameters:
+'     CheckValue  - String to be searched
+'     SearchValue - String to be searched for
+'
+' Returns:
+'     Boolean
+'
 '---------------------------------------------------------------------------------------
 Public Function StartsWith(ByVal CheckValue As String, ByVal SearchValue As String) As Boolean
     StartsWith = VBA.Left$(CheckValue, VBA.Len(SearchValue)) = SearchValue
@@ -254,14 +271,15 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: Length
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Gibt die Anzahl von Zeichen in Value zurück
-' </summary>
-' <returns>Anzahl Zeichen von Value als Long</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Returns the number of characters in Value
+'
+' Parameters:
+'     Value - String to be checked
+'
+' Returns:
+'     Long - Anzahl Zeichen von Value
+'
 '---------------------------------------------------------------------------------------
 Public Function Length(ByVal Value As String) As Long
     Length = VBA.Len(Value)
@@ -270,16 +288,16 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: Concat
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Fügt der Zeichenfolge ValueA die Zeihenfolge ValueB an.
-' </summary>
-' <param name="ValueA">Zeichenfolge</param>
-' <param name="ValueB">Zeichenfolge</param>
-' <returns>ValueB angefügt an ValueA als String</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Appends the string ValueB to the string ValueA.
+'
+' Parameters:
+'     ValueA - Base string
+'     ValueB - String to be append at end of A
+'
+' Returns:
+'     String - ValueB appended to ValueA
+'
 '---------------------------------------------------------------------------------------
 Public Function Concat(ByVal ValueA As String, ByVal ValueB As String) As String
     Concat = ValueA & ValueB
@@ -288,17 +306,18 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: Trim
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Entfernt führende und/oder nachfolgende Leerzeichen einer Zeichenfolge.
-' Ersetzt die Funktion VBA.Trim().
-' </summary>
-' <param name="Value">Zeichenfolge</param>
-' <param name="TrimType">Trim-Optionen</param>
-' <returns>String</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Removes leading and/or trailing spaces from a string
+'
+' Replaces the function VBA.Trim().
+'
+' Parameters:
+'     Value    - String to be trimmed
+'     TrimType - Trim options (at start, at end or both)
+'
+' Returns:
+'     String
+'
 '---------------------------------------------------------------------------------------
 Public Function Trim(ByVal Value As String, Optional ByVal TrimType As TrimOption = TrimOption.TrimBoth) As String
         
@@ -322,19 +341,20 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: Substring
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Gibt einen Teil der Zeichenfolge Value zurück, die an der Position StartIndex beginnt
-' und die Länge Length hat.
-' </summary>
-' <param name="Value">Zeichenfolge</param>
-' <param name="StartIndex">Startposition in der Zeichenfolge</param>
-' <param name="Length">Anzahl Zeichen die Zurückgegeben werden sollen</param>
-' <returns>String</returns>
-' <remarks>
-' StartIndex ist Nullterminiert, analog zu String.Substring() in .NET
-' </remarks>
-'**/
+'
+' Returns a part of the string Value starting at the position StartIndex and having the length Length.
+'
+' Parameters:
+'     Value       - String
+'     StartIndex  - Start position in the string
+'     Length      - Number of characters to be returned
+'
+' Returns:
+'     String
+'
+' Remarks:
+'     StartIndex is null terminated, analogous to String.Substring() in .NET
+'
 '---------------------------------------------------------------------------------------
 Public Function SubString(ByVal Value As String, ByVal StartIndex As Long, Optional ByVal Length As Long = 0) As String
     If Length = 0 Then Length = StringTools.Length(Value) - StartIndex
@@ -344,17 +364,17 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: InsertAt
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
+'
 ' Setzt die Zeichenfolge InsertValue an der Position Pos ein
-' </summary>
-' <param name="Value">Zeichenfolge</param>
-' <param name="InsertValue">Zeichenfolge die eingefügt werden soll</param>
-' <param name="Pos">Position an der die Zeichenfolge eingefügt werden soll (Pos ist nullterminiert)</param>
-' <returns>String</returns>
-' <remarks>
-' </remarks>
-'**/
+'
+' Parameters:
+'     Value       - String
+'     InsertValue - String to be inserted
+'     Pos         - Position at which the string is to be inserted (Pos is zero-terminated).
+'
+' Returns:
+'     String
+'
 '---------------------------------------------------------------------------------------
 Public Function InsertAt(ByVal Value As String, ByVal InsertValue As String, ByVal Pos As Long) As String
     InsertAt = VBA.Mid$(Value, 1, Pos) & InsertValue & StringTools.SubString(Value, Pos)
@@ -363,17 +383,19 @@ End Function
 '---------------------------------------------------------------------------------------
 ' Function: Replicate
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Zeichenfolge wiederholen
-' </summary>
-' <param name="Value">Die zu wiederholende Zeichenfolge</param>
-' <param name="Number">Anzahl der Wiederholungen</param>
-' <returns>String</returns>
-' <remarks>
-' Replicate("abc", 3) erzeugt "abcabcabc"
-' </remarks>
-'**/
+'
+' Repeat string
+'
+' Parameters:
+'     Value    - The string to be repeated
+'     Number   - Number of repetitions
+'
+' Returns:
+'     String
+'
+' Remarks:
+'     Replicate("abc", 3) creates "abcabcabc"
+'
 '---------------------------------------------------------------------------------------
 Public Function Replicate(ByVal Value As String, ByVal Number As Long) As String
 

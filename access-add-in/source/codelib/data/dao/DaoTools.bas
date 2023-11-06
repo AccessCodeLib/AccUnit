@@ -1,17 +1,16 @@
 Attribute VB_Name = "DaoTools"
 Attribute VB_Description = "Hilfsfunktionen für den Umgang mit DAO"
 '---------------------------------------------------------------------------------------
-' Module: DaoTools
+' Package: data.dao.DaoTools
 '---------------------------------------------------------------------------------------
-'/**
-' \author       Josef Poetzl
-' <summary>
-' Hilfsfunktionen für den Umgang mit DAO
-' </summary>
-' <remarks>
-' </remarks>
-'\ingroup data_dao
-'**/
+'
+' Auxiliary functions for the handling of DAO
+'
+' Author:
+'     Josef Poetzl
+'
+'---------------------------------------------------------------------------------------
+
 '---------------------------------------------------------------------------------------
 '<codelib>
 '  <file>data/dao/DaoTools.bas</file>
@@ -42,9 +41,9 @@ Public Function TableDefExists(ByVal TableDefName As String, _
                       Optional ByVal DbRef As DAO.Database = Nothing) As Boolean
 'Man könnte auch die TableDef-Liste durchlaufen.
 'Eine weitere Alternative wäre das Auswerten über cnn.OpenSchema(adSchemaTables, ...)
-   
+
    TableDefExists = CheckDatabaseObjectExists(acTable, TableDefName, DbRef)
-   
+
 End Function
 
 '---------------------------------------------------------------------------------------
@@ -65,7 +64,7 @@ Public Function QueryDefExists(ByVal QueryDefName As String, _
                       Optional ByVal DbRef As DAO.Database = Nothing) As Boolean
 
    QueryDefExists = CheckDatabaseObjectExists(acQuery, QueryDefName, DbRef)
-   
+
 End Function
 
 Private Function CheckDatabaseObjectExists(ByVal ObjType As AcObjectType, ByVal ObjName As String, _

@@ -8,17 +8,17 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '---------------------------------------------------------------------------------------
-' Klassenmodul: WinApiTools
-'---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Sammlung von WinAPI-Tools
-' </summary>
-' <remarks>
-' </remarks>
-'**/
+' Class: api.winapi.WinApiTools
 '---------------------------------------------------------------------------------------
 '
+' Factory for WinAPI classes
+'
+' Author:
+'     Josef Poetzl
+'
+'---------------------------------------------------------------------------------------
+
+'---------------------------------------------------------------------------------------
 '<codelib>
 '  <file>api/winapi/WinApiTools.cls</file>
 '  <license>_codelib/license.bas</license>

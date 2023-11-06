@@ -9,16 +9,16 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "Konfigurationseinstellungen der CodeLib verwalten"
 '---------------------------------------------------------------------------------------
-' Klassenmodul: ACLibConfiguration (Josef Pötzl, 2009-12-11)
+' Class: _codelib.addins.shared.ACLibConfiguration
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
+'
 ' Konfigurationseinstellungen der CodeLib verwalten
-' </summary>
-' <remarks>
-' </remarks>
-'\ingroup addins_shared
-'**/
+'
+' Author:
+'     Josef Poetzl
+'
+'---------------------------------------------------------------------------------------
+
 '---------------------------------------------------------------------------------------
 '<codelib>
 '  <file>_codelib/addins/shared/ACLibConfiguration.cls</file>
@@ -44,7 +44,8 @@ Private Const EXTENSION_KEY As String = "ACLibConfiguration"
 
 
 ' Grundeinstellungen
-Private Const ACLIB_CONFIG_ROOTFOLDERNAME As String = "AccessCodeLibrary"
+Private Const ACLIB_CONFIG_ROOTFOLDERNAME As String = "AccessCodeLib"
+Private Const ACLIB_CONFIG_ROOTFOLDERNAME_DEPR As String = "AccessCodeLibrary"
 Private Const ACLIB_CONFIG_DATABASENAME As String = "ACLib_Config"
 Private Const ACLIB_CONFIG_TABLEDEFNAME As String = "ACLib_ConfigTable"
 
@@ -224,7 +225,7 @@ Public Property Let ImportTestsDefaultValue(ByVal NewValue As Boolean)
 
 End Property
 
-Private Function GetACLibGlobalProperty(ByRef PropertyName As String) As String
+Friend Function GetACLibGlobalProperty(ByRef PropertyName As String) As String
    
    Dim rst As DAO.Recordset
    Dim SelectSql As String
@@ -240,7 +241,7 @@ Private Function GetACLibGlobalProperty(ByRef PropertyName As String) As String
 
 End Function
 
-Private Function SetACLibGlobalProperty(ByRef PropertyName As String, ByRef NewValue As String) As String
+Friend Function SetACLibGlobalProperty(ByRef PropertyName As String, ByRef NewValue As String) As String
    
    Dim rst As DAO.Recordset
    Dim SelectSql As String
@@ -324,10 +325,22 @@ Public Property Get ACLibConfigDirectory() As String
 
 End Property
 
+Private Property Get ACLibConfigDirectoryDepr() As String
+   
+   Dim strPath As String
+
+   strPath = Environ("Appdata") & "\" & ACLIB_CONFIG_ROOTFOLDERNAME_DEPR & "\"
+   
+   ACLibConfigDirectoryDepr = strPath
+
+End Property
+
 Private Property Get ACLibConfigDatabaseFile() As String
    
    Dim db As DAO.Database
+   Dim strDbFileExt As String
    Dim strDbFile As String
+   Dim strDbFileDepr As String
    Dim bolCreateConfigTable As Boolean
    
 #If ADODB_EARLYBINDING = 1 Then
@@ -336,14 +349,22 @@ Private Property Get ACLibConfigDatabaseFile() As String
    Dim cnn As Object
 #End If
 
-   strDbFile = CodeDb.Name
-   strDbFile = Mid$(strDbFile, InStrRev(strDbFile, "."))
-   If Left$(strDbFile, 5) = ".accd" Then
-      strDbFile = ".accdu"
+   strDbFileExt = CodeDb.Name
+   strDbFileExt = Mid$(strDbFileExt, InStrRev(strDbFileExt, "."))
+   If Left$(strDbFileExt, 5) = ".accd" Then
+      strDbFileExt = ".accdu"
    Else
-      strDbFile = ".mdt"
+      strDbFileExt = ".mdt"
    End If
-   strDbFile = ACLibConfigDirectory & ACLIB_CONFIG_DATABASENAME & strDbFile
+   strDbFile = ACLibConfigDirectory & ACLIB_CONFIG_DATABASENAME & strDbFileExt
+   
+   ' Try transfer file from deprecated folder path:
+   If Len(Dir$(strDbFile)) = 0 Then
+      strDbFileDepr = ACLibConfigDirectoryDepr & ACLIB_CONFIG_DATABASENAME & strDbFileExt
+      If Len(Dir$(strDbFileDepr)) > 0 Then
+         FileCopy strDbFileDepr, strDbFile
+      End If
+   End If
    
    If Len(Dir$(strDbFile)) = 0 Then
 

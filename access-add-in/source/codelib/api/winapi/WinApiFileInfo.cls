@@ -8,16 +8,16 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '---------------------------------------------------------------------------------------
-' Class: WinApiFileInfo
+' Class: api.winapi.WinApiFileInfo
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Dateiinformationen mit Win-API auslesen
-' </summary>
-' <remarks>
-' </remarks>
-'\ingroup WinAPI
-'**/
+'
+' Read file information with Win-API
+'
+' Author:
+'     Josef Poetzl
+'
+'---------------------------------------------------------------------------------------
+
 '---------------------------------------------------------------------------------------
 '<codelib>
 '  <file>api/winapi/WinApiFileInfo.cls</file>
@@ -25,7 +25,7 @@ Attribute VB_Exposed = False
 '</codelib>
 '---------------------------------------------------------------------------------------
 '
-' Code basiert auf http://support.microsoft.com/kb/509493/
+' Code based on http://support.microsoft.com/kb/509493/
 '
 Option Compare Text
 Option Explicit
@@ -103,6 +103,31 @@ Private Type FILEINFOOUT
   ProductVersion As String
 End Type
 
+'---------------------------------------------------------------------------------------
+' Function: GetFileVersion
+'---------------------------------------------------------------------------------------
+'
+' Determines the version of a file
+'
+' Parameters:
+'     FilePath - full path to the file
+'
+' Returns:
+'     Version identifier
+'
+' Remarks:
+'     Useful for reading versions from dll files
+'
+'--------------------------------------------------------------------------------------
+Public Function GetFileVersion(ByVal FilePath As String) As String
+   Dim VerInfo As FILEINFOOUT
+   If GetVersion(FilePath, VerInfo) Then
+      GetFileVersion = VerInfo.FileVersion
+   Else
+      GetFileVersion = vbNullString
+   End If
+End Function
+
 Private Function GetVersion(ByVal FilePath As String, _
                             ByRef GetFileInfo As FILEINFOOUT) As Boolean
 
@@ -150,27 +175,4 @@ Private Function GetVersion(ByVal FilePath As String, _
   
   GetVersion = True
 
-End Function
-
-'---------------------------------------------------------------------------------------
-' Function: GetFileVersion
-'---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Ermittelt die Version aus einer Datei
-' </summary>
-' <param name="sFile">vollständiger Pfad zur Datei</param>
-' <returns>Versionskennung</returns>
-' <remarks>
-' Nützlich zum Auslesen von Versionen aus dll-Dateien
-' </remarks>
-'**/
-'---------------------------------------------------------------------------------------
-Public Function GetFileVersion(ByVal FilePath As String) As String
-   Dim VerInfo As FILEINFOOUT
-   If GetVersion(FilePath, VerInfo) Then
-      GetFileVersion = VerInfo.FileVersion
-   Else
-      GetFileVersion = vbNullString
-   End If
 End Function

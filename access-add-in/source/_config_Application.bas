@@ -4,8 +4,6 @@ Attribute VB_Name = "_config_Application"
 '---------------------------------------------------------------------------------------
 '---------------------------------------------------------------------------------------
 '<codelib>
-'  <file>%AppFolder%/source/_config_Application.bas</file>
-'  <replace>base/_config_Application.bas</replace>
 '  <license>_codelib/license.bas</license>
 '  <use>%AppFolder%/source/defGlobal_AccUnitLoader.bas</use>
 '  <use>base/modApplication.bas</use>
@@ -20,7 +18,7 @@ Option Compare Database
 Option Explicit
 
 'Version nummer
-Private Const APPLICATION_VERSION As String = "0.9.17.230817"
+Private Const APPLICATION_VERSION As String = "0.9.18.231106"
 
 Private Const APPLICATION_NAME As String = "ACLib AccUnit Loader"
 Private Const APPLICATION_FULLNAME As String = "Access Code Library - AccUnit Loader"

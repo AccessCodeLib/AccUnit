@@ -104,13 +104,13 @@ Private Function IAccessTestSuite_Add(ByVal testToAdd As Object) As AccUnit.IAcc
    Set IAccessTestSuite_Add = Add(testToAdd)
 End Function
 
-Public Function AddByClassName(ByVal className As String) As DebugPrintTestSuite
-   m_TestSuite.AddByClassName className
+Public Function AddByClassName(ByVal ClassName As String) As DebugPrintTestSuite
+   m_TestSuite.AddByClassName ClassName
    Set AddByClassName = Me
 End Function
 
-Private Function IAccessTestSuite_AddByClassName(ByVal className As String) As AccUnit.IAccessTestSuite
-   Set IAccessTestSuite_AddByClassName = AddByClassName(className)
+Private Function IAccessTestSuite_AddByClassName(ByVal ClassName As String) As AccUnit.IAccessTestSuite
+   Set IAccessTestSuite_AddByClassName = AddByClassName(ClassName)
 End Function
 
 Public Function AddFromVBProject() As DebugPrintTestSuite
