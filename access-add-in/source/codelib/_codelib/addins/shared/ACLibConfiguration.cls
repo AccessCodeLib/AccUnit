@@ -12,7 +12,7 @@ Attribute VB_Description = "Konfigurationseinstellungen der CodeLib verwalten"
 ' Class: _codelib.addins.shared.ACLibConfiguration
 '---------------------------------------------------------------------------------------
 '
-' Konfigurationseinstellungen der CodeLib verwalten
+' Manage AccessCodeLib configuration settings
 '
 ' Author:
 '     Josef Poetzl
@@ -65,11 +65,13 @@ Private Const SQL_CREATETABLE_CONFIGTABLE As String = _
 Private Const PROPNAME_LOCALREPOSITORYROOT As String = "LocalRepositoryRoot"
 Private Const PROPNAME_PRIVATEREPOSITORYROOT As String = "PrivateRepositoryRoot"
 Private Const PROPNAME_IMPORTTESTDEFAULTVALUE As String = "ImportTestDefaultValue"
+Private Const PROPNAME_GITHUBAUTHPERSONALACCESSTOKEN As String = "GitHubAuthPersonalAccessToken"
 
 ' Hilfsvariablen
 Private m_LocalRepositoryPath As String   ' allg. Repository-Verzeichnis
 Private m_PrivateRepositoryPath As String ' privates Verzeichnis (nicht in CodeLib enthalten)
 Private m_ImportTestDefaultValue As Long
+Private m_GitHubAuthPersonalAccessToken As String
 Private m_ACLibPropertyDb As DAO.Database
 
 '---------------------------------------------------------------------------------------
@@ -225,6 +227,23 @@ Public Property Let ImportTestsDefaultValue(ByVal NewValue As Boolean)
 
 End Property
 
+Public Property Get GitHubAuthPersonalAccessToken() As String
+'m_GitHubAuthPersonalAccessToken: vbnullstring = noch nicht abgefragt
+
+   If StrPtr(m_GitHubAuthPersonalAccessToken) = 0 Then
+      m_GitHubAuthPersonalAccessToken = GetACLibGlobalProperty(PROPNAME_GITHUBAUTHPERSONALACCESSTOKEN) & ""
+   End If
+   GitHubAuthPersonalAccessToken = m_GitHubAuthPersonalAccessToken
+
+End Property
+
+Public Property Let GitHubAuthPersonalAccessToken(ByVal NewValue As String)
+
+   m_GitHubAuthPersonalAccessToken = NewValue
+   SetACLibGlobalProperty PROPNAME_GITHUBAUTHPERSONALACCESSTOKEN, m_GitHubAuthPersonalAccessToken
+
+End Property
+
 Friend Function GetACLibGlobalProperty(ByRef PropertyName As String) As String
    
    Dim rst As DAO.Recordset
@@ -287,6 +306,7 @@ Private Function CheckConfigTableDef() As Boolean
 
    Dim db As DAO.Database
    Dim tdf As DAO.TableDef
+   Dim ConfigDataPath As String
 
    Set db = CodeDb
    
@@ -297,12 +317,15 @@ Private Function CheckConfigTableDef() As Boolean
       tdf.SourceTableName = ACLIB_CONFIG_TABLEDEFNAME
       db.TableDefs.Append tdf
       
-   ElseIf Len(Dir$(Mid$(db.TableDefs(ACLIB_CONFIG_TABLEDEFNAME).Connect, Len(";Database=") + 1))) = 0 Then
+   Else
    
-      With db.TableDefs(ACLIB_CONFIG_TABLEDEFNAME)
-         .Connect = ";Database=" & ACLibConfigDatabaseFile
-         .RefreshLink
-      End With
+      ConfigDataPath = Mid$(db.TableDefs(ACLIB_CONFIG_TABLEDEFNAME).Connect, Len(";Database=") + 1)
+      If ConfigDataPath <> ACLibConfigDatabaseFile Then
+         With db.TableDefs(ACLIB_CONFIG_TABLEDEFNAME)
+            .Connect = ";Database=" & ACLibConfigDatabaseFile
+            .RefreshLink
+         End With
+      End If
       
    End If
    

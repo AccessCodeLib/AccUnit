@@ -134,13 +134,20 @@ End Property
 '     Boolean
 '
 '---------------------------------------------------------------------------------------
-Public Function CreateAppFile(ByVal FileID As String, ByVal FileName As String) As Boolean
+Public Function CreateAppFile(ByVal FileID As String, ByVal FileName As String, _
+                     Optional ByVal ExtFilterFieldName As String, Optional ExtFilterValue As Variant) As Boolean
 
    Dim Binfile() As Byte
    Dim FieldSize As Long
    Dim fld As DAO.Field
+   Dim SelectSql As String
 
-   With CodeDb.OpenRecordset("select " & TABLE_FIELD_FILE & " from " & TABLE_APPFILES & " where " & TABLE_FIELD_ID & "='" & Replace(FileID, "'", "''") & "'")
+   SelectSql = "select " & TABLE_FIELD_FILE & " from " & TABLE_APPFILES & " where " & TABLE_FIELD_ID & "='" & Replace(FileID, "'", "''") & "'"
+   If Len(ExtFilterFieldName) > 0 Then
+      SelectSql = SelectSql & " and " & ExtFilterFieldName & " = '" & Replace(ExtFilterValue, "'", "''") & "'"
+   End If
+
+   With CodeDb.OpenRecordset(SelectSql)
       If Not .EOF Then
       
          Set fld = .Fields(0)
