@@ -1,0 +1,20 @@
+﻿{
+  "Info": {
+    "Class": "clsDbDocument",
+    "Description": "Database Documents Properties (DAO)"
+  },
+  "Items": {
+    "Databases": {
+      "SummaryInfo": {
+        "Author": "Josef Pötzl",
+        "Company": "accunit-codelib.net",
+        "Title": "AccUnit Loader"
+      }
+    },
+    "Tables": {
+      "tab1DS": {
+        "Description": "Tabelle mit einem DS (ist in Abfragen hilfeich)"
+      }
+    }
+  }
+}
