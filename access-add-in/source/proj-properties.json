@@ -1,0 +1,10 @@
+﻿{
+  "Info": {
+    "Class": "clsDbProjProperty",
+    "Description": "Project Properties (Access)"
+  },
+  "Items": {
+    "VCS Build Path": "C:\\Daten\\Projekte\\AccUnit\\AccUnit\\access-add-in",
+    "VCS Source Path": "\\source"
+  }
+}
