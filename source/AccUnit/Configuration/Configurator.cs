@@ -15,7 +15,7 @@ namespace AccessCodeLib.AccUnit.Configuration
 
         [ComVisible(true)]
         void RemoveTestEnvironment(bool RemoveTestModules = false, bool ExportModulesBeforeRemoving = true, VBProject VBProject = null);
-        void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib, bool removeIfExists = false, VBProject VBProject = null);
+        void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib, bool RemoveIfExists = false, VBProject VBProject = null, object HostApplication = null);
         void RemoveAccUnitLoaderFactoryModule(VBProject VBProject = null);
         void ExportTestClasses(string ExportPath = null, VBProject VBProject = null);
         void ImportTestClasses(string FileNameFilter = null, string ImportPath = null, VBProject VBProject = null);
@@ -40,13 +40,23 @@ namespace AccessCodeLib.AccUnit.Configuration
             _vbProject = vbproject;
         }
 
-        public void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib = false, bool removeIfExists = false, VBProject vbProject = null)
+        public void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib = false, bool removeIfExists = false, 
+                    VBProject vbProject = null, object HostApplication = null)
         {
             if (vbProject != null)
             {
                 _vbProject = vbProject;
             }
-            var accUnitLoaderAddInCodeTemplates = new AccUnitLoaderAddInCodeTemplates(UseAccUnitTypeLib);
+
+            string hostName = "Microsoft Access";
+
+            if (HostApplication != null)
+            {
+                OfficeApplicationHelper officeApplicationHelper = new OfficeApplicationHelper(HostApplication);
+                hostName = officeApplicationHelper.Name;
+            }
+
+            var accUnitLoaderAddInCodeTemplates = new AccUnitLoaderAddInCodeTemplates(UseAccUnitTypeLib, hostName);
 
             if (removeIfExists)
             {

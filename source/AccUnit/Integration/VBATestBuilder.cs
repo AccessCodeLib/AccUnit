@@ -138,15 +138,29 @@ namespace AccessCodeLib.AccUnit
         }
 
         private object RunMethodInOfficeApplication(object[] parameters)
-        {
+        {  
             try
             {
+                if (OfficeApplicationHelper.Name == "Microsoft Excel")
+                {
+                    parameters[0] = GetFullRunMethodeNameForExcel(parameters[0].ToString());
+                }
                 return OfficeApplicationHelper.Run(parameters);
             }
             catch (Exception xcp)
             {
                 throw new OfficeApplicationRunException(xcp, parameters);
             }
+        }
+
+        private string GetFullRunMethodeNameForExcel(string methodName)
+        {
+            var invokeHelper = new InvocationHelper(OfficeApplicationHelper.Application);
+            var wb = invokeHelper.InvokePropertyGet("ActiveWorkbook");
+            invokeHelper = new InvocationHelper(wb);
+            var wbName = invokeHelper.InvokePropertyGet("Name");
+
+            return string.Concat("'",wbName,"'!",methodName);
         }
 
         private void EnsureOfficeApplicationExists()
