@@ -9,3 +9,4 @@
 /access-add-in/*.accdb
 /access-add-in/Tests
 *.laccdb
+/excel-add-in/lib

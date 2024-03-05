@@ -141,7 +141,7 @@ namespace AccessCodeLib.AccUnit
         {  
             try
             {
-                if (OfficeApplicationHelper.Name == "Microsoft Excel")
+                if (OfficeApplicationHelper.Name.Equals("Microsoft Excel", StringComparison.CurrentCultureIgnoreCase))
                 {
                     parameters[0] = GetFullRunMethodeNameForExcel(parameters[0].ToString());
                 }
