@@ -2,6 +2,7 @@
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Configuration
@@ -107,9 +108,18 @@ namespace AccessCodeLib.AccUnit.Configuration
 
         private void RemoveAccUnitTlbReference()
         {
+            string refName;
             foreach (Reference reference in _vbProject.References)
             {
-                if (reference.Name == "AccUnit")
+                try
+                {
+                    refName = reference.Name;
+                }
+                catch {
+                    refName = "";
+                }
+
+                if (!string.IsNullOrEmpty(refName) && refName.Equals("AccUnit", StringComparison.CurrentCultureIgnoreCase))
                 {
                     _vbProject.References.Remove(reference);
                     break;
