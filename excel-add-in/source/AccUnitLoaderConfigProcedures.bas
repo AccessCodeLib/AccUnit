@@ -10,11 +10,19 @@ End Sub
 Public Sub RemoveAccUnitTlbReference()
 
    Dim ref As Reference
+   Dim RefName As String
    
    With CurrentVbProject
       For Each ref In .References
-         If Len(ref.GUID) > 0 Then
-         ElseIf ref.Name = "AccUnit" Then
+On Error Resume Next
+         RefName = ref.Name
+         If Err.Number <> 0 Then
+            Err.Clear
+            RefName = vbNullString
+         End If
+On Error GoTo 0
+         If RefName = "AccUnit" Then
+            Debug.Print ref.GUID
             .References.Remove ref
             Exit Sub
          End If
@@ -42,10 +50,17 @@ End Sub
 Private Function AccUnitTlbReferenceExists() As Boolean
 
    Dim ref As Reference
+   Dim RefName As String
    
    For Each ref In CurrentVbProject.References
-      If Len(ref.GUID) > 0 Then
-      ElseIf ref.Name = "AccUnit" Then
+On Error Resume Next
+      RefName = ref.Name
+      If Err.Number <> 0 Then
+         Err.Clear
+         RefName = vbNullString
+      End If
+On Error GoTo 0
+      If RefName = "AccUnit" Then
          AccUnitTlbReferenceExists = True
          Exit Function
       End If

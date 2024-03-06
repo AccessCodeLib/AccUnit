@@ -26,6 +26,9 @@
 		   <button id="AccUnitLoaderRemoveEnvironment1Btn" label="Remove Test Environment" 
 				size="large" imageMso="Delete" 
 				onAction="RemoveTestEnvironmentDelTestsRCB" /> 
+		   <button id="TestSuiteRunAllFromVBProjectBtn" label="Run All Tests" 
+				size="large" imageMso="SourceControlRun" 
+				onAction="TestSuiteRunAllFromVBProjectRCB" /> 
          </group> 
        </tab> 
      </tabs> 
