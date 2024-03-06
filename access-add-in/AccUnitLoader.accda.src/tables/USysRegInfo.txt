@@ -1,0 +1,6 @@
+﻿Subkey	Type	ValName	Value
+HKEY_CURRENT_ACCESS_PROFILE\\Menu Add-Ins\\ACLib AccUnit Loader	0		
+HKEY_CURRENT_ACCESS_PROFILE\\Menu Add-Ins\\ACLib AccUnit Loader	1	Expression	=StartApplication()
+HKEY_CURRENT_ACCESS_PROFILE\\Menu Add-Ins\\ACLib AccUnit Loader	1	Library	|ACCDIR\\AccUnitLoader.accda
+HKEY_CURRENT_ACCESS_PROFILE\\Menu Add-Ins\\ACLib AccUnit Loader	4	BitmapID	339
+HKEY_CURRENT_ACCESS_PROFILE\\Menu Add-Ins\\ACLib AccUnit Loader	4	Version	1

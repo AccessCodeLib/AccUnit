@@ -1,11 +1,9 @@
-Attribute VB_Name = "AccUnitLoaderRibbonCallBacks"
+﻿Attribute VB_Name = "AccUnitLoaderRibbonCallBacks"
 Option Explicit
 Option Compare Text
 
 Public Sub ShowAccUnitLoaderForm()
-   With New AccUnitLoaderForm
-      .Show 0
-   End With
+   StartApplication
 End Sub
 
 Public Sub ShowAccUnitLoaderFormRCB(RibbonControl As Object)

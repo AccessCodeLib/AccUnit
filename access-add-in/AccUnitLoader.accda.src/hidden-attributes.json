@@ -1,0 +1,13 @@
+﻿{
+  "Info": {
+    "Class": "clsDbHiddenAttribute",
+    "Description": "Database objects hidden attribute"
+  },
+  "Items": {
+    "Tables": [
+      "tab1DS",
+      "USys_AppFiles",
+      "USysRegInfo"
+    ]
+  }
+}
