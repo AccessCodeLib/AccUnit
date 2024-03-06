@@ -6,41 +6,41 @@ Public Sub ShowAccUnitLoaderForm()
    StartApplication
 End Sub
 
-Public Sub ShowAccUnitLoaderFormRCB(RibbonControl As Object)
+Public Sub ShowAccUnitLoaderFormRCB(Optional RibbonControl As Object)
    ShowAccUnitLoaderForm
 End Sub
 
-Public Sub AddAccUnitTlbReferenceRCB(RibbonControl As Object)
+Public Sub AddAccUnitTlbReferenceRCB(Optional RibbonControl As Object)
    AddAccUnitTlbReference
 End Sub
 
-Public Sub RemoveAccUnitTlbReferenceRCB(RibbonControl As Object)
+Public Sub RemoveAccUnitTlbReferenceRCB(Optional RibbonControl As Object)
    RemoveAccUnitTlbReference
 End Sub
 
-Public Sub InsertFactoryModuleRCB(RibbonControl As Object)
+Public Sub InsertFactoryModuleRCB(Optional RibbonControl As Object)
    CheckAccUnitTypeLibFile CodeVBProject
    InsertFactoryModule
 End Sub
 
-Public Sub ImportTestClassesRCB(RibbonControl As Object)
+Public Sub ImportTestClassesRCB(Optional RibbonControl As Object)
    CheckAccUnitTypeLibFile CodeVBProject
    ImportTestClasses
 End Sub
 
-Public Sub ExportTestClassesRCB(RibbonControl As Object)
+Public Sub ExportTestClassesRCB(Optional RibbonControl As Object)
    ExportTestClasses
 End Sub
 
-Public Sub RemoveTestEnvironmentKeepTestsRCB(RibbonControl As Object)
+Public Sub RemoveTestEnvironmentKeepTestsRCB(Optional RibbonControl As Object)
    RemoveTestEnvironment False
 End Sub
 
-Public Sub RemoveTestEnvironmentDelTestsRCB(RibbonControl As Object)
+Public Sub RemoveTestEnvironmentDelTestsRCB(Optional RibbonControl As Object)
    RemoveTestEnvironment True
 End Sub
 
-Public Sub TestSuiteRunAllFromVBProjectRCB(RibbonControl As Object)
+Public Sub TestSuiteRunAllFromVBProjectRCB(Optional RibbonControl As Object)
    GetAccUnitFactory.DebugPrintTestSuite.AddFromVBProject.Run
    SetFocusToImmediateWindow
 End Sub

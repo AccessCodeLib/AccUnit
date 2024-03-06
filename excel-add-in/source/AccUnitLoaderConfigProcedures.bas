@@ -22,7 +22,6 @@ On Error Resume Next
          End If
 On Error GoTo 0
          If RefName = "AccUnit" Then
-            Debug.Print ref.GUID
             .References.Remove ref
             Exit Sub
          End If
