@@ -1,4 +1,4 @@
-﻿Attribute VB_Name = "modTypeLibCheck"
+Attribute VB_Name = "modTypeLibCheck"
 '---------------------------------------------------------------------------------------
 ' Module: modTypeLibCheck
 '---------------------------------------------------------------------------------------
@@ -18,49 +18,85 @@
 '</codelib>
 '---------------------------------------------------------------------------------------
 '
-Option Compare Database
+Option Compare Text
 Option Explicit
+Option Private Module
 
-#Const EARLYBINDING = 0
+#Const EARLYBINDING = 1
 
 Private Const EXTENSION_KEY_APPFILE As String = "AppFile"
 
 Public Property Get DefaultAccUnitLibFolder() As String
-   DefaultAccUnitLibFolder = CodeProject.Path & "\lib"
+   Dim FilePath As String
+   FilePath = CodeVBProject.FileName
+   FilePath = VBA.Left(FilePath, VBA.InStrRev(FilePath, "\"))
+   DefaultAccUnitLibFolder = FilePath & "lib"
 End Property
 
-Public Sub CheckAccUnitTypeLibFile()
+Public Sub CheckAccUnitTypeLibFile(ByVal VBProjectRef As VBProject, Optional ByRef ReferenceFixed As Boolean)
 
    Dim LibPath As String
    Dim LibFile As String
-
-   LibPath = DefaultAccUnitLibFolder & "\"
+   Dim FileFixed As Boolean
+   
+   LibPath = GetAccUnitLibPath(True)
    LibFile = LibPath & ACCUNIT_TYPELIB_FILE
-
    FileTools.CreateDirectory LibPath
 
    If Not FileTools.FileExists(LibFile) Then
+      FileFixed = True
       ExportTlbFile LibFile
    End If
 
-
 On Error Resume Next
-   CheckMissingReference
+   CheckMissingReference VBProjectRef, ReferenceFixed
+   
+   ReferenceFixed = ReferenceFixed Or FileFixed
 
 End Sub
+
+Private Function GetAccUnitLibPath(Optional ByVal BackSlashAtEnd As Boolean = False) As String
+
+   Dim LibPath As String
+   Dim LibFile As String
+   
+   With CurrentAccUnitConfiguration
+On Error GoTo ErrMissingPath
+      LibPath = .AccUnitDllPath
+On Error GoTo 0
+   End With
+
+   If VBA.Len(LibPath) = 0 Then
+      LibPath = DefaultAccUnitLibFolder
+   End If
+   
+   If BackSlashAtEnd Then
+      If VBA.Right(LibPath, 1) <> "\" Then
+         LibPath = LibPath & "\"
+      End If
+   End If
+   
+   GetAccUnitLibPath = LibPath
+   
+   Exit Function
+   
+ErrMissingPath:
+   Resume Next
+
+End Function
 
 Private Sub ExportTlbFile(ByVal LibFile As String)
    With CurrentApplication.Extensions(EXTENSION_KEY_APPFILE)
-      .CreateAppFile ACCUNIT_TYPELIB_FILE, LibFile
+      .CreateAppFile ACCUNIT_TYPELIB_FILE, LibFile, "BitInfo", CStr(GetCurrentVbaBitSystem)
    End With
 End Sub
 
-Private Sub CheckMissingReference()
+Private Sub CheckMissingReference(ByVal VBProjectRef As VBProject, Optional ByRef ReferenceFixed As Boolean)
 
    Dim AccUnitRefExists As Boolean
    Dim ref As Object
 
-   With CodeDbProject
+   With VBProjectRef
       For Each ref In .References
          If ref.Name = "AccUnit" Then
             AccUnitRefExists = True
@@ -69,56 +105,26 @@ Private Sub CheckMissingReference()
       Next
    End With
 
-   AddAccUnitTlbReference
+   AddAccUnitTlbReference VBProjectRef
+   ReferenceFixed = True
 
 End Sub
 
-Private Sub AddAccUnitTlbReference()
-   CodeDbProject.References.AddFromFile CodeProject.Path & "\lib\" & ACCUNIT_TYPELIB_FILE
+Private Sub AddAccUnitTlbReference(ByVal VBProjectRef As VBProject)
+   VBProjectRef.References.AddFromFile GetAccUnitLibPath(True) & ACCUNIT_TYPELIB_FILE
 End Sub
 
-Private Sub RemoveAccUnitTlbReference()
+Private Sub RemoveAccUnitTlbReference(ByVal VBProjectRef As VBProject)
 
    Dim ref As Object
 
-   For Each ref In CodeDbProject.References
+   For Each ref In VBProjectRef.References
       If ref.IsBroken Then
-         CodeDbProject.References.Remove ref
+         VBProjectRef.References.Remove ref
       ElseIf ref.Name = "AccUnit" Then
-         CodeDbProject.References.Remove ref
+         VBProjectRef.References.Remove ref
          Exit Sub
       End If
    Next
 
 End Sub
-
-#If EARLYBINDING Then
-Private Property Get CodeDbProject() As VBIDE.VBProject
-#Else
-Private Property Get CodeDbProject() As Object
-#End If
-
-#If EARLYBINDING Then
-   Dim Proj As VBProject
-#Else
-   Dim Proj As Object
-#End If
-   Dim strCodeDbName As String
-   Dim objCodeVbProject As Object
-
-   Set objCodeVbProject = VBE.ActiveVBProject
-   'Prüfen, ob das richtige VbProject gewählt wurde (muss das von CodeDb sein)
-   strCodeDbName = UncPath(CodeDb.Name)
-   If objCodeVbProject.FileName <> strCodeDbName Then
-      Set objCodeVbProject = Nothing
-      For Each Proj In VBE.VBProjects
-         If Proj.FileName = strCodeDbName Then
-            Set objCodeVbProject = Proj
-            Exit For
-         End If
-      Next
-   End If
-
-   Set CodeDbProject = objCodeVbProject
-
-End Property
