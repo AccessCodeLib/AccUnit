@@ -7,7 +7,6 @@
     "Name": "ACLib_ConfigTable",
     "Connect": ";DATABASE=C:\\Users\\poetzl.joposol\\AppData\\Roaming\\AccessCodeLib\\ACLib_Config.accdu",
     "SourceTableName": "ACLib_ConfigTable",
-    "Attributes": 1073741824,
-    "PrimaryKey": "[PropName]"
+    "Attributes": 1073741824
   }
 }

@@ -89,4 +89,4 @@ Function CopyFiles()
  
 End Function
 
-
+'Computer\HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Excel\Add-in Manager
