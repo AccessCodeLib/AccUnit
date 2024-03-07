@@ -33,21 +33,25 @@ Public Property Get DefaultAccUnitLibFolder() As String
    DefaultAccUnitLibFolder = FilePath & "lib"
 End Property
 
-Public Sub CheckAccUnitTypeLibFile(ByVal VBProjectRef As VBProject)
+Public Sub CheckAccUnitTypeLibFile(ByVal VBProjectRef As VBProject, Optional ByRef ReferenceFixed As Boolean)
 
    Dim LibPath As String
    Dim LibFile As String
+   Dim FileFixed As Boolean
    
    LibPath = GetAccUnitLibPath(True)
    LibFile = LibPath & ACCUNIT_TYPELIB_FILE
    FileTools.CreateDirectory LibPath
 
    If Not FileTools.FileExists(LibFile) Then
+      FileFixed = True
       ExportTlbFile LibFile
    End If
 
 On Error Resume Next
-   CheckMissingReference VBProjectRef
+   CheckMissingReference VBProjectRef, ReferenceFixed
+   
+   ReferenceFixed = ReferenceFixed Or FileFixed
 
 End Sub
 
@@ -87,7 +91,7 @@ Private Sub ExportTlbFile(ByVal LibFile As String)
    End With
 End Sub
 
-Private Sub CheckMissingReference(ByVal VBProjectRef As VBProject)
+Private Sub CheckMissingReference(ByVal VBProjectRef As VBProject, Optional ByRef ReferenceFixed As Boolean)
 
    Dim AccUnitRefExists As Boolean
    Dim ref As Object
@@ -102,6 +106,7 @@ Private Sub CheckMissingReference(ByVal VBProjectRef As VBProject)
    End With
 
    AddAccUnitTlbReference VBProjectRef
+   ReferenceFixed = True
 
 End Sub
 

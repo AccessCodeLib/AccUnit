@@ -13,7 +13,7 @@ Attribute VB_Description = "Funktionen für Dateioperationen"
 
 '---------------------------------------------------------------------------------------
 '<codelib>
-'  <file>file/FileTools.bas</file>
+'  <file>file/FileTools_Excel.bas</file>
 '  <license>_codelib/license.bas</license>
 '  <test>_test/file/FileToolsTests.cls</test>
 '</codelib>
@@ -141,7 +141,13 @@ Public Function SelectFolder(Optional ByVal InitialDir As String = vbNullString,
                              Optional ByVal MultiSelectEnabled As Boolean = False, _
                              Optional ByVal ViewMode As Long = -1) As String
 
-   'SelectFolder = WizHook_GetFileName(InitialDir, DlgTitle, SELECTBOX_OPENTITLE, FilterString, MultiSelectEnabled, , ViewMode, True)
+   With Application.FileDialog(msoFileDialogFolderPicker)
+      .AllowMultiSelect = MultiSelectEnabled
+      .Show
+      If .SelectedItems.Count > 0 Then
+         SelectFolder = .SelectedItems(1)
+      End If
+   End With
 
 End Function
 

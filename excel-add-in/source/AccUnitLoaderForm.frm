@@ -1,12 +1,12 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AccUnitLoaderForm 
    Caption         =   "ACLib - AccUnit Loader"
-   ClientHeight    =   4340
-   ClientLeft      =   120
-   ClientTop       =   465
-   ClientWidth     =   9375
+   ClientHeight    =   3822
+   ClientLeft      =   119
+   ClientTop       =   462
+   ClientWidth     =   9373
    OleObjectBlob   =   "AccUnitLoaderForm.frx":0000
-   StartUpPosition =   2  'Bildschirmmitte
+   StartUpPosition =   2  'CenterScreen
 End
 Attribute VB_Name = "AccUnitLoaderForm"
 Attribute VB_GlobalNameSpace = False
@@ -52,8 +52,8 @@ Private Sub ShowSuccessInfo(ByVal InfoText As String)
    m_RemoveInfoTextMaxTimer = Timer + ShowSuccessInfoTimerInterval / 1000
 End Sub
 
-Private Sub cmdOpenMenu_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
-   m_OpenMenuMouse_X = X
+Private Sub cmdOpenMenu_MouseDown(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal Y As Single)
+   m_OpenMenuMouse_X = x
    m_OpenMenuMouse_Y = Y
 End Sub
 
@@ -80,16 +80,14 @@ On Error GoTo 0
 ErrMissingPath:
    Resume Next
 
-
 End Sub
 
 Private Sub UserForm_Terminate()
    On Error Resume Next
-   Debug.Print "UserForm_Terminate"
    DisposeCurrentApplicationHandler
 End Sub
 
-Private Sub UserForm_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal X As Single, ByVal Y As Single)
+Private Sub UserForm_MouseMove(ByVal Button As Integer, ByVal Shift As Integer, ByVal x As Single, ByVal Y As Single)
    If m_RemoveInfoTextMaxTimer > 0 Then
       If Timer >= m_RemoveInfoTextMaxTimer Then
          m_RemoveInfoTextMaxTimer = 0
@@ -101,22 +99,6 @@ End Sub
 Private Property Get CurrentAccUnitDllPath() As String
    CurrentAccUnitDllPath = Me.txtAccUnitDllPath.Value
 End Property
-
-Private Sub cmdExportAccUnitFiles_Click()
-
-On Error GoTo HandleErr
-
-   ExportAccUnitFiles
-   ShowSuccessInfo "AccUnit files exported"
-   
-ExitHere:
-   Exit Sub
-
-HandleErr:
-   ShowErrorHandlerInfo "cmdExportAccUnitFiles_Click"
-   Resume ExitHere
-
-End Sub
 
 Private Sub cmdInsertFactoryModule_Click()
 
@@ -155,12 +137,15 @@ On Error GoTo HandleErr
       
      ' .ControlSection = acDetail
 
-'      .AddMenuItem -99, "", MF_SEPARATOR
-'      .AddMenuItem -1, "For AccUnit developers:", MF_STRING + MF_GRAYED
-'      .AddMenuItem 11, "Import AccUnit files from directory"
-'
-'      .AddMenuItem -2, "", MF_SEPARATOR
-'      .AddMenuItem 21, "Export AccUnit files to directory"
+#If DEVMODE = 1 Then
+      .AddMenuItem -99, "", MF_SEPARATOR
+      .AddMenuItem -1, "For AccUnit developers:", MF_STRING + MF_GRAYED
+      .AddMenuItem 11, "Import AccUnit files from directory"
+#End If
+
+      .AddMenuItem -2, "", MF_SEPARATOR
+      .AddMenuItem 21, "Export AccUnit files to directory"
+      .AddMenuItem 22, "Remove AccUnit files from Add-In file"
 
       .AddMenuItem -3, "", MF_SEPARATOR
       .AddMenuItem 31, "Remove test environment incl. test classes"
@@ -179,6 +164,9 @@ On Error GoTo HandleErr
       Case 21
          ExportAccUnitFiles
          SuccessMessage = "AccUnit files exported"
+      Case 22
+         RemoveAccUnitFilesFromAddInStorage
+         SuccessMessage = "AccUnit files removed from Add-In file"
       Case 31
          RemoveTestEnvironment True
          SuccessMessage = "Test environment end test classes removed"

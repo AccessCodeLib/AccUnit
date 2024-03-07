@@ -2,14 +2,19 @@ Attribute VB_Name = "AccUnitLoaderRibbonCallBacks"
 Option Explicit
 Option Compare Text
 
-Public Sub ShowAccUnitLoaderForm()
+Public Sub ShowAccUnitLoaderForm(Optional ByVal Modal As Long = 0)
    With New AccUnitLoaderForm
-      .Show 0
+      .Show Modal
    End With
 End Sub
 
 Public Sub ShowAccUnitLoaderFormRCB(RibbonControl As Object)
-   ShowAccUnitLoaderForm
+   
+   Dim ReferenceFixed As Boolean
+   
+   CheckAccUnitTypeLibFile CodeVBProject, ReferenceFixed
+   ShowAccUnitLoaderForm Abs(ReferenceFixed)
+   
 End Sub
 
 Public Sub AddAccUnitTlbReferenceRCB(RibbonControl As Object)

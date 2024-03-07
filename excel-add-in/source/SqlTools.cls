@@ -702,11 +702,11 @@ End Function
 Private Property Get DecimalMarker() As String
 
    Static DecChar As String
-   Dim X As String
+   Dim x As String
 
    If Len(DecChar) = 0 Then
-      X = Trim(CStr(1.2))
-      DecChar = Mid(X, 2, 1)
+      x = Trim(CStr(1.2))
+      DecChar = Mid(x, 2, 1)
    End If
 
    DecimalMarker = DecChar
@@ -1166,26 +1166,26 @@ Private Function GetValueArrayString(ByVal Value As Variant, ByVal FieldDataType
                                      ByVal Delimiter As String, ByVal IgnoreValue As Variant) As String
 
    Dim i As Long
-   Dim s As String
+   Dim S As String
 
    For i = LBound(Value) To UBound(Value)
       If IsArray(IgnoreValue) Then
          If ArrayContains(FieldDataType, IgnoreValue, Value(i)) Then
          Else
-            s = s & Delimiter & ConvertToSqlText(Value(i), FieldDataType)
+            S = S & Delimiter & ConvertToSqlText(Value(i), FieldDataType)
          End If
       Else
          If Value(i) = IgnoreValue Then
          ElseIf IsNull(Value(i)) And IsNull(IgnoreValue) Then
          Else
-            s = s & Delimiter & ConvertToSqlText(Value(i), FieldDataType)
+            S = S & Delimiter & ConvertToSqlText(Value(i), FieldDataType)
          End If
       End If
    Next
-   If Len(s) > 0 And Len(Delimiter) > 0 Then
-      s = Mid(s, Len(Delimiter) + 1)
+   If Len(S) > 0 And Len(Delimiter) > 0 Then
+      S = Mid(S, Len(Delimiter) + 1)
    End If
-   GetValueArrayString = s
+   GetValueArrayString = S
 
 End Function
 

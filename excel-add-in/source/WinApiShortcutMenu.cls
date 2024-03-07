@@ -38,7 +38,7 @@ Option Compare Text
 Option Explicit
 
 Private Type POINTAPI
-   X As Long
+   x As Long
    Y As Long
 End Type
 
@@ -68,7 +68,7 @@ Private Declare PtrSafe Function CreateWindowEx _
       ByVal lpClassname As String, _
       ByVal lpWindowName As String, _
       ByVal dwStyle As Long, _
-      ByVal X As Long, _
+      ByVal x As Long, _
       ByVal Y As Long, _
       ByVal nWidth As Long, _
       ByVal nHeight As Long, _
@@ -94,7 +94,7 @@ Private Declare PtrSafe Function TrackPopupMenu _
       Lib "User32.dll" ( _
       ByVal hMenu As LongPtr, _
       ByVal wFlags As Long, _
-      ByVal X As Long, _
+      ByVal x As Long, _
       ByVal Y As Long, _
       ByVal nReserved As Long, _
       ByVal hWnd As LongPtr, _
@@ -299,7 +299,7 @@ End Sub
 '     Long - Number of the selected menu item
 '
 '---------------------------------------------------------------------------------------
-Public Function OpenMenu(Optional ByVal X As Single = 0, Optional ByVal Y As Single = 0) As Long
+Public Function OpenMenu(Optional ByVal x As Single = 0, Optional ByVal Y As Single = 0) As Long
 
    Dim MenuHwnd As LongPtr
    Dim FormHwnd As LongPtr
@@ -365,7 +365,7 @@ Public Function OpenMenu(Optional ByVal X As Single = 0, Optional ByVal Y As Sin
    ScaleFactorY = (RcHelper.Bottom - RcHelper.Top) / m_AccessForm.InsideHeight
    
    'Debug.Print ScaleFactorX, ScaleFactorY
-   ButtonLeft = (m_MenuControl.Left + X * 0) * ScaleFactorX
+   ButtonLeft = (m_MenuControl.Left + x * 0) * ScaleFactorX
    ButtonTop = (m_MenuControl.Top + Y * 0) * ScaleFactorY
    
    XPos = RcHelper.Left + ButtonLeft - 1
@@ -388,7 +388,6 @@ Public Function OpenMenu(Optional ByVal X As Single = 0, Optional ByVal Y As Sin
       'Evaluate message
       If Message.Message = WM_COMMAND Then
          OpenMenu = Message.wParam
-         Debug.Print Message.wParam
       ElseIf Message.Message = WM_MOUSELEAVE Then
          RepeatGetMessage = True
       Else

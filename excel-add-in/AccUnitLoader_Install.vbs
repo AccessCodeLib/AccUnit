@@ -10,7 +10,8 @@ MsgBox "Before updating the add-in file, the add-in must not be loaded!" & chr(1
 DeleteAddInFiles
 AddInFileInstalled = CopyFiles()
 If AddInFileInstalled Then
-  CompletedMsg = "Add-In was saved in '" + GetAddInLocation + "'."
+  CompletedMsg = "Add-In was saved in '" + GetAddInLocation + "'." & chr(13) & _
+		 "Next step: open Excel and activate Add-In."
 Else
   CompletedMsg = "Error! File was not copied."
 End If
@@ -83,8 +84,6 @@ Function CopyFiles()
    IF Not FileCopy(GetSourceFileFullName, GetDestFileFullName) Then
       Exit Function
    End If
-
-   ' lib files
 
    CopyFiles = True
  

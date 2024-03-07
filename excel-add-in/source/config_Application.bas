@@ -19,7 +19,7 @@ Option Explicit
 Option Private Module
 
 'Version nummer
-Private Const APPLICATION_VERSION As String = "0.9.1.240306"
+Private Const APPLICATION_VERSION As String = "0.9.2.240307"
 
 Private Const APPLICATION_NAME As String = "ACLib AccUnit Loader"
 Private Const APPLICATION_FULLNAME As String = "Access Code Library - AccUnit Loader"
@@ -84,7 +84,7 @@ Public Sub InitConfig(Optional ByRef CurrentAppHandlerRef As ApplicationHandler 
    Set m_Extensions = New AppHandler_ExtensionCollection
    With m_Extensions
       Set .ApplicationHandler = CurrentAppHandlerRef
-      '.Add New ApplicationHandler_AppFile
+      .Add New ApplicationHandler_AppFile
       .Add New AccUnitConfiguration
    End With
 
