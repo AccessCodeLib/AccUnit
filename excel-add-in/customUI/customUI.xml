@@ -1,0 +1,36 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui"> 
+   <ribbon> 
+     <tabs> 
+       <tab id="AccUnitLoaderTab" label="AccUnit"> 
+         <group id="AccUnitLoaderGrp" label="AccUnit Loader"> 
+           <button id="AccUnitLoaderFormBtn" label="Configuration" 
+				size="large" imageMso="ControlToolboxOutlook" 
+				onAction="ShowAccUnitLoaderFormRCB" /> 
+		   <button id="AccUnitLoaderAddTlbReferenceBtn" label="Set Reference to AccUnit.tlb" 
+				size="normal" imageMso="VisualBasicReferences" 
+				onAction="AddAccUnitTlbReferenceRCB" /> 
+		   <button id="AccUnitLoaderDelTlbReferenceBtn" label="Remove Reference to AccUnit.tlb" 
+				size="normal" imageMso="VisualBasicReferences" 
+				onAction="RemoveAccUnitTlbReferenceRCB" /> 
+		 </group> 
+		 <group id="AccUnitTestsGrp" label="AccUnit Test Environment">
+		   <button id="AccUnitLoaderInsertFactoryBtn" label="Insert/Update AccUnit Factory" 
+				size="large" imageMso="CreateModule" 
+				onAction="InsertFactoryModuleRCB" /> 
+		   <button id="AccUnitLoaderImportTestClassesBtn" label="Import Test Classes" 
+				size="large" imageMso="CreateClassModule" 
+				onAction="ImportTestClassesRCB" /> 
+		   <button id="AccUnitLoaderExportTestClassesBtn" label="Export Test Classes" 
+				size="large" imageMso="FileSaveAsOtherFormats" 
+				onAction="ExportTestClassesRCB" /> 
+		   <button id="AccUnitLoaderRemoveEnvironment1Btn" label="Remove Test Environment" 
+				size="large" imageMso="Delete" 
+				onAction="RemoveTestEnvironmentDelTestsRCB" /> 
+		   <button id="TestSuiteRunAllFromVBProjectBtn" label="Run All Tests" 
+				size="large" imageMso="SourceControlRun" 
+				onAction="TestSuiteRunAllFromVBProjectRCB" /> 
+         </group> 
+       </tab> 
+     </tabs> 
+   </ribbon> 
+ </customUI>

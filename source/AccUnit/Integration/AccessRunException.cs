@@ -24,7 +24,7 @@ namespace AccessCodeLib.AccUnit
 
         public OfficeApplicationRunException(Exception innerException, object[] parameters)
             : base(
-                string.Format("An exception occurred while calling method {0} via Application.Run()", parameters?[0]),
+                string.Format("An exception occurred while calling method {0} via Application.Run()\n{1}", parameters?[0], innerException.ToString()),
                 innerException)
         {
             if (parameters != null && parameters.Length > 0)
