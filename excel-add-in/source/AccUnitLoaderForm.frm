@@ -143,7 +143,7 @@ On Error GoTo HandleErr
       .AddMenuItem 11, "Import AccUnit files from directory"
 #End If
 
-If ThisWorkbook.CustomDocumentProperties.Count = 10 Then
+If ThisWorkbook.CustomDocumentProperties.Count >= 5 Then
       .AddMenuItem -2, "", MF_SEPARATOR
       .AddMenuItem 21, "Export AccUnit files to directory"
       .AddMenuItem 22, "Remove AccUnit files from Add-In file"
@@ -162,16 +162,18 @@ End If
    Select Case mnu.OpenMenu(m_OpenMenuMouse_X, m_OpenMenuMouse_Y)
       Case 11
          ImportAccUnitFiles
+         SetEnableMode
          SuccessMessage = "AccUnit files imported"
       Case 21
          ExportAccUnitFiles
+         SetEnableMode
          SuccessMessage = "AccUnit files exported"
       Case 22
          RemoveAccUnitFilesFromAddInStorage
+         SetEnableMode
          SuccessMessage = "AccUnit files removed from Add-In file"
       Case 31
          RemoveTestEnvironment True
-         SetEnableMode
          SuccessMessage = "Test environment end test classes removed"
       Case 32
          RemoveTestEnvironment False
@@ -249,11 +251,10 @@ Private Sub SetEnableMode()
    bolPathExists = Len(Me.txtAccUnitDllPath.Value & vbNullString) > 0
 
    Me.cmdSetAccUnitTlbReferenz.Enabled = bolPathExists
-   With Me.cmdInsertFactoryModule
+   Me.cmdInsertFactoryModule.Enabled = bolPathExists
+   With Me.cmdExportFilesToFolder
       .Enabled = bolPathExists
-      If bolPathExists Then
-         .Enabled = (ThisWorkbook.CustomDocumentProperties.Count = 10)
-      End If
+      .Visible = (ThisWorkbook.CustomDocumentProperties.Count >= 5)
    End With
 
 End Sub
