@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AccUnitLoaderForm 
    Caption         =   "ACLib - AccUnit Loader"
-   ClientHeight    =   3822
+   ClientHeight    =   4473
    ClientLeft      =   119
    ClientTop       =   462
    ClientWidth     =   9373
@@ -65,7 +65,7 @@ Private Sub UserForm_Initialize()
       Me.Caption = .ApplicationTitle & " (Version " & .Version & ")"
    End With
    
-   LoadIconFromAppFiles
+'   LoadIconFromAppFiles
    
    With CurrentAccUnitConfiguration
 On Error GoTo ErrMissingPath
@@ -143,9 +143,11 @@ On Error GoTo HandleErr
       .AddMenuItem 11, "Import AccUnit files from directory"
 #End If
 
+If ThisWorkbook.CustomDocumentProperties.Count = 10 Then
       .AddMenuItem -2, "", MF_SEPARATOR
       .AddMenuItem 21, "Export AccUnit files to directory"
       .AddMenuItem 22, "Remove AccUnit files from Add-In file"
+End If
 
       .AddMenuItem -3, "", MF_SEPARATOR
       .AddMenuItem 31, "Remove test environment incl. test classes"
@@ -169,6 +171,7 @@ On Error GoTo HandleErr
          SuccessMessage = "AccUnit files removed from Add-In file"
       Case 31
          RemoveTestEnvironment True
+         SetEnableMode
          SuccessMessage = "Test environment end test classes removed"
       Case 32
          RemoveTestEnvironment False
@@ -197,6 +200,22 @@ HandleErr:
    Resume ExitHere
 
 End Function
+
+Private Sub cmdExportFilesToFolder_Click()
+   
+On Error GoTo HandleErr
+
+   ExportAccUnitFiles
+   ShowSuccessInfo "AccUnit files exported"
+   
+ExitHere:
+   Exit Sub
+
+HandleErr:
+   ShowErrorHandlerInfo "cmdInsertFactoryModule_Click"
+   Resume ExitHere
+   
+End Sub
 
 Private Sub cmdSelectAccUnitDllPath_Click()
    
@@ -230,7 +249,12 @@ Private Sub SetEnableMode()
    bolPathExists = Len(Me.txtAccUnitDllPath.Value & vbNullString) > 0
 
    Me.cmdSetAccUnitTlbReferenz.Enabled = bolPathExists
-   Me.cmdInsertFactoryModule.Enabled = bolPathExists
+   With Me.cmdInsertFactoryModule
+      .Enabled = bolPathExists
+      If bolPathExists Then
+         .Enabled = (ThisWorkbook.CustomDocumentProperties.Count = 10)
+      End If
+   End With
 
 End Sub
 

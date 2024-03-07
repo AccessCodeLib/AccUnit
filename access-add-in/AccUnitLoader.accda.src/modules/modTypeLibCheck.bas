@@ -29,7 +29,7 @@ Private Const EXTENSION_KEY_APPFILE As String = "AppFile"
 Public Property Get DefaultAccUnitLibFolder() As String
    Dim FilePath As String
    FilePath = CodeVBProject.FileName
-   FilePath = Left(FilePath, Len(FilePath) - InStrRev(FilePath, "\"))
+   FilePath = Left(FilePath, InStrRev(FilePath, "\"))
    DefaultAccUnitLibFolder = FilePath & "lib"
 End Property
 

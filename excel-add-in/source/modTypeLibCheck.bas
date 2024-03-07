@@ -29,7 +29,7 @@ Private Const EXTENSION_KEY_APPFILE As String = "AppFile"
 Public Property Get DefaultAccUnitLibFolder() As String
    Dim FilePath As String
    FilePath = CodeVBProject.FileName
-   FilePath = Left(FilePath, Len(FilePath) - InStrRev(FilePath, "\"))
+   FilePath = Left(FilePath, InStrRev(FilePath, "\"))
    DefaultAccUnitLibFolder = FilePath & "lib"
 End Property
 
@@ -87,7 +87,7 @@ End Function
 
 Private Sub ExportTlbFile(ByVal LibFile As String)
    With CurrentApplication.Extensions(EXTENSION_KEY_APPFILE)
-      .CreateAppFile ACCUNIT_TYPELIB_FILE, LibFile
+      .CreateAppFile ACCUNIT_TYPELIB_FILE, LibFile, "BitInfo", CStr(GetCurrentVbaBitSystem)
    End With
 End Sub
 
