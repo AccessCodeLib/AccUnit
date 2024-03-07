@@ -29,7 +29,7 @@ Private Const EXTENSION_KEY_APPFILE As String = "AppFile"
 Public Property Get DefaultAccUnitLibFolder() As String
    Dim FilePath As String
    FilePath = CodeVBProject.FileName
-   FilePath = Left(FilePath, InStrRev(FilePath, "\"))
+   FilePath = VBA.Left(FilePath, VBA.InStrRev(FilePath, "\"))
    DefaultAccUnitLibFolder = FilePath & "lib"
 End Property
 
@@ -66,12 +66,12 @@ On Error GoTo ErrMissingPath
 On Error GoTo 0
    End With
 
-   If Len(LibPath) = 0 Then
+   If VBA.Len(LibPath) = 0 Then
       LibPath = DefaultAccUnitLibFolder
    End If
 
    If BackSlashAtEnd Then
-      If Right(LibPath, 1) <> "\" Then
+      If VBA.Right(LibPath, 1) <> "\" Then
          LibPath = LibPath & "\"
       End If
    End If
