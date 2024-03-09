@@ -19,8 +19,8 @@ Begin Form
     ItemSuffix =209
     Left =3855
     Top =3030
-    Right =14430
-    Bottom =13815
+    Right =17078
+    Bottom =13695
     RecSrcDt = Begin
         0x212b6fd80e9ce340
     End
@@ -268,13 +268,16 @@ Begin Form
                 Begin TextBox
                     OverlapFlags =85
                     TextAlign =1
+                    TextFontFamily =49
                     IMESentenceMode =3
                     Left =2318
                     Top =1868
                     Width =9072
                     Height =2835
+                    FontSize =10
                     TabIndex =5
                     Name ="txtTestMethodTemplate"
+                    FontName ="Consolas"
                     GroupTable =2
                     BottomPadding =0
                     HorizontalAnchor =2

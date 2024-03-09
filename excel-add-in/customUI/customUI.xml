@@ -13,7 +13,7 @@
 				size="normal" imageMso="VisualBasicReferences" 
 				onAction="RemoveAccUnitTlbReferenceRCB" /> 
 		 </group> 
-		 <group id="AccUnitTestsGrp" label="AccUnit Test Environment">
+		 <group id="AccUnitTestEnvironmentGrp" label="AccUnit Test Environment">
 		   <button id="AccUnitLoaderInsertFactoryBtn" label="Insert/Update AccUnit Factory" 
 				size="large" imageMso="CreateModule" 
 				onAction="InsertFactoryModuleRCB" /> 
@@ -26,6 +26,8 @@
 		   <button id="AccUnitLoaderRemoveEnvironment1Btn" label="Remove Test Environment" 
 				size="large" imageMso="Delete" 
 				onAction="RemoveTestEnvironmentDelTestsRCB" /> 
+		 </group> 
+		 <group id="AccUnitTestsGrp" label="Test">
 		   <button id="TestSuiteRunAllFromVBProjectBtn" label="Run All Tests" 
 				size="large" imageMso="SourceControlRun" 
 				onAction="TestSuiteRunAllFromVBProjectRCB" /> 

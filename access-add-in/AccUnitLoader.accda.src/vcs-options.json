@@ -9,7 +9,7 @@
     "UseFastSave": true,
     "UseMergeBuild": false,
     "UseGitIntegration": false,
-    "SavePrintVars": true,
+    "SavePrintVars": false,
     "ExportPrintSettings": {
       "Orientation": true,
       "PaperSize": true,
@@ -42,6 +42,15 @@
     "SanitizeLevel": 2,
     "ExtractThemeFiles": false,
     "TablesToExportData": {
+      "ACLib_ConfigTable": {
+        "Format": "XML Format"
+      },
+      "tab1DS": {
+        "Format": "XML Format"
+      },
+      "USys_AppFiles": {
+        "Format": "XML Format"
+      },
       "USysRegInfo": {
         "Format": "Tab Delimited"
       },
