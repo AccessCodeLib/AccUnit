@@ -72,35 +72,6 @@ HandleErr:
 
 End Sub
 
-Private Sub InsertFactoryModule()
-
-   Dim Configurator As AccUnit.Configurator
-
-   With New AccUnitLoaderFactory
-      Set Configurator = .Configurator
-   End With
-
-   Configurator.InsertAccUnitLoaderFactoryModule AccUnitTlbReferenceExists, True
-   Set Configurator = Nothing
-
-On Error Resume Next
-   Application.RunCommand acCmdCompileAndSaveAllModules
-
-End Sub
-
-Private Function AccUnitTlbReferenceExists() As Boolean
-
-   Dim ref As Reference
-
-   For Each ref In Application.References
-      If ref.Name = "AccUnit" Then
-         AccUnitTlbReferenceExists = True
-         Exit Function
-      End If
-   Next
-
-End Function
-
 Private Sub cmdOpenMenu_Click()
    OpenImportFileShortcutMenu
 End Sub
@@ -173,52 +144,6 @@ HandleErr:
 
 End Function
 
-Private Sub RemoveTestEnvironment(ByVal RemoveTestModules As Boolean)
-
-   Dim Configurator As AccUnit.Configurator
-
-   With New AccUnitLoaderFactory
-      Set Configurator = .Configurator
-   End With
-
-   Configurator.RemoveTestEnvironment RemoveTestModules
-   Set Configurator = Nothing
-
-On Error Resume Next
-   Application.RunCommand acCmdCompileAndSaveAllModules
-
-End Sub
-
-Private Sub ExportTestClasses()
-
-   Dim Configurator As AccUnit.Configurator
-
-   With New AccUnitLoaderFactory
-      Set Configurator = .Configurator
-   End With
-
-   Configurator.ExportTestClasses
-   Set Configurator = Nothing
-
-End Sub
-
-Private Sub ImportTestClasses()
-
-   Dim Configurator As AccUnit.Configurator
-
-   With New AccUnitLoaderFactory
-      Set Configurator = .Configurator
-   End With
-
-   Configurator.InsertAccUnitLoaderFactoryModule AccUnitTlbReferenceExists, False
-   Configurator.ImportTestClasses
-   Set Configurator = Nothing
-
-On Error Resume Next
-   Application.RunCommand acCmdCompileAndSaveAllModules
-
-End Sub
-
 Private Sub cmdSelectAccUnitDllPath_Click()
 
    Dim SelectedAccUnitDllPath As String
@@ -289,31 +214,13 @@ HandleErr:
 
 End Sub
 
-Private Sub AddAccUnitTlbReference()
-   RemoveAccUnitTlbReference
-   Application.References.AddFromFile Me.txtAccUnitDllPath.Value & "\AccessCodeLib.AccUnit.tlb"
-End Sub
-
-Private Sub RemoveAccUnitTlbReference()
-
-   Dim ref As Reference
-
-   For Each ref In Application.References
-      If ref.Name = "AccUnit" Then
-         Application.References.Remove ref
-         Exit Sub
-      End If
-   Next
-
-End Sub
-
 Private Sub cmdUserSettings_Click()
    DoCmd.OpenForm "AccUnitUserSettings", acNormal, , , , acDialog
 End Sub
 
 Private Sub Form_Load()
 
-   CheckAccUnitTypeLibFile
+   CheckAccUnitTypeLibFile CodeVBProject
 
    With CurrentApplication
       Me.Caption = .ApplicationTitle & "  " & VBA.ChrW(&H25AA) & "  Version " & .Version

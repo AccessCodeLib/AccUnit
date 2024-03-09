@@ -1,4 +1,4 @@
-Attribute VB_Name = "modTypeLibCheck"
+﻿Attribute VB_Name = "modTypeLibCheck"
 '---------------------------------------------------------------------------------------
 ' Module: modTypeLibCheck
 '---------------------------------------------------------------------------------------
@@ -33,25 +33,25 @@ Public Property Get DefaultAccUnitLibFolder() As String
    DefaultAccUnitLibFolder = FilePath & "lib"
 End Property
 
-Public Sub CheckAccUnitTypeLibFile(ByVal VBProjectRef As VBProject, Optional ByRef ReferenceFixed As Boolean)
+Public Sub CheckAccUnitTypeLibFile(Optional ByVal VBProjectRef As VBProject = Nothing)
 
    Dim LibPath As String
    Dim LibFile As String
-   Dim FileFixed As Boolean
-   
+
    LibPath = GetAccUnitLibPath(True)
    LibFile = LibPath & ACCUNIT_TYPELIB_FILE
    FileTools.CreateDirectory LibPath
 
    If Not FileTools.FileExists(LibFile) Then
-      FileFixed = True
       ExportTlbFile LibFile
    End If
 
 On Error Resume Next
-   CheckMissingReference VBProjectRef, ReferenceFixed
-   
-   ReferenceFixed = ReferenceFixed Or FileFixed
+   If VBProjectRef Is Nothing Then
+      Set VBProjectRef = CodeVBProject
+   End If
+
+   CheckMissingReference VBProjectRef
 
 End Sub
 
@@ -59,7 +59,7 @@ Private Function GetAccUnitLibPath(Optional ByVal BackSlashAtEnd As Boolean = Fa
 
    Dim LibPath As String
    Dim LibFile As String
-   
+
    With CurrentAccUnitConfiguration
 On Error GoTo ErrMissingPath
       LibPath = .AccUnitDllPath
@@ -69,17 +69,17 @@ On Error GoTo 0
    If VBA.Len(LibPath) = 0 Then
       LibPath = DefaultAccUnitLibFolder
    End If
-   
+
    If BackSlashAtEnd Then
       If VBA.Right(LibPath, 1) <> "\" Then
          LibPath = LibPath & "\"
       End If
    End If
-   
+
    GetAccUnitLibPath = LibPath
-   
+
    Exit Function
-   
+
 ErrMissingPath:
    Resume Next
 
@@ -87,18 +87,26 @@ End Function
 
 Private Sub ExportTlbFile(ByVal LibFile As String)
    With CurrentApplication.Extensions(EXTENSION_KEY_APPFILE)
-      .CreateAppFile ACCUNIT_TYPELIB_FILE, LibFile, "BitInfo", CStr(GetCurrentVbaBitSystem)
+      .CreateAppFile ACCUNIT_TYPELIB_FILE, LibFile
    End With
 End Sub
 
-Private Sub CheckMissingReference(ByVal VBProjectRef As VBProject, Optional ByRef ReferenceFixed As Boolean)
+Private Sub CheckMissingReference(ByVal VBProjectRef As VBProject)
 
    Dim AccUnitRefExists As Boolean
    Dim ref As Object
+   Dim RefName As String
 
    With VBProjectRef
       For Each ref In .References
-         If ref.Name = "AccUnit" Then
+On Error Resume Next
+         RefName = ref.Name
+         If Err.Number <> 0 Then
+            Err.Clear
+            RefName = vbNullString
+         End If
+On Error GoTo 0
+         If RefName = "AccUnit" Then
             AccUnitRefExists = True
             Exit Sub
          End If
@@ -106,7 +114,6 @@ Private Sub CheckMissingReference(ByVal VBProjectRef As VBProject, Optional ByRe
    End With
 
    AddAccUnitTlbReference VBProjectRef
-   ReferenceFixed = True
 
 End Sub
 
@@ -117,11 +124,20 @@ End Sub
 Private Sub RemoveAccUnitTlbReference(ByVal VBProjectRef As VBProject)
 
    Dim ref As Object
+   Dim RefName As String
 
    For Each ref In VBProjectRef.References
+On Error Resume Next
+      RefName = ref.Name
+      If Err.Number <> 0 Then
+         Err.Clear
+         RefName = vbNullString
+      End If
+On Error GoTo 0
+
       If ref.IsBroken Then
          VBProjectRef.References.Remove ref
-      ElseIf ref.Name = "AccUnit" Then
+      ElseIf RefName = "AccUnit" Then
          VBProjectRef.References.Remove ref
          Exit Sub
       End If

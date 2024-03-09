@@ -1,6 +1,6 @@
 ﻿{
   "Info": {
-    "AddinVersion": "4.0.30",
+    "AddinVersion": "4.0.34",
     "AccessVersion": "16.0 32-bit"
   },
   "Options": {
@@ -44,9 +44,6 @@
     "TablesToExportData": {
       "tab1DS": {
         "Format": "Tab Delimited"
-      },
-      "USys_AppFiles": {
-        "Format": "XML Format"
       },
       "USysRegInfo": {
         "Format": "Tab Delimited"

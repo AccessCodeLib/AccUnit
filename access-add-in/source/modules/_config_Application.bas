@@ -6,7 +6,7 @@
 '<codelib>
 '  <license>_codelib/license.bas</license>
 '  <use>%AppFolder%/source/defGlobal_AccUnitLoader.bas</use>
-'  <use>base/modApplication.bas</use>
+'  <use>base/modApplication.bas</use
 '  <use>base/ApplicationHandler.cls</use>
 '  <use>base/ApplicationHandler_AppFile.cls</use>
 '  <use>base/modErrorHandler.bas</use>
@@ -18,7 +18,7 @@ Option Compare Database
 Option Explicit
 
 'Version nummer
-Private Const APPLICATION_VERSION As String = "0.9.19.231108"
+Private Const APPLICATION_VERSION As String = "0.9.21.240308"
 
 Private Const APPLICATION_NAME As String = "ACLib AccUnit Loader"
 Private Const APPLICATION_FULLNAME As String = "Access Code Library - AccUnit Loader"

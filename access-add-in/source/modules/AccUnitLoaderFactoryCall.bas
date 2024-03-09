@@ -12,6 +12,6 @@ Option Compare Database
 Option Explicit
 
 Public Function GetAccUnitFactory() As AccUnitLoaderFactory
-   CheckAccUnitTypeLibFile
+   CheckAccUnitTypeLibFile CodeVBProject
    Set GetAccUnitFactory = New AccUnitLoaderFactory
 End Function

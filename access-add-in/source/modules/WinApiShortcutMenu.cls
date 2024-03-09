@@ -522,7 +522,7 @@ Public Function OpenMenu(Optional ByVal X As Single = 0, Optional ByVal Y As Sin
       If Message.Message = WM_COMMAND Then
          OpenMenu = Message.wParam
       ElseIf Message.Message = WM_MOUSELEAVE Then
-         RepeatGetMessage = True
+        ' RepeatGetMessage = True
       Else
          OpenMenu = 0
       End If

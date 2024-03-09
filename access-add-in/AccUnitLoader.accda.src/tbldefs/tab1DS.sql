@@ -1,4 +1,0 @@
-﻿CREATE TABLE [tab1DS] (
-  [id] BIT CONSTRAINT [PrimaryKey] PRIMARY KEY UNIQUE NOT NULL,
-  [ShowInfoForm] BIT
-)
