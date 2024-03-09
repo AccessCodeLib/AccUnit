@@ -132,24 +132,20 @@ On Error GoTo HandleErr
    With mnu
       Set .AccessForm = Me
       .UserFormCaption = Me.Caption
-      
       Set .MenuControl = Me.cmdOpenMenu
-      
-     ' .ControlSection = acDetail
 
 #If DEVMODE = 1 Then
-      .AddMenuItem -99, "", MF_SEPARATOR
       .AddMenuItem -1, "For AccUnit developers:", MF_STRING + MF_GRAYED
       .AddMenuItem 11, "Import AccUnit files from directory"
+      .AddMenuItem -2, "", MF_SEPARATOR
 #End If
 
 If ThisWorkbook.CustomDocumentProperties.Count >= 5 Then
-      .AddMenuItem -2, "", MF_SEPARATOR
       .AddMenuItem 21, "Export AccUnit files to directory"
       .AddMenuItem 22, "Remove AccUnit files from Add-In file"
+      .AddMenuItem -3, "", MF_SEPARATOR
 End If
 
-      .AddMenuItem -3, "", MF_SEPARATOR
       .AddMenuItem 31, "Remove test environment incl. test classes"
       .AddMenuItem 32, "Remove test environment (keep test classes)"
 
@@ -294,7 +290,7 @@ End Sub
 
 
 Private Sub cmdUserSettings_Click()
-'   DoCmd.OpenForm "AccUnitUserSettings", acNormal, , , , acDialog
+   AccUnitUserSettings.Show 1
 End Sub
 
 Private Sub txtAccUnitDllPath_AfterUpdate()
