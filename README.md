@@ -8,7 +8,7 @@ For more informations see [Wiki](https://github.com/AccessCodeLib/AccUnit/wiki) 
 
 ### Notes
 * For 32 and 64 Bit Office/Access
-* Run COM regfree (with [Access-Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in))
+* Run COM regfree (with [Access Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in) or [Excel Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/excel-add-in))
 
 ### Dev state
 * Simple test can started by [Access-Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in)
