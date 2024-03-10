@@ -114,11 +114,21 @@ Public Property Get TestSuite(Optional ByVal TestReportOutputTo As TestReportOut
       .Init AccessTestSuite, New TestResultCollector
    End With
 
+   AddTestResultReporter TestSuite, TestReportOutputTo
+
+End Property
+
+Private Sub AddTestResultReporter(ByVal TestSuite As TestSuite, ByVal TestReportOutputTo As TestReportOutput)
+
    If (TestReportOutputTo And TestReportOutput.DebugPrint) = TestReportOutput.DebugPrint Then
       TestSuite.AddTestResultReporter New DebugPrintTestResultReporter
    End If
 
-End Property
+   If (TestReportOutputTo And TestReportOutput.LogFile) = TestReportOutput.LogFile Then
+      TestSuite.AddTestResultReporter New LogFileTestResultReporter
+   End If
+
+End Sub
 
 Public Property Get CodeCoverageTracker() As Object 'AccUnit.CodeCoverageTracker
     Set CodeCoverageTracker = AccUnitFactory.CodeCoverageTracker(CurrentVbProject)

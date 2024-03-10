@@ -31,7 +31,8 @@ Option Explicit
 #Const USE_ACCUNIT_TYPELIB = {UseAccUnitTypeLib}
 
 Public Enum TestReportOutput
-   DebugPrint = 0
+   DebugPrint = 1
+   LogFile = 2
 End Enum
 
 Private Const DefaultTestReportOutput As Long = TestReportOutput.DebugPrint
@@ -76,7 +77,7 @@ End Property
 #If USE_ACCUNIT_TYPELIB Then
 Public Property Get TestSuite(Optional ByVal OutputTo As TestReportOutput = DefaultTestReportOutput) As AccUnit.AccessTestSuite
 #Else
-Public Property Get TestSuite(Optional ByVal OutputTo As TestReportOutput = DefaultTestReportOutputt) As Object
+Public Property Get TestSuite(Optional ByVal OutputTo As TestReportOutput = DefaultTestReportOutput) As Object
 #End If
    Set TestSuite = AccUnitLoaderFactory.TestSuite(OutputTo)
 End Property

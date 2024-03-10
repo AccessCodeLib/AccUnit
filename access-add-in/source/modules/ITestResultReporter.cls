@@ -11,12 +11,17 @@ Attribute VB_Exposed = True
 ' Interface: ITestResultReporter
 '---------------------------------------------------------------------------------------
 '
-' Interface for Reporter classes
+' Interface for TestResultReporter classes
 '
 '---------------------------------------------------------------------------------------
 Option Compare Text
 Option Explicit
 
-Public Property Set TestResultCollector(ByVal NewValue As TestResultCollector)
+Public Enum TestReportOutput
+   DebugPrint = 1
+   LogFile = 2
+End Enum
+
+Public Property Set TestResultCollector(ByVal TestResultCollectorToListen As TestResultCollector)
 '
 End Property

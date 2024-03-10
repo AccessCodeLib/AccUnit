@@ -39,9 +39,5 @@ Public Type CodeLibInfo
    Description As String
 End Type
 
-Public Enum TestReportOutput
-   DebugPrint = 1
-End Enum
-
 'Standard-Icon
 Public ACLibIconFileName As String 'Nur Dateiname inkl. Dateierweiterung, aber ohne vollständigen Pfad
