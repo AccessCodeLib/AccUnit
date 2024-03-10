@@ -32,7 +32,7 @@ Attribute VB_Description = "Konfigurationseinstellungen der CodeLib verwalten"
 '</codelib>
 '---------------------------------------------------------------------------------------
 '
-Option Compare Database
+Option Compare Text
 Option Explicit
 
 Private m_DaoSqlTools As SqlTools

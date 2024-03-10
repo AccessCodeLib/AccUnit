@@ -25,7 +25,7 @@ Attribute VB_Exposed = False
 '</codelib>
 '---------------------------------------------------------------------------------------
 '
-Option Compare Database
+Option Compare Text
 Option Explicit
 
 Private Const WM_MSG_SETICON As Long = &H80

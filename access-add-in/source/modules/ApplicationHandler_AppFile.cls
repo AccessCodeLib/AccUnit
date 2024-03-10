@@ -33,7 +33,7 @@ Attribute VB_Description = "Erweiterung für ApplicationHandler-Klasse: Anwendun
 '</codelib>
 '---------------------------------------------------------------------------------------
 '
-Option Compare Database
+Option Compare Text
 Option Explicit
 
 Private Const EXTENSION_KEY As String = "AppFile"

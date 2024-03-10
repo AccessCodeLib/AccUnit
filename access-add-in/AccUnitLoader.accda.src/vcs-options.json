@@ -4,7 +4,7 @@
     "AccessVersion": "16.0 32-bit"
   },
   "Options": {
-    "ExportFolder": "\\source",
+    "ExportFolder": "",
     "ShowDebug": false,
     "UseFastSave": true,
     "UseMergeBuild": false,

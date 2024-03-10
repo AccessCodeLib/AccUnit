@@ -20,8 +20,9 @@ Attribute VB_Description = "Hilfsfunktionen für den Umgang mit DAO"
 '</codelib>
 '---------------------------------------------------------------------------------------
 '
-Option Compare Database
+Option Compare Text
 Option Explicit
+Option Private Module
 
 '---------------------------------------------------------------------------------------
 ' Function: TableDefExists

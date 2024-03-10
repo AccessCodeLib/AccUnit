@@ -9,28 +9,13 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Attribute VB_Description = "Konfigurationseinstellungen der CodeLib verwalten"
 '---------------------------------------------------------------------------------------
-' Klassenmodul: AccUnitConfiguration
-'---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Konfigurationseinstellungen verwalten
-' </summary>
-' <remarks>
-' </remarks>
-'\ingroup addins_shared
-'**/
-'---------------------------------------------------------------------------------------
-'<codelib>
-'  <file>%AppFolder%/source/AccUnitConfiguration.cls</file>
-'  <use>base/ApplicationHandler.cls</use>
-'  <use>data/SqlTools.bas</use>
-'  <use>file/FileTools.bas</use>
-'  <use>data/dao/modDAO_Tools.bas</use>
-'  <ref><name>DAO</name><major>5</major><minor>0</minor><guid>{00025E01-0000-0000-C000-000000000046}</guid></ref>
-'</codelib>
+' Class: AccUnitConfiguration
 '---------------------------------------------------------------------------------------
 '
-Option Compare Database
+' AccUnit configuration
+'
+'---------------------------------------------------------------------------------------
+Option Compare Text
 Option Explicit
 
 Private m_DaoSqlTools As SqlTools
