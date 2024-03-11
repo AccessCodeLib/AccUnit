@@ -104,7 +104,7 @@ Public Sub ExportTestClasses()
 
 End Sub
 
-Public Sub RemoveTestEnvironment(ByVal RemoveTestModules As Boolean)
+Public Sub RemoveTestEnvironment(ByVal RemoveTestModules As Boolean, Optional ByVal SaveTestModules As Boolean = True)
 
    Dim Configurator As AccUnit.Configurator
 
@@ -112,7 +112,7 @@ Public Sub RemoveTestEnvironment(ByVal RemoveTestModules As Boolean)
       Set Configurator = .Configurator
    End With
 
-   Configurator.RemoveTestEnvironment RemoveTestModules, , CurrentVbProject
+   Configurator.RemoveTestEnvironment RemoveTestModules, SaveTestModules, CurrentVbProject
    Set Configurator = Nothing
 
 On Error Resume Next
@@ -205,3 +205,40 @@ Public Function GetCurrentAccessBitSystem() As Long
 #End If
 
 End Function
+
+Public Function AutomatedTestRun() As Boolean
+
+   Dim Success As Boolean
+   Dim TestSummary As AccUnit.ITestSummary
+   Dim FailedMessage As String
+
+   AddAccUnitTlbReference
+   InsertFactoryModule
+   ImportTestClasses
+
+   SetFocusToImmediateWindow
+
+   Set TestSummary = GetAccUnitFactory.TestSuite(LogFile + DebugPrint).AddFromVBProject.Run.Summary
+   Success = TestSummary.Success
+
+   RemoveTestEnvironment True
+
+   If Not Success Then
+      FailedMessage = TestSummary.Failed & " of " & TestSummary.Total & " Tests failed"
+      Err.Raise vbObjectError + 12, "AccUnitLoader.AutomatedTestRun", FailedMessage
+   End If
+
+End Function
+
+Private Sub SetFocusToImmediateWindow()
+   Dim VbeWin As VBIDE.Window
+   For Each VbeWin In Application.VBE.Windows
+      If VbeWin.Type = vbext_wt_Immediate Then
+         If Not VbeWin.Visible Then
+            VbeWin.Visible = True
+         End If
+         VbeWin.SetFocus
+         Exit Sub
+      End If
+   Next
+End Sub

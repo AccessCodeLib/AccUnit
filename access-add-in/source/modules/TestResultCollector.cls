@@ -23,13 +23,19 @@ Implements AccUnit.ITestSummaryPrinter
 Private m_TestResults As Collection
 Private m_TestSummary As TestSummary
 
+Public Event TestSuiteStarted(ByVal TestSuite As AccUnit.ITestSuite)
 Public Event TestTraceMessage(ByVal Message As String, ByVal CodeCoverageTracker As CodeCoverageTracker)
-Public Event PrintSummary(ByVal PrintTestResults As Boolean, ByVal TestSummary As TestSummary, ByVal TestResults As Collection)
 Public Event NewTestResult(ByVal TestResult As AccUnit.ITestResult)
+Public Event TestSuiteFinished(ByVal TestSummary As AccUnit.ITestSummary)
+Public Event PrintSummary(ByVal TestSummary As AccUnit.ITestSummary, ByVal PrintTestResults As Boolean)
 
 Private Sub Class_Initialize()
    Set m_TestResults = New Collection
    Set m_TestSummary = New TestSummary
+End Sub
+
+Public Sub TestSuiteStarted(ByVal TestSuite As AccUnit.ITestSuite)
+    RaiseEvent TestSuiteStarted(TestSuite)
 End Sub
 
 Public Sub PrintTestTraceMessage(ByVal Message As String, ByVal CodeCoverageTracker As CodeCoverageTracker)
@@ -42,16 +48,20 @@ Private Sub ITestResultCollector_Add(ByVal TestResult As AccUnit.ITestResult)
    RaiseEvent NewTestResult(TestResult)
 End Sub
 
+Public Sub TestSuiteFinished(ByVal TestSummary As AccUnit.ITestSummary)
+    RaiseEvent TestSuiteFinished(TestSummary)
+End Sub
+
 Private Property Get ITestSummaryPrinter_Name() As String
    ITestSummaryPrinter_Name = "TestResultCollectorEventBridge"
 End Property
 
 Private Sub ITestSummaryPrinter_PrintSummary(Optional ByVal PrintTestResults As Boolean = False)
-   RaiseEvent PrintSummary(PrintTestResults, m_TestSummary, m_TestResults)
+   RaiseEvent PrintSummary(m_TestSummary, PrintTestResults)
 End Sub
 
-Public Sub PrintSummary(Optional ByVal PrintTestResults As Boolean = False)
-   RaiseEvent PrintSummary(PrintTestResults, m_TestSummary, m_TestResults)
+Public Sub PrintSummary(ByVal TestSummary As AccUnit.ITestSummary, Optional ByVal PrintTestResults As Boolean = False)
+   RaiseEvent PrintSummary(TestSummary, PrintTestResults)
 End Sub
 
 Public Property Get Summary() As TestSummary

@@ -61,3 +61,7 @@ End Property
 Public Property Get Total() As Long
    Total = m_Total
 End Property
+
+Public Property Get Success() As Boolean
+   Success = (Failed = 0)
+End Property

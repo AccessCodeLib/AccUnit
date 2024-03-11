@@ -34,42 +34,62 @@ Private Sub m_TestResultCollector_NewTestResult(ByVal TestResult As AccUnit.ITes
 '
 End Sub
 
+Private Sub m_TestResultCollector_TestSuiteFinished(ByVal TestSummary As AccUnit.ITestSummary)
+   PrintSummary TestSummary, True
+   PrintToFile String(40, "#")
+End Sub
+
+Private Sub m_TestResultCollector_TestSuiteStarted(ByVal TestSuite As AccUnit.ITestSuite)
+   PrintToFile String(40, "#")
+End Sub
+
 Private Sub m_TestResultCollector_TestTraceMessage(ByVal Message As String, ByVal CodeCoverageTracker As CodeCoverageTracker)
-   If Message Like "* [*][*][*]*" Then
-      Message = Replace(Message, vbNewLine, vbTab)
-   ElseIf Message Like "* ~~~*" Then
-      Message = Replace(Message, vbNewLine, vbTab)
-   End If
-   PrintToFile Message
-
-   If Not (CodeCoverageTracker Is Nothing) Then
-   If Message Like "*Total*" Then
-      PrintToFile CodeCoverageTracker.GetReport()
-   End If
-   End If
+'   If Message Like "* [*][*][*]*" Then
+'      Message = Replace(Message, vbNewLine, vbTab)
+'   ElseIf Message Like "* ~~~*" Then
+'      Message = Replace(Message, vbNewLine, vbTab)
+'   End If
+'   PrintToFile Message
+'
+'   If Not (CodeCoverageTracker Is Nothing) Then
+'   If Message Like "*Total*" Then
+'      PrintToFile CodeCoverageTracker.GetReport()
+'   End If
+'   End If
 End Sub
 
-Private Sub m_TestResultCollector_PrintSummary(ByVal PrintTestResults As Boolean, ByVal TestSummary As TestSummary, ByVal TestResults As Collection)
-   PrintSummary PrintTestResults, TestSummary, TestResults
+Private Sub m_TestResultCollector_PrintSummary(ByVal TestSummary As AccUnit.ITestSummary, ByVal PrintTestResults As Boolean)
+   PrintSummary TestSummary, PrintTestResults
 End Sub
 
-Private Sub PrintSummary(ByVal PrintTestResults As Boolean, ByVal TestSummary As TestSummary, ByVal TestResults As Collection)
+Private Sub PrintSummary(ByVal TestSummary As AccUnit.ITestSummary, ByVal PrintTestResults As Boolean)
    If PrintTestResults Then
       PrintToFile String(40, "-")
-      PrintTestDetailSummary TestResults
+      PrintTestDetailSummary TestSummary.GetTestResults
    End If
    PrintToFile String(40, "-")
    PrintToFile "Tests: " & TestSummary.Total
    PrintToFile " ", "Passed:  " & TestSummary.Passed
    PrintToFile " ", "Failed:  " & TestSummary.Failed
-   PrintToFile " ", "Ignored2: " & TestSummary.Ignored
+   PrintToFile " ", "Ignored: " & TestSummary.Ignored
    PrintToFile String(40, "-")
+
+   If TestSummary.Failed + TestSummary.Error > 0 Then
+      PrintToFile (TestSummary.Failed + TestSummary.Error) & " / " & TestSummary.Total & " failed"
+   ElseIf TestSummary.Passed = TestSummary.Total Then
+      PrintToFile (TestSummary.Passed) & " / " & TestSummary.Total & " passed"
+   Else
+      PrintToFile (TestSummary.Ignored) & " / " & TestSummary.Total & " ignored"
+   End If
+
+   PrintToFile String(40, "-")
+
 End Sub
 
-Private Sub PrintTestDetailSummary(ByVal TestResults As Collection)
+Private Sub PrintTestDetailSummary(ByRef TestResults() As AccUnit.ITestResult)
 
    Dim i As Long
-   Dim r As AccUnit.ITestResult
+   Dim r As Variant 'AccUnit.ITestResult
    Dim LastTestIsRowTest As Boolean
 
    For Each r In TestResults
@@ -101,10 +121,10 @@ Private Sub PrintSubResults(ByVal mainId As String, ByVal resultCol As AccUnit.T
       Set r = resultCol.Item(i - 1)
       ResultID = mainId & "." & i
       If TypeOf r Is AccUnit.ITestResultSummary Then
-         PrintToFile String(3, " ") & ResultID, r.test.FullName & "-", r.Result, "..."
+         PrintToFile String(3, " ") & ResultID, r.test.FullName, r.Result, "..."
          PrintSubResults ResultID, r
       Else
-         PrintToFile String(3, " ") & ResultID, r.test.FullName & "-", r.Result, r.Message
+         PrintToFile String(3, " ") & ResultID, r.test.FullName, r.Result, r.Message
       End If
    Next
 

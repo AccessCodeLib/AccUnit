@@ -51,12 +51,20 @@ Public Property Get TestSuite() As AccUnit.AccessTestSuite
    Set TestSuite = m_TestSuite
 End Property
 
+Private Sub m_TestSuite_TestSuiteFinished(ByVal Summary As AccUnit.ITestSummary)
+    m_TestResultCollector.TestSuiteFinished Summary
+End Sub
+
+Private Sub m_TestSuite_TestSuiteStarted(ByVal TestSuite As AccUnit.ITestSuite)
+   m_TestResultCollector.TestSuiteStarted TestSuite
+End Sub
+
 Private Sub m_TestSuite_TestTraceMessage(ByVal Message As String)
    m_TestResultCollector.PrintTestTraceMessage Message, m_CodeCoverageTracker
 End Sub
 
 Public Sub PrintSummary(Optional ByVal PrintTestResults As Boolean = False)
-   m_TestResultCollector.PrintSummary PrintTestResults
+   m_TestResultCollector.PrintSummary m_TestSuite.Summary, PrintTestResults
 End Sub
 
 Public Property Set CodeCoverageTracker(ByVal NewRef As Object)
@@ -122,7 +130,7 @@ Private Property Get IAccessTestSuite_Name() As String
    IAccessTestSuite_Name = "TestSuite"
 End Property
 
-Public Function Run() As TestSuite
+Public Function Run() As AccUnit.IAccessTestSuite
    m_TestSuite.Run
    Set Run = Me
 End Function
@@ -148,6 +156,10 @@ End Function
 Private Function IAccessTestSuite_Filter(ByVal FilterTags As Variant) As AccUnit.IAccessTestSuite
    Set IAccessTestSuite_Filter = Filter(FilterTags)
 End Function
+
+Private Property Get Summary() As AccUnit.ITestSummary
+   Set Summary = m_TestSuite.Summary
+End Property
 
 Private Property Get IAccessTestSuite_Summary() As AccUnit.ITestSummary
    Set IAccessTestSuite_Summary = m_TestSuite.Summary

@@ -12,7 +12,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
     public interface ITestRunnerEvents
     {
         event TestSuiteStartedEventHandler TestSuiteStarted;
-        event FinishedEventHandler TestSuiteFinished;
+        event TestSuiteFinishedEventHandler TestSuiteFinished;
         event TestFixtureStartedEventHandler TestFixtureStarted;
         event FinishedEventHandler TestFixtureFinished;
         event TestStartedEventHandler TestStarted;

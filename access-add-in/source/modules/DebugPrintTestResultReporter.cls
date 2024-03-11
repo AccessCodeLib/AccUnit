@@ -34,6 +34,10 @@ Private Sub m_TestResultCollector_NewTestResult(ByVal TestResult As AccUnit.ITes
 '
 End Sub
 
+Private Sub m_TestResultCollector_TestSuiteFinished(ByVal TestSummary As AccUnit.ITestSummary)
+    Debug.Print String(20, "#")
+End Sub
+
 Private Sub m_TestResultCollector_TestTraceMessage(ByVal Message As String, ByVal CodeCoverageTracker As CodeCoverageTracker)
    If Message Like "* [*][*][*]*" Then
       Message = Replace(Message, vbNewLine, vbTab)
@@ -49,27 +53,27 @@ Private Sub m_TestResultCollector_TestTraceMessage(ByVal Message As String, ByVa
    End If
 End Sub
 
-Private Sub m_TestResultCollector_PrintSummary(ByVal PrintTestResults As Boolean, ByVal TestSummary As TestSummary, ByVal TestResults As Collection)
-   PrintSummary PrintTestResults, TestSummary, TestResults
+Private Sub m_TestResultCollector_PrintSummary(ByVal TestSummary As AccUnit.ITestSummary, ByVal PrintTestResults As Boolean)
+   PrintSummary TestSummary, PrintTestResults
 End Sub
 
-Private Sub PrintSummary(ByVal PrintTestResults As Boolean, ByVal TestSummary As TestSummary, ByVal TestResults As Collection)
+Private Sub PrintSummary(ByVal TestSummary As AccUnit.ITestSummary, Optional ByVal PrintTestResults As Boolean = False)
    If PrintTestResults Then
       Debug.Print String(40, "-")
-      PrintTestDetailSummary TestResults
+      PrintTestDetailSummary TestSummary.GetTestResults
    End If
    Debug.Print String(40, "-")
    Debug.Print "Tests: "; TestSummary.Total
    Debug.Print , "Passed:  "; TestSummary.Passed
    Debug.Print , "Failed:  "; TestSummary.Failed
-   Debug.Print , "Ignored2: "; TestSummary.Ignored
+   Debug.Print , "Ignored: "; TestSummary.Ignored
    Debug.Print String(40, "-")
 End Sub
 
-Private Sub PrintTestDetailSummary(ByVal TestResults As Collection)
+Private Sub PrintTestDetailSummary(ByRef TestResults() As AccUnit.ITestResult)
 
    Dim i As Long
-   Dim r As AccUnit.ITestResult
+   Dim r As Variant ' AccUnit.ITestResult
    Dim LastTestIsRowTest As Boolean
 
    For Each r In TestResults
