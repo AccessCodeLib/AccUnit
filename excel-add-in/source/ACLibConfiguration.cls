@@ -39,8 +39,6 @@ Private m_DaoSqlTools As SqlTools
 Private Const EXTENSION_KEY As String = "ACLibConfiguration"
 
 #Const ADODB_EARLYBINDING = 0
-'ADODB wird hier über Late binding eingesetzt, da es nur zum Erstellen der Tabelle genutzt wird
-
 
 ' Grundeinstellungen
 Private Const ACLIB_CONFIG_ROOTFOLDERNAME As String = "AccessCodeLib"
@@ -298,40 +296,6 @@ Private Function CreateConfigTable(ByRef TargetConnection As Object) As Boolean
 
 End Function
 
-'
-'Private Function CheckConfigTableDef() As Boolean
-'
-'   Dim db As DAO.Database
-'   Dim tdf As DAO.TableDef
-'   Dim ConfigDataPath As String
-'
-'   Set db = CodeDb
-'
-'   If Not TableDefExists(ACLIB_CONFIG_TABLEDEFNAME, db) Then
-'
-'      Set tdf = db.CreateTableDef(ACLIB_CONFIG_TABLEDEFNAME)
-'      tdf.Connect = ";Database=" & ACLibConfigDatabaseFile
-'      tdf.SourceTableName = ACLIB_CONFIG_TABLEDEFNAME
-'      db.TableDefs.Append tdf
-'
-'   Else
-'
-'      ConfigDataPath = Mid$(db.TableDefs(ACLIB_CONFIG_TABLEDEFNAME).Connect, Len(";Database=") + 1)
-'      If ConfigDataPath <> ACLibConfigDatabaseFile Then
-'         With db.TableDefs(ACLIB_CONFIG_TABLEDEFNAME)
-'            .Connect = ";Database=" & ACLibConfigDatabaseFile
-'            .RefreshLink
-'         End With
-'      End If
-'
-'   End If
-'
-'   Set db = Nothing
-'
-'   CheckConfigTableDef = True
-'
-'End Function
-'
 Public Property Get ACLibConfigDirectory() As String
 
    Dim strPath As String
@@ -410,7 +374,7 @@ Private Property Get ACLibConfigDatabaseFile() As String
 #Else
       Set cnn = CreateObject("ADODB.Connection")
 #End If
-      cnn.ConnectionString = "" ' Replace(CodeProject.Connection.ConnectionString, CodeDb.Name, strDbFile)
+      cnn.ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & strDbFile
       cnn.Open
       CreateConfigTable cnn
       cnn.Close

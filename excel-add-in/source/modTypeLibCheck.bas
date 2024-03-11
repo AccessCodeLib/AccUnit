@@ -55,7 +55,7 @@ On Error Resume Next
 
 End Sub
 
-Private Function GetAccUnitLibPath(Optional ByVal BackSlashAtEnd As Boolean = False) As String
+Public Function GetAccUnitLibPath(Optional ByVal BackSlashAtEnd As Boolean = False) As String
 
    Dim LibPath As String
    Dim LibFile As String
