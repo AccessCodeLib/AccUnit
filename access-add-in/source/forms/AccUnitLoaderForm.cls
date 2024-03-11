@@ -17,7 +17,7 @@ Attribute VB_Exposed = False
 '</codelib>
 '---------------------------------------------------------------------------------------
 '
-Option Compare Database
+Option Compare Text
 Option Explicit
 
 ' verwendete Erweiterungen

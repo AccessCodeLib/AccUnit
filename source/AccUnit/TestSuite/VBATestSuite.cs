@@ -57,13 +57,13 @@ namespace AccessCodeLib.AccUnit
             return memberinfo;
         }
 
-        void OnTestSuiteFinished(ITestResult result)
+        void OnTestSuiteFinished(ITestSummary testSummary)
         {
             if (Cancel) return;
-            using (new BlockLogger(result.Message))
+            using (new BlockLogger(testSummary.ToString()))
             {
-                RaiseTraceMessage(SummaryFormatter.GetTestSuiteFinishedText(result));
-                RaiseTestSuiteFinished(result);
+                RaiseTraceMessage(SummaryFormatter.GetTestSuiteFinishedText(testSummary));
+                RaiseTestSuiteFinished(testSummary);
             }
         }
 
@@ -266,9 +266,9 @@ namespace AccessCodeLib.AccUnit
             TestSuiteStarted?.Invoke(testSuite, tags);
         }
 
-        private void RaiseTestSuiteFinished(ITestResult result)
+        private void RaiseTestSuiteFinished(ITestSummary testSummary)
         {
-            TestSuiteFinished?.Invoke(result);
+            TestSuiteFinished?.Invoke(testSummary);
         }
 
         private void RaiseTestFixtureFinished(ITestResult result)
@@ -329,8 +329,8 @@ namespace AccessCodeLib.AccUnit
                         _testRunner.TestFinished -= OnTestSuiteTestFinished;
                         _testRunner.TestFixtureFinished -= OnTestSuiteTestFixtureFinished;
                         _testRunner.TestFixtureStarted -= OnTestSuiteTestFixtureStarted;
-                        _testRunner.TestSuiteStarted -= OnTestSuiteStarted;
-                        _testRunner.TestSuiteFinished -= OnTestSuiteFinished;
+                        //_testRunner.TestSuiteStarted -= OnTestSuiteStarted;
+                        //_testRunner.TestSuiteFinished -= OnTestSuiteFinished;
                     }
                     catch (Exception ex) { Logger.Log(ex); }
 
@@ -341,8 +341,8 @@ namespace AccessCodeLib.AccUnit
                     _testRunner.TestFinished += OnTestSuiteTestFinished;
                     _testRunner.TestFixtureFinished += OnTestSuiteTestFixtureFinished;
                     _testRunner.TestFixtureStarted += OnTestSuiteTestFixtureStarted;
-                    _testRunner.TestSuiteStarted += OnTestSuiteStarted;
-                    _testRunner.TestSuiteFinished += OnTestSuiteFinished;
+                    //_testRunner.TestSuiteStarted += OnTestSuiteStarted;
+                    //_testRunner.TestSuiteFinished += OnTestSuiteFinished;
                 }
             }
         }
@@ -463,10 +463,13 @@ namespace AccessCodeLib.AccUnit
             {
                 TestResultCollector = new TestResultCollection(this);
             }
+            var tagList = _filterTags as ITagList;
+            //RaiseTestSuiteStarted(this, tagList);
             var testResult = TestRunner.Run(this, TestResultCollector, _methodFilter, _filterTags);
             _testSummary = testResult as ITestSummary;
 
             RaiseTraceMessage(SummaryFormatter.GetTestSummaryText(Summary));
+            RaiseTestSuiteFinished(Summary);
             return this;
         }
 
@@ -486,7 +489,7 @@ namespace AccessCodeLib.AccUnit
         }
 
         public event TestSuiteStartedEventHandler TestSuiteStarted;
-        public event FinishedEventHandler TestSuiteFinished;
+        public event TestSuiteFinishedEventHandler TestSuiteFinished;
         public event TestFixtureStartedEventHandler TestFixtureStarted;
         public event TestStartedEventHandler TestStarted;
         public event FinishedEventHandler TestFinished;

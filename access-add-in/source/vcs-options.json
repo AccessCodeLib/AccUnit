@@ -42,9 +42,6 @@
     "SanitizeLevel": 2,
     "ExtractThemeFiles": false,
     "TablesToExportData": {
-      "tab1DS": {
-        "Format": "Tab Delimited"
-      },
       "USysRegInfo": {
         "Format": "Tab Delimited"
       },
@@ -54,7 +51,7 @@
     },
     "SchemaExports": {
     },
-    "RunBeforeExport": "",
+    "RunBeforeExport": "PrepareForVCS",
     "RunAfterExport": "",
     "RunBeforeBuild": "",
     "RunAfterBuild": "",

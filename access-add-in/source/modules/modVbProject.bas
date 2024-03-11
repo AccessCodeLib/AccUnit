@@ -17,8 +17,9 @@
 '</codelib>
 '---------------------------------------------------------------------------------------
 '
-Option Compare Database
+Option Compare Text
 Option Explicit
+Option Private Module
 
 #Const EARLYBINDING = 1
 

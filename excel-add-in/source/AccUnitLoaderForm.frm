@@ -65,13 +65,7 @@ Private Sub UserForm_Initialize()
       Me.Caption = .ApplicationTitle & " (Version " & .Version & ")"
    End With
    
-'   LoadIconFromAppFiles
-   
-   With CurrentAccUnitConfiguration
-On Error GoTo ErrMissingPath
-      Me.txtAccUnitDllPath.Value = .AccUnitDllPath
-On Error GoTo 0
-   End With
+   Me.txtAccUnitDllPath.Value = GetAccUnitLibPath(True)
    
    SetEnableMode
    

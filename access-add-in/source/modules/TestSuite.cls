@@ -2,42 +2,32 @@
 BEGIN
   MultiUse = -1  'True
 END
-Attribute VB_Name = "DebugPrintTestSuite"
+Attribute VB_Name = "TestSuite"
 Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '---------------------------------------------------------------------------------------
-' Klassenmodul: DebugPrintTestSuite
-'---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Debug.Print-Ausgabe vom Test-Ergebnis
-' </summary>
-' <remarks>
-' </remarks>
-'\ingroup addins_shared
-'**/
-'---------------------------------------------------------------------------------------
-'<codelib>
-'  <file>%AppFolder%/source/DebugPrintTestSuite.cls</file>
-'  <license>_codelib/license.bas</license>
-'</codelib>
+' Class: TestSuite
 '---------------------------------------------------------------------------------------
 '
-Option Compare Database
+' AccUnitLoader TestSuite for Access
+'
+'---------------------------------------------------------------------------------------
+Option Compare Text
 Option Explicit
 
 Implements AccUnit.IAccessTestSuite
 
 Private WithEvents m_TestSuite As AccUnit.AccessTestSuite
 Attribute m_TestSuite.VB_VarHelpID = -1
-Private m_TestResultCollector As DebugPrintTestResultCollector
+Private m_TestResultCollector As TestResultCollector
 Private m_CodeCoverageTracker As AccUnit.CodeCoverageTracker
-'
+
+Private m_TestResultReporters As Collection
 
 Private Sub Class_Initialize()
-'
+   Set m_TestResultReporters = New Collection
 End Sub
 
 Private Sub Class_Terminate()
@@ -46,33 +36,35 @@ Private Sub Class_Terminate()
 End Sub
 
 Public Sub Init(ByVal NewTestSuite As AccUnit.AccessTestSuite, _
-                ByVal NewTestResultCollector As DebugPrintTestResultCollector)
+                ByVal NewTestResultCollector As TestResultCollector)
    Set m_TestSuite = NewTestSuite
    Set m_TestResultCollector = NewTestResultCollector
    Set m_TestSuite.TestResultCollector = m_TestResultCollector
+End Sub
+
+Public Sub AddTestResultReporter(ByVal Reporter As ITestResultReporter)
+   Set Reporter.TestResultCollector = m_TestResultCollector
+   m_TestResultReporters.Add Reporter
 End Sub
 
 Public Property Get TestSuite() As AccUnit.AccessTestSuite
    Set TestSuite = m_TestSuite
 End Property
 
-Private Sub m_TestSuite_TestTraceMessage(ByVal Message As String)
-   If Message Like "* [*][*][*]*" Then
-      Message = Replace(Message, vbNewLine, vbTab)
-   ElseIf Message Like "* ~~~*" Then
-      Message = Replace(Message, vbNewLine, vbTab)
-   End If
-   Debug.Print Message
+Private Sub m_TestSuite_TestSuiteFinished(ByVal Summary As AccUnit.ITestSummary)
+    m_TestResultCollector.TestSuiteFinished Summary
+End Sub
 
-   If Not (m_CodeCoverageTracker Is Nothing) Then
-   If Message Like "*Total*" Then
-      Debug.Print m_CodeCoverageTracker.GetReport()
-   End If
-   End If
+Private Sub m_TestSuite_TestSuiteStarted(ByVal TestSuite As AccUnit.ITestSuite)
+   m_TestResultCollector.TestSuiteStarted TestSuite
+End Sub
+
+Private Sub m_TestSuite_TestTraceMessage(ByVal Message As String)
+   m_TestResultCollector.PrintTestTraceMessage Message, m_CodeCoverageTracker
 End Sub
 
 Public Sub PrintSummary(Optional ByVal PrintTestResults As Boolean = False)
-   m_TestResultCollector.PrintSummary PrintTestResults
+   m_TestResultCollector.PrintSummary m_TestSuite.Summary, PrintTestResults
 End Sub
 
 Public Property Set CodeCoverageTracker(ByVal NewRef As Object)
@@ -95,7 +87,7 @@ Private Property Get IAccessTestSuite_ActiveVBProject() As VBIDE.VBProject
    Set IAccessTestSuite_ActiveVBProject = m_TestSuite.ActiveVBProject
 End Property
 
-Public Function Add(ByVal testToAdd As Object) As DebugPrintTestSuite
+Public Function Add(ByVal testToAdd As Object) As TestSuite
    m_TestSuite.Add testToAdd
    Set Add = Me
 End Function
@@ -104,7 +96,7 @@ Private Function IAccessTestSuite_Add(ByVal testToAdd As Object) As AccUnit.IAcc
    Set IAccessTestSuite_Add = Add(testToAdd)
 End Function
 
-Public Function AddByClassName(ByVal ClassName As String) As DebugPrintTestSuite
+Public Function AddByClassName(ByVal ClassName As String) As TestSuite
    m_TestSuite.AddByClassName ClassName
    Set AddByClassName = Me
 End Function
@@ -113,7 +105,7 @@ Private Function IAccessTestSuite_AddByClassName(ByVal ClassName As String) As A
    Set IAccessTestSuite_AddByClassName = AddByClassName(ClassName)
 End Function
 
-Public Function AddFromVBProject() As DebugPrintTestSuite
+Public Function AddFromVBProject() As TestSuite
    m_TestSuite.AddFromVBProject
    Set AddFromVBProject = Me
 End Function
@@ -135,10 +127,10 @@ Private Property Get IAccessTestSuite_HostApplication() As Object
 End Property
 
 Private Property Get IAccessTestSuite_Name() As String
-   IAccessTestSuite_Name = "DebugPrintTestSuite"
+   IAccessTestSuite_Name = "TestSuite"
 End Property
 
-Public Function Run() As DebugPrintTestSuite
+Public Function Run() As AccUnit.IAccessTestSuite
    m_TestSuite.Run
    Set Run = Me
 End Function
@@ -147,7 +139,7 @@ Private Function IAccessTestSuite_Run() As AccUnit.IAccessTestSuite
    Set IAccessTestSuite_Run = Run()
 End Function
 
-Public Function SelectTests(ByVal TestNameFilter As Variant) As DebugPrintTestSuite
+Public Function SelectTests(ByVal TestNameFilter As Variant) As TestSuite
    m_TestSuite.SelectTests TestNameFilter
    Set SelectTests = Me
 End Function
@@ -156,7 +148,7 @@ Private Function IAccessTestSuite_SelectTests(ByVal TestNameFilter As Variant) A
    Set IAccessTestSuite_SelectTests = SelectTests(TestNameFilter)
 End Function
 
-Public Function Filter(ByVal FilterTags As Variant) As DebugPrintTestSuite
+Public Function Filter(ByVal FilterTags As Variant) As TestSuite
    m_TestSuite.Filter FilterTags
    Set Filter = Me
 End Function
@@ -164,6 +156,10 @@ End Function
 Private Function IAccessTestSuite_Filter(ByVal FilterTags As Variant) As AccUnit.IAccessTestSuite
    Set IAccessTestSuite_Filter = Filter(FilterTags)
 End Function
+
+Private Property Get Summary() As AccUnit.ITestSummary
+   Set Summary = m_TestSuite.Summary
+End Property
 
 Private Property Get IAccessTestSuite_Summary() As AccUnit.ITestSummary
    Set IAccessTestSuite_Summary = m_TestSuite.Summary

@@ -27,7 +27,7 @@ Attribute VB_Exposed = False
 '</codelib>
 '---------------------------------------------------------------------------------------
 
-Option Compare Database
+Option Compare Text
 Option Explicit
 
 Private m_Shell As WinApiShellTools

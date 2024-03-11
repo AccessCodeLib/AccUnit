@@ -19,7 +19,7 @@ Attribute VB_Description = "Gebräuchliche WinAPI-Funktionen"
 '</codelib>
 '---------------------------------------------------------------------------------------
 '
-Option Compare Database
+Option Compare Text
 Option Explicit
 Option Private Module
 

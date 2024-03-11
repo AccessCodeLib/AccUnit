@@ -8,23 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '---------------------------------------------------------------------------------------
-' Klassenmodul: AccUnitLoaderFactory
+' Class: AccUnitLoaderFactory
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Factory-Klasse für AccUnit
-' </summary>
-' <remarks>
-' </remarks>
-'\ingroup addins_shared
-'**/
+'
+' Factory for AccUnit elements
+'
 '---------------------------------------------------------------------------------------
-'<codelib>
-'  <file>%AppFolder%/source/AccUnitLoaderFactory.cls</file>
-'  <license>_codelib/license.bas</license>
-'</codelib>
-'---
-Option Compare Database
+Option Compare Text
 Option Explicit
 
 Private m_AccUnitFactory As Object
@@ -47,7 +37,7 @@ On Error Resume Next
 
 End Sub
 
-Public Property Get AccUnitFactory() As AccUnit.AccUnitFactory
+Private Property Get AccUnitFactory() As AccUnit.AccUnitFactory
    If m_AccUnitFactory Is Nothing Then
       InitAccUnitFactory
    End If
@@ -81,20 +71,7 @@ Public Property Get ConstraintBuilder() As Object ' AccUnit.ConstraintBuilder
     Set ConstraintBuilder = AccUnitFactory.ConstraintBuilder
 End Property
 
-Public Function NewDebugPrintMatchResultCollector(Optional ByVal ShowPassedText As Boolean = False, Optional ByVal UseRaiseErrorForFailedMatch As Boolean = True) As DebugPrintMatchResultCollector
-
-   With New DebugPrintMatchResultCollector
-      .Init ShowPassedText, UseRaiseErrorForFailedMatch
-      Set NewDebugPrintMatchResultCollector = .This
-   End With
-
-End Function
-
-Public Function NewDebugPrintTestResultCollector() As DebugPrintTestResultCollector
-   Set NewDebugPrintTestResultCollector = New DebugPrintTestResultCollector
-End Function
-
-Public Property Get TestRunner() As Object 'AccUnit.TestRunner
+Private Property Get TestRunner() As Object 'AccUnit.TestRunner
 
     SetErrorTrappingToBreakOnUnhandledErrors
     Set TestRunner = AccUnitFactory.TestRunner(CurrentVbProject)
@@ -114,33 +91,8 @@ Private Sub SetErrorTrappingToBreakOnUnhandledErrors()
 
 End Sub
 
-Public Sub RunTest(ByVal testClassInstance As Object, Optional ByVal MethodName As String = "*", Optional ByVal PrintSummary As Boolean = True, Optional ByVal TestResultCollector As Object)
-
-   If PrintSummary And TestResultCollector Is Nothing Then
-      Set TestResultCollector = New DebugPrintTestResultCollector
-   End If
-
-   TestRunner.Run testClassInstance, MethodName, TestResultCollector
-
-   If PrintSummary Then
-      TestResultCollector.PrintSummary True
-   End If
-
-End Sub
-
 Public Property Get Configurator() As Object 'AccUnit.Configurator
    Set Configurator = AccUnitFactory.Configurator(CurrentVbProject)
-End Property
-
-Public Property Get VbaTestSuite() As Object 'AccUnit.VbaTestSuite
-   Set VbaTestSuite = AccUnitFactory.VbaTestSuite
-
-   With VbaTestSuite
-      Set .HostApplication = Application
-      Set .ActiveVBProject = CurrentVbProject
-      Set .TestRunner = TestRunner
-   End With
-
 End Property
 
 Public Property Get AccessTestSuite() As Object 'AccUnit.AccessTestSuite
@@ -154,15 +106,29 @@ Public Property Get AccessTestSuite() As Object 'AccUnit.AccessTestSuite
 
 End Property
 
-Public Property Get DebugPrintTestSuite() As DebugPrintTestSuite
+Public Property Get TestSuite(Optional ByVal TestReportOutputTo As TestReportOutput = TestReportOutput.DebugPrint) As TestSuite
 
-   Set DebugPrintTestSuite = New DebugPrintTestSuite
+   Set TestSuite = New TestSuite
 
-   With DebugPrintTestSuite
-      .Init AccessTestSuite, NewDebugPrintTestResultCollector
+   With TestSuite
+      .Init AccessTestSuite, New TestResultCollector
    End With
 
+   AddTestResultReporter TestSuite, TestReportOutputTo
+
 End Property
+
+Private Sub AddTestResultReporter(ByVal TestSuite As TestSuite, ByVal TestReportOutputTo As TestReportOutput)
+
+   If (TestReportOutputTo And TestReportOutput.DebugPrint) = TestReportOutput.DebugPrint Then
+      TestSuite.AddTestResultReporter New DebugPrintTestResultReporter
+   End If
+
+   If (TestReportOutputTo And TestReportOutput.LogFile) = TestReportOutput.LogFile Then
+      TestSuite.AddTestResultReporter New LogFileTestResultReporter
+   End If
+
+End Sub
 
 Public Property Get CodeCoverageTracker() As Object 'AccUnit.CodeCoverageTracker
     Set CodeCoverageTracker = AccUnitFactory.CodeCoverageTracker(CurrentVbProject)

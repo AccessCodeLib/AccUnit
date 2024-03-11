@@ -8,24 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = True
 '---------------------------------------------------------------------------------------
-' Klassenmodul: TestSummary
-'---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' Test-Summary
-' </summary>P
-' <remarks>
-' </remarks>
-'\ingroup addins_shared
-'**/
-'---------------------------------------------------------------------------------------
-'<codelib>
-'  <file>%AppFolder%/source/TestSummary.cls</file>
-'  <license>_codelib/license.bas</license>
-'</codelib>
+' Class: TestSummary
 '---------------------------------------------------------------------------------------
 '
-Option Compare Database
+' Test-Summary
+'
+'---------------------------------------------------------------------------------------
+Option Compare Text
 Option Explicit
 
 Private m_Failed As Long
@@ -71,4 +60,8 @@ End Property
 
 Public Property Get Total() As Long
    Total = m_Total
+End Property
+
+Public Property Get Success() As Boolean
+   Success = (Failed = 0)
 End Property

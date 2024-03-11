@@ -39,7 +39,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
     public interface ITestSuiteEvents
     {
         event TestSuiteStartedEventHandler TestSuiteStarted;
-        event FinishedEventHandler TestSuiteFinished;
+        event TestSuiteFinishedEventHandler TestSuiteFinished;
         event TestSuiteResetEventHandler TestSuiteReset;
         event TestFixtureStartedEventHandler TestFixtureStarted;
         event FinishedEventHandler TestFixtureFinished;
@@ -56,6 +56,6 @@ namespace AccessCodeLib.AccUnit.Interfaces
     public delegate void TestFixtureStartedEventHandler(ITestFixture fixture);
     public delegate void TestStartedEventHandler(ITest test, IgnoreInfo ignoreInfo, ITagList tags);
     public delegate void MessageEventHandler(string message);
-    public delegate void TestSuiteRunFinishedEventHandler(ITestSummary summary);
+    public delegate void TestSuiteFinishedEventHandler(ITestSummary summary);
     public delegate void TestSuiteResetEventHandler(ResetMode resetmode, ref bool cancel);
 }

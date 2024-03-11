@@ -39,7 +39,7 @@ Attribute VB_Exposed = False
 '</codelib>
 '---------------------------------------------------------------------------------------
 '
-Option Compare Database
+Option Compare Text
 Option Explicit
 
 Private WithEvents m_ApplicationHandler As ApplicationHandler

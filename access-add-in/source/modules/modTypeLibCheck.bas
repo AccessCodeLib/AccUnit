@@ -2,22 +2,10 @@
 '---------------------------------------------------------------------------------------
 ' Module: modTypeLibCheck
 '---------------------------------------------------------------------------------------
-'/**
-' <summary>
-' TypeLib-Referenz setzen
-' </summary>
-' <remarks>
-' </remarks>
-' \ingroup base
-'**/
-'---------------------------------------------------------------------------------------
-'<codelib>
-'  <file>%AppFolder%/source/modTypeLibCheck.bas</file>
-'  <license>_codelib/license.bas</license>
-'  <use>file/FileTools.bas</use>
-'</codelib>
-'---------------------------------------------------------------------------------------
 '
+' Set TypeLib reference for AccUnit
+'
+'---------------------------------------------------------------------------------------
 Option Compare Text
 Option Explicit
 Option Private Module

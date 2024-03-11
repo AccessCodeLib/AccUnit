@@ -13,7 +13,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
     public class VbaTestRunner : ITestRunner
     {
         public event TestSuiteStartedEventHandler TestSuiteStarted;
-        public event FinishedEventHandler TestSuiteFinished;
+        public event TestSuiteFinishedEventHandler TestSuiteFinished;
         public event TestFixtureStartedEventHandler TestFixtureStarted;
         public event FinishedEventHandler TestFixtureFinished;
         public event TestStartedEventHandler TestStarted;
@@ -51,9 +51,9 @@ namespace AccessCodeLib.AccUnit.TestRunner
             TestSuiteStarted?.Invoke(testSuite, new TagList());
         }
 
-        void RaiseTestSuiteFinished(ITestResult testResult)
+        void RaiseTestSuiteFinished(ITestSummary testSummary)
         {
-            TestSuiteFinished?.Invoke(testResult);
+            TestSuiteFinished?.Invoke(testSummary);
         }
 
         public ITestResult Run(ITestFixture testFixture, ITestResultCollector testResultCollector, IEnumerable<string> methodFilter = null, IEnumerable<ITestItemTag> filterTags = null)

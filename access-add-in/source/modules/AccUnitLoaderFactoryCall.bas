@@ -2,13 +2,7 @@
 '---------------------------------------------------------------------------------------
 ' Modul: AccUnitLoaderFactoryCall
 '---------------------------------------------------------------------------------------
-'<codelib>
-'  <file>%AppFolder%/source/GetAccUnitFactory.bas</file>
-'  <license>_codelib/license.bas</license>
-'  <use>%AppFolder%/source/AccUnitLoaderFactory.cls</use>
-'</codelib>
-'---
-Option Compare Database
+Option Compare Text
 Option Explicit
 
 Public Function GetAccUnitFactory() As AccUnitLoaderFactory
