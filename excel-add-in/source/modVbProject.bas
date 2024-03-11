@@ -42,7 +42,7 @@ Public Property Get CurrentVbProject() As Object
       Set m_CurrentVbProject = Application.VBE.ActiveVBProject
       If Application.VBE.VBProjects.Count > 1 Then
       'Prüfen, ob das richtige VbProject gewählt wurde (muss das vom aktiven Workbook sein)
-         strCurrentDbName = Application.ActiveWorkbook.FullName
+         strCurrentDbName = UncPath(Application.ActiveWorkbook.FullName)
          If m_CurrentVbProject.FileName <> strCurrentDbName Then
             Set m_CurrentVbProject = Nothing
             For Each Proj In Application.VBE.VBProjects
