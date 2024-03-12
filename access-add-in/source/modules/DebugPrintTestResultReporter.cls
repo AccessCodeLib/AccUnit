@@ -30,14 +30,6 @@ Private Property Set TestResultCollector(ByVal TestResultCollectorToListen As Te
    Set m_TestResultCollector = TestResultCollectorToListen
 End Property
 
-Private Sub m_TestResultCollector_NewTestResult(ByVal TestResult As AccUnit.ITestResult)
-'
-End Sub
-
-Private Sub m_TestResultCollector_TestSuiteFinished(ByVal TestSummary As AccUnit.ITestSummary)
-    Debug.Print String(20, "#")
-End Sub
-
 Private Sub m_TestResultCollector_TestTraceMessage(ByVal Message As String, ByVal CodeCoverageTracker As CodeCoverageTracker)
    If Message Like "* [*][*][*]*" Then
       Message = Replace(Message, vbNewLine, vbTab)

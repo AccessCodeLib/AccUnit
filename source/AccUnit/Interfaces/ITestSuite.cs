@@ -52,7 +52,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
     public delegate void DisposeEventHandler(object sender);
     public delegate void NullReferenceEventHandler(ref object returnedObject);
     public delegate void FinishedEventHandler(ITestResult result);
-    public delegate void TestSuiteStartedEventHandler(ITestSuite testSuite, ITagList tags);
+    public delegate void TestSuiteStartedEventHandler(ITestSuite testSuite);
     public delegate void TestFixtureStartedEventHandler(ITestFixture fixture);
     public delegate void TestStartedEventHandler(ITest test, IgnoreInfo ignoreInfo, ITagList tags);
     public delegate void MessageEventHandler(string message);

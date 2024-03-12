@@ -41,7 +41,7 @@ namespace AccessCodeLib.AccUnit
         {
             using (new BlockLogger(testSuite.Name))
             {
-                RaiseTestSuiteStarted(testSuite, tags);
+                RaiseTestSuiteStarted(testSuite);
             }
         }
 
@@ -261,9 +261,9 @@ namespace AccessCodeLib.AccUnit
 
         #region Event-Invocators
 
-        private void RaiseTestSuiteStarted(ITestSuite testSuite, ITagList tags)
+        private void RaiseTestSuiteStarted(ITestSuite testSuite)
         {
-            TestSuiteStarted?.Invoke(testSuite, tags);
+            TestSuiteStarted?.Invoke(testSuite);
         }
 
         private void RaiseTestSuiteFinished(ITestSummary testSummary)
@@ -464,7 +464,7 @@ namespace AccessCodeLib.AccUnit
                 TestResultCollector = new TestResultCollection(this);
             }
             var tagList = _filterTags as ITagList;
-            //RaiseTestSuiteStarted(this, tagList);
+            RaiseTestSuiteStarted(this);
             var testResult = TestRunner.Run(this, TestResultCollector, _methodFilter, _filterTags);
             _testSummary = testResult as ITestSummary;
 

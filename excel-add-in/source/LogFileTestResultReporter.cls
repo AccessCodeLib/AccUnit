@@ -17,10 +17,17 @@ Attribute VB_Exposed = False
 Option Compare Text
 Option Explicit
 
+Private Const LineSeperatorLen As Long = 40
+
 Implements ITestResultReporter
+Private m_FileNo As Long
 
 Private WithEvents m_TestResultCollector As TestResultCollector
 Attribute m_TestResultCollector.VB_VarHelpID = -1
+
+Private Sub Class_Terminate()
+   CloseFile
+End Sub
 
 Private Property Set ITestResultReporter_TestResultCollector(ByVal TestResultCollectorToListen As TestResultCollector)
    Set TestResultCollector = TestResultCollectorToListen
@@ -30,32 +37,14 @@ Private Property Set TestResultCollector(ByVal TestResultCollectorToListen As Te
    Set m_TestResultCollector = TestResultCollectorToListen
 End Property
 
-Private Sub m_TestResultCollector_NewTestResult(ByVal TestResult As AccUnit.ITestResult)
-'
-End Sub
-
 Private Sub m_TestResultCollector_TestSuiteFinished(ByVal TestSummary As AccUnit.ITestSummary)
    PrintSummary TestSummary, True
-   PrintToFile String(40, "#")
+   CloseFile
 End Sub
 
 Private Sub m_TestResultCollector_TestSuiteStarted(ByVal TestSuite As AccUnit.ITestSuite)
-   PrintToFile String(40, "#")
-End Sub
-
-Private Sub m_TestResultCollector_TestTraceMessage(ByVal Message As String, ByVal CodeCoverageTracker As CodeCoverageTracker)
-'   If Message Like "* [*][*][*]*" Then
-'      Message = Replace(Message, vbNewLine, vbTab)
-'   ElseIf Message Like "* ~~~*" Then
-'      Message = Replace(Message, vbNewLine, vbTab)
-'   End If
-'   PrintToFile Message
-'
-'   If Not (CodeCoverageTracker Is Nothing) Then
-'   If Message Like "*Total*" Then
-'      PrintToFile CodeCoverageTracker.GetReport()
-'   End If
-'   End If
+   PrintToFile String(LineSeperatorLen, "#")
+   PrintToFile Format(Now(), "yyyy-mm-dd hh:nn:ss")
 End Sub
 
 Private Sub m_TestResultCollector_PrintSummary(ByVal TestSummary As AccUnit.ITestSummary, ByVal PrintTestResults As Boolean)
@@ -63,16 +52,17 @@ Private Sub m_TestResultCollector_PrintSummary(ByVal TestSummary As AccUnit.ITes
 End Sub
 
 Private Sub PrintSummary(ByVal TestSummary As AccUnit.ITestSummary, ByVal PrintTestResults As Boolean)
+   
    If PrintTestResults Then
-      PrintToFile String(40, "-")
+      PrintToFile String(LineSeperatorLen, "-")
       PrintTestDetailSummary TestSummary.GetTestResults
    End If
-   PrintToFile String(40, "-")
+   PrintToFile String(LineSeperatorLen, "-")
    PrintToFile "Tests: " & TestSummary.Total
    PrintToFile " ", "Passed:  " & TestSummary.Passed
    PrintToFile " ", "Failed:  " & TestSummary.Failed
    PrintToFile " ", "Ignored: " & TestSummary.Ignored
-   PrintToFile String(40, "-")
+   PrintToFile String(LineSeperatorLen, "-")
    
    If TestSummary.Failed + TestSummary.Error > 0 Then
       PrintToFile (TestSummary.Failed + TestSummary.Error) & " / " & TestSummary.Total & " failed"
@@ -82,7 +72,7 @@ Private Sub PrintSummary(ByVal TestSummary As AccUnit.ITestSummary, ByVal PrintT
       PrintToFile (TestSummary.Ignored) & " / " & TestSummary.Total & " ignored"
    End If
    
-   PrintToFile String(40, "-")
+   PrintToFile String(LineSeperatorLen, "-")
    
 End Sub
 
@@ -132,9 +122,6 @@ End Sub
 
 Private Sub PrintToFile(ParamArray LogItems())
    
-   Dim FileNo As Long
-   FileNo = FreeFile
-   
    Dim LineString As String
    Dim i As Long
    
@@ -143,14 +130,29 @@ Private Sub PrintToFile(ParamArray LogItems())
       LineString = LineString & vbTab & LogItems(i)
    Next
       
-   Open LogFilePath For Append As #FileNo
-   Print #FileNo, LineString
-   Close #FileNo
+   If m_FileNo = 0 Then
+      OpenFile
+   End If
+   
+   Print #m_FileNo, LineString
    
 End Sub
 
+Private Sub OpenFile()
+   m_FileNo = FreeFile
+   Open LogFilePath For Append As #m_FileNo
+End Sub
+
+Private Sub CloseFile()
+On Error Resume Next
+   If m_FileNo <> 0 Then
+      Close #m_FileNo
+      m_FileNo = 0
+   End If
+End Sub
+
 Private Property Get LogFilePath() As String
-   LogFilePath = Application.ActiveWorkbook.FullName & ".AccUnit.log"
+   LogFilePath = CurrentVbProject.FileName & ".AccUnit.log"
 End Property
 
 

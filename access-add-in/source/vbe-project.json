@@ -9,7 +9,7 @@
     "FileName": "AccUnitLoader.accda",
     "HelpFile": "",
     "HelpContextId": 0,
-    "ConditionalCompilationArguments": "",
+    "ConditionalCompilationArguments": "DEVMODE = 0",
     "Mode": 0,
     "Protection": 0,
     "Type": 100
