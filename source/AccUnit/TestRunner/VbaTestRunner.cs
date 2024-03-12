@@ -48,7 +48,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
 
         void RaiseTestSuiteStarted(ITestSuite testSuite)
         {
-            TestSuiteStarted?.Invoke(testSuite, new TagList());
+            TestSuiteStarted?.Invoke(testSuite);
         }
 
         void RaiseTestSuiteFinished(ITestSummary testSummary)
