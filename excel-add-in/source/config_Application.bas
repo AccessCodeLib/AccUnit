@@ -19,7 +19,7 @@ Option Explicit
 Option Private Module
 
 'Version nummer
-Private Const APPLICATION_VERSION As String = "0.9.5.240311"
+Private Const APPLICATION_VERSION As String = "0.9.6.20240312"
 
 Private Const APPLICATION_NAME As String = "ACLib AccUnit Loader"
 Private Const APPLICATION_FULLNAME As String = "Access Code Library - AccUnit Loader"
@@ -89,27 +89,3 @@ Public Sub InitConfig(Optional ByRef CurrentAppHandlerRef As ApplicationHandler 
    End With
 
 End Sub
-
-
-'############################################################################
-'
-' Funktionen für die Anwendungswartung
-' (werden nur im Anwendungsentwurf benötigt)
-'
-'----------------------------------------------------------------------------
-' Hilfsfunktion zum Speichern von Dateien in die lokale AppFile-Tabelle
-'----------------------------------------------------------------------------
-'Private Sub SetAppFiles()
-'
-'   Dim accFileName As Variant
-'
-'  ' Call CurrentApplication.Extensions("AppFile").SaveAppFile("AppIcon", CodeProject.Path & "\" & APPLICATION_ICONFILE)
-'   With CurrentApplication.Extensions("AppFile")
-'      For Each accFileName In AccUnitFileNames
-'         .SaveAppFile accFileName, CodeProject.Path & "\lib\" & accFileName, True
-'      Next
-'   End With
-'
-'
-'
-'End Sub
