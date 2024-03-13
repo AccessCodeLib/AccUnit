@@ -1,5 +1,5 @@
 # AccUnit
-**AccUnit - Test your VBA/Access code**
+**AccUnit - Test your Access/Excel VBA code**
 
 For more informations see [Wiki](https://github.com/AccessCodeLib/AccUnit/wiki) and https://accunit.access-codelib.net/
 
@@ -11,15 +11,18 @@ For more informations see [Wiki](https://github.com/AccessCodeLib/AccUnit/wiki) 
 * Run COM regfree (with [Access Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in) or [Excel Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/excel-add-in))
 
 ### Dev state
-* Tests can started by [Access-Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in) or [Excel Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/excel-add-in))
-* Row test available
-* TestSuite with 'Debug.Print' output to VBE Immediate window
-* Code coverage tests ([Video](https://accunit.access-codelib.net/videos/examples/CodeCoverageTest.mp4))
-* Generate test classes with TestClassGenerator (write TestSuite.TestClassGenerator in VBA immediate window) ([Video](https://accunit.access-codelib.net/videos/examples/NW2-UnitTests.mp4
-))
-* Tag filter: `TestSuite.Add(...).Filter("abc,xyz").Run`
-* Test filter: `TestSuite.Add(...).SelectTests("xyz*").Run`
-* Output test results to log/text file
+* Run tests
+  * Tests can started by [Access-Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in) or [Excel Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/excel-add-in)
+  * Tag filter: `TestSuite.Add(...).Filter("abc,xyz").Run`
+  * Test filter: `TestSuite.Add(...).SelectTests("xyz*").Run`
+* Write tests
+  * Row test available
+  * Generate test classes with TestClassGenerator (write TestSuite.TestClassGenerator in VBA immediate window) ([Video](https://accunit.access-codelib.net/videos/examples/NW2-UnitTests.mp4))
+* Output test results
+  * TestSuite with 'Debug.Print' output to VBE Immediate window
+  * Output test results to log/text file
+* Other features
+  * Code coverage tests ([Video](https://accunit.access-codelib.net/videos/examples/CodeCoverageTest.mp4))
 
 ### Remarks
 Examples see [./examples/msaccess/](https://github.com/AccessCodeLib/AccUnit/blob/main/examples/msaccess/)
