@@ -11,14 +11,15 @@ For more informations see [Wiki](https://github.com/AccessCodeLib/AccUnit/wiki) 
 * Run COM regfree (with [Access Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in) or [Excel Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/excel-add-in))
 
 ### Dev state
-* Simple test can started by [Access-Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in)
+* Tests can started by [Access-Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in) or [Excel Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/excel-add-in))
 * Row test available
-* VbaTestSuite with 'Debug.Print'-Output to VBE Immediate window
+* TestSuite with 'Debug.Print' output to VBE Immediate window
 * Code coverage tests ([Video](https://accunit.access-codelib.net/videos/examples/CodeCoverageTest.mp4))
 * Generate test classes with TestClassGenerator (write TestSuite.TestClassGenerator in VBA immediate window) ([Video](https://accunit.access-codelib.net/videos/examples/NW2-UnitTests.mp4
 ))
 * Tag filter: `TestSuite.Add(...).Filter("abc,xyz").Run`
 * Test filter: `TestSuite.Add(...).SelectTests("xyz*").Run`
+* Output test results to log/text file
 
 ### Remarks
 Examples see [./examples/msaccess/](https://github.com/AccessCodeLib/AccUnit/blob/main/examples/msaccess/)
