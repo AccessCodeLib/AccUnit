@@ -90,11 +90,12 @@ On Error GoTo HandleErr
       Set .AccessForm = Me
       .ControlSection = acDetail
 
-      .AddMenuItem -99, "", MF_SEPARATOR
+#If DEVMODE = 1 Then
       .AddMenuItem -1, "For AccUnit developers:", MF_STRING + MF_GRAYED
       .AddMenuItem 11, "Import AccUnit files from directory"
-
       .AddMenuItem -2, "", MF_SEPARATOR
+#End If
+
       .AddMenuItem 21, "Export AccUnit files to directory"
 
       .AddMenuItem -3, "", MF_SEPARATOR

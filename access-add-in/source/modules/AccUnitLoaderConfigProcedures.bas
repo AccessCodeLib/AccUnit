@@ -206,11 +206,10 @@ Public Function GetCurrentAccessBitSystem() As Long
 
 End Function
 
-Public Function AutomatedTestRun() As Boolean
+Public Function AutomatedTestRun(Optional ByRef FailedMessage As String) As Boolean
 
    Dim Success As Boolean
    Dim TestSummary As AccUnit.ITestSummary
-   Dim FailedMessage As String
 
    AddAccUnitTlbReference
    InsertFactoryModule
@@ -225,8 +224,9 @@ Public Function AutomatedTestRun() As Boolean
 
    If Not Success Then
       FailedMessage = TestSummary.Failed & " of " & TestSummary.Total & " Tests failed"
-      Err.Raise vbObjectError + 12, "AccUnitLoader.AutomatedTestRun", FailedMessage
    End If
+
+   AutomatedTestRun = Success
 
 End Function
 
