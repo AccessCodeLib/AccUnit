@@ -206,6 +206,20 @@ Public Function GetCurrentAccessBitSystem() As Long
 
 End Function
 
+Public Function AutomatedTestRunVCS() As Variant
+
+    Dim FailedMessage As String
+    Dim Success As Boolean
+
+    Success = AutomatedTestRun(FailedMessage)
+    If Success Then
+        AutomatedTestRunVCS = True
+    Else
+        AutomatedTestRunVCS = "Alert: " & FailedMessage
+    End If
+
+End Function
+
 Public Function AutomatedTestRun(Optional ByRef FailedMessage As String) As Boolean
 
    Dim Success As Boolean
