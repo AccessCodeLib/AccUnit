@@ -199,7 +199,7 @@ End Sub
 Public Function SaveAppFile(ByVal FileID As String, ByVal FileName As String, _
                    Optional ByVal SaveVersion As Boolean = False, _
                    Optional ByVal ExtFieldName As String, Optional ByVal ExtFieldValue As Variant, _
-                   Optional ByVal ExtFilterFieldName As String, Optional ExtFilterValue As Variant) As Boolean
+                   Optional ByVal ExtFilterFieldName As String, Optional ByVal ExtFilterValue As Variant) As Boolean
 
    Dim FileNo As Integer
    Dim Binfile() As Byte
@@ -292,6 +292,28 @@ Private Function CreateAppFileTable() As Boolean
    CodeDb.Execute CreateTableSql, dbFailOnError
 
    CreateAppFileTable = (Err.Number = 0)
+
+End Function
+
+Public Function GetStoredAppFileVersion(ByVal FileID As String, _
+                               Optional ByVal ExtFilterFieldName As String, _
+                               Optional ByVal ExtFilterValue As Variant) As String
+
+   Dim SelectSql As String
+   Dim rst As DAO.Recordset
+
+   SelectSql = "select version from " & TABLE_APPFILES & " where id='" & Replace(FileID, "'", "''") & "'"
+   If Len(ExtFilterFieldName) > 0 Then
+      SelectSql = SelectSql & " and " & ExtFilterFieldName & " = '" & Replace(ExtFilterValue, "'", "''") & "'"
+   End If
+
+   Set rst = CodeDb.OpenRecordset(SelectSql, dbOpenForwardOnly)
+   With rst
+      If Not .EOF Then
+         GetStoredAppFileVersion = Nz(.Fields(0).Value, vbNullString)
+      End If
+      .Close
+   End With
 
 End Function
 

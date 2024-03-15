@@ -25,12 +25,21 @@ Public Sub CheckAccUnitTypeLibFile(Optional ByVal VBProjectRef As VBProject = No
 
    Dim LibPath As String
    Dim LibFile As String
+   Dim ExportFile As Boolean
 
    LibPath = GetAccUnitLibPath(True)
    LibFile = LibPath & ACCUNIT_TYPELIB_FILE
    FileTools.CreateDirectory LibPath
 
-   If Not FileTools.FileExists(LibFile) Then
+   ExportFile = Not FileTools.FileExists(LibFile)
+   If Not ExportFile Then
+      If Not CheckAccUnitVersion(LibFile) Then
+         RemoveAccUnitTlbReference VBProjectRef
+         ExportFile = True
+      End If
+   End If
+
+   If ExportFile Then
       ExportTlbFile LibFile
    End If
 
@@ -75,7 +84,7 @@ End Function
 
 Private Sub ExportTlbFile(ByVal LibFile As String)
    With CurrentApplication.Extensions(EXTENSION_KEY_APPFILE)
-      .CreateAppFile ACCUNIT_TYPELIB_FILE, LibFile
+      .CreateAppFile ACCUNIT_TYPELIB_FILE, LibFile, "BitInfo", CStr(GetCurrentAccessBitSystem)
    End With
 End Sub
 
@@ -132,3 +141,75 @@ On Error GoTo 0
    Next
 
 End Sub
+
+Private Function CheckAccUnitVersion(ByVal AccUnitTlbFilePath As String) As Boolean
+
+   Dim AccUnitDllPath As String
+
+   AccUnitDllPath = VBA.Replace(AccUnitTlbFilePath, ".tlb", ".dll")
+
+   If FileTools.FileExists(AccUnitDllPath) Then
+      CheckAccUnitVersion = CheckAccUnitDllVersion(AccUnitDllPath)
+      Exit Function
+   End If
+
+   CheckAccUnitVersion = CheckAccUnitTlbVersion(AccUnitTlbFilePath)
+
+End Function
+
+Private Function CheckAccUnitDllVersion(ByVal AccUnitDllFilePath As String) As Boolean
+
+   Dim InstalledFileVersion As String
+   Dim SourceTableFileVersion As String
+
+   With New WinApiFileInfo
+      InstalledFileVersion = .GetFileVersion(AccUnitDllFilePath)
+   End With
+
+   With CurrentApplication.Extensions(EXTENSION_KEY_APPFILE)
+      SourceTableFileVersion = .GetStoredAppFileVersion(ACCUNIT_DLL_FILE, "BitInfo", VBA.CStr(GetCurrentAccessBitSystem))
+   End With
+
+   CheckAccUnitDllVersion = (CompareVersions(InstalledFileVersion, SourceTableFileVersion) >= 0)
+
+End Function
+
+Private Function CheckAccUnitTlbVersion(ByVal AccUnitTlbFilePath As String) As Boolean
+
+   Dim InstalledFileVersion As String
+   Dim SourceTableFileVersion As String
+
+   InstalledFileVersion = VBA.Format(VBA.FileDateTime(AccUnitTlbFilePath), "yyyy\.mm\.dd")
+
+   With CurrentApplication.Extensions(EXTENSION_KEY_APPFILE)
+      SourceTableFileVersion = .GetStoredAppFileVersion(ACCUNIT_TYPELIB_FILE, "BitInfo", VBA.CStr(GetCurrentAccessBitSystem))
+   End With
+
+   CheckAccUnitTlbVersion = (CompareVersions(InstalledFileVersion, SourceTableFileVersion) >= 0)
+
+End Function
+
+Private Function CompareVersions(ByVal Version1 As String, ByVal Version2 As String) As Long
+
+   Dim Version1Parts() As String
+   Dim Version2Parts() As String
+   Dim i As Long
+
+   If VBA.StrComp(Version1, Version2, vbTextCompare) = 0 Then
+      CompareVersions = 0
+      Exit Function
+   End If
+
+   Version1Parts = VBA.Split(Version1, ".")
+   Version2Parts = VBA.Split(Version2, ".")
+
+   For i = 0 To UBound(Version1Parts)
+      If VBA.Val(Version1Parts(i)) > VBA.Val(Version2Parts(i)) Then
+         CompareVersions = 1
+         Exit For
+      End If
+   Next
+
+   CompareVersions = -1
+
+End Function
