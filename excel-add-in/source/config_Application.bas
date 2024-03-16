@@ -18,8 +18,8 @@ Option Compare Text
 Option Explicit
 Option Private Module
 
-'Version nummer
-Private Const APPLICATION_VERSION As String = "0.9.6.20240312"
+'Version number
+Private Const APPLICATION_VERSION As String = "0.9.7.20240316"
 
 Private Const APPLICATION_NAME As String = "ACLib AccUnit Loader"
 Private Const APPLICATION_FULLNAME As String = "Access Code Library - AccUnit Loader"

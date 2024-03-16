@@ -21,11 +21,12 @@ Public Property Get DefaultAccUnitLibFolder() As String
    DefaultAccUnitLibFolder = FilePath & "lib"
 End Property
 
-Public Sub CheckAccUnitTypeLibFile(Optional ByVal VBProjectRef As VBProject = Nothing)
+Public Sub CheckAccUnitTypeLibFile(Optional ByVal VBProjectRef As VBProject = Nothing, Optional ByRef ReferenceFixed As Boolean)
 
    Dim LibPath As String
    Dim LibFile As String
    Dim ExportFile As Boolean
+   Dim FileFixed As Boolean
 
    LibPath = GetAccUnitLibPath(True)
    LibFile = LibPath & ACCUNIT_TYPELIB_FILE
@@ -40,6 +41,7 @@ Public Sub CheckAccUnitTypeLibFile(Optional ByVal VBProjectRef As VBProject = No
    End If
 
    If ExportFile Then
+      FileFixed = True
       ExportTlbFile LibFile
    End If
 
@@ -48,7 +50,9 @@ On Error Resume Next
       Set VBProjectRef = CodeVBProject
    End If
 
-   CheckMissingReference VBProjectRef
+   CheckMissingReference VBProjectRef, ReferenceFixed
+
+   ReferenceFixed = ReferenceFixed Or FileFixed
 
 End Sub
 
@@ -84,11 +88,11 @@ End Function
 
 Private Sub ExportTlbFile(ByVal LibFile As String)
    With CurrentApplication.Extensions(EXTENSION_KEY_APPFILE)
-      .CreateAppFile ACCUNIT_TYPELIB_FILE, LibFile, "BitInfo", CStr(GetCurrentAccessBitSystem)
+      .CreateAppFile ACCUNIT_TYPELIB_FILE, LibFile, "BitInfo", CStr(GetCurrentVbaBitSystem)
    End With
 End Sub
 
-Private Sub CheckMissingReference(ByVal VBProjectRef As VBProject)
+Private Sub CheckMissingReference(ByVal VBProjectRef As VBProject, Optional ByRef ReferenceFixed As Boolean)
 
    Dim AccUnitRefExists As Boolean
    Dim ref As Object
@@ -111,6 +115,7 @@ On Error GoTo 0
    End With
 
    AddAccUnitTlbReference VBProjectRef
+   ReferenceFixed = True
 
 End Sub
 
@@ -167,7 +172,7 @@ Private Function CheckAccUnitDllVersion(ByVal AccUnitDllFilePath As String) As B
    End With
 
    With CurrentApplication.Extensions(EXTENSION_KEY_APPFILE)
-      SourceTableFileVersion = .GetStoredAppFileVersion(ACCUNIT_DLL_FILE, "BitInfo", VBA.CStr(GetCurrentAccessBitSystem))
+      SourceTableFileVersion = .GetStoredAppFileVersion(ACCUNIT_DLL_FILE, "BitInfo", VBA.CStr(GetCurrentVbaBitSystem))
    End With
 
    CheckAccUnitDllVersion = (CompareVersions(InstalledFileVersion, SourceTableFileVersion) >= 0)
@@ -182,7 +187,7 @@ Private Function CheckAccUnitTlbVersion(ByVal AccUnitTlbFilePath As String) As B
    InstalledFileVersion = VBA.Format(VBA.FileDateTime(AccUnitTlbFilePath), "yyyy\.mm\.dd")
 
    With CurrentApplication.Extensions(EXTENSION_KEY_APPFILE)
-      SourceTableFileVersion = .GetStoredAppFileVersion(ACCUNIT_TYPELIB_FILE, "BitInfo", VBA.CStr(GetCurrentAccessBitSystem))
+      SourceTableFileVersion = .GetStoredAppFileVersion(ACCUNIT_TYPELIB_FILE, "BitInfo", VBA.CStr(GetCurrentVbaBitSystem))
    End With
 
    CheckAccUnitTlbVersion = (CompareVersions(InstalledFileVersion, SourceTableFileVersion) >= 0)

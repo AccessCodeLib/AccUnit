@@ -208,10 +208,22 @@ Public Function SaveAppFile(ByVal FileID As String, ByVal FileName As String, _
                    Optional ByVal ExtFilterFieldName As String, Optional ExtFilterValue As Variant) As Boolean
 
    Dim PropertyName As String
+   Dim Version As String
+   Dim FileInfo As WinApiFileInfo
    
    PropertyName = FileID
    If ExtFilterFieldName = "BitInfo" Then
       PropertyName = PropertyName & ".x" & ExtFilterValue
+   End If
+   
+   If SaveVersion Then
+      Set FileInfo = New WinApiFileInfo
+      Version = FileInfo.GetFileVersion(FileName)
+          Set FileInfo = Nothing
+      If Len(Version) = 0 Then
+         Version = VBA.Format$(Nz(FileDateTime(FileName), vbNullString), "yyyy.mm.dd")
+      End If
+      SaveCustomDocumentProperty PropertyName & ".Version", Version
    End If
 
    SaveAppFile = SaveAsCustomDocumentProperty(PropertyName, FileName)
@@ -220,12 +232,19 @@ End Function
 
 Private Function SaveAsCustomDocumentProperty(ByVal PropertyName As String, ByVal FilePath As String) As Boolean
    
-   Dim CustProp As Object
    Dim Base64FileString As String
    
    With New Base64Converter
       Base64FileString = .ConvertFileToBase64(FilePath)
    End With
+   
+   SaveAsCustomDocumentProperty = SaveCustomDocumentProperty(PropertyName, Base64FileString)
+   
+End Function
+
+Private Function SaveCustomDocumentProperty(ByVal PropertyName As String, ByRef PropertyValue As String) As Boolean
+   
+   Dim CustProp As Object
    
    Set CustProp = GetCustomProperty(PropertyName)
    If CustProp Is Nothing Then
@@ -236,11 +255,11 @@ Private Function SaveAsCustomDocumentProperty(ByVal PropertyName As String, ByVa
                                          Type:=msoPropertyTypeString)
    End If
 
-   CustProp.Value = Base64FileString
-   SaveAsCustomDocumentProperty = True
+   CustProp.Value = PropertyValue
+   
+   SaveCustomDocumentProperty = True
    
 End Function
-
 
 '---------------------------------------------------------------------------------------
 ' Function: RemoveAppFileFormAddInStorage
@@ -283,7 +302,30 @@ Private Function RemoveCustomDocumentProperties(ByVal PropertyName As String) As
    
 End Function
 
-
+Public Function GetStoredAppFileVersion(ByVal FileID As String, _
+                               Optional ByVal ExtFilterFieldName As String, _
+                               Optional ByVal ExtFilterValue As Variant) As String
+   
+   Dim PropertyName As String
+   Dim Prop As Object
+   
+   PropertyName = FileID
+   If ExtFilterFieldName = "BitInfo" Then
+      PropertyName = PropertyName & ".x" & ExtFilterValue
+   End If
+   PropertyName = PropertyName & ".Version"
+   
+   Set Prop = GetCustomProperty(PropertyName)
+   If Prop Is Nothing Then
+      GetStoredAppFileVersion = vbNullString
+      Debug.Print "CustomDocumentProperty "; PropertyName; " not exits"
+      Exit Function
+      'Err.Raise vbObjectError, "GetStoredAppFileVersion", "CustomDocumentProperty not exits"
+   End If
+   
+   GetStoredAppFileVersion = Prop.Value
+   
+End Function
 
 '---------------------------------------------------------------------------------------
 ' Event handling of m_ApplicationHandler
