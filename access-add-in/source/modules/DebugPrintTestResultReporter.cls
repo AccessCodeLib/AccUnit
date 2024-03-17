@@ -72,7 +72,7 @@ Private Sub PrintTestDetailSummary(ByRef TestResults() As AccUnit.ITestResult)
       i = i + 1
       If TypeOf r Is AccUnit.TestResultCollection Then
          If i > 1 Then Debug.Print String(20, "-")
-         Debug.Print CStr(i), r.test.FullName & ":", r.Result, "..."
+         Debug.Print CStr(i), r.Test.FullName & ":", r.Result, "..."
          Debug.Print String(3, " ") & String(17, "-")
          PrintSubResults i, r
          LastTestIsRowTest = True
@@ -81,7 +81,7 @@ Private Sub PrintTestDetailSummary(ByRef TestResults() As AccUnit.ITestResult)
             LastTestIsRowTest = False
             If i > 1 Then Debug.Print String(20, "-")
          End If
-         Debug.Print CStr(i), r.test.FullName & ":", r.Result, r.Message
+         Debug.Print CStr(i), r.Test.FullName & ":", r.Result, r.Message
       End If
    Next
 
@@ -97,10 +97,10 @@ Private Sub PrintSubResults(ByVal mainId As String, ByVal resultCol As AccUnit.T
       Set r = resultCol.Item(i - 1)
       ResultID = mainId & "." & i
       If TypeOf r Is AccUnit.ITestResultSummary Then
-         Debug.Print String(3, " ") & ResultID, r.test.FullName & "-", r.Result, "..."
+         Debug.Print String(3, " ") & ResultID, r.Test.FullName & "-", r.Result, "..."
          PrintSubResults ResultID, r
       Else
-         Debug.Print String(3, " ") & ResultID, r.test.FullName & "-", r.Result, r.Message
+         Debug.Print String(3, " ") & ResultID, r.Test.FullName & "-", r.Result, r.Message
       End If
    Next
 

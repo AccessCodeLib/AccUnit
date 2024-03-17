@@ -80,8 +80,7 @@ Public Property Get AccUnitFileNames() As Variant()
                         "AccessCodeLib.Common.Tools.dll", _
                         "AccessCodeLib.Common.VBIDETools.dll", _
                         "Microsoft.Vbe.Interop.dll")
-   '                       "Interop.VBA.dll"
-   '                       "AccessCodeLib.Common.VBIDETools.XmlSerializers.dll"
+
 End Property
 
 Public Sub ExportAccUnitFiles(Optional ByVal lBit As Long = 0)

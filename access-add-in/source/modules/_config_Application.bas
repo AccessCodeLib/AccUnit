@@ -17,8 +17,8 @@
 Option Compare Text
 Option Explicit
 
-'Version nummer
-Private Const APPLICATION_VERSION As String = "0.9.25.240313"
+'Version number
+Private Const APPLICATION_VERSION As String = "0.9.26.240316"
 
 Private Const APPLICATION_NAME As String = "ACLib AccUnit Loader"
 Private Const APPLICATION_FULLNAME As String = "Access Code Library - AccUnit Loader"
@@ -109,8 +109,6 @@ Private Sub SetAppFiles()
       Next
    End With
 
-
-
 End Sub
 
 Public Sub PrepareForVCS()
@@ -119,4 +117,12 @@ Public Sub PrepareForVCS()
       Application.RefreshDatabaseWindow
    End If
    RemoveAccUnitTlbReference
+End Sub
+
+Private Sub Test()
+With New WinApiFileInfo
+   Debug.Print VBA.FileDateTime(CodeProject.Path & "\lib\x86\AccessCodeLib.AccUnit.tlb")
+   Debug.Print "Version:", .GetFileVersion(CodeProject.Path & "\lib\x86\AccessCodeLib.AccUnit.tlb")
+End With
+
 End Sub

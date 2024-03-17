@@ -128,9 +128,8 @@ Public Property Get AccUnitFileNames() As Variant()
                         ACCUNIT_DLL_FILE, _
                         "AccessCodeLib.Common.Tools.dll", _
                         "AccessCodeLib.Common.VBIDETools.dll", _
-                        "AccessCodeLib.Common.VBIDETools.XmlSerializers.dll", _
                         "Microsoft.Vbe.Interop.dll")
-   '                       "Interop.VBA.dll"
+
 End Property
 
 Public Sub ExportAccUnitFiles(Optional ByVal lBit As Long = 0)
@@ -142,7 +141,7 @@ Public Sub ExportAccUnitFiles(Optional ByVal lBit As Long = 0)
 On Error GoTo HandleErr
 
    If lBit = 0 Then
-      lBit = GetCurrentAccessBitSystem
+      lBit = GetCurrentVbaBitSystem
    End If
 
    sBit = CStr(lBit)
@@ -172,7 +171,7 @@ Public Sub ImportAccUnitFiles(Optional ByVal lBit As Long = 0)
    Dim DllPath As String
 
    If lBit = 0 Then
-      lBit = GetCurrentAccessBitSystem
+      lBit = GetCurrentVbaBitSystem
    End If
 
    sBit = CStr(lBit)
@@ -192,16 +191,16 @@ Public Sub ImportAccUnitFiles(Optional ByVal lBit As Long = 0)
 
 End Sub
 
-Public Function GetCurrentAccessBitSystem() As Long
+Public Function GetCurrentVbaBitSystem() As Long
 
 #If VBA7 Then
 #If Win64 Then
-      GetCurrentAccessBitSystem = 64
+      GetCurrentVbaBitSystem = 64
 #Else
-      GetCurrentAccessBitSystem = 32
+      GetCurrentVbaBitSystem = 32
 #End If
 #Else
-      GetCurrentAccessBitSystem = 32
+      GetCurrentVbaBitSystem = 32
 #End If
 
 End Function
