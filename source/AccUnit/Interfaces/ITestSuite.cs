@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using AccessCodeLib.AccUnit.CodeCoverage;
 
 namespace AccessCodeLib.AccUnit.Interfaces
 {
@@ -21,6 +22,12 @@ namespace AccessCodeLib.AccUnit.Interfaces
 
         [ComVisible(false)]
         ITestResultCollector TestResultCollector { get; set; }
+
+        [ComVisible(false)]
+        ICodeCoverageTracker CodeCoverageTracker { get; set; }
+
+        [ComVisible(false)]
+        void AppendTestResultReporter(ITestResultReporter reporter);
 
         [ComVisible(false)]
         void AddTestClasses(IEnumerable<TestClassInfo> testClasses);
@@ -45,7 +52,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
         event FinishedEventHandler TestFixtureFinished;
         event TestStartedEventHandler TestStarted;
         event FinishedEventHandler TestFinished;
-        event MessageEventHandler TestTraceMessage;
+        event TestTraceMessageEventHandler TestTraceMessage;
         event DisposeEventHandler Disposed;
     }
 
@@ -58,4 +65,6 @@ namespace AccessCodeLib.AccUnit.Interfaces
     public delegate void MessageEventHandler(string message);
     public delegate void TestSuiteFinishedEventHandler(ITestSummary summary);
     public delegate void TestSuiteResetEventHandler(ResetMode resetmode, ref bool cancel);
+    public delegate void TestTraceMessageEventHandler(string message, ICodeCoverageTracker CodeCoverageTracker);
+
 }

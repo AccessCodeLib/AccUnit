@@ -19,6 +19,7 @@ namespace AccessCodeLib.AccUnit.Interop
         new ITestResultCollector TestResultCollector { get; set; }
         new ITestRunner TestRunner { get; set; }
 
+        new IAccessTestSuite AppendTestResultReporter(ITestResultReporter reporter);
         new IAccessTestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
         new IAccessTestSuite AddByClassName(string className);
         new IAccessTestSuite AddFromVBProject();
@@ -102,6 +103,17 @@ namespace AccessCodeLib.AccUnit.Interop
             {
                 return new TestClassGenerator(ActiveVBProject);
             }
+        }
+
+        public new IAccessTestSuite AppendTestResultReporter(ITestResultReporter reporter)
+        {
+            base.AppendTestResultReporter(reporter);
+            return this;
+        }
+
+        protected override ITestResultCollector NewTestResultCollector()
+        {
+            return new TestResultCollector(this);
         }
     }
 }

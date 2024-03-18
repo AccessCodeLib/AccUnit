@@ -1,7 +1,12 @@
 ﻿using AccessCodeLib.AccUnit.Interfaces;
+using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Integration
 {
+    [ComVisible(true)]
+    [Guid("330B79CF-D77A-47A4-8EF7-E32B75849137")]
+    [ClassInterface(ClassInterfaceType.None)]
+    [ProgId(Interop.Constants.ProgIdLibName + ".TestResult")]
     public class TestResult : ITestResult
     {
         public TestResult(ITestData test)

@@ -105,12 +105,17 @@
     <Compile Include="Assertions\AssertThrowsContainer.cs" />
     <Compile Include="Assertions\StringConstraintBuilder.cs" />
     <Compile Include="CodeCoverage\CodeModuleTracker.cs" />
+    <Compile Include="CodeCoverage\ICodeCoverageTracker.cs" />
     <Compile Include="CodeCoverage\ProcedureTracker.cs" />
+    <Compile Include="Integration\TestResultCollector.cs" />
     <Compile Include="Interfaces\ITestItemTag.cs" />
     <Compile Include="Interfaces\ITagList.cs" />
     <Compile Include="Interfaces\ITestClassMemberList.cs" />
+    <Compile Include="Interfaces\ITestResultReporter.cs" />
     <Compile Include="Interfaces\StringCompareMode.cs" />
     <Compile Include="Interop\InteropConverter.cs" />
+    <Compile Include="Interop\ITestResultCollectorComEvents.cs" />
+    <Compile Include="Interop\TestResultCollector.cs" />
     <Compile Include="~trash\CodeModuleMemberWithMarker.cs" />
     <Compile Include="~trash\CompareTypeHelper.cs" />
     <Compile Include="Integration\MessageBoxData.cs" />
