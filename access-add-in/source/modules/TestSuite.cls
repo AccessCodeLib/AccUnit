@@ -44,20 +44,16 @@ Public Property Get TestSuite() As AccUnit.AccessTestSuite
    Set TestSuite = m_TestSuite
 End Property
 
-Private Sub m_TestSuite_TestSuiteFinished(ByVal Summary As AccUnit.ITestSummary)
-'
-End Sub
-
 Private Sub m_TestSuite_TestSuiteStarted(ByVal TestSuite As AccUnit.ITestSuite)
 '
 End Sub
 
-Private Sub m_TestSuite_TestTraceMessage(ByVal Message As String)
+Private Sub m_TestSuite_TestTraceMessage(ByVal Message As String, ByVal CodeCoverageTracker As AccUnit.ICodeCoverageTracker)
 '
 End Sub
 
-Public Sub PrintSummary(Optional ByVal PrintTestResults As Boolean = False)
-'   m_TestResultCollector.PrintSummary m_TestSuite.Summary, PrintTestResults
+Private Sub m_TestSuite_TestSuiteFinished(ByVal Summary As AccUnit.ITestSummary)
+'
 End Sub
 
 Public Property Set CodeCoverageTracker(ByVal NewRef As Object)

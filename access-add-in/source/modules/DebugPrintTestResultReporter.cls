@@ -27,10 +27,6 @@ Private Property Get ITestResultReporter_TestResultCollector() As AccUnit.ITestR
 End Property
 
 Private Property Set ITestResultReporter_TestResultCollector(ByVal TestResultCollectorToListen As AccUnit.ITestResultCollector)
-   Set TestResultCollector = TestResultCollectorToListen
-End Property
-
-Private Property Set TestResultCollector(ByVal TestResultCollectorToListen As AccUnit.TestResultCollector)
    Set m_TestResultCollector = TestResultCollectorToListen
 End Property
 
@@ -47,7 +43,6 @@ Private Sub m_TestResultCollector_TestSuiteStarted(ByVal TestSuite As AccUnit.IT
 End Sub
 
 Private Sub m_TestResultCollector_TestTraceMessage(ByVal Message As String, ByVal CodeCoverageTracker As CodeCoverageTracker)
-
    If Message Like "* [*][*][*]*" Then
       Message = Replace(Message, vbNewLine, vbTab)
    ElseIf Message Like "* ~~~*" Then

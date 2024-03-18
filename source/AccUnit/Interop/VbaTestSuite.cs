@@ -117,12 +117,17 @@ namespace AccessCodeLib.AccUnit.Interop
             return this;
         }
 
-        protected override void RaiseTraceMessage(string text)
+        protected override ITestResultCollector NewTestResultCollector()
         {
-            TestTraceMessage?.Invoke(text, CodeCoverageTracker as ICodeCoverageTracker);
+            return new TestResultCollector(this);
         }
 
-        public new event TestTraceMessageEventHandler TestTraceMessage;
+        //protected override void RaiseTraceMessage(string text)
+        //{
+        //    TestTraceMessage?.Invoke(text, CodeCoverageTracker as ICodeCoverageTracker);
+        //}
+
+        //public new event TestTraceMessageEventHandler TestTraceMessage;
 
     }
 }

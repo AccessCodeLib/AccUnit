@@ -211,7 +211,7 @@ Private Function CompareVersions(ByVal Version1 As String, ByVal Version2 As Str
    For i = 0 To UBound(Version1Parts)
       If VBA.Val(Version1Parts(i)) > VBA.Val(Version2Parts(i)) Then
          CompareVersions = 1
-         Exit For
+         Exit Function
       End If
    Next
 
