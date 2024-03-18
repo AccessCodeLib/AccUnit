@@ -51,6 +51,10 @@ Public Property Get TestSuite() As AccUnit.VbaTestSuite
    Set TestSuite = m_TestSuite
 End Property
 
+Private Function IVBATestSuite_AppendTestResultReporter(ByVal Reporter As AccUnit.ITestResultReporter) As AccUnit.IVBATestSuite
+   m_TestSuite.AppendTestResultReporter Reporter
+End Function
+
 Private Sub m_TestSuite_TestSuiteFinished(ByVal Summary As AccUnit.ITestSummary)
     m_TestResultCollector.TestSuiteFinished Summary
 End Sub
@@ -59,8 +63,8 @@ Private Sub m_TestSuite_TestSuiteStarted(ByVal TestSuite As AccUnit.ITestSuite)
    m_TestResultCollector.TestSuiteStarted TestSuite
 End Sub
 
-Private Sub m_TestSuite_TestTraceMessage(ByVal Message As String)
-   m_TestResultCollector.PrintTestTraceMessage Message, m_CodeCoverageTracker
+Private Sub m_TestSuite_TestTraceMessage(ByVal Message As String, ByVal CodeConverageTracker As CodeCoverageTracker)
+   m_TestResultCollector.PrintTestTraceMessage Message, CodeConverageTracker
 End Sub
 
 Public Sub PrintSummary(Optional ByVal PrintTestResults As Boolean = False)

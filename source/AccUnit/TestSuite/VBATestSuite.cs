@@ -326,9 +326,9 @@ namespace AccessCodeLib.AccUnit
             TestFinished?.Invoke(result);
         }
 
-        private void RaiseTraceMessage(string text)
+        protected virtual void RaiseTraceMessage(string text)
         {
-            TestTraceMessage?.Invoke(text, CodeCoverageTracker);
+            TestTraceMessage?.Invoke(text, CodeCoverageTracker);    
         }
 
         #endregion
@@ -498,7 +498,6 @@ namespace AccessCodeLib.AccUnit
             {
                 TestResultCollector = NewTestResultCollector();
             }
-            var tagList = _filterTags as ITagList;
             RaiseTestSuiteStarted(this);
             var testResult = TestRunner.Run(this, TestResultCollector, _methodFilter, _filterTags);
             _testSummary = testResult as ITestSummary;

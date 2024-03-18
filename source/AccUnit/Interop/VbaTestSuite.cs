@@ -116,5 +116,13 @@ namespace AccessCodeLib.AccUnit.Interop
             base.AppendTestResultReporter(reporter);
             return this;
         }
+
+        protected override void RaiseTraceMessage(string text)
+        {
+            TestTraceMessage?.Invoke(text, CodeCoverageTracker as ICodeCoverageTracker);
+        }
+
+        public new event TestTraceMessageEventHandler TestTraceMessage;
+
     }
 }
