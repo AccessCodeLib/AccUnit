@@ -34,5 +34,6 @@ steps:
     testAssemblyVer2: |
       **\*test*.dll
       !**\*AccessTestClientTests.dll
+      !**\*VBIDETools.Tests.dll
       !**\obj\**
     testFiltercriteria: "Category!=AccessClientTests"
