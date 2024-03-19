@@ -42,11 +42,12 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $assemblyPath = Join-Path -Path $(Build.SourcesDirectory) -ChildPath "AccUnit\bin\Release\AccUnit.dll"
-      $assembly = [System.Reflection.Assembly]::LoadFile($assemblyPath)
-      $version = $assembly.GetName().Version.ToString()
+      $assemblyPath = "$(Build.SourcesDirectory)\source\AccUnit\bin\Release\AccUnit.dll"
+      $versionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($assemblyPath)
+      $version = $versionInfo.FileVersion
       $parts = $version.Split('.')
       $version = "$($parts[0]).$($parts[1]).$($parts[2])"
+      Write-Host "Version: $version"
       Write-Host "##vso[task.setvariable variable=dllVersion]$version"
 
 - task: PublishBuildArtifacts@1
