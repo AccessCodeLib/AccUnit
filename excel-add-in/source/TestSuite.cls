@@ -21,7 +21,6 @@ Implements AccUnit.IVBATestSuite
 
 Private WithEvents m_TestSuite As AccUnit.VbaTestSuite
 Attribute m_TestSuite.VB_VarHelpID = -1
-Private m_TestResultCollector As TestResultCollector
 Private m_CodeCoverageTracker As AccUnit.CodeCoverageTracker
 
 Private m_TestResultReporters As Collection
@@ -35,36 +34,32 @@ Private Sub Class_Terminate()
    Set m_TestSuite = Nothing
 End Sub
 
-Public Sub Init(ByVal NewTestSuite As AccUnit.VbaTestSuite, _
-                ByVal NewTestResultCollector As TestResultCollector)
+Public Sub Init(ByVal NewTestSuite As AccUnit.VbaTestSuite)
    Set m_TestSuite = NewTestSuite
-   Set m_TestResultCollector = NewTestResultCollector
-   Set m_TestSuite.TestResultCollector = m_TestResultCollector
 End Sub
 
-Public Sub AddTestResultReporter(ByVal Reporter As ITestResultReporter)
-   Set Reporter.TestResultCollector = m_TestResultCollector
-   m_TestResultReporters.Add Reporter
+Public Sub AppendTestResultReporter(ByVal Reporter As ITestResultReporter)
+   m_TestSuite.AppendTestResultReporter Reporter
 End Sub
 
 Public Property Get TestSuite() As AccUnit.VbaTestSuite
    Set TestSuite = m_TestSuite
 End Property
 
+Private Function IVBATestSuite_AppendTestResultReporter(ByVal Reporter As AccUnit.ITestResultReporter) As AccUnit.IVBATestSuite
+   m_TestSuite.AppendTestResultReporter Reporter
+End Function
+
 Private Sub m_TestSuite_TestSuiteFinished(ByVal Summary As AccUnit.ITestSummary)
-    m_TestResultCollector.TestSuiteFinished Summary
+'
 End Sub
 
 Private Sub m_TestSuite_TestSuiteStarted(ByVal TestSuite As AccUnit.ITestSuite)
-   m_TestResultCollector.TestSuiteStarted TestSuite
+'
 End Sub
 
-Private Sub m_TestSuite_TestTraceMessage(ByVal Message As String)
-   m_TestResultCollector.PrintTestTraceMessage Message, m_CodeCoverageTracker
-End Sub
-
-Public Sub PrintSummary(Optional ByVal PrintTestResults As Boolean = False)
-   m_TestResultCollector.PrintSummary m_TestSuite.Summary, PrintTestResults
+Private Sub m_TestSuite_TestTraceMessage(ByVal Message As String, ByVal CodeConverageTracker As CodeCoverageTracker)
+'
 End Sub
 
 Public Property Set CodeCoverageTracker(ByVal NewRef As Object)
@@ -124,6 +119,10 @@ End Property
 
 Private Property Get IVBATestSuite_HostApplication() As Object
    Set IVBATestSuite_HostApplication = m_TestSuite.HostApplication
+End Property
+
+Private Property Get Name() As String
+   Name = "TestSuite"
 End Property
 
 Private Property Get IVBATestSuite_Name() As String

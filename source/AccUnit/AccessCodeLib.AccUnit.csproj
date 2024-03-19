@@ -79,7 +79,18 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.Vbe.Interop, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\lib\vbide\Microsoft.Vbe.Interop.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\lib\office\Office.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
@@ -105,12 +116,17 @@
     <Compile Include="Assertions\AssertThrowsContainer.cs" />
     <Compile Include="Assertions\StringConstraintBuilder.cs" />
     <Compile Include="CodeCoverage\CodeModuleTracker.cs" />
+    <Compile Include="CodeCoverage\ICodeCoverageTracker.cs" />
     <Compile Include="CodeCoverage\ProcedureTracker.cs" />
+    <Compile Include="Integration\TestResultCollector.cs" />
     <Compile Include="Interfaces\ITestItemTag.cs" />
     <Compile Include="Interfaces\ITagList.cs" />
     <Compile Include="Interfaces\ITestClassMemberList.cs" />
+    <Compile Include="Interfaces\ITestResultReporter.cs" />
     <Compile Include="Interfaces\StringCompareMode.cs" />
     <Compile Include="Interop\InteropConverter.cs" />
+    <Compile Include="Interop\ITestResultCollectorComEvents.cs" />
+    <Compile Include="Interop\TestResultCollector.cs" />
     <Compile Include="~trash\CodeModuleMemberWithMarker.cs" />
     <Compile Include="~trash\CompareTypeHelper.cs" />
     <Compile Include="Integration\MessageBoxData.cs" />
@@ -244,26 +260,6 @@
       <Project>{9fa679c2-82c0-42dc-a34f-f78a9012eeeb}</Project>
       <Name>AccessCodeLib.Common.VBIDETools</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="Microsoft.Office.Core">
-      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
-      <VersionMajor>2</VersionMajor>
-      <VersionMinor>8</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="VBIDE">
-      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
-      <VersionMajor>5</VersionMajor>
-      <VersionMinor>3</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -10,7 +10,7 @@ namespace AccessCodeLib.AccUnit.Interop
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface ITestSuiteComEvents : ITestSuiteEvents
     {
-        new void TestTraceMessage(string Message);
+        new void TestTraceMessage(string Message, ICodeCoverageTracker CodeCoverageTracker);
         new void TestSuiteStarted(ITestSuite TestSuite);
         /*
         

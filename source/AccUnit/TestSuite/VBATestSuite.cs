@@ -1,8 +1,8 @@
-﻿using AccessCodeLib.AccUnit.Integration;
+﻿using AccessCodeLib.AccUnit.CodeCoverage;
+using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.AccUnit.TestRunner;
 using AccessCodeLib.Common.Tools.Logging;
-using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
@@ -33,7 +33,42 @@ namespace AccessCodeLib.AccUnit
         private readonly VBATestBuilder _testBuilder = new VBATestBuilder();
 
         private ITestRunner _testRunner;
-        public ITestResultCollector TestResultCollector { get; set; }
+
+        private ITestResultCollector _testResultCollector;
+        public ITestResultCollector TestResultCollector
+        {
+            get
+            {
+                if (_testResultCollector is null)
+                {
+                    _testResultCollector = NewTestResultCollector();
+                }
+                return _testResultCollector;    
+            }
+            set
+            {
+                _testResultCollector = value;   
+            }
+        }
+
+        protected virtual ITestResultCollector NewTestResultCollector()
+        {
+            return new TestResultCollector(this);
+        }
+
+        public ICodeCoverageTracker CodeCoverageTracker { get; set; }
+
+        private readonly List<ITestResultReporter> _testResultReportes = new List<ITestResultReporter>();
+        public void AppendTestResultReporter(ITestResultReporter reporter)
+        {
+            reporter.TestResultCollector = TestResultCollector;
+            AddTestResultReporterToList(reporter);
+        }
+
+        protected virtual void AddTestResultReporterToList(ITestResultReporter reporter)
+        {
+            _testResultReportes.Add(reporter);
+        }
 
         #region TestSuite Events
 
@@ -291,9 +326,9 @@ namespace AccessCodeLib.AccUnit
             TestFinished?.Invoke(result);
         }
 
-        private void RaiseTraceMessage(string text)
+        protected virtual void RaiseTraceMessage(string text)
         {
-            TestTraceMessage?.Invoke(text);
+            TestTraceMessage?.Invoke(text, CodeCoverageTracker);    
         }
 
         #endregion
@@ -461,9 +496,8 @@ namespace AccessCodeLib.AccUnit
             Cancel = false;
             if (TestResultCollector is null)
             {
-                TestResultCollector = new TestResultCollection(this);
+                TestResultCollector = NewTestResultCollector();
             }
-            var tagList = _filterTags as ITagList;
             RaiseTestSuiteStarted(this);
             var testResult = TestRunner.Run(this, TestResultCollector, _methodFilter, _filterTags);
             _testSummary = testResult as ITestSummary;
@@ -494,7 +528,7 @@ namespace AccessCodeLib.AccUnit
         public event TestStartedEventHandler TestStarted;
         public event FinishedEventHandler TestFinished;
         public event FinishedEventHandler TestFixtureFinished;
-        public event MessageEventHandler TestTraceMessage;
+        public event TestTraceMessageEventHandler TestTraceMessage;
         public event TestSuiteResetEventHandler TestSuiteReset;
 
         #endregion
@@ -546,6 +580,7 @@ namespace AccessCodeLib.AccUnit
 
         void DisposeUnmanagedResources()
         {
+            _testResultCollector = null;
             _activeVbProject = null;
         }
 

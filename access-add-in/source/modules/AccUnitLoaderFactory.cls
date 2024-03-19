@@ -20,6 +20,11 @@ Option Explicit
 Private m_AccUnitFactory As Object
 Private m_MatchResultCollector As Object
 
+Public Enum TestReportOutput
+   DebugPrint = 1
+   LogFile = 2
+End Enum
+
 Private Sub Class_Initialize()
 '
 End Sub
@@ -111,21 +116,21 @@ Public Property Get TestSuite(Optional ByVal TestReportOutputTo As TestReportOut
    Set TestSuite = New TestSuite
 
    With TestSuite
-      .Init AccessTestSuite, New TestResultCollector
+      .Init AccessTestSuite
    End With
 
-   AddTestResultReporter TestSuite, TestReportOutputTo
+   AppendTestResultReporter TestSuite, TestReportOutputTo
 
 End Property
 
-Private Sub AddTestResultReporter(ByVal TestSuite As TestSuite, ByVal TestReportOutputTo As TestReportOutput)
+Private Sub AppendTestResultReporter(ByVal TestSuite As TestSuite, ByVal TestReportOutputTo As TestReportOutput)
 
    If (TestReportOutputTo And TestReportOutput.DebugPrint) = TestReportOutput.DebugPrint Then
-      TestSuite.AddTestResultReporter New DebugPrintTestResultReporter
+      TestSuite.AppendTestResultReporter New DebugPrintTestResultReporter
    End If
 
    If (TestReportOutputTo And TestReportOutput.LogFile) = TestReportOutput.LogFile Then
-      TestSuite.AddTestResultReporter New LogFileTestResultReporter
+      TestSuite.AppendTestResultReporter New LogFileTestResultReporter
    End If
 
 End Sub
