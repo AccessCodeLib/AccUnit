@@ -45,6 +45,8 @@ steps:
       $assemblyPath = Join-Path -Path $(Build.SourcesDirectory) -ChildPath "AccUnit\bin\Release\AccUnit.dll"
       $assembly = [System.Reflection.Assembly]::LoadFile($assemblyPath)
       $version = $assembly.GetName().Version.ToString()
+      $parts = $version.Split('.')
+      $version = "$($parts[0]).$($parts[1]).$($parts[2])"
       Write-Host "##vso[task.setvariable variable=dllVersion]$version"
 
 - task: PublishBuildArtifacts@1
