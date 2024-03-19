@@ -6,6 +6,7 @@ using NUnit.Framework.Internal;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
 {
+    [Category("AccessClientTests")]
     public class AccessClientTests
     {
         private AccessTestHelper _accessTestHelper;
