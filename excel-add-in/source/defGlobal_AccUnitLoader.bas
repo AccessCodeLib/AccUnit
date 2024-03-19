@@ -78,29 +78,22 @@ Public Property Get AccUnitFileNames() As Variant()
                         ACCUNIT_TYPELIB_FILE, _
                         ACCUNIT_DLL_FILE, _
                         "AccessCodeLib.Common.Tools.dll", _
-                        "AccessCodeLib.Common.VBIDETools.dll", _
-                        "Microsoft.Vbe.Interop.dll")
+                        "AccessCodeLib.Common.VBIDETools.dll")
 
 End Property
 
-Public Sub ExportAccUnitFiles(Optional ByVal lBit As Long = 0)
+Public Sub ExportAccUnitFiles()
 
-   Dim accFileName As Variant
-   Dim sBit As String
+   Dim AccUnitFileName As Variant
    Dim DllPath As String
 
 On Error GoTo HandleErr
 
-   If lBit = 0 Then
-      lBit = GetCurrentVbaBitSystem
-   End If
-
-   sBit = CStr(lBit)
    DllPath = CurrentAccUnitConfiguration.AccUnitDllPath
 
    With CurrentApplication.Extensions("AppFile")
-      For Each accFileName In AccUnitFileNames
-         .CreateAppFile accFileName, DllPath & accFileName, "BitInfo", sBit
+      For Each AccUnitFileName In AccUnitFileNames
+         .CreateAppFile AccUnitFileName, DllPath & AccUnitFileName
       Next
    End With
 
@@ -108,57 +101,31 @@ ExitHere:
    Exit Sub
 
 HandleErr:
-   If accFileName = "AccessCodeLib.AccUnit.tlb" Then
+   If AccUnitFileName = "AccessCodeLib.AccUnit.tlb" Then
       Resume Next
    End If
    Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
 
 End Sub
 
-Public Sub ImportAccUnitFiles(Optional ByVal lBit As Long = 0)
+Public Sub ImportAccUnitFiles()
 
-   Dim accFileName As Variant
-   Dim sBit As String
+   Dim AccUnitFileName As Variant
    Dim DllPath As String
-
-   If lBit = 0 Then
-      lBit = GetCurrentVbaBitSystem
-   End If
-
-   sBit = CStr(lBit)
+   
    DllPath = CurrentAccUnitConfiguration.AccUnitDllPath
 
-   If lBit = 32 Then
-      DllPath = Replace(DllPath, "x64", "x86")
-   ElseIf lBit = 64 Then
-      DllPath = Replace(DllPath, "x86", "x64")
-   End If
-
    With CurrentApplication.Extensions("AppFile")
-      For Each accFileName In AccUnitFileNames
-         .SaveAppFile accFileName, DllPath & accFileName, True, , , "BitInfo", sBit
+      For Each AccUnitFileName In AccUnitFileNames
+         .SaveAppFile AccUnitFileName, DllPath & AccUnitFileName, True
       Next
    End With
 
 End Sub
 
-Public Function GetCurrentVbaBitSystem() As Long
-
-#If VBA7 Then
-#If Win64 Then
-      GetCurrentVbaBitSystem = 64
-#Else
-      GetCurrentVbaBitSystem = 32
-#End If
-#Else
-      GetCurrentVbaBitSystem = 32
-#End If
-
-End Function
-
 Public Sub RemoveAccUnitFilesFromAddInStorage()
 
-   Dim accFileName As Variant
+   Dim AccUnitFileName As Variant
    Dim DllPath As String
 
 On Error GoTo HandleErr
@@ -166,9 +133,9 @@ On Error GoTo HandleErr
    DllPath = CurrentAccUnitConfiguration.AccUnitDllPath
 
    With CurrentApplication.Extensions("AppFile")
-      For Each accFileName In AccUnitFileNames
-         .RemoveAppFileFromAddInStorage accFileName, "BitInfo", 32
-         .RemoveAppFileFromAddInStorage accFileName, "BitInfo", 64
+      For Each AccUnitFileName In AccUnitFileNames
+         .RemoveAppFileFromAddInStorage AccUnitFileName
+         .RemoveAppFileFromAddInStorage AccUnitFileName
       Next
    End With
 
