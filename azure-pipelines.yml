@@ -31,4 +31,8 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+    testAssemblyVer2: |
+      **\*test*.dll
+      !**\*AccessTestClientTests.dll
+      !**\obj\**
     testFiltercriteria: "Category!=AccessClientTests"
