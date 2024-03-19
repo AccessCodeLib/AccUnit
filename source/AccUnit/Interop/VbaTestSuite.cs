@@ -19,6 +19,7 @@ namespace AccessCodeLib.AccUnit.Interop
         new ITestResultCollector TestResultCollector { get; set; }
         new ITestRunner TestRunner { get; set; }
 
+        new IVBATestSuite AppendTestResultReporter(ITestResultReporter reporter);
         new IVBATestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
         new IVBATestSuite AddByClassName(string className);
         new IVBATestSuite AddFromVBProject();
@@ -31,6 +32,8 @@ namespace AccessCodeLib.AccUnit.Interop
         IVBATestSuite SelectTests(object TestNameFilter);
         IVBATestSuite Filter(object FilterTags);
         ITestClassGenerator TestClassGenerator { get; }
+        
+
     }
 
     [ComVisible(true)]
@@ -107,5 +110,24 @@ namespace AccessCodeLib.AccUnit.Interop
                 return new TestClassGenerator(ActiveVBProject);
             }
         }
+
+        public new IVBATestSuite AppendTestResultReporter(ITestResultReporter reporter)
+        {
+            base.AppendTestResultReporter(reporter);
+            return this;
+        }
+
+        protected override ITestResultCollector NewTestResultCollector()
+        {
+            return new TestResultCollector(this);
+        }
+
+        //protected override void RaiseTraceMessage(string text)
+        //{
+        //    TestTraceMessage?.Invoke(text, CodeCoverageTracker as ICodeCoverageTracker);
+        //}
+
+        //public new event TestTraceMessageEventHandler TestTraceMessage;
+
     }
 }

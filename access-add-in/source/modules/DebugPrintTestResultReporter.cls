@@ -17,18 +17,30 @@ Attribute VB_Exposed = False
 Option Compare Text
 Option Explicit
 
-Implements ITestResultReporter
+Implements AccUnit.ITestResultReporter
 
-Private WithEvents m_TestResultCollector As TestResultCollector
+Private WithEvents m_TestResultCollector As AccUnit.TestResultCollector
 Attribute m_TestResultCollector.VB_VarHelpID = -1
 
-Private Property Set ITestResultReporter_TestResultCollector(ByVal TestResultCollectorToListen As TestResultCollector)
-   Set TestResultCollector = TestResultCollectorToListen
+Private Property Get ITestResultReporter_TestResultCollector() As AccUnit.ITestResultCollector
+   Set ITestResultReporter_TestResultCollector = m_TestResultCollector
 End Property
 
-Private Property Set TestResultCollector(ByVal TestResultCollectorToListen As TestResultCollector)
+Private Property Set ITestResultReporter_TestResultCollector(ByVal TestResultCollectorToListen As AccUnit.ITestResultCollector)
    Set m_TestResultCollector = TestResultCollectorToListen
 End Property
+
+Private Sub m_TestResultCollector_NewTestResult(ByVal Result As AccUnit.ITestResult)
+'
+End Sub
+
+Private Sub m_TestResultCollector_TestSuiteFinished(ByVal Summary As AccUnit.ITestSummary)
+'
+End Sub
+
+Private Sub m_TestResultCollector_TestSuiteStarted(ByVal TestSuite As AccUnit.ITestSuite)
+'
+End Sub
 
 Private Sub m_TestResultCollector_TestTraceMessage(ByVal Message As String, ByVal CodeCoverageTracker As CodeCoverageTracker)
    If Message Like "* [*][*][*]*" Then
@@ -43,6 +55,7 @@ Private Sub m_TestResultCollector_TestTraceMessage(ByVal Message As String, ByVa
       Debug.Print CodeCoverageTracker.GetReport()
    End If
    End If
+
 End Sub
 
 Private Sub m_TestResultCollector_PrintSummary(ByVal TestSummary As AccUnit.ITestSummary, ByVal PrintTestResults As Boolean)

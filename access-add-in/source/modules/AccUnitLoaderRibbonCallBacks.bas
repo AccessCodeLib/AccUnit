@@ -41,8 +41,8 @@ Public Sub RemoveTestEnvironmentDelTestsRCB(Optional RibbonControl As Object)
 End Sub
 
 Public Sub TestSuiteRunAllFromVBProjectRCB(Optional RibbonControl As Object)
-   GetAccUnitFactory.TestSuite.AddFromVBProject.Run
    SetFocusToImmediateWindow
+   GetAccUnitFactory.TestSuite.AddFromVBProject.Run
 End Sub
 
 Private Sub SetFocusToImmediateWindow()

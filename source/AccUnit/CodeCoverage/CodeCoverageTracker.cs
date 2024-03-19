@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace AccessCodeLib.AccUnit.CodeCoverage
 {
-    public class CodeCoverageTracker : IDisposable
+    public class CodeCoverageTracker : ICodeCoverageTracker, IDisposable
     {
         private Dictionary<string, CodeModuleTracker> _codeModules = new Dictionary<string, CodeModuleTracker>();
         private VBProject _vbProject;
