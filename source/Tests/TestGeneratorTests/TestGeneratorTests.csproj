@@ -10,6 +10,8 @@
     <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
 
     <IsPublishable>False</IsPublishable>
+
+    <Configurations>Debug;Release;AzureCI</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

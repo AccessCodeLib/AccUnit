@@ -6,6 +6,8 @@
     <IsPackable>false</IsPackable>
 
     <Platforms>AnyCPU;x86;x64</Platforms>
+
+    <Configurations>Debug;Release;AzureCI</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
