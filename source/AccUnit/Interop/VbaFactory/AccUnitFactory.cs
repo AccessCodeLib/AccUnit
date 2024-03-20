@@ -10,12 +10,12 @@ namespace AccessCodeLib.AccUnit.Interop
     {
         IConstraintBuilder ConstraintBuilder { get; }
         IAssert Assert { get; }
-        ITestRunner TestRunner(VBProject VBProject);
+        ITestRunner TestRunner([MarshalAs(UnmanagedType.IDispatch)] VBProject VBProject);
         ITestBuilder TestBuilder { get; }
-        IConfigurator Configurator(VBProject VBProject = null);
+        IConfigurator Configurator([MarshalAs(UnmanagedType.IDispatch)] VBProject VBProject = null);
         IVBATestSuite VBATestSuite { get; }
         IAccessTestSuite AccessTestSuite { get; }
-        ICodeCoverageTracker CodeCoverageTracker(VBProject VBProject);
+        ICodeCoverageTracker CodeCoverageTracker([MarshalAs(UnmanagedType.IDispatch)] VBProject VBProject);
     }
 
     [ComVisible(true)]
