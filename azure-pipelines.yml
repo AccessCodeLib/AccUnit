@@ -48,7 +48,8 @@ steps:
       $parts = $version.Split('.')
       $version = "$($parts[0]).$($parts[1]).$($parts[2])"
       Write-Host "Version: $version"
-      Write-Host "##vso[task.setvariable variable=dllVersion]$version"
+      $version | Out-File "$(Build.ArtifactStagingDirectory)\version.txt"
+  displayName: 'Write Version to File'
 
 - task: PublishBuildArtifacts@1
   inputs:
