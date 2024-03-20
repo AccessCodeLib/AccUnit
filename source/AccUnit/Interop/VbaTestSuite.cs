@@ -13,7 +13,7 @@ namespace AccessCodeLib.AccUnit.Interop
         #region COM visibility of inherited members
 
         new string Name { get; }
-        new VBProject ActiveVBProject { get; set; }
+        new VBProject ActiveVBProject { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)] set; }
         new object HostApplication { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)] set; }
         new ITestSummary Summary { get; }
         new ITestResultCollector TestResultCollector { get; set; }
