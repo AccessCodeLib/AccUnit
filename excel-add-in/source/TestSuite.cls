@@ -74,11 +74,11 @@ Private Function IVBATestSuite_Reset(Optional ByVal mode As AccUnit.ResetMode = 
    Set IVBATestSuite_Reset = Me
 End Function
 
-Private Property Set IVBATestSuite_ActiveVBProject(ByVal RHS As VBIDE.VBProject)
+Private Property Set IVBATestSuite_ActiveVBProject(ByVal RHS As Object)
    Set m_TestSuite.ActiveVBProject = RHS
 End Property
 
-Private Property Get IVBATestSuite_ActiveVBProject() As VBIDE.VBProject
+Private Property Get IVBATestSuite_ActiveVBProject() As Object
    Set IVBATestSuite_ActiveVBProject = m_TestSuite.ActiveVBProject
 End Property
 

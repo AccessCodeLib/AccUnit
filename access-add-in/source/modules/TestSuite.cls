@@ -68,11 +68,11 @@ Private Function AccessTestSuite_Reset(Optional ByVal mode As AccUnit.ResetMode 
    Set AccessTestSuite_Reset = Me
 End Function
 
-Private Property Set AccessTestSuite_ActiveVBProject(ByVal RHS As VBIDE.VBProject)
+Private Property Set AccessTestSuite_ActiveVBProject(ByVal RHS As Object)
    Set m_TestSuite.ActiveVBProject = RHS
 End Property
 
-Private Property Get AccessTestSuite_ActiveVBProject() As VBIDE.VBProject
+Private Property Get AccessTestSuite_ActiveVBProject() As Object
    Set AccessTestSuite_ActiveVBProject = m_TestSuite.ActiveVBProject
 End Property
 
