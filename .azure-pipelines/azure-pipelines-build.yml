@@ -44,16 +44,16 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $assemblyPath = "$(Build.SourcesDirectory)\source\AccUnit\bin\Release\AccUnit.dll"
+      $assemblyPath = "$(Build.SourcesDirectory)\source\AccUnit\bin\$(buildConfiguration)\AccUnit.dll"
       $versionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($assemblyPath)
       $version = $versionInfo.FileVersion
       $parts = $version.Split('.')
       $version = "$($parts[0]).$($parts[1]).$($parts[2])"
       Write-Host "Version: $version"
       $version | Out-File "$(Build.ArtifactStagingDirectory)\version.txt"
-      Get-ChildItem -Path "$(Build.SourcesDirectory)\source\AccUnit\bin\Release"
-      Compress-Archive -Path "$(Build.SourcesDirectory)\source\AccUnit\bin\Release\AccessCodeLib.*.dll" -DestinationPath "$(Build.ArtifactStagingDirectory)\AccUnit.$($version).bin.zip"
-      Compress-Archive -Path "$(Build.SourcesDirectory)\source\AccUnit\bin\Release\AccessCodeLib.*.tlb" -DestinationPath "$(Build.ArtifactStagingDirectory)\AccUnit.$($version).bin.zip" -Update
+      Get-ChildItem -Path "$(Build.SourcesDirectory)\source\AccUnit\bin\$(buildConfiguration)"
+      Compress-Archive -Path "$(Build.SourcesDirectory)\source\AccUnit\bin\$(buildConfiguration)\AccessCodeLib.*.dll" -DestinationPath "$(Build.ArtifactStagingDirectory)\AccUnit.$($version).bin.zip"
+      Compress-Archive -Path "$(Build.SourcesDirectory)\source\AccUnit\bin\$(buildConfiguration)\AccessCodeLib.*.tlb" -DestinationPath "$(Build.ArtifactStagingDirectory)\AccUnit.$($version).bin.zip" -Update
   displayName: 'Read Version and create zip file'
 
 - task: PublishBuildArtifacts@1
