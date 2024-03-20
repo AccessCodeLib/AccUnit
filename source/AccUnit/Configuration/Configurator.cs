@@ -15,11 +15,11 @@ namespace AccessCodeLib.AccUnit.Configuration
         void Init(VBProject VBProject);
 
         [ComVisible(true)]
-        void RemoveTestEnvironment(bool RemoveTestModules = false, bool ExportModulesBeforeRemoving = true, VBProject VBProject = null);
-        void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib, bool RemoveIfExists = false, VBProject VBProject = null, object HostApplication = null);
-        void RemoveAccUnitLoaderFactoryModule(VBProject VBProject = null);
-        void ExportTestClasses(string ExportPath = null, VBProject VBProject = null);
-        void ImportTestClasses(string FileNameFilter = null, string ImportPath = null, VBProject VBProject = null);
+        void RemoveTestEnvironment(bool RemoveTestModules = false, bool ExportModulesBeforeRemoving = true, [MarshalAs(UnmanagedType.IDispatch)] object VBProject = null);
+        void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib, bool RemoveIfExists = false, [MarshalAs(UnmanagedType.IDispatch)] object VBProject = null, object HostApplication = null);
+        void RemoveAccUnitLoaderFactoryModule([MarshalAs(UnmanagedType.IDispatch)] object VBProject = null);
+        void ExportTestClasses(string ExportPath = null, [MarshalAs(UnmanagedType.IDispatch)] object VBProject = null);
+        void ImportTestClasses(string FileNameFilter = null, string ImportPath = null, [MarshalAs(UnmanagedType.IDispatch)] object VBProject = null);
 
         IUserSettings UserSettings { get; } 
     }
@@ -42,11 +42,11 @@ namespace AccessCodeLib.AccUnit.Configuration
         }
 
         public void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib = false, bool removeIfExists = false, 
-                    VBProject vbProject = null, object HostApplication = null)
+                    object vbProject = null, object HostApplication = null)
         {
             if (vbProject != null)
             {
-                _vbProject = vbProject;
+                _vbProject = (VBProject)vbProject;
             }
 
             string hostName = "Microsoft Access";
@@ -71,10 +71,10 @@ namespace AccessCodeLib.AccUnit.Configuration
             accUnitLoaderAddInCodeTemplates.EnsureModulesExistIn(_vbProject);
         }
 
-        public void RemoveAccUnitLoaderFactoryModule(VBProject vbProject = null)
+        public void RemoveAccUnitLoaderFactoryModule(object vbProject = null)
         {
             if (vbProject != null)
-                _vbProject = vbProject;
+                _vbProject = (VBProject)vbProject;
 
             var accUnitLoaderAddInCodeTemplates = new AccUnitLoaderAddInCodeTemplates(false);
             accUnitLoaderAddInCodeTemplates.RemoveFromVBProject(_vbProject);
@@ -88,10 +88,10 @@ namespace AccessCodeLib.AccUnit.Configuration
             //TestSuiteCodeTemplates.EnsureModulesExistIn(_vbProject);
         }
 
-        public void RemoveTestEnvironment(bool removeTestModules = false, bool exportModulesBeforeRemoving = true, VBProject vbProject = null)
+        public void RemoveTestEnvironment(bool removeTestModules = false, bool exportModulesBeforeRemoving = true, object vbProject = null)
         {
             if (vbProject != null)
-                _vbProject = vbProject;
+                _vbProject = (VBProject)vbProject;
 
             if (removeTestModules)
             {
@@ -127,10 +127,10 @@ namespace AccessCodeLib.AccUnit.Configuration
             }
         }
 
-        public void ExportTestClasses(string exportPath = null, VBProject vbProject = null)
+        public void ExportTestClasses(string exportPath = null, object vbProject = null)
         {
             if (vbProject != null)
-                _vbProject = vbProject;
+                _vbProject = (VBProject)vbProject;
 
             OfficeApplicationHelper officeApplicationHelper = new VBProjectOnlyApplicatonHelper(_vbProject);
             using (var testClassManager = new TestClassManager(officeApplicationHelper))
@@ -139,7 +139,7 @@ namespace AccessCodeLib.AccUnit.Configuration
             }
         }
 
-        public void ImportTestClasses(string FileNameFilter = null, string importPath = null, VBProject VBProject = null)
+        public void ImportTestClasses(string FileNameFilter = null, string importPath = null, object VBProject = null)
         {
             OfficeApplicationHelper officeApplicationHelper = new VBProjectOnlyApplicatonHelper(_vbProject);
             using (var testClassManager = new TestClassManager(officeApplicationHelper))
