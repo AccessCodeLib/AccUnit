@@ -13,7 +13,7 @@ namespace AccessCodeLib.AccUnit.Interop
         #region COM visibility of inherited members
 
         new string Name { get; }
-        new VBProject ActiveVBProject { get; set; }
+        new object ActiveVBProject { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)] set; }
         new object HostApplication { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)] set; }
         new ITestSummary Summary { get; }
         new ITestResultCollector TestResultCollector { get; set; }
@@ -43,6 +43,12 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId("AccUnit.VBATestSuite")]
     public class VBATestSuite : AccUnit.VBATestSuite, IVBATestSuite, IDisposable
     {
+        object IVBATestSuite.ActiveVBProject
+        {
+            get { return base.ActiveVBProject; }
+            set { base.ActiveVBProject = (VBProject)value; }
+        }
+
         ITestRunner IVBATestSuite.TestRunner
         {
             get

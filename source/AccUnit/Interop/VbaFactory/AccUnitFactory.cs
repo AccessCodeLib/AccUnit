@@ -10,12 +10,12 @@ namespace AccessCodeLib.AccUnit.Interop
     {
         IConstraintBuilder ConstraintBuilder { get; }
         IAssert Assert { get; }
-        ITestRunner TestRunner(VBProject VBProject);
+        ITestRunner TestRunner([MarshalAs(UnmanagedType.IDispatch)] object VBProject);
         ITestBuilder TestBuilder { get; }
-        IConfigurator Configurator(VBProject VBProject = null);
+        IConfigurator Configurator([MarshalAs(UnmanagedType.IDispatch)] object VBProject = null);
         IVBATestSuite VBATestSuite { get; }
         IAccessTestSuite AccessTestSuite { get; }
-        ICodeCoverageTracker CodeCoverageTracker(VBProject VBProject);
+        ICodeCoverageTracker CodeCoverageTracker([MarshalAs(UnmanagedType.IDispatch)] object VBProject);
     }
 
     [ComVisible(true)]
@@ -40,9 +40,9 @@ namespace AccessCodeLib.AccUnit.Interop
             }
         }
 
-        public ITestRunner TestRunner(VBProject vbProject = null)
+        public ITestRunner TestRunner(object vbProject = null)
         {
-            return new TestRunner(vbProject);
+            return new TestRunner((VBProject)vbProject);
         }
 
         public ITestBuilder TestBuilder
@@ -53,9 +53,9 @@ namespace AccessCodeLib.AccUnit.Interop
             }
         }
 
-        public IConfigurator Configurator(VBProject vbProject = null)
+        public IConfigurator Configurator(object vbProject = null)
         {
-            return new Configurator(vbProject);
+            return new Configurator((VBProject)vbProject);
         }
 
         public IVBATestSuite VBATestSuite
@@ -74,9 +74,9 @@ namespace AccessCodeLib.AccUnit.Interop
             }
         }
 
-        public ICodeCoverageTracker CodeCoverageTracker(VBProject vbProject = null)
+        public ICodeCoverageTracker CodeCoverageTracker(object vbProject = null)
         {
-            return new CodeCoverageTracker(vbProject);
+            return new CodeCoverageTracker((VBProject)vbProject);
         }
     }
 }

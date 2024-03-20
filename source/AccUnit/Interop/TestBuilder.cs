@@ -1,6 +1,7 @@
 ﻿using Microsoft.Vbe.Interop;
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 
 namespace AccessCodeLib.AccUnit.Interop
 {
@@ -22,7 +23,7 @@ namespace AccessCodeLib.AccUnit.Interop
         [return: MarshalAs(UnmanagedType.IDispatch)]
         object CreateObject(string className);
 
-        VBProject ActiveVBProject { get; }
+        object ActiveVBProject { [return: MarshalAs(UnmanagedType.IDispatch)] get; }
 
         void RefreshFactoryCodeModule();
         void Dispose();
@@ -34,6 +35,6 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId(Constants.ProgIdLibName + ".TestBuilder")]
     public class TestBuilder : VBATestBuilder, ITestBuilder
     {
-
+        object ITestBuilder.ActiveVBProject => (object)base.ActiveVBProject;
     }
 }
