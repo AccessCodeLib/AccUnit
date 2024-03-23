@@ -221,7 +221,14 @@ End Sub
 
 Private Sub Form_Load()
 
-   CheckAccUnitTypeLibFile CodeVBProject
+   Dim ReferenceFixed As Boolean
+   Dim ReferenceFixedMessage As String
+
+On Error GoTo ErrMissingPath
+   CheckAccUnitTypeLibFile CodeVBProject, ReferenceFixed, ReferenceFixedMessage
+   If Len(ReferenceFixedMessage) Then
+      Me.labInfo.Caption = ReferenceFixedMessage
+   End If
 
    With CurrentApplication
       Me.Caption = .ApplicationTitle & "  " & VBA.ChrW(&H25AA) & "  Version " & .Version
@@ -230,9 +237,7 @@ Private Sub Form_Load()
    LoadIconFromAppFiles
 
    With CurrentAccUnitConfiguration
-On Error GoTo ErrMissingPath
       Me.txtAccUnitDllPath.Value = .AccUnitDllPath
-On Error GoTo 0
    End With
 
    SetEnableMode
@@ -240,6 +245,7 @@ On Error GoTo 0
    Exit Sub
 
 ErrMissingPath:
+   ShowErrorHandlerInfo Err.Description
    Resume Next
 
 End Sub

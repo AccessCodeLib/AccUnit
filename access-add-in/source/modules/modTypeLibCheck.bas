@@ -21,7 +21,9 @@ Public Property Get DefaultAccUnitLibFolder() As String
    DefaultAccUnitLibFolder = FilePath & "lib"
 End Property
 
-Public Sub CheckAccUnitTypeLibFile(Optional ByVal VBProjectRef As VBProject = Nothing, Optional ByRef ReferenceFixed As Boolean)
+Public Sub CheckAccUnitTypeLibFile(Optional ByVal VBProjectRef As VBProject = Nothing, _
+                                   Optional ByRef ReferenceFixed As Boolean, _
+                                   Optional ByRef ReferenceFixedMessage As String)
 
    Dim LibPath As String
    Dim LibFile As String
@@ -39,7 +41,10 @@ Public Sub CheckAccUnitTypeLibFile(Optional ByVal VBProjectRef As VBProject = No
    ExportFile = Not FileTools.FileExists(LibFile)
    If Not ExportFile Then
       If Not CheckAccUnitVersion(LibFile) Then
+         ReferenceFixedMessage = ReferenceFixedMessage & vbNewLine & "New AccUnit dll version exists (please export form add-in)"
+On Error Resume Next
          RemoveAccUnitTlbReference VBProjectRef
+On Error GoTo 0
          ExportFile = True
       End If
    End If
@@ -53,6 +58,11 @@ On Error Resume Next
    CheckMissingReference VBProjectRef, ReferenceFixed
 
    ReferenceFixed = ReferenceFixed Or FileFixed
+   If Len(ReferenceFixedMessage) > 0 Then
+      If Left(ReferenceFixedMessage, 2) = vbNewLine Then
+         ReferenceFixedMessage = Mid(ReferenceFixedMessage, 3)
+      End If
+   End If
 
 End Sub
 
