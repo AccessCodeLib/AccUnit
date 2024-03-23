@@ -28,6 +28,10 @@ Public Sub CheckAccUnitTypeLibFile(Optional ByVal VBProjectRef As VBProject = No
    Dim ExportFile As Boolean
    Dim FileFixed As Boolean
 
+   If VBProjectRef Is Nothing Then
+      Set VBProjectRef = CodeVBProject
+   End If
+
    LibPath = GetAccUnitLibPath(True)
    LibFile = LibPath & ACCUNIT_TYPELIB_FILE
    FileTools.CreateDirectory LibPath
@@ -46,10 +50,6 @@ Public Sub CheckAccUnitTypeLibFile(Optional ByVal VBProjectRef As VBProject = No
    End If
 
 On Error Resume Next
-   If VBProjectRef Is Nothing Then
-      Set VBProjectRef = CodeVBProject
-   End If
-
    CheckMissingReference VBProjectRef, ReferenceFixed
 
    ReferenceFixed = ReferenceFixed Or FileFixed
