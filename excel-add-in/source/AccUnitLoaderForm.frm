@@ -1,12 +1,12 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AccUnitLoaderForm 
    Caption         =   "ACLib - AccUnit Loader"
-   ClientHeight    =   4470
-   ClientLeft      =   120
-   ClientTop       =   465
-   ClientWidth     =   9375
+   ClientHeight    =   4473
+   ClientLeft      =   119
+   ClientTop       =   462
+   ClientWidth     =   9373
    OleObjectBlob   =   "AccUnitLoaderForm.frx":0000
-   StartUpPosition =   2  'Bildschirmmitte
+   StartUpPosition =   2  'CenterScreen
 End
 Attribute VB_Name = "AccUnitLoaderForm"
 Attribute VB_GlobalNameSpace = False
@@ -59,7 +59,14 @@ End Sub
 
 Private Sub UserForm_Initialize()
 
-   CheckAccUnitTypeLibFile CodeVBProject
+   Dim ReferenceFixed As Boolean
+   Dim ReferenceFixedMessage As String
+
+On Error GoTo ErrMissingPath
+   CheckAccUnitTypeLibFile CodeVBProject, ReferenceFixed, ReferenceFixedMessage
+   If Len(ReferenceFixedMessage) Then
+      Me.labInfo.Caption = ReferenceFixedMessage
+   End If
 
    With CurrentApplication
       Me.Caption = .ApplicationTitle & " (Version " & .Version & ")"
@@ -281,8 +288,6 @@ HandleErr:
 
 End Sub
 
-
-
 Private Sub cmdUserSettings_Click()
    AccUnitUserSettings.Show 1
 End Sub
@@ -319,42 +324,3 @@ Private Sub txtAccUnitDllPath_BeforeUpdate(ByVal Cancel As MSForms.ReturnBoolean
    End If
 
 End Sub
-
-Private Sub LoadIconFromAppFiles()
-
-'   Dim IconFilePath As String
-'   Dim IconFileName As String
-'
-'   'Latebindung, damit ApplicationHandler_AppFile-Klasse nicht vorhanden sein muss
-'   Dim AppFile As Object ' ... ApplicationHandler_AppFile
-'
-'   If Val(SysCmd(acSysCmdAccessVer)) <= 9 Then 'Abbruch, da Ac00 sonst abstürzt
-'      Exit Sub
-'   End If
-'
-'   Set AppFile = CurrentApplication.Extensions(EXTENSION_KEY_APPFILE)
-'
-'   'Textbox binden
-'   If Not (AppFile Is Nothing) Then
-'      IconFileName = ACLibIconFileName
-'      IconFilePath = CurrentAccUnitConfiguration.ACLibConfig.ACLibConfigDirectory
-'
-'      If Len(ACLibIconFileName) = 0 Then 'nur Temp-Datei erzeugen
-'         IconFileName = Me.Name & ".ico"
-'         IconFilePath = TempPath
-'      End If
-'
-'      IconFilePath = IconFilePath & IconFileName
-'
-'      If Len(Dir$(IconFilePath)) = 0 Then
-'         If Not AppFile.CreateAppFile(APPFILE_PROPNAME_APPICON, IconFilePath) Then
-'            Exit Sub
-'         End If
-'      End If
-'
-'      WinAPI.Image.SetFormIconFromFile Me, IconFilePath
-'
-'   End If
-   
-End Sub
-
