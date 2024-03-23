@@ -148,7 +148,7 @@ namespace AccessCodeLib.AccUnit.Configuration
             }
         }
 
-        public void ExportTestClasses(string exportDirectory = null)
+        public void ExportTestClasses(string exportDirectory = null, bool exportTestComponents = false)
         {
             if (exportDirectory is null)
             {
@@ -159,6 +159,15 @@ namespace AccessCodeLib.AccUnit.Configuration
             foreach (var testClassInfo in classNames)
             {
                 ExportTestClass(testClassInfo.Name, exportDirectory);
+            }
+
+            if (exportTestComponents)
+            {
+                var components = new TestClassReader(ActiveVBProject).GetTestComponents();
+                foreach (var c in components)
+                {
+                    ExportTestClass(c.Name, exportDirectory);
+                }
             }
         }
 

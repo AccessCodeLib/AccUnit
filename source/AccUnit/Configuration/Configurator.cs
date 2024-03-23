@@ -18,7 +18,7 @@ namespace AccessCodeLib.AccUnit.Configuration
         void RemoveTestEnvironment(bool RemoveTestModules = false, bool ExportModulesBeforeRemoving = true, [MarshalAs(UnmanagedType.IDispatch)] object VBProject = null);
         void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib, bool RemoveIfExists = false, [MarshalAs(UnmanagedType.IDispatch)] object VBProject = null, object HostApplication = null);
         void RemoveAccUnitLoaderFactoryModule([MarshalAs(UnmanagedType.IDispatch)] object VBProject = null);
-        void ExportTestClasses(string ExportPath = null, [MarshalAs(UnmanagedType.IDispatch)] object VBProject = null);
+        void ExportTestClasses(string ExportPath = null, [MarshalAs(UnmanagedType.IDispatch)] object VBProject = null, bool ExportTestComponents = true);
         void ImportTestClasses(string FileNameFilter = null, string ImportPath = null, [MarshalAs(UnmanagedType.IDispatch)] object VBProject = null);
 
         IUserSettings UserSettings { get; } 
@@ -127,7 +127,7 @@ namespace AccessCodeLib.AccUnit.Configuration
             }
         }
 
-        public void ExportTestClasses(string exportPath = null, object vbProject = null)
+        public void ExportTestClasses(string exportPath = null, object vbProject = null, bool exportTestComponents = true)
         {
             if (vbProject != null)
                 _vbProject = (VBProject)vbProject;
@@ -135,7 +135,7 @@ namespace AccessCodeLib.AccUnit.Configuration
             OfficeApplicationHelper officeApplicationHelper = new VBProjectOnlyApplicatonHelper(_vbProject);
             using (var testClassManager = new TestClassManager(officeApplicationHelper))
             {
-                testClassManager.ExportTestClasses(exportPath);
+                testClassManager.ExportTestClasses(exportPath, exportTestComponents);
             }
         }
 
