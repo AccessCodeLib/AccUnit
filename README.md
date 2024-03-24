@@ -15,6 +15,7 @@ For more informations see [Wiki](https://github.com/AccessCodeLib/AccUnit/wiki) 
   * Tests can started by [Access-Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in) or [Excel Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/excel-add-in)
   * Tag filter: `TestSuite.Add(...).Filter("abc,xyz").Run`
   * Test filter: `TestSuite.Add(...).SelectTests("xyz*").Run`
+  * CI/VCS support: start automated test run with AutomatedTestRun / AutomatedTestRunVCS ([How‐to: Run tests with AccUnit‐Loader - CI/VCS support](https://github.com/AccessCodeLib/AccUnit/wiki/How%E2%80%90to:-Run-tests-with-AccUnit%E2%80%90Loader-(Access-add%E2%80%90in)#civcs-support))
 * Write tests
   * Row test available
   * Generate test classes with TestClassGenerator (write TestSuite.TestClassGenerator in VBA immediate window) ([Video](https://accunit.access-codelib.net/videos/examples/NW2-UnitTests.mp4))
