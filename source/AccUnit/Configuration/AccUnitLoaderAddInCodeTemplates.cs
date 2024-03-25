@@ -35,6 +35,15 @@ Public Enum TestReportOutput
    LogFile = 2
 End Enum
 
+#If USE_ACCUNIT_TYPELIB Then
+#Else
+Public Enum StringCompareMode
+    StringCompareMode_BinaryCompare = 0
+    StringCompareMode_TextCompare = 1
+    StringCompareMode_vbNullStringEqualEmptyString = 4
+End Enum
+#End If
+
 Private Const DefaultTestReportOutput As Long = TestReportOutput.DebugPrint
 Private m_AccUnitLoaderFactory As Object
 Private m_CodeCoverageTracker As Object
@@ -135,6 +144,15 @@ Public Enum TestReportOutput
    DebugPrint = 1
    LogFile = 2
 End Enum
+
+#If USE_ACCUNIT_TYPELIB Then
+#Else
+Public Enum StringCompareMode
+    StringCompareMode_BinaryCompare = 0
+    StringCompareMode_TextCompare = 1
+    StringCompareMode_vbNullStringEqualEmptyString = 4
+End Enum
+#End If
 
 Private Const DefaultTestReportOutput As Long = TestReportOutput.DebugPrint
 Private m_AccUnitLoaderFactory As Object
