@@ -188,19 +188,19 @@ End Sub
 
 Public Function AutomatedTestRunVCS() As Variant
 
-    Dim FailedMessage As String
+    Dim ResultMessage As String
     Dim Success As Boolean
 
-    Success = AutomatedTestRun(FailedMessage)
+    Success = AutomatedTestRun(ResultMessage)
     If Success Then
-        AutomatedTestRunVCS = True
+        AutomatedTestRunVCS = "Success: " & ResultMessage
     Else
-        AutomatedTestRunVCS = "Alert: " & FailedMessage
+        AutomatedTestRunVCS = "Alert: " & ResultMessage
     End If
 
 End Function
 
-Public Function AutomatedTestRun(Optional ByRef FailedMessage As String) As Boolean
+Public Function AutomatedTestRun(Optional ByRef ResultMessage As String) As Boolean
 
    Dim Success As Boolean
    Dim TestSummary As AccUnit.ITestSummary
@@ -217,7 +217,11 @@ Public Function AutomatedTestRun(Optional ByRef FailedMessage As String) As Bool
    RemoveTestEnvironment True
 
    If Not Success Then
-      FailedMessage = TestSummary.Failed & " of " & TestSummary.Total & " Tests failed"
+      ResultMessage = TestSummary.Failed & " of " & TestSummary.Total & " tests failed"
+   ElseIf TestSummary.Ignored > 0 Then
+      ResultMessage = TestSummary.Ignored & " of " & TestSummary.Total & " tests ignored"
+   Else
+      ResultMessage = TestSummary.Total & " tests passed"
    End If
 
    AutomatedTestRun = Success
