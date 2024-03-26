@@ -148,11 +148,11 @@ Public Property Get LocalRepositoryPath() As String
    If Len(m_LocalRepositoryPath) = 0 Then
       m_LocalRepositoryPath = GetACLibGlobalProperty(PROPNAME_LOCALREPOSITORYROOT)
       If Len(m_LocalRepositoryPath) > 0 Then
-         If Not DirExists(m_LocalRepositoryPath) Then
+         If Not FileTools.DirExists(m_LocalRepositoryPath) Then
             Err.Raise vbObjectError, "ACLibConfiguration.LocalRepositoryPath", "Das Verzeichnis '" & m_LocalRepositoryPath & "' ist nicht vorhanden!"
             m_LocalRepositoryPath = vbNullString
          End If
-         If Right$(m_LocalRepositoryPath, 1) <> "\" Then
+         If VBA.Right$(m_LocalRepositoryPath, 1) <> "\" Then
             m_LocalRepositoryPath = m_LocalRepositoryPath & "\"
             SetACLibGlobalProperty PROPNAME_LOCALREPOSITORYROOT, m_LocalRepositoryPath
          End If
@@ -165,8 +165,8 @@ End Property
 
 Public Property Let LocalRepositoryPath(ByVal NewPath As String)
 
-   If Len(NewPath) > 0 Then
-      If Right$(NewPath, 1) <> "\" Then
+   If VBA.Len(NewPath) > 0 Then
+      If VBA.Right$(NewPath, 1) <> "\" Then
          NewPath = NewPath & "\"
       End If
    End If
@@ -181,11 +181,11 @@ Public Property Get PrivateRepositoryPath() As String
    If Len(m_PrivateRepositoryPath) = 0 Then
       m_PrivateRepositoryPath = GetACLibGlobalProperty(PROPNAME_PRIVATEREPOSITORYROOT)
       If Len(m_PrivateRepositoryPath) > 0 Then
-         If Not DirExists(m_PrivateRepositoryPath) Then
+         If Not FileTools.DirExists(m_PrivateRepositoryPath) Then
             Err.Raise vbObjectError, "ACLibConfiguration.PrivateRepositoryPath", "Das Verzeichnis '" & m_PrivateRepositoryPath & "' ist nicht vorhanden!"
             m_PrivateRepositoryPath = vbNullString
          End If
-         If Right$(m_PrivateRepositoryPath, 1) <> "\" Then
+         If VBA.Right$(m_PrivateRepositoryPath, 1) <> "\" Then
             m_PrivateRepositoryPath = m_PrivateRepositoryPath & "\"
             SetACLibGlobalProperty PROPNAME_PRIVATEREPOSITORYROOT, m_PrivateRepositoryPath
          End If
@@ -198,8 +198,8 @@ End Property
 
 Public Property Let PrivateRepositoryPath(ByVal NewPath As String)
 
-   If Len(NewPath) > 0 Then
-      If Right$(NewPath, 1) <> "\" Then
+   If VBA.Len(NewPath) > 0 Then
+      If VBA.Right$(NewPath, 1) <> "\" Then
          NewPath = NewPath & "\"
       End If
    End If
@@ -214,7 +214,7 @@ Public Property Get ImportTestsDefaultValue() As Boolean
 '                          2 = true
 
    If m_ImportTestDefaultValue = 0 Then
-      m_ImportTestDefaultValue = Val(GetACLibGlobalProperty(PROPNAME_IMPORTTESTDEFAULTVALUE)) + 1
+      m_ImportTestDefaultValue = VBA.Val(GetACLibGlobalProperty(PROPNAME_IMPORTTESTDEFAULTVALUE)) + 1
    End If
    ImportTestsDefaultValue = (m_ImportTestDefaultValue = 2)
 
@@ -222,15 +222,15 @@ End Property
 
 Public Property Let ImportTestsDefaultValue(ByVal NewValue As Boolean)
 
-   m_ImportTestDefaultValue = Abs(NewValue) + 1
-   SetACLibGlobalProperty PROPNAME_IMPORTTESTDEFAULTVALUE, Abs(NewValue)
+   m_ImportTestDefaultValue = VBA.Abs(NewValue) + 1
+   SetACLibGlobalProperty PROPNAME_IMPORTTESTDEFAULTVALUE, VBA.Abs(NewValue)
 
 End Property
 
 Public Property Get GitHubAuthPersonalAccessToken() As String
 'm_GitHubAuthPersonalAccessToken: vbnullstring = noch nicht abgefragt
 
-   If StrPtr(m_GitHubAuthPersonalAccessToken) = 0 Then
+   If VBA.StrPtr(m_GitHubAuthPersonalAccessToken) = 0 Then
       m_GitHubAuthPersonalAccessToken = GetACLibGlobalProperty(PROPNAME_GITHUBAUTHPERSONALACCESSTOKEN) & ""
    End If
    GitHubAuthPersonalAccessToken = m_GitHubAuthPersonalAccessToken
@@ -249,7 +249,7 @@ Friend Function GetACLibGlobalProperty(ByRef PropertyName As String) As String
    Dim rst As DAO.Recordset
    Dim SelectSql As String
 
-   SelectSql = Replace(SQL_SELECT_PROPERTYVALUE, "[?]", DaoSqlTool.TextToSqlText(PropertyName))
+   SelectSql = VBA.Replace(SQL_SELECT_PROPERTYVALUE, "[?]", DaoSqlTool.TextToSqlText(PropertyName))
    Set rst = ACLibPropertyDb.OpenRecordset(SelectSql)
    If Not rst.EOF Then
       GetACLibGlobalProperty = Nz(rst.Fields(SQL_CONFIG_TABLE_FIELD_PROPVALUE), vbNullString)
@@ -265,7 +265,7 @@ Friend Function SetACLibGlobalProperty(ByRef PropertyName As String, ByRef NewVa
    Dim rst As DAO.Recordset
    Dim SelectSql As String
 
-   SelectSql = Replace(SQL_SELECT_PROPERTYVALUE, "[?]", DaoSqlTool.TextToSqlText(PropertyName))
+   SelectSql = VBA.Replace(SQL_SELECT_PROPERTYVALUE, "[?]", DaoSqlTool.TextToSqlText(PropertyName))
    Set rst = ACLibPropertyDb.OpenRecordset(SelectSql)
    If rst.EOF Then
       rst.AddNew
@@ -310,7 +310,7 @@ Private Function CheckConfigTableDef() As Boolean
 
    Set db = CodeDb
 
-   If Not TableDefExists(ACLIB_CONFIG_TABLEDEFNAME, db) Then
+   If Not DaoTools.TableDefExists(ACLIB_CONFIG_TABLEDEFNAME, db) Then
 
       Set tdf = db.CreateTableDef(ACLIB_CONFIG_TABLEDEFNAME)
       tdf.Connect = ";Database=" & ACLibConfigDatabaseFile
@@ -319,7 +319,7 @@ Private Function CheckConfigTableDef() As Boolean
 
    Else
 
-      ConfigDataPath = Mid$(db.TableDefs(ACLIB_CONFIG_TABLEDEFNAME).Connect, Len(";Database=") + 1)
+      ConfigDataPath = VBA.Mid$(db.TableDefs(ACLIB_CONFIG_TABLEDEFNAME).Connect, Len(";Database=") + 1)
       If ConfigDataPath <> ACLibConfigDatabaseFile Then
          With db.TableDefs(ACLIB_CONFIG_TABLEDEFNAME)
             .Connect = ";Database=" & ACLibConfigDatabaseFile
@@ -339,9 +339,9 @@ Public Property Get ACLibConfigDirectory() As String
 
    Dim strPath As String
 
-   strPath = Environ("Appdata") & "\" & ACLIB_CONFIG_ROOTFOLDERNAME & "\"
-   If Len(Dir$(strPath, vbDirectory)) = 0 Then
-      MkDir strPath
+   strPath = VBA.Environ("Appdata") & "\" & ACLIB_CONFIG_ROOTFOLDERNAME & "\"
+   If VBA.Len(VBA.Dir$(strPath, vbDirectory)) = 0 Then
+      VBA.MkDir strPath
    End If
 
    ACLibConfigDirectory = strPath
@@ -352,7 +352,7 @@ Private Property Get ACLibConfigDirectoryDepr() As String
 
    Dim strPath As String
 
-   strPath = Environ("Appdata") & "\" & ACLIB_CONFIG_ROOTFOLDERNAME_DEPR & "\"
+   strPath = VBA.Environ("Appdata") & "\" & ACLIB_CONFIG_ROOTFOLDERNAME_DEPR & "\"
 
    ACLibConfigDirectoryDepr = strPath
 
@@ -373,8 +373,8 @@ Private Property Get ACLibConfigDatabaseFile() As String
 #End If
 
    strDbFileExt = CodeDb.Name
-   strDbFileExt = Mid$(strDbFileExt, InStrRev(strDbFileExt, "."))
-   If Left$(strDbFileExt, 5) = ".accd" Then
+   strDbFileExt = VBA.Mid$(strDbFileExt, VBA.InStrRev(strDbFileExt, "."))
+   If VBA.Left$(strDbFileExt, 5) = ".accd" Then
       strDbFileExt = ".accdu"
    Else
       strDbFileExt = ".mdt"
@@ -382,17 +382,17 @@ Private Property Get ACLibConfigDatabaseFile() As String
    strDbFile = ACLibConfigDirectory & ACLIB_CONFIG_DATABASENAME & strDbFileExt
 
    ' Try transfer file from deprecated folder path:
-   If Len(Dir$(strDbFile)) = 0 Then
+   If VBA.Len(VBA.Dir$(strDbFile)) = 0 Then
       strDbFileDepr = ACLibConfigDirectoryDepr & ACLIB_CONFIG_DATABASENAME & strDbFileExt
-      If Len(Dir$(strDbFileDepr)) > 0 Then
-         FileCopy strDbFileDepr, strDbFile
+      If VBA.Len(VBA.Dir$(strDbFileDepr)) > 0 Then
+         VBA.FileCopy strDbFileDepr, strDbFile
       End If
    End If
 
-   If Len(Dir$(strDbFile)) = 0 Then
+   If VBA.Len(VBA.Dir$(strDbFile)) = 0 Then
 
       'Datenbank anlegen
-      If CodeDb.Version = "4.0" Then
+      If Application.CodeDb.Version = "4.0" Then
          Set db = DBEngine.CreateDatabase(strDbFile, dbLangGeneral, dbVersion40)
       Else
          Set db = DBEngine.CreateDatabase(strDbFile, dbLangGeneral)

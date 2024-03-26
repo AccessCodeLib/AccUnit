@@ -20,8 +20,6 @@ Option Explicit
 
 Private m_DaoSqlTools As SqlTools
 
-Private Const EXTENSION_KEY As String = "AccUnitConfiguration"
-
 #Const ADODB_EARLYBINDING = 0
 'ADODB wird hier über Late binding eingesetzt, da es nur zum Erstellen der Tabelle genutzt wird
 
@@ -36,79 +34,12 @@ Private m_PrivateRepositoryPath As String ' privates Verzeichnis (nicht in CodeL
 Private m_ImportTestDefaultValue As Long
 Private m_ACLibPropertyDb As DAO.Database
 
-'---------------------------------------------------------------------------------------
-' Standard-Initialisierung von Erweiterungen
-'---------------------------------------------------------------------------------------
-
-Private WithEvents m_ApplicationHandler As ApplicationHandler
-Attribute m_ApplicationHandler.VB_VarHelpID = -1
-
-Public Property Set ApplicationHandlerRef(ByRef ObjRef As ApplicationHandler)
-   Set m_ApplicationHandler = ObjRef
-End Property
-
-Public Property Get ExtensionKey() As String
-   ExtensionKey = EXTENSION_KEY
-End Property
-
-'---------------------------------------------------------------------------------------
-' Standard-Ereignisbehandlung von Erweiterungen
-'---------------------------------------------------------------------------------------
-
-' CheckExtension
-Private Sub m_ApplicationHandler_CheckExtension(ByVal ExtensionKeyToCheck As String, ByRef Exists As Boolean)
-   If ExtensionKeyToCheck = EXTENSION_KEY Then Exists = True
-End Sub
-
-' ExtensionLookup
-Private Sub m_ApplicationHandler_ExtensionLookup(ByVal ExtensionKeyToCheck As String, ByRef ExtensionReference As Object)
-   If ExtensionKeyToCheck = EXTENSION_KEY Then
-      Set ExtensionReference = Me
-   End If
-End Sub
-
-'ExtensionPropertyLookup
-Private Sub m_ApplicationHandler_ExtensionPropertyLookup( _
-                     ByVal ExtensionKeyToCheck As String, ByVal PropertyName As String, _
-                     ByRef ResumeMode As ApplicationHandlerResumeModes, ByRef ResumeMessage As Variant)
-   If ExtensionKeyToCheck = EXTENSION_KEY Then
-      GetExtensionPropertyLookup PropertyName, ResumeMode, ResumeMessage
-   End If
-End Sub
-
-' AfterDispose
-Private Sub m_ApplicationHandler_AfterDispose(ByRef ResumeMode As ApplicationHandlerResumeModes, ByRef ResumeMessage As Variant)
-'=> Referenz in m_ApplicationHandler auf Nothing setzen
-   Set m_ApplicationHandler = Nothing
-End Sub
-
-
-'---------------------------------------------------------------------------------------
-' Ergänzungen für Erweiterung: AccUnitConfiguration
-'---------------------------------------------------------------------------------------
-
-
 Public Property Get ACLibConfig() As ACLibConfiguration
    If m_ACLibConfig Is Nothing Then
       Set m_ACLibConfig = New ACLibConfiguration
    End If
    Set ACLibConfig = m_ACLibConfig
 End Property
-
-Private Sub GetExtensionPropertyLookup(ByVal PropertyName As String, ByRef ResumeMode As ApplicationHandlerResumeModes, ByRef ResumeMessage As Variant)
-
-   ResumeMode = AppResumeMode_Completed
-
-   Select Case PropertyName
-      Case PROPNAME_ACCUNITDLLPATH
-         ResumeMessage = AccUnitDllPath
-
-      Case Else 'Property wurde nicht erkannt
-         ResumeMode = AppResumeMode_Error
-
-   End Select
-
-End Sub
 
 Public Property Get AccUnitDllPathPropertyName() As String
    AccUnitDllPathPropertyName = PROPNAME_ACCUNITDLLPATH

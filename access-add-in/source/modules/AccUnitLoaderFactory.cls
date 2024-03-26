@@ -20,11 +20,6 @@ Option Explicit
 Private m_AccUnitFactory As Object
 Private m_MatchResultCollector As Object
 
-Public Enum TestReportOutput
-   DebugPrint = 1
-   LogFile = 2
-End Enum
-
 Private Sub Class_Initialize()
 '
 End Sub
@@ -42,7 +37,7 @@ On Error Resume Next
 
 End Sub
 
-Private Property Get AccUnitFactory() As AccUnit.AccUnitFactory
+Private Property Get AccUnitFactory() As Object 'AccUnit.AccUnitFactory
    If m_AccUnitFactory Is Nothing Then
       InitAccUnitFactory
    End If
@@ -131,6 +126,10 @@ Private Sub AppendTestResultReporter(ByVal TestSuite As TestSuite, ByVal TestRep
 
    If (TestReportOutputTo And TestReportOutput.LogFile) = TestReportOutput.LogFile Then
       TestSuite.AppendTestResultReporter New LogFileTestResultReporter
+   End If
+
+   If (TestReportOutputTo And TestReportOutput.MsAccessVCS) = TestReportOutput.MsAccessVCS Then
+      TestSuite.AppendTestResultReporter New MsAccessVcsTestResultReporter
    End If
 
 End Sub
