@@ -196,17 +196,18 @@ Public Function AutomatedTestRunVCS() As Variant
     Dim ResultMessage As String
     Dim Success As Boolean
 
-    Success = AutomatedTestRun(ResultMessage, TestReportOutput.DebugPrint + TestReportOutput.MsAccessVCS)
+    Success = AutomatedTestRun(ResultMessage, TestReportOutput.DebugPrint + TestReportOutput.MsAccessVCS, False)
     If Success Then
         AutomatedTestRunVCS = "Success: " & ResultMessage
     Else
-        AutomatedTestRunVCS = "Alert: " & ResultMessage
+        AutomatedTestRunVCS = "Failed: " & ResultMessage
     End If
 
 End Function
 
 Public Function AutomatedTestRun(Optional ByRef ResultMessage As String, _
-                                 Optional ByVal TestReportOutputTo As TestReportOutput = TestReportOutput.LogFile + TestReportOutput.DebugPrint) As Boolean
+                                 Optional ByVal TestReportOutputTo As TestReportOutput = TestReportOutput.LogFile + TestReportOutput.DebugPrint, _
+                                 Optional ByVal SetFocusToImmediateWindowBeforeTestStart As Boolean = True) As Boolean
 
    Dim Success As Boolean
 
@@ -220,9 +221,11 @@ Public Function AutomatedTestRun(Optional ByRef ResultMessage As String, _
    InsertFactoryModule
    ImportTestClasses
 
-   SetFocusToImmediateWindow
+   If SetFocusToImmediateWindowBeforeTestStart Then
+      SetFocusToImmediateWindow
+   End If
 
-   Set TestSummary = AccUnitLoaderFactoryCall.GetAccUnitFactory.TestSuite(LogFile + DebugPrint).AddFromVBProject.Run.Summary
+   Set TestSummary = AccUnitLoaderFactoryCall.GetAccUnitFactory.TestSuite(TestReportOutputTo).AddFromVBProject.Run.Summary
    Success = TestSummary.Success
 
    RemoveTestEnvironment True

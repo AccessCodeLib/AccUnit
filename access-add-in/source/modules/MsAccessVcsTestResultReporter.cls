@@ -21,13 +21,13 @@ Private Const LineSeperatorLen As Long = 40
 Private Const MsAccessVcsAddInFileName As String = "Version Control"
 
 Implements AccUnit.ITestResultReporter
-Private m_VcsLog As Object
+Private m_VCS As Object
 
 Private WithEvents m_TestResultCollector As AccUnit.TestResultCollector
 Attribute m_TestResultCollector.VB_VarHelpID = -1
 
 Private Sub Class_Terminate()
-   Set m_VcsLog = Nothing
+   Set m_VCS = Nothing
 End Sub
 
 Private Property Get ITestResultReporter_TestResultCollector() As AccUnit.ITestResultCollector
@@ -57,6 +57,7 @@ End Sub
 
 Private Sub m_TestResultCollector_TestSuiteFinished(ByVal TestSummary As AccUnit.ITestSummary)
    PrintSummary TestSummary, True
+   PrintToFile String(LineSeperatorLen, "#")
 End Sub
 
 Private Sub m_TestResultCollector_PrintSummary(ByVal TestSummary As AccUnit.ITestSummary, ByVal PrintTestResults As Boolean)
@@ -142,25 +143,24 @@ Private Sub PrintToFile(ParamArray LogItems())
       LineString = LineString & vbTab & LogItems(i)
    Next
 
-   If m_VcsLog Is Nothing Then
-      InitVcsLogger
+   If m_VCS Is Nothing Then
+      InitVcs
    End If
 
 'Interface:
-'Public Sub Add(strText As String, Optional blnPrint As Boolean = True, _
+'Public Sub AddLog(strText As String, Optional blnPrint As Boolean = True, _
 '    Optional blnNextOutputOnNewLine As Boolean = True, _
 '    Optional strColor As String = vbNullString, _
 '    Optional blnBold As Boolean = False, _
 '    Optional blnItalic As Boolean = False)
 '
-   m_VcsLog.Add LineString, False
+   m_VCS.AddLog LineString, False
 
 End Sub
 
-Private Sub InitVcsLogger()
+Private Sub InitVcs()
    Dim VcsRef As Object
-   Set VcsRef = Application.Run(GetVcsAddInRunPath & ".VCS")
-   Set m_VcsLog = VcsRef.Log
+   Set m_VCS = Application.Run(GetVcsAddInRunPath & ".VCS")
 End Sub
 
 Private Function GetVcsAddInRunPath() As String
