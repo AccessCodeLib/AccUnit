@@ -21,7 +21,7 @@ Option Compare Text
 Option Explicit
 Option Private Module
 
-#Const EARLYBINDING = 1
+#Const EARLYBINDING = 0
 
 Private m_CurrentVbProject As Object
 
@@ -76,7 +76,7 @@ Public Property Get CodeVBProject() As Object
 
    Set objCodeVbProject = VBE.ActiveVBProject
    'Prüfen, ob das richtige VbProject gewählt wurde (muss das von CodeDb sein)
-   strCodeDbName = UncPath(CodeDb.Name)
+   strCodeDbName = FileTools.UncPath(CodeDb.Name)
    If objCodeVbProject.FileName <> strCodeDbName Then
       Set objCodeVbProject = Nothing
       For Each Proj In VBE.VBProjects

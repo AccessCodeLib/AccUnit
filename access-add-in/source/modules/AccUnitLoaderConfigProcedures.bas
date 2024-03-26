@@ -2,16 +2,22 @@
 Option Explicit
 Option Compare Text
 
+#Const AccUnitEarlyBinding = 0
+
 ' Integrierte Erweiterungen
 Private Const EXTENSION_KEY_AccUnitConfiguration As String = "AccUnitConfiguration"
 
+#If AccUnitEarlyBinding Then
 Public Property Get CurrentAccUnitConfiguration() As AccUnitConfiguration
-   Set CurrentAccUnitConfiguration = CurrentApplication.Extensions(EXTENSION_KEY_AccUnitConfiguration)
+#Else
+Public Property Get CurrentAccUnitConfiguration() As Object
+#End If
+   Set CurrentAccUnitConfiguration = modApplication.CurrentApplication.Extensions(EXTENSION_KEY_AccUnitConfiguration)
 End Property
 
 Public Sub AddAccUnitTlbReference()
    RemoveAccUnitTlbReference
-   CurrentVbProject.References.AddFromFile CurrentAccUnitConfiguration.AccUnitDllPath & "\AccessCodeLib.AccUnit.tlb"
+   modVbProject.CurrentVbProject.References.AddFromFile modApplication.CurrentAccUnitConfiguration.AccUnitDllPath & "\AccessCodeLib.AccUnit.tlb"
 End Sub
 
 Public Sub RemoveAccUnitTlbReference()
@@ -19,7 +25,7 @@ Public Sub RemoveAccUnitTlbReference()
    Dim ref As VBIDE.Reference
    Dim RefName As String
 
-   With CurrentVbProject
+   With modVbProject.CurrentVbProject
       For Each ref In .References
 On Error Resume Next
          RefName = ref.Name
@@ -39,13 +45,17 @@ End Sub
 
 Public Sub InsertFactoryModule()
 
+#If AccUnitEarlyBinding Then
    Dim Configurator As AccUnit.Configurator
+#Else
+   Dim Configurator As Object
+#End If
 
    With New AccUnitLoaderFactory
       Set Configurator = .Configurator
    End With
 
-   Configurator.InsertAccUnitLoaderFactoryModule AccUnitTlbReferenceExists, True, CurrentVbProject, Application
+   Configurator.InsertAccUnitLoaderFactoryModule AccUnitTlbReferenceExists, True, modVbProject.CurrentVbProject, Application
    Set Configurator = Nothing
 
 On Error Resume Next
@@ -58,7 +68,7 @@ Private Function AccUnitTlbReferenceExists() As Boolean
    Dim ref As VBIDE.Reference
    Dim RefName As String
 
-   For Each ref In CurrentVbProject.References
+   For Each ref In modVbProject.CurrentVbProject.References
 On Error Resume Next
       RefName = ref.Name
       If Err.Number <> 0 Then
@@ -76,13 +86,17 @@ End Function
 
 Public Sub ImportTestClasses()
 
+#If AccUnitEarlyBinding Then
    Dim Configurator As AccUnit.Configurator
+#Else
+   Dim Configurator As Object
+#End If
 
    With New AccUnitLoaderFactory
       Set Configurator = .Configurator
    End With
 
-   Configurator.InsertAccUnitLoaderFactoryModule AccUnitTlbReferenceExists, False, CurrentVbProject, Application
+   Configurator.InsertAccUnitLoaderFactoryModule AccUnitTlbReferenceExists, False, modVbProject.CurrentVbProject, Application
    Configurator.ImportTestClasses
    Set Configurator = Nothing
 
@@ -93,7 +107,11 @@ End Sub
 
 Public Sub ExportTestClasses()
 
+#If AccUnitEarlyBinding Then
    Dim Configurator As AccUnit.Configurator
+#Else
+   Dim Configurator As Object
+#End If
 
    With New AccUnitLoaderFactory
       Set Configurator = .Configurator
@@ -106,13 +124,17 @@ End Sub
 
 Public Sub RemoveTestEnvironment(ByVal RemoveTestModules As Boolean, Optional ByVal SaveTestModules As Boolean = True)
 
+#If AccUnitEarlyBinding Then
    Dim Configurator As AccUnit.Configurator
+#Else
+   Dim Configurator As Object
+#End If
 
    With New AccUnitLoaderFactory
       Set Configurator = .Configurator
    End With
 
-   Configurator.RemoveTestEnvironment RemoveTestModules, SaveTestModules, CurrentVbProject
+   Configurator.RemoveTestEnvironment RemoveTestModules, SaveTestModules, modVbProject.CurrentVbProject
    Set Configurator = Nothing
 
 On Error Resume Next
@@ -191,7 +213,7 @@ Public Function AutomatedTestRunVCS() As Variant
     Dim ResultMessage As String
     Dim Success As Boolean
 
-    Success = AutomatedTestRun(ResultMessage)
+    Success = AutomatedTestRun(ResultMessage, DebugPrint + MsAccessVCS)
     If Success Then
         AutomatedTestRunVCS = "Success: " & ResultMessage
     Else
@@ -200,10 +222,16 @@ Public Function AutomatedTestRunVCS() As Variant
 
 End Function
 
-Public Function AutomatedTestRun(Optional ByRef ResultMessage As String) As Boolean
+Public Function AutomatedTestRun(Optional ByRef ResultMessage As String, _
+                                 Optional ByVal TestReportOutputTo As TestReportOutput = LogFile + DebugPrint) As Boolean
 
    Dim Success As Boolean
+
+#If AccUnitEarlyBinding Then
    Dim TestSummary As AccUnit.ITestSummary
+#Else
+   Dim TestSummary As Object
+#End If
 
    AddAccUnitTlbReference
    InsertFactoryModule

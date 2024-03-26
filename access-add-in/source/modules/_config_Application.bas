@@ -112,11 +112,11 @@ Private Sub SetAppFiles()
 End Sub
 
 Public Sub PrepareForVCS()
-   If TableDefExists("ACLib_ConfigTable") Then
-      CurrentDb.TableDefs.Delete "ACLib_ConfigTable"
+   If DaoTools.TableDefExists("ACLib_ConfigTable") Then
+      Application.CurrentDb.TableDefs.Delete "ACLib_ConfigTable"
       Application.RefreshDatabaseWindow
    End If
-   RemoveAccUnitTlbReference
+   AccUnitLoaderConfigProcedures.RemoveAccUnitTlbReference
 End Sub
 
 Private Sub Test()

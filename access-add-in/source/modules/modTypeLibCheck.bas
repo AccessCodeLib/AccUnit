@@ -10,13 +10,11 @@ Option Compare Text
 Option Explicit
 Option Private Module
 
-#Const EARLYBINDING = 1
-
 Private Const EXTENSION_KEY_APPFILE As String = "AppFile"
 
 Public Property Get DefaultAccUnitLibFolder() As String
    Dim FilePath As String
-   FilePath = CodeVBProject.FileName
+   FilePath = modVbProject.CodeVBProject.FileName
    FilePath = VBA.Left(FilePath, VBA.InStrRev(FilePath, "\"))
    DefaultAccUnitLibFolder = FilePath & "lib"
 End Property
@@ -31,10 +29,11 @@ Public Sub CheckAccUnitTypeLibFile(Optional ByVal VBProjectRef As VBProject = No
    Dim FileFixed As Boolean
 
    If VBProjectRef Is Nothing Then
-      Set VBProjectRef = CodeVBProject
+      Set VBProjectRef = modVbProject.CodeVBProject
    End If
 
-   LibPath = GetAccUnitLibPath(True)
+   LibPath = modTypeLibCheck.GetAccUnitLibPath(True)
+   'LibPath = modTypeLibCheck.DefaultAccUnitLibFolder
    LibFile = LibPath & ACCUNIT_TYPELIB_FILE
    FileTools.CreateDirectory LibPath
 
@@ -71,14 +70,15 @@ Private Function GetAccUnitLibPath(Optional ByVal BackSlashAtEnd As Boolean = Fa
    Dim LibPath As String
    Dim LibFile As String
 
-   With CurrentAccUnitConfiguration
+   'With AccUnitLoaderConfigProcedures.CurrentAccUnitConfiguration
+   With New AccUnitConfiguration
 On Error GoTo ErrMissingPath
       LibPath = .AccUnitDllPath
 On Error GoTo 0
    End With
 
    If VBA.Len(LibPath) = 0 Then
-      LibPath = DefaultAccUnitLibFolder
+      LibPath = modTypeLibCheck.DefaultAccUnitLibFolder
    End If
 
    If BackSlashAtEnd Then
