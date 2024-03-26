@@ -190,20 +190,20 @@ Public Sub ImportAccUnitFiles()
    End With
 
 End Sub
-'
-'Public Function AutomatedTestRunVCS() As Variant
-'
-'    Dim ResultMessage As String
-'    Dim Success As Boolean
-'
-'    Success = AutomatedTestRun(ResultMessage, DebugPrint + MsAccessVCS)
-'    If Success Then
-'        AutomatedTestRunVCS = "Success: " & ResultMessage
-'    Else
-'        AutomatedTestRunVCS = "Alert: " & ResultMessage
-'    End If
-'
-'End Function
+
+Public Function AutomatedTestRunVCS() As Variant
+
+    Dim ResultMessage As String
+    Dim Success As Boolean
+
+    Success = AutomatedTestRun(ResultMessage, TestReportOutput.DebugPrint + TestReportOutput.MsAccessVCS)
+    If Success Then
+        AutomatedTestRunVCS = "Success: " & ResultMessage
+    Else
+        AutomatedTestRunVCS = "Alert: " & ResultMessage
+    End If
+
+End Function
 
 Public Function AutomatedTestRun(Optional ByRef ResultMessage As String, _
                                  Optional ByVal TestReportOutputTo As TestReportOutput = TestReportOutput.LogFile + TestReportOutput.DebugPrint) As Boolean
@@ -216,24 +216,24 @@ Public Function AutomatedTestRun(Optional ByRef ResultMessage As String, _
    Dim TestSummary As Object
 #End If
 
-'   AddAccUnitTlbReference
-'   InsertFactoryModule
-'   ImportTestClasses
-'
-'   SetFocusToImmediateWindow
-'
-'   Set TestSummary = AccUnitLoaderFactoryCall.GetAccUnitFactory.TestSuite(LogFile + DebugPrint).AddFromVBProject.Run.Summary
-'   Success = TestSummary.Success
-'
-'   RemoveTestEnvironment True
-'
-'   If Not Success Then
-'      ResultMessage = TestSummary.Failed & " of " & TestSummary.Total & " tests failed"
-'   ElseIf TestSummary.Ignored > 0 Then
-'      ResultMessage = TestSummary.Ignored & " of " & TestSummary.Total & " tests ignored"
-'   Else
-'      ResultMessage = TestSummary.Total & " tests passed"
-'   End If
+   AddAccUnitTlbReference
+   InsertFactoryModule
+   ImportTestClasses
+
+   SetFocusToImmediateWindow
+
+   Set TestSummary = AccUnitLoaderFactoryCall.GetAccUnitFactory.TestSuite(LogFile + DebugPrint).AddFromVBProject.Run.Summary
+   Success = TestSummary.Success
+
+   RemoveTestEnvironment True
+
+   If Not Success Then
+      ResultMessage = TestSummary.Failed & " of " & TestSummary.Total & " tests failed"
+   ElseIf TestSummary.Ignored > 0 Then
+      ResultMessage = TestSummary.Ignored & " of " & TestSummary.Total & " tests ignored"
+   Else
+      ResultMessage = TestSummary.Total & " tests passed"
+   End If
 
    AutomatedTestRun = Success
 
