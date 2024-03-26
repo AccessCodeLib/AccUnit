@@ -14,7 +14,7 @@ End Property
 
 Public Sub AddAccUnitTlbReference()
    RemoveAccUnitTlbReference
-   modVbProject.CurrentVbProject.References.AddFromFile modApplication.CurrentAccUnitConfiguration.AccUnitDllPath & "\AccessCodeLib.AccUnit.tlb"
+   modVbProject.CurrentVbProject.References.AddFromFile CurrentAccUnitConfiguration.AccUnitDllPath & "\AccessCodeLib.AccUnit.tlb"
 End Sub
 
 Public Sub RemoveAccUnitTlbReference()
