@@ -18,21 +18,15 @@ Attribute VB_Description = "Konfigurationseinstellungen der CodeLib verwalten"
 Option Compare Text
 Option Explicit
 
-Private m_DaoSqlTools As SqlTools
-
 #Const ADODB_EARLYBINDING = 0
-'ADODB wird hier über Late binding eingesetzt, da es nur zum Erstellen der Tabelle genutzt wird
-
-Private m_ACLibConfig As ACLibConfiguration
+'ADODB is used here via late binding, as it is only used to create the table
 
 ' Base config
 Private Const PROPNAME_ACCUNITDLLPATH As String = "AccUnitDllPath"
 
-' Hilfsvariablen
-Private m_AccUnitDllPath As String   ' allg. Repository-Verzeichnis
-Private m_PrivateRepositoryPath As String ' privates Verzeichnis (nicht in CodeLib enthalten)
-Private m_ImportTestDefaultValue As Long
-Private m_ACLibPropertyDb As DAO.Database
+' Auxiliary variables
+Private m_AccUnitDllPath As String
+Private m_ACLibConfig As ACLibConfiguration
 
 Public Property Get ACLibConfig() As ACLibConfiguration
    If m_ACLibConfig Is Nothing Then

@@ -45,7 +45,6 @@ Option Explicit
 Private WithEvents m_ApplicationHandler As ApplicationHandler
 Attribute m_ApplicationHandler.VB_VarHelpID = -1
 Private m_Extension As Collection
-Private m_Disposed As Boolean
 
 '---------------------------------------------------------------------------------------
 ' Property: Extensions
@@ -110,6 +109,6 @@ On Error Resume Next
    Dispose
 End Sub
 
-Private Sub m_ApplicationHandler_AfterDispose(ResumeMode As ApplicationHandlerResumeModes, ResumeMessage As Variant)
+Private Sub m_ApplicationHandler_AfterDispose(ByRef ResumeMode As ApplicationHandlerResumeModes, ByRef ResumeMessage As Variant)
    Dispose
 End Sub

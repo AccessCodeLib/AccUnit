@@ -118,8 +118,6 @@ End Sub
 '---------------------------------------------------------------------------------------
 Public Sub DisposeCurrentApplicationHandler()
 
-   Dim CheckCnt As Long, MaxCnt As Long
-
 On Error Resume Next
 
    If Not m_ApplicationHandler Is Nothing Then

@@ -78,42 +78,42 @@ End Sub
 Private Sub PrintTestDetailSummary(ByRef TestResults() As AccUnit.ITestResult)
 
    Dim i As Long
-   Dim r As Variant ' AccUnit.ITestResult
+   Dim TestResult As Variant ' AccUnit.ITestResult
    Dim LastTestIsRowTest As Boolean
 
-   For Each r In TestResults
+   For Each TestResult In TestResults
       i = i + 1
-      If TypeOf r Is AccUnit.TestResultCollection Then
+      If TypeOf TestResult Is AccUnit.TestResultCollection Then
          If i > 1 Then Debug.Print String(20, "-")
-         Debug.Print CStr(i), r.Test.FullName & ":", r.Result, "..."
+         Debug.Print CStr(i), TestResult.Test.FullName & ":", TestResult.Result, "..."
          Debug.Print String(3, " ") & String(17, "-")
-         PrintSubResults i, r
+         PrintSubResults i, TestResult
          LastTestIsRowTest = True
       Else
          If LastTestIsRowTest Then
             LastTestIsRowTest = False
             If i > 1 Then Debug.Print String(20, "-")
          End If
-         Debug.Print CStr(i), r.Test.FullName & ":", r.Result, r.Message
+         Debug.Print CStr(i), TestResult.Test.FullName & ":", TestResult.Result, TestResult.Message
       End If
    Next
 
 End Sub
 
-Private Sub PrintSubResults(ByVal mainId As String, ByVal resultCol As AccUnit.TestResultCollection)
+Private Sub PrintSubResults(ByVal MainId As String, ByVal ResultCol As AccUnit.TestResultCollection)
 
    Dim i As Long
-   Dim r As AccUnit.ITestResult
+   Dim TestResult As AccUnit.ITestResult
    Dim ResultID As String
 
-   For i = 1 To resultCol.Count
-      Set r = resultCol.Item(i - 1)
-      ResultID = mainId & "." & i
-      If TypeOf r Is AccUnit.ITestResultSummary Then
-         Debug.Print String(3, " ") & ResultID, r.Test.FullName & "-", r.Result, "..."
-         PrintSubResults ResultID, r
+   For i = 1 To ResultCol.Count
+      Set TestResult = ResultCol.Item(i - 1)
+      ResultID = MainId & "." & i
+      If TypeOf TestResult Is AccUnit.ITestResultSummary Then
+         Debug.Print String(3, " ") & ResultID, TestResult.Test.FullName & "-", TestResult.Result, "..."
+         PrintSubResults ResultID, TestResult
       Else
-         Debug.Print String(3, " ") & ResultID, r.Test.FullName & "-", r.Result, r.Message
+         Debug.Print String(3, " ") & ResultID, TestResult.Test.FullName & "-", TestResult.Result, TestResult.Message
       End If
    Next
 

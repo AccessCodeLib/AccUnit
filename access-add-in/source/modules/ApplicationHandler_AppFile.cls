@@ -135,7 +135,7 @@ End Property
 '
 '---------------------------------------------------------------------------------------
 Public Function CreateAppFile(ByVal FileID As String, ByVal FileName As String, _
-                     Optional ByVal ExtFilterFieldName As String, Optional ExtFilterValue As Variant) As Boolean
+                     Optional ByVal ExtFilterFieldName As String, Optional ByVal ExtFilterValue As Variant) As Boolean
 
    Dim Binfile() As Byte
    Dim FieldSize As Long

@@ -97,18 +97,18 @@ End Sub
 '----------------------------------------------------------------------------
 ' Hilfsfunktion zum Speichern von Dateien in die lokale AppFile-Tabelle
 '----------------------------------------------------------------------------
-Private Sub SetAppFiles()
-
-   Dim accFileName As Variant
-
-  ' Call CurrentApplication.Extensions("AppFile").SaveAppFile("AppIcon", CodeProject.Path & "\" & APPLICATION_ICONFILE)
-   With modApplication.CurrentApplication.Extensions("AppFile")
-      For Each accFileName In AccUnitLoaderConfigProcedures.AccUnitFileNames
-         .SaveAppFile accFileName, CodeProject.Path & "\lib\" & accFileName, True
-      Next
-   End With
-
-End Sub
+'Private Sub SetAppFiles()
+'
+'   Dim accFileName As Variant
+'
+'  ' Call CurrentApplication.Extensions("AppFile").SaveAppFile("AppIcon", CodeProject.Path & "\" & APPLICATION_ICONFILE)
+'   With modApplication.CurrentApplication.Extensions("AppFile")
+'      For Each accFileName In AccUnitLoaderConfigProcedures.AccUnitFileNames
+'         .SaveAppFile accFileName, CodeProject.Path & "\lib\" & accFileName, True
+'      Next
+'   End With
+'
+'End Sub
 
 Public Sub PrepareForVCS()
    If DaoTools.TableDefExists("ACLib_ConfigTable") Then
@@ -117,11 +117,3 @@ Public Sub PrepareForVCS()
    End If
    AccUnitLoaderConfigProcedures.RemoveAccUnitTlbReference
 End Sub
-
-'Private Sub Test()
-'With New WinApiFileInfo
-'   Debug.Print VBA.FileDateTime(CodeProject.Path & "\lib\x86\AccessCodeLib.AccUnit.tlb")
-'   Debug.Print "Version:", .GetFileVersion(CodeProject.Path & "\lib\x86\AccessCodeLib.AccUnit.tlb")
-'End With
-'
-'End Sub

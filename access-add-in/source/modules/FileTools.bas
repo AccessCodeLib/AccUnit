@@ -848,7 +848,7 @@ End Function
 '     Boolean
 '
 '---------------------------------------------------------------------------------------
-Public Function OpenFile(ByVal FilePath As String, Optional ByVal ReadOnlyMode As Boolean = False) As Boolean
+Public Function OpenFile(ByVal FilePath As String) As Boolean
 
    Const FileNotFoundErrorTextTemplate As String = "File '{FilePath}' not found."
    Dim FileNotFoundErrorText As String
@@ -907,7 +907,6 @@ Private Function ShellExecute(ByVal FilePath As String, _
    Const FileNotFoundErrorTextTemplate As String = "File '{FilePath}' not found."
    Dim FileNotFoundErrorText As String
    Dim Ret As Long
-   Dim Directory As String
    Dim DeskWin As Long
 
    If Len(FilePath) = 0 Then
@@ -930,14 +929,6 @@ Private Function ShellExecute(ByVal FilePath As String, _
    ElseIf Ret = SE_ERR_NOASSOC Then
       ShellExecute = False
       Exit Function
-' ToDo: "Öffnen mit"-Dialog verwenden:
-      'Wenn die Dateierweiterung noch nicht bekannt ist...
-      'wird der "Öffnen mit..."-Dialog angezeigt.
-'      Directory = Space$(260)
-'      Ret = GetSystemDirectory(Directory, Len(Directory))
-'      Directory = Left$(Directory, Ret)
-'      Call ShellExecuteA(DeskWin, vbNullString, "RUNDLL32.EXE", "shell32.dll, OpenAs_RunDLL " & _
-'         FilePath, Directory, vbNormalFocus)
    End If
 
    ShellExecute = True

@@ -68,7 +68,6 @@ End Sub
 Private Function GetAccUnitLibPath(Optional ByVal BackSlashAtEnd As Boolean = False) As String
 
    Dim LibPath As String
-   Dim LibFile As String
 
    'With AccUnitLoaderConfigProcedures.CurrentAccUnitConfiguration
    With New AccUnitConfiguration
