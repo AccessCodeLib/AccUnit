@@ -26,6 +26,7 @@ Begin Form
         0x212b6fd80e9ce340
     End
     Caption ="ACLib - AccUnit Loader"
+    OnOpen ="[Event Procedure]"
     DatasheetFontName ="Calibri"
     OnTimer ="[Event Procedure]"
     OnLoad ="[Event Procedure]"

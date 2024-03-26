@@ -5,6 +5,12 @@
 Option Compare Text
 Option Explicit
 
+Public Enum TestReportOutput
+   DebugPrint = 1
+   LogFile = 2
+   MsAccessVCS = 1024
+End Enum
+
 Public Enum CodeLibElementType  'angelehnt an Enum vbext_ComponentType
    clet_StdModule = 1           ' = vbext_ComponentType.vbext_ct_StdModule
    clet_ClassModule = 2         ' = vbext_ComponentType.vbext_ct_ClassModule

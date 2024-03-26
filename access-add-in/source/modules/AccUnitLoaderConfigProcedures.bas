@@ -4,15 +4,12 @@ Option Compare Text
 
 #Const AccUnitEarlyBinding = 0
 
-' Integrierte Erweiterungen
-Private Const EXTENSION_KEY_AccUnitConfiguration As String = "AccUnitConfiguration"
-
 #If AccUnitEarlyBinding Then
 Public Property Get CurrentAccUnitConfiguration() As AccUnitConfiguration
 #Else
 Public Property Get CurrentAccUnitConfiguration() As Object
 #End If
-   Set CurrentAccUnitConfiguration = modApplication.CurrentApplication.Extensions(EXTENSION_KEY_AccUnitConfiguration)
+   Set CurrentAccUnitConfiguration = New AccUnitConfiguration
 End Property
 
 Public Sub AddAccUnitTlbReference()
@@ -162,7 +159,7 @@ On Error GoTo HandleErr
 
    DllPath = CurrentAccUnitConfiguration.AccUnitDllPath
 
-   With CurrentApplication.Extensions("AppFile")
+   With modApplication.CurrentApplication.Extensions("AppFile")
       For Each accFileName In AccUnitFileNames
          .CreateAppFile accFileName, DllPath & accFileName
       Next
@@ -186,7 +183,7 @@ Public Sub ImportAccUnitFiles()
 
    DllPath = CurrentAccUnitConfiguration.AccUnitDllPath
 
-   With CurrentApplication.Extensions("AppFile")
+   With modApplication.CurrentApplication.Extensions("AppFile")
       For Each accFileName In AccUnitFileNames
          .SaveAppFile accFileName, DllPath & accFileName, True
       Next
@@ -194,36 +191,22 @@ Public Sub ImportAccUnitFiles()
 
 End Sub
 '
-'Private Function GetCurrentVbaBitSystem() As Long
+'Public Function AutomatedTestRunVCS() As Variant
 '
-'#If VBA7 Then
-'#If Win64 Then
-'      GetCurrentVbaBitSystem = 64
-'#Else
-'      GetCurrentVbaBitSystem = 32
-'#End If
-'#Else
-'      GetCurrentVbaBitSystem = 32
-'#End If
+'    Dim ResultMessage As String
+'    Dim Success As Boolean
 '
-'End Sub
-
-Public Function AutomatedTestRunVCS() As Variant
-
-    Dim ResultMessage As String
-    Dim Success As Boolean
-
-    Success = AutomatedTestRun(ResultMessage, DebugPrint + MsAccessVCS)
-    If Success Then
-        AutomatedTestRunVCS = "Success: " & ResultMessage
-    Else
-        AutomatedTestRunVCS = "Alert: " & ResultMessage
-    End If
-
-End Function
+'    Success = AutomatedTestRun(ResultMessage, DebugPrint + MsAccessVCS)
+'    If Success Then
+'        AutomatedTestRunVCS = "Success: " & ResultMessage
+'    Else
+'        AutomatedTestRunVCS = "Alert: " & ResultMessage
+'    End If
+'
+'End Function
 
 Public Function AutomatedTestRun(Optional ByRef ResultMessage As String, _
-                                 Optional ByVal TestReportOutputTo As TestReportOutput = LogFile + DebugPrint) As Boolean
+                                 Optional ByVal TestReportOutputTo As TestReportOutput = TestReportOutput.LogFile + TestReportOutput.DebugPrint) As Boolean
 
    Dim Success As Boolean
 
@@ -233,24 +216,24 @@ Public Function AutomatedTestRun(Optional ByRef ResultMessage As String, _
    Dim TestSummary As Object
 #End If
 
-   AddAccUnitTlbReference
-   InsertFactoryModule
-   ImportTestClasses
-
-   SetFocusToImmediateWindow
-
-   Set TestSummary = GetAccUnitFactory.TestSuite(LogFile + DebugPrint).AddFromVBProject.Run.Summary
-   Success = TestSummary.Success
-
-   RemoveTestEnvironment True
-
-   If Not Success Then
-      ResultMessage = TestSummary.Failed & " of " & TestSummary.Total & " tests failed"
-   ElseIf TestSummary.Ignored > 0 Then
-      ResultMessage = TestSummary.Ignored & " of " & TestSummary.Total & " tests ignored"
-   Else
-      ResultMessage = TestSummary.Total & " tests passed"
-   End If
+'   AddAccUnitTlbReference
+'   InsertFactoryModule
+'   ImportTestClasses
+'
+'   SetFocusToImmediateWindow
+'
+'   Set TestSummary = AccUnitLoaderFactoryCall.GetAccUnitFactory.TestSuite(LogFile + DebugPrint).AddFromVBProject.Run.Summary
+'   Success = TestSummary.Success
+'
+'   RemoveTestEnvironment True
+'
+'   If Not Success Then
+'      ResultMessage = TestSummary.Failed & " of " & TestSummary.Total & " tests failed"
+'   ElseIf TestSummary.Ignored > 0 Then
+'      ResultMessage = TestSummary.Ignored & " of " & TestSummary.Total & " tests ignored"
+'   Else
+'      ResultMessage = TestSummary.Total & " tests passed"
+'   End If
 
    AutomatedTestRun = Success
 
@@ -259,7 +242,7 @@ End Function
 Private Sub SetFocusToImmediateWindow()
    Dim VbeWin As VBIDE.Window
    For Each VbeWin In Application.VBE.Windows
-      If VbeWin.Type = vbext_wt_Immediate Then
+      If VbeWin.Type = VBIDE.vbext_WindowType.vbext_wt_Immediate Then
          If Not VbeWin.Visible Then
             VbeWin.Visible = True
          End If

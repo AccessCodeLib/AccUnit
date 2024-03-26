@@ -20,12 +20,6 @@ Option Explicit
 Private m_AccUnitFactory As Object
 Private m_MatchResultCollector As Object
 
-Public Enum TestReportOutput
-   DebugPrint = 1
-   LogFile = 2
-   MsAccessVCS = 1024
-End Enum
-
 Private Sub Class_Initialize()
 '
 End Sub

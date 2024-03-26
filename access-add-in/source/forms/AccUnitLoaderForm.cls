@@ -221,14 +221,7 @@ End Sub
 
 Private Sub Form_Load()
 
-   Dim ReferenceFixed As Boolean
-   Dim ReferenceFixedMessage As String
-
 On Error GoTo ErrMissingPath
-   CheckAccUnitTypeLibFile CodeVBProject, ReferenceFixed, ReferenceFixedMessage
-   If Len(ReferenceFixedMessage) Then
-      Me.labInfo.Caption = ReferenceFixedMessage
-   End If
 
    With CurrentApplication
       Me.Caption = .ApplicationTitle & "  " & VBA.ChrW(&H25AA) & "  Version " & .Version
@@ -247,6 +240,18 @@ On Error GoTo ErrMissingPath
 ErrMissingPath:
    ShowErrorHandlerInfo Err.Description
    Resume Next
+
+End Sub
+
+Private Sub Form_Open(Cancel As Integer)
+
+   Dim ReferenceFixed As Boolean
+   Dim ReferenceFixedMessage As String
+
+   modTypeLibCheck.CheckAccUnitTypeLibFile modVbProject.CodeVBProject, ReferenceFixed, ReferenceFixedMessage
+   If VBA.Len(ReferenceFixedMessage) Then
+      Me.labInfo.Caption = ReferenceFixedMessage
+   End If
 
 End Sub
 

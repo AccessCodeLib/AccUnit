@@ -6,6 +6,6 @@ Option Compare Text
 Option Explicit
 
 Public Function GetAccUnitFactory() As AccUnitLoaderFactory
-   CheckAccUnitTypeLibFile CodeVBProject
+   modTypeLibCheck.CheckAccUnitTypeLibFile modVbProject.CodeVBProject
    Set GetAccUnitFactory = New AccUnitLoaderFactory
 End Function

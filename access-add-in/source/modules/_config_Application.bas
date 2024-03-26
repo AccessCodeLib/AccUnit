@@ -18,7 +18,7 @@ Option Compare Text
 Option Explicit
 
 'Version number
-Private Const APPLICATION_VERSION As String = "0.9.402.240323"
+Private Const APPLICATION_VERSION As String = "0.9.601.240326"
 
 Private Const APPLICATION_NAME As String = "ACLib AccUnit Loader"
 Private Const APPLICATION_FULLNAME As String = "Access Code Library - AccUnit Loader"
@@ -29,7 +29,7 @@ Public Const ACCUNIT_DLL_FILE As String = "AccessCodeLib.AccUnit.dll"
 
 Private Const APPLICATION_STARTFORMNAME As String = "AccUnitLoaderForm"
 
-Private m_Extensions As ApplicationHandler_ExtensionCollection
+Private m_Extensions As Object 'ApplicationHandler_ExtensionCollection
 
 '---------------------------------------------------------------------------------------
 ' Sub: InitConfig
@@ -44,7 +44,7 @@ Private m_Extensions As ApplicationHandler_ExtensionCollection
 ' </remarks>
 '**/
 '---------------------------------------------------------------------------------------
-Public Sub InitConfig(Optional ByRef CurrentAppHandlerRef As ApplicationHandler = Nothing)
+Public Sub InitConfig(Optional ByRef CurrentAppHandlerRef As Object = Nothing)
 
 '----------------------------------------------------------------------------
 ' Globale Variablen einstellen
@@ -55,13 +55,13 @@ Public Sub InitConfig(Optional ByRef CurrentAppHandlerRef As ApplicationHandler 
 ' Anwendungsinstanz einstellen
 '
    If CurrentAppHandlerRef Is Nothing Then
-      Set CurrentAppHandlerRef = CurrentApplication
+      Set CurrentAppHandlerRef = modApplication.CurrentApplication
    End If
 
    With CurrentAppHandlerRef
 
       'Zur Sicherheit AccDb einstellen
-      Set .AppDb = CodeDb 'muss auf CodeDb zeigen,
+      Set .AppDb = Application.CodeDb 'muss auf CodeDb zeigen,
                           'da diese Anwendung als Add-In verwendet wird
 
       'Anwendungsname
@@ -84,7 +84,6 @@ Public Sub InitConfig(Optional ByRef CurrentAppHandlerRef As ApplicationHandler 
    With m_Extensions
       Set .ApplicationHandler = CurrentAppHandlerRef
       .Add New ApplicationHandler_AppFile
-      .Add New AccUnitConfiguration
    End With
 
 End Sub
@@ -103,8 +102,8 @@ Private Sub SetAppFiles()
    Dim accFileName As Variant
 
   ' Call CurrentApplication.Extensions("AppFile").SaveAppFile("AppIcon", CodeProject.Path & "\" & APPLICATION_ICONFILE)
-   With CurrentApplication.Extensions("AppFile")
-      For Each accFileName In AccUnitFileNames
+   With modApplication.CurrentApplication.Extensions("AppFile")
+      For Each accFileName In AccUnitLoaderConfigProcedures.AccUnitFileNames
          .SaveAppFile accFileName, CodeProject.Path & "\lib\" & accFileName, True
       Next
    End With
@@ -119,10 +118,10 @@ Public Sub PrepareForVCS()
    AccUnitLoaderConfigProcedures.RemoveAccUnitTlbReference
 End Sub
 
-Private Sub Test()
-With New WinApiFileInfo
-   Debug.Print VBA.FileDateTime(CodeProject.Path & "\lib\x86\AccessCodeLib.AccUnit.tlb")
-   Debug.Print "Version:", .GetFileVersion(CodeProject.Path & "\lib\x86\AccessCodeLib.AccUnit.tlb")
-End With
-
-End Sub
+'Private Sub Test()
+'With New WinApiFileInfo
+'   Debug.Print VBA.FileDateTime(CodeProject.Path & "\lib\x86\AccessCodeLib.AccUnit.tlb")
+'   Debug.Print "Version:", .GetFileVersion(CodeProject.Path & "\lib\x86\AccessCodeLib.AccUnit.tlb")
+'End With
+'
+'End Sub
