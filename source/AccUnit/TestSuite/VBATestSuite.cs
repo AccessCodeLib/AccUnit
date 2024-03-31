@@ -351,34 +351,37 @@ namespace AccessCodeLib.AccUnit
             {
                 if (_testRunner is null)
                 {
-                    _testRunner = new VbaTestRunner(_testBuilder.ActiveVBProject);
+                    SetNewTestRunner(new VbaTestRunner(_testBuilder.ActiveVBProject));
                 }
                 return _testRunner;
             }
             set
             {
-                if (_testRunner != null)
-                    try
-                    {
-                        _testRunner.TestStarted -= OnTestSuiteTestStarted;
-                        _testRunner.TestFinished -= OnTestSuiteTestFinished;
-                        _testRunner.TestFixtureFinished -= OnTestSuiteTestFixtureFinished;
-                        _testRunner.TestFixtureStarted -= OnTestSuiteTestFixtureStarted;
-                        //_testRunner.TestSuiteStarted -= OnTestSuiteStarted;
-                        //_testRunner.TestSuiteFinished -= OnTestSuiteFinished;
-                    }
-                    catch (Exception ex) { Logger.Log(ex); }
+                SetNewTestRunner(value);
+            }
+        }
 
-                _testRunner = value;
-                if (_testRunner != null)
+        private void SetNewTestRunner(ITestRunner testRunner)
+        {
+            if (_testRunner != null)
+            {
+                try
                 {
-                    _testRunner.TestStarted += OnTestSuiteTestStarted;
-                    _testRunner.TestFinished += OnTestSuiteTestFinished;
-                    _testRunner.TestFixtureFinished += OnTestSuiteTestFixtureFinished;
-                    _testRunner.TestFixtureStarted += OnTestSuiteTestFixtureStarted;
-                    //_testRunner.TestSuiteStarted += OnTestSuiteStarted;
-                    //_testRunner.TestSuiteFinished += OnTestSuiteFinished;
+                    _testRunner.TestStarted -= OnTestSuiteTestStarted;
+                    _testRunner.TestFinished -= OnTestSuiteTestFinished;
+                    _testRunner.TestFixtureFinished -= OnTestSuiteTestFixtureFinished;
+                    _testRunner.TestFixtureStarted -= OnTestSuiteTestFixtureStarted;
                 }
+                catch (Exception ex) { Logger.Log(ex); }
+            }
+
+            _testRunner = testRunner;
+            if (_testRunner != null)
+            {
+                _testRunner.TestStarted += OnTestSuiteTestStarted;
+                _testRunner.TestFinished += OnTestSuiteTestFinished;
+                _testRunner.TestFixtureFinished += OnTestSuiteTestFixtureFinished;
+                _testRunner.TestFixtureStarted += OnTestSuiteTestFixtureStarted;
             }
         }
 

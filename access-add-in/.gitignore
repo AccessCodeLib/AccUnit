@@ -17,3 +17,5 @@ vcs-index.json
 # Ignore any dotenv files (used for external database connections)
 *.env
 
+# test folder, ...
+LocalTest*

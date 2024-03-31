@@ -10,3 +10,4 @@
 /access-add-in/Tests
 *.laccdb
 /excel-add-in/lib
+*.zip

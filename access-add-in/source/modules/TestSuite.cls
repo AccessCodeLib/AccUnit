@@ -120,7 +120,7 @@ Public Property Get Name() As String
 End Property
 
 Private Property Get AccessTestSuite_Name() As String
-   AccessTestSuite_Name = "TestSuite"
+   AccessTestSuite_Name = "AccUnitLoader TestSuite"
 End Property
 
 Public Function Run() As AccUnit.IAccessTestSuite

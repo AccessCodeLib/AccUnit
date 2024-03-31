@@ -71,26 +71,6 @@ Public Property Get ConstraintBuilder() As Object ' AccUnit.ConstraintBuilder
     Set ConstraintBuilder = AccUnitFactory.ConstraintBuilder
 End Property
 
-Private Property Get TestRunner() As Object 'AccUnit.TestRunner
-
-    SetErrorTrappingToBreakOnUnhandledErrors
-    Set TestRunner = AccUnitFactory.TestRunner(CurrentVbProject)
-
-End Property
-
-Private Sub SetErrorTrappingToBreakOnUnhandledErrors()
-'BreakOnAllErrors = 0,
-'BreakInClassModule = 1,
-'BreakOnUnhandledErrors = 2
-   Const ErrorTrappingOptionName As String = "Error Trapping"
-
-   If Application.GetOption(ErrorTrappingOptionName) <> 2 Then
-      Application.SetOption ErrorTrappingOptionName, 2
-      Debug.Print "Error Trapping auf BreakOnUnhandledErrors (2) umgestellt"
-   End If
-
-End Sub
-
 Public Property Get Configurator() As Object 'AccUnit.Configurator
    Set Configurator = AccUnitFactory.Configurator(CurrentVbProject)
 End Property
@@ -101,7 +81,6 @@ Public Property Get AccessTestSuite() As Object 'AccUnit.AccessTestSuite
    With AccessTestSuite
       Set .HostApplication = Application
       Set .ActiveVBProject = CurrentVbProject
-      Set .TestRunner = TestRunner
    End With
 
 End Property
@@ -136,4 +115,8 @@ End Sub
 
 Public Property Get CodeCoverageTracker() As Object 'AccUnit.CodeCoverageTracker
     Set CodeCoverageTracker = AccUnitFactory.CodeCoverageTracker(CurrentVbProject)
+End Property
+
+Public Property Get ErrorTrappingObserver() As AccUnit.AccessErrorTrappingObserver
+    Set ErrorTrappingObserver = AccUnitFactory.AccessErrorTrappingObserver(Application)
 End Property
