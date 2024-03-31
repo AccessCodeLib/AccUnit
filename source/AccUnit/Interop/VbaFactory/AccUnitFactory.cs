@@ -16,6 +16,7 @@ namespace AccessCodeLib.AccUnit.Interop
         IVBATestSuite VBATestSuite { get; }
         IAccessTestSuite AccessTestSuite { get; }
         ICodeCoverageTracker CodeCoverageTracker([MarshalAs(UnmanagedType.IDispatch)] object VBProject);
+        IErrorTrappingObserver AccessErrorTrappingObserver([MarshalAs(UnmanagedType.IDispatch)] object HostApplication);
     }
 
     [ComVisible(true)]
@@ -77,6 +78,11 @@ namespace AccessCodeLib.AccUnit.Interop
         public ICodeCoverageTracker CodeCoverageTracker(object vbProject = null)
         {
             return new CodeCoverageTracker((VBProject)vbProject);
+        }
+
+        public IErrorTrappingObserver AccessErrorTrappingObserver(object HostApplication)
+        {
+            return new AccessErrorTrappingObserver(HostApplication);
         }
     }
 }
