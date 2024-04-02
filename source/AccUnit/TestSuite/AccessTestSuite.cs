@@ -2,7 +2,6 @@
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
-using Microsoft.Vbe.Interop;
 using System;
 
 namespace AccessCodeLib.AccUnit
@@ -13,13 +12,12 @@ namespace AccessCodeLib.AccUnit
 
     public class AccessTestSuite : VBATestSuite, IAccessTestSuite
     {
-        public AccessTestSuite(AccessApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
+        public AccessTestSuite(IAccessApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
                 : base(applicationHelper, testBuilder, testRunner, testSummaryFormatter)
         {
-            _applicationHelper = applicationHelper;
         }
 
-        private AccessApplicationHelper _applicationHelper;
+        protected new IAccessApplicationHelper ApplicationHelper => (IAccessApplicationHelper)base.ApplicationHelper;
        
         protected override void OnTestStarted(TestClassMemberInfo testClassMemberInfo)
         {
@@ -34,7 +32,7 @@ namespace AccessCodeLib.AccUnit
 
         private DaoTransactionManager CreateTransactionManager()
         {
-            return new DaoTransactionManager(_applicationHelper.Application);
+            return new DaoTransactionManager(ApplicationHelper.Application);
         }
 
         private ITransactionManager TransactionManager { get; set; }
@@ -62,7 +60,7 @@ namespace AccessCodeLib.AccUnit
         {
             using (new BlockLogger())
             {
-                using (new AccessErrorTrappingObserver(_applicationHelper, ErrorTrapping))
+                using (new AccessErrorTrappingObserver(ApplicationHelper, ErrorTrapping))
                 {
                     base.Run();
                 }
@@ -79,7 +77,7 @@ namespace AccessCodeLib.AccUnit
 
         public bool CheckAccessApplicationIsCompiled()
         {
-            return _applicationHelper.IsCompiled;
+            return ApplicationHelper.IsCompiled;
         }
 
         public new IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData)
@@ -119,13 +117,12 @@ namespace AccessCodeLib.AccUnit
 
         private void DisposeManagedResources()
         {
-            TransactionManager = null;
-            _applicationHelper = null;
+            // ...
         }
 
         void DisposeUnmanagedResources()
         {
-            //_hostApplication = null;
+            TransactionManager = null;
         }
 
         ~AccessTestSuite()

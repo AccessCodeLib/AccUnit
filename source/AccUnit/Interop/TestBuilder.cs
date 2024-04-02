@@ -29,7 +29,7 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId(Constants.ProgIdLibName + ".TestBuilder")]
     public class TestBuilder : VBATestBuilder, ITestBuilder
     {
-        public TestBuilder(OfficeApplicationHelper applicationHelper)
+        public TestBuilder(IOfficeApplicationHelper applicationHelper)
                 : base(applicationHelper)
         {
         }

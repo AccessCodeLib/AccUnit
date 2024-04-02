@@ -101,7 +101,7 @@ namespace AccessCodeLib.AccUnit
         }
 
 
-        public static void DisposeTestMessageBox(OfficeApplicationHelper officeApplicationHelper)
+        public static void DisposeTestMessageBox(IOfficeApplicationHelper officeApplicationHelper)
         {
             try
             {

@@ -1,5 +1,6 @@
 ﻿using AccessCodeLib.AccUnit.Interfaces;
 using Microsoft.Vbe.Interop;
+using System;
 using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit.Interfaces
@@ -10,7 +11,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
         //object HostApplication { get; }
     }
 
-    public interface ITestBuilder
+    public interface ITestBuilder : IDisposable  
     {
         bool TestToolsActivated { get; }
         object CreateObject(string className);
@@ -19,7 +20,6 @@ namespace AccessCodeLib.AccUnit.Interfaces
         IEnumerable<object> CreateTests(IEnumerable<TestClassInfo> testClasses);
         IEnumerable<object> CreateTestsFromVBProject();
         void DeleteFactoryCodeModule();
-        void Dispose();
         void RefreshFactoryCodeModule();
     }
 

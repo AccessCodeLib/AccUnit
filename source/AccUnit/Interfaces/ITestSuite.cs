@@ -18,7 +18,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
         ITestSummary Summary { get; }
 
         [ComVisible(false)]
-        ITestRunner TestRunner { get; set; }
+        ITestRunner TestRunner { get; }
 
         [ComVisible(false)]
         ITestResultCollector TestResultCollector { get; set; }

@@ -10,23 +10,21 @@ using System.Linq;
 
 namespace AccessCodeLib.AccUnit
 {
-    public class VBATestBuilder : IDisposable, IVBATestBuilder
+    public class VBATestBuilder : IVBATestBuilder, IDisposable
     {
         private VBProject _vbProject;
 
-        public VBATestBuilder(OfficeApplicationHelper applicationHelper)
+        public VBATestBuilder(IOfficeApplicationHelper applicationHelper)
         {
             OfficeApplicationHelper = applicationHelper;
             _vbProject = applicationHelper.CurrentVBProject;
             TestClassFactoryManager = new TestClassFactoryManager(_vbProject, new TestClassReader(_vbProject));
         }
 
-        public event NullReferenceEventHandler OfficeApplicationReferenceRequired;
-
         private TestClassFactoryManager TestClassFactoryManager { get; set; }
         public bool TestToolsActivated { get; private set; }
 
-        internal OfficeApplicationHelper OfficeApplicationHelper { get; private set; }
+        internal IOfficeApplicationHelper OfficeApplicationHelper { get; private set; }
 
         private void CheckTestManagerInterface(object testToAdd, ITestClassMemberList memberFilter)
         {

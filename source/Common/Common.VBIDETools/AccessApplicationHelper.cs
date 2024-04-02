@@ -5,7 +5,7 @@ using System;
 
 namespace AccessCodeLib.Common.VBIDETools
 {
-    public interface IAccessApplicationHelper
+    public interface IAccessApplicationHelper : IOfficeApplicationHelper
     {
         CurrentDb CurrentDb { get; }
         DBEngine DBEngine { get; }

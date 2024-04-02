@@ -43,7 +43,7 @@ namespace AccessCodeLib.AccUnit.Interop
     public class AccessTestSuite : AccUnit.AccessTestSuite, IAccessTestSuite
     {
 
-        public AccessTestSuite(AccessApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
+        public AccessTestSuite(IAccessApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
                 : base(applicationHelper, testBuilder, testRunner, testSummaryFormatter)
         {
         }

@@ -103,10 +103,6 @@ namespace AccessCodeLib.AccUnit.Interop
         {
             get
             {
-                /*
-                var officeApplicationHelper = ComTools.GetTypeForComObject(HostApplication, "Access.Application") != null
-                                                ? new AccessApplicationHelper(HostApplication) : new OfficeApplicationHelper(HostApplication);
-                */
                 return new TestClassGenerator(ActiveVBProject);
             }
         }
@@ -121,13 +117,5 @@ namespace AccessCodeLib.AccUnit.Interop
         {
             return new TestResultCollector(this);
         }
-
-        //protected override void RaiseTraceMessage(string text)
-        //{
-        //    TestTraceMessage?.Invoke(text, CodeCoverageTracker as ICodeCoverageTracker);
-        //}
-
-        //public new event TestTraceMessageEventHandler TestTraceMessage;
-
     }
 }
