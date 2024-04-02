@@ -76,17 +76,10 @@ Public Property Get Configurator() As Object 'AccUnit.Configurator
 End Property
 
 Public Property Get AccessTestSuite() As Object 'AccUnit.AccessTestSuite
-   Set AccessTestSuite = AccUnitFactory.AccessTestSuite
-
-   With AccessTestSuite
-      Set .HostApplication = Application
-      Set .ActiveVBProject = CurrentVbProject
-   End With
-
+   Set AccessTestSuite = AccUnitFactory.AccessTestSuite(Application)
 End Property
 
-Public Property Get TestSuite(Optional ByVal TestReportOutputTo As TestReportOutput = TestReportOutput.DebugPrint) As TestSuite
-
+Public Property Get TestSuite(Optional ByVal TestReportOutputTo As TestReportOutput = TestReportOutput.DebugPrint) As Object 'TestSuite
    Set TestSuite = New TestSuite
 
    With TestSuite

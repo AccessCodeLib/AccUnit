@@ -16,7 +16,7 @@ namespace AccessCodeLib.AccUnit.Interop
         new string Name { get; }
         new ITestSummary Summary { get; }
         new ITestResultCollector TestResultCollector { get; set; }
-        new ITestRunner TestRunner { get; set; }
+        new ITestRunner TestRunner { get; }
 
         new IVBATestSuite AppendTestResultReporter(ITestResultReporter reporter);
         new IVBATestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
@@ -52,10 +52,6 @@ namespace AccessCodeLib.AccUnit.Interop
             get
             {
                 return base.TestRunner as ITestRunner;
-            }
-            set
-            {
-                base.TestRunner = value;
             }
         }
 

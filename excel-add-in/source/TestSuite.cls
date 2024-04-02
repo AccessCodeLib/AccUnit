@@ -74,14 +74,6 @@ Private Function IVBATestSuite_Reset(Optional ByVal mode As AccUnit.ResetMode = 
    Set IVBATestSuite_Reset = Me
 End Function
 
-Private Property Set IVBATestSuite_ActiveVBProject(ByVal RHS As Object)
-   Set m_TestSuite.ActiveVBProject = RHS
-End Property
-
-Private Property Get IVBATestSuite_ActiveVBProject() As Object
-   Set IVBATestSuite_ActiveVBProject = m_TestSuite.ActiveVBProject
-End Property
-
 Public Function Add(ByVal testToAdd As Object) As TestSuite
    m_TestSuite.Add testToAdd
    Set Add = Me
@@ -112,14 +104,6 @@ End Function
 Private Sub IVBATestSuite_Dispose()
    m_TestSuite.Dispose
 End Sub
-
-Private Property Set IVBATestSuite_HostApplication(ByVal RHS As Object)
-   Set m_TestSuite.HostApplication = RHS
-End Property
-
-Private Property Get IVBATestSuite_HostApplication() As Object
-   Set IVBATestSuite_HostApplication = m_TestSuite.HostApplication
-End Property
 
 Private Property Get Name() As String
    Name = "TestSuite"
@@ -170,10 +154,6 @@ End Property
 
 Private Property Get IVBATestSuite_TestResultCollector() As AccUnit.ITestResultCollector
    Set IVBATestSuite_TestResultCollector = m_TestSuite.TestResultCollector
-End Property
-
-Private Property Set IVBATestSuite_TestRunner(ByVal RHS As AccUnit.ITestRunner)
-   Set m_TestSuite.TestRunner = RHS
 End Property
 
 Private Property Get IVBATestSuite_TestRunner() As AccUnit.ITestRunner

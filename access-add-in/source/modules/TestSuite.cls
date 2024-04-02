@@ -68,14 +68,6 @@ Private Function AccessTestSuite_Reset(Optional ByVal mode As AccUnit.ResetMode 
    Set AccessTestSuite_Reset = Me
 End Function
 
-Private Property Set AccessTestSuite_ActiveVBProject(ByVal RHS As Object)
-   Set m_TestSuite.ActiveVBProject = RHS
-End Property
-
-Private Property Get AccessTestSuite_ActiveVBProject() As Object
-   Set AccessTestSuite_ActiveVBProject = m_TestSuite.ActiveVBProject
-End Property
-
 Public Function Add(ByVal testToAdd As Object) As TestSuite
    m_TestSuite.Add testToAdd
    Set Add = Me
@@ -106,14 +98,6 @@ End Function
 Private Sub AccessTestSuite_Dispose()
    m_TestSuite.Dispose
 End Sub
-
-Private Property Set AccessTestSuite_HostApplication(ByVal RHS As Object)
-   Set m_TestSuite.HostApplication = RHS
-End Property
-
-Private Property Get AccessTestSuite_HostApplication() As Object
-   Set AccessTestSuite_HostApplication = m_TestSuite.HostApplication
-End Property
 
 Public Property Get Name() As String
    Name = "TestSuite"
@@ -169,10 +153,6 @@ End Property
 Private Function AccessTestSuite_AppendTestResultReporter(ByVal Reporter As AccUnit.ITestResultReporter) As AccUnit.IAccessTestSuite
    AppendTestResultReporter Reporter
 End Function
-
-Private Property Set AccessTestSuite_TestRunner(ByVal RHS As AccUnit.ITestRunner)
-   Set m_TestSuite.TestRunner = RHS
-End Property
 
 Private Property Get AccessTestSuite_TestRunner() As AccUnit.ITestRunner
    Set AccessTestSuite_TestRunner = m_TestSuite.TestRunner
