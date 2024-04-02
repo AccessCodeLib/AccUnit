@@ -15,7 +15,7 @@ namespace AccessCodeLib.AccUnit
         public const string IgoreMarker = "~~~";
     }
 
-    internal class TestSummaryFormatter : ITestSummaryFormatter
+    public class TestSummaryFormatter : ITestSummaryFormatter
     {
         private const int DefaultSeparatorMaxLength = 0;
         private const char DefaultSeparatorChar = '-';

@@ -1,4 +1,7 @@
-﻿using AccessCodeLib.Common.TestHelpers.AccessRelated;
+﻿using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.AccUnit.TestRunner;
+using AccessCodeLib.Common.TestHelpers.AccessRelated;
+using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
@@ -14,10 +17,7 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
         public void TestBuilderTestsSetup()
         {
             _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper();
-            _testBuilder = new Interop.TestBuilder
-            {
-                HostApplication = _accessTestHelper.Application
-            };
+            _testBuilder = new Interop.TestBuilder(new AccessApplicationHelper(_accessTestHelper.Application));
         }
 
         [TearDown]
@@ -58,10 +58,14 @@ public Function GetCheckValue() as long
    GetCheckValue = m_Check
 End Function
 ");
-            var testSuite = new AccessTestSuite
-            {
-                HostApplication = _accessTestHelper.Application
-            };
+
+            var applicationHelper = new AccessApplicationHelper(_accessTestHelper.Application);
+
+            var testSuite = new AccessTestSuite(applicationHelper, 
+                                                new VBATestBuilder(applicationHelper), 
+                                                new VbaTestRunner(applicationHelper.CurrentVBProject),
+                                                new TestSummaryFormatter(TestSuiteUserSettings.Current.SeparatorMaxLength, TestSuiteUserSettings.Current.SeparatorChar)
+                                                );
 
             var methods = new string[] { "TestMethod1", "TestMethod3" };
             var summary = testSuite.AddByClassName("clsAccUnitTestClass").Select(methods).Run().Summary;
@@ -91,11 +95,13 @@ public Function GetCheckValue() as long
    GetCheckValue = m_Check
 End Function
 ");
-            var testSuite = new Interop.AccessTestSuite
-            {
-                HostApplication = _accessTestHelper.Application
-            };
-
+            var applicationHelper = new AccessApplicationHelper(_accessTestHelper.Application);
+            var testSuite = new Interop.AccessTestSuite(applicationHelper,
+                                                        new Interop.TestBuilder(applicationHelper),
+                                                        new Interop.TestRunner(applicationHelper.CurrentVBProject),
+                                                        new TestSummaryFormatter(TestSuiteUserSettings.Current.SeparatorMaxLength, TestSuiteUserSettings.Current.SeparatorChar)
+                                                        );
+           
             var testNameFilter = "TestMethod[13]";
             var summary = testSuite.AddByClassName("clsAccUnitTestClass").SelectTests(testNameFilter).Run().Summary;
 

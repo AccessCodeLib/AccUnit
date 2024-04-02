@@ -9,8 +9,5 @@ namespace AccessCodeLib.AccUnit.Interfaces
         IVBATestSuite AddByClassName(string className);
         IVBATestSuite AddFromVBProject();
         TestClassMemberInfo GetTestClassMemberInfo(string classname, string membername);
-
-        VBProject ActiveVBProject { get; set; }
-        object HostApplication { get; set; }
     }
 }

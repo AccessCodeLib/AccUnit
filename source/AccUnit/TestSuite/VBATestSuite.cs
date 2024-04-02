@@ -3,21 +3,35 @@ using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.AccUnit.TestRunner;
 using AccessCodeLib.Common.Tools.Logging;
+using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Printing;
 
 namespace AccessCodeLib.AccUnit
 {
     public class VBATestSuite : IVBATestSuite, IDisposable, ITestData
     {
+        /*
         public VBATestSuite()
         {
             using (new BlockLogger())
             {
                 SummaryFormatter = new TestSummaryFormatter(TestSuiteUserSettings.Current.SeparatorMaxLength, TestSuiteUserSettings.Current.SeparatorChar);
                 _testBuilder.OfficeApplicationReferenceRequired += OnOfficeApplicationReferenceRequired;
+            }
+        }
+        */
+        public VBATestSuite(OfficeApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
+        {
+            using (new BlockLogger())
+            {
+                _applicationHelper = applicationHelper;
+                _testBuilder = testBuilder;
+                SetNewTestRunner(testRunner);
+                SummaryFormatter = testSummaryFormatter;
             }
         }
 
@@ -28,10 +42,10 @@ namespace AccessCodeLib.AccUnit
 
         public IEnumerable<ITestFixture> TestFixtures { get { return _testFixtures; } }
 
+        private readonly OfficeApplicationHelper _applicationHelper;
         private ITestSummary _testSummary;
-        private TestSummaryFormatter SummaryFormatter { get; set; }
-        private readonly VBATestBuilder _testBuilder = new VBATestBuilder();
-
+        private ITestSummaryFormatter SummaryFormatter { get; set; }
+        private readonly IVBATestBuilder _testBuilder;
         private ITestRunner _testRunner;
 
         private ITestResultCollector _testResultCollector;
@@ -281,7 +295,7 @@ namespace AccessCodeLib.AccUnit
                 try
                 {
                     if (_testBuilder.TestToolsActivated)
-                        TestMessageBox.DisposeTestMessageBox(_testBuilder.OfficeApplicationHelper);
+                        TestMessageBox.DisposeTestMessageBox(_applicationHelper);
                 }
                 catch (Exception ex)
                 {
@@ -349,10 +363,6 @@ namespace AccessCodeLib.AccUnit
         {
             get
             {
-                if (_testRunner is null)
-                {
-                    SetNewTestRunner(new VbaTestRunner(_testBuilder.ActiveVBProject));
-                }
                 return _testRunner;
             }
             set
@@ -397,9 +407,9 @@ namespace AccessCodeLib.AccUnit
                 _accUnitTests.Add(testToAdd as ITestManagerBridge);
 
             var fixture = new TestFixture(testToAdd);
-            fixture.FillFixtureTags(_testBuilder.ActiveVBProject);
-            fixture.FillInstanceMembers(_testBuilder.ActiveVBProject);
-            fixture.FillTestListFromTestClassInstance(_testBuilder.ActiveVBProject);
+            fixture.FillFixtureTags(_applicationHelper.CurrentVBProject);
+            fixture.FillInstanceMembers(_applicationHelper.CurrentVBProject);
+            fixture.FillTestListFromTestClassInstance(_applicationHelper.CurrentVBProject);
             _testFixtures.Add(fixture);
         }
 
@@ -439,22 +449,6 @@ namespace AccessCodeLib.AccUnit
         {
             _filterTags = new List<ITestItemTag>(filterTags);
             return this;
-        }
-
-        private object _hostApplication;
-        public virtual object HostApplication
-        {
-            get { return _hostApplication; }
-            set
-            {
-                _hostApplication = value;
-                _testBuilder.HostApplication = _hostApplication;
-            }
-        }
-
-        private void OnOfficeApplicationReferenceRequired(ref object returnedObject)
-        {
-            returnedObject = HostApplication;
         }
 
         ITestSuite ITestSuite.Reset(ResetMode mode) { return Reset(mode); }
@@ -536,17 +530,11 @@ namespace AccessCodeLib.AccUnit
 
         #endregion
 
-        private VBProject _activeVbProject;
         public virtual VBProject ActiveVBProject
         {
             get
             {
-                return _activeVbProject;
-            }
-            set
-            {
-                _activeVbProject = value;
-                _testBuilder.ActiveVBProject = _activeVbProject;
+                return _applicationHelper.CurrentVBProject;
             }
         }
 
@@ -579,12 +567,12 @@ namespace AccessCodeLib.AccUnit
         void DisposeManagedResources()
         {
             _testBuilder.Dispose();
+            _applicationHelper.Dispose();
         }
 
         void DisposeUnmanagedResources()
         {
             _testResultCollector = null;
-            _activeVbProject = null;
         }
 
         public void Dispose()

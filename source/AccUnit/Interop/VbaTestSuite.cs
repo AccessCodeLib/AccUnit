@@ -1,4 +1,5 @@
 ﻿using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,6 @@ namespace AccessCodeLib.AccUnit.Interop
         #region COM visibility of inherited members
 
         new string Name { get; }
-        new object ActiveVBProject { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)] set; }
-        new object HostApplication { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)] set; }
         new ITestSummary Summary { get; }
         new ITestResultCollector TestResultCollector { get; set; }
         new ITestRunner TestRunner { get; set; }
@@ -43,10 +42,9 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId("AccUnit.VBATestSuite")]
     public class VBATestSuite : AccUnit.VBATestSuite, IVBATestSuite, IDisposable
     {
-        object IVBATestSuite.ActiveVBProject
+        public VBATestSuite(OfficeApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
+               : base(applicationHelper, testBuilder, testRunner, testSummaryFormatter)
         {
-            get { return base.ActiveVBProject; }
-            set { base.ActiveVBProject = (VBProject)value; }
         }
 
         ITestRunner IVBATestSuite.TestRunner

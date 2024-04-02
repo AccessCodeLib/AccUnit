@@ -16,10 +16,7 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
         public void AccessClientTestsSetup()
         {
             _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper();
-            _testBuilder = new Interop.TestBuilder
-            {
-                HostApplication = _accessTestHelper.Application
-            };
+            _testBuilder = new Interop.TestBuilder(new AccessApplicationHelper(_accessTestHelper.Application));
         }
 
         [TearDown]
@@ -62,7 +59,7 @@ End Function
             var invocHelper = new InvocationHelper(fixture);
 
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner((VBProject)_testBuilder.ActiveVBProject);
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
             testRunner.Run(fixture, memberName, result, "abc");
 
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
@@ -93,7 +90,7 @@ End Function
 
             var rowGenerator = new TestRowGenerator
             {
-                ActiveVBProject = (VBProject)_testBuilder.ActiveVBProject,
+                ActiveVBProject = _accessTestHelper.ActiveVBProject,
                 TestName = fixtureName
             };
             var testRows = rowGenerator.GetTestRows(memberName);
@@ -103,7 +100,7 @@ End Function
             var invocHelper = new InvocationHelper(fixture);
 
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner((VBProject)_testBuilder.ActiveVBProject);
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
             testRunner.Run(fixture, "TestMethod1", result, "ABC");
 
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
@@ -135,7 +132,7 @@ End Function
 
             var rowGenerator = new TestRowGenerator
             {
-                ActiveVBProject = (VBProject)_testBuilder.ActiveVBProject,
+                ActiveVBProject = _accessTestHelper.ActiveVBProject,
                 TestName = fixtureName
             };
             var testRows = rowGenerator.GetTestRows(memberName);
@@ -145,7 +142,7 @@ End Function
             var invocHelper = new InvocationHelper(fixture);
 
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner((VBProject)_testBuilder.ActiveVBProject);
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
             testRunner.Run(fixture, "TestMethod1", result, "ABC");
 
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
@@ -177,7 +174,7 @@ End Function
 
             var rowGenerator = new TestRowGenerator
             {
-                ActiveVBProject = (VBProject)_testBuilder.ActiveVBProject,
+                ActiveVBProject = _accessTestHelper.ActiveVBProject,
                 TestName = fixtureName
             };
             var testRows = rowGenerator.GetTestRows(memberName);
@@ -187,7 +184,7 @@ End Function
             var invocHelper = new InvocationHelper(fixture);
 
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner((VBProject)_testBuilder.ActiveVBProject);
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
             testRunner.Run(fixture, "TestMethod1", result, "ABC,XYZ");
 
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
@@ -220,7 +217,7 @@ End Function
 
             var rowGenerator = new TestRowGenerator
             {
-                ActiveVBProject = (VBProject)_testBuilder.ActiveVBProject,
+                ActiveVBProject = _accessTestHelper.ActiveVBProject,
                 TestName = fixtureName
             };
             var testRows = rowGenerator.GetTestRows(memberName);
@@ -230,7 +227,7 @@ End Function
             var invocHelper = new InvocationHelper(fixture);
 
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner((VBProject)_testBuilder.ActiveVBProject);
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
             testRunner.Run(fixture, "TestMethod1", result, "ABC,XYZ");
 
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
@@ -283,11 +280,13 @@ public Function GetCheckValue() as long
 End Function
 ");
 
-            var testSuite = new VBATestSuite
-            {
-                ActiveVBProject = (VBProject)_testBuilder.ActiveVBProject,
-                HostApplication = _accessTestHelper.Application
-            };
+            var applicationHelper = new AccessApplicationHelper(_accessTestHelper.Application); 
+            var testSuite = new VBATestSuite(
+                    applicationHelper, 
+                    new VBATestBuilder(applicationHelper), 
+                    new Interop.TestRunner(applicationHelper.CurrentVBProject), 
+                    new TestSummaryFormatter(TestSuiteUserSettings.Current.SeparatorMaxLength, TestSuiteUserSettings.Current.SeparatorChar)
+                    );
 
             var tagFilters = tagFilter.Split(',');
             var tagList = new List<ITestItemTag>();

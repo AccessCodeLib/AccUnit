@@ -16,10 +16,8 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
         public void TestBuilderTestsSetup()
         {
             _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper();
-            _testBuilder = new Interop.TestBuilder
-            {
-                HostApplication = _accessTestHelper.Application
-            };
+            var applicationHelper = new AccessApplicationHelper(_accessTestHelper.Application); 
+            _testBuilder = new Interop.TestBuilder(applicationHelper);
         }
 
         [TearDown]

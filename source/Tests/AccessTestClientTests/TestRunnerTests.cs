@@ -16,10 +16,8 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
         public void TestBuilderTestsSetup()
         {
             _accessTestHelper = AccessClientTestHelper.NewAccessTestHelper();
-            _testBuilder = new Interop.TestBuilder
-            {
-                HostApplication = _accessTestHelper.Application
-            };
+            var applictionHelper = new AccessApplicationHelper(_accessTestHelper.Application);
+            _testBuilder = new Interop.TestBuilder(applictionHelper);
         }
 
         [TearDown]
@@ -49,7 +47,7 @@ End Function
             var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
             Assert.That(fixture, Is.Not.Null);
 
-            var testRunner = new Interop.TestRunner((VBProject)_testBuilder.ActiveVBProject);
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
             testRunner.Run(fixture, "TestMethod");
 
         }
@@ -72,7 +70,7 @@ End Function
             Assert.That(fixture, Is.Not.Null);
 
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner((VBProject)_testBuilder.ActiveVBProject);
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
             testRunner.Run(fixture, "*", result);
 
             var actual = result.Results.Count();
@@ -110,7 +108,7 @@ End Function
             Assert.That(fixture, Is.Not.Null);
 
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner((VBProject)_testBuilder.ActiveVBProject);
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
             testRunner.Run(fixture, "*", result);
 
             var resultCount = result.Results.Count();
@@ -153,7 +151,7 @@ End Function
             var name = Microsoft.VisualBasic.Information.TypeName(fixture);
             Assert.That(name, Is.EqualTo("clsAccUnitTestClass"));
 
-            var vbc = ((VBProject)_testBuilder.ActiveVBProject).VBComponents.Item(name);
+            var vbc = _accessTestHelper.ActiveVBProject.VBComponents.Item(name);
             var codeReader = new CodeModuleReader(vbc.CodeModule);
 
             var publicMembers = codeReader.Members.FindAll(true).FindAll(m => m.ProcKind == vbext_ProcKind.vbext_pk_Proc);
@@ -195,12 +193,12 @@ End Function
             var memberName = "TestMethod1";
             var fixtureMember = new TestFixtureMember(memberName);
 
-            var testClassReader = new TestClassReader((VBProject)_testBuilder.ActiveVBProject);
+            var testClassReader = new TestClassReader(_accessTestHelper.ActiveVBProject);
             fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
 
             var rowGenerator = new TestRowGenerator
             {
-                ActiveVBProject = (VBProject)_testBuilder.ActiveVBProject,
+                ActiveVBProject = _accessTestHelper.ActiveVBProject,
                 TestName = fixtureName
             };
             var testRows = rowGenerator.GetTestRows(memberName);
@@ -213,7 +211,7 @@ End Function
             Assert.That(returnValue, Is.EqualTo(123));
 
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner((VBProject)_testBuilder.ActiveVBProject);
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
             testRunner.Run(fixture, "TestMethod1", result);
 
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
@@ -247,12 +245,12 @@ End Function
             var memberName = "TestMethod1";
             var fixtureMember = new TestFixtureMember(memberName);
 
-            var testClassReader = new TestClassReader((VBProject)_testBuilder.ActiveVBProject);
+            var testClassReader = new TestClassReader(_accessTestHelper.ActiveVBProject);
             fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
 
             var rowGenerator = new TestRowGenerator
             {
-                ActiveVBProject = (VBProject)_testBuilder.ActiveVBProject,
+                ActiveVBProject = _accessTestHelper.ActiveVBProject,
                 TestName = fixtureName
             };
             var testRows = rowGenerator.GetTestRows(memberName);
@@ -262,7 +260,7 @@ End Function
             Assert.That(returnValue, Is.EqualTo(1));
 
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner((VBProject)_testBuilder.ActiveVBProject);
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
             testRunner.Run(fixture, "TestMethod1", result);
 
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
@@ -292,12 +290,12 @@ End Function
             var memberName = "TestMethod1";
             var fixtureMember = new TestFixtureMember(memberName);
 
-            var testClassReader = new TestClassReader((VBProject)_testBuilder.ActiveVBProject);
+            var testClassReader = new TestClassReader(_accessTestHelper.ActiveVBProject);
             fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
 
             var rowGenerator = new TestRowGenerator
             {
-                ActiveVBProject = (VBProject)_testBuilder.ActiveVBProject,
+                ActiveVBProject = _accessTestHelper.ActiveVBProject,
                 TestName = fixtureName
             };
             var testRows = rowGenerator.GetTestRows(memberName);
@@ -306,7 +304,7 @@ End Function
             Assert.That(returnValue, Is.EqualTo(1));
 
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner((VBProject)_testBuilder.ActiveVBProject);
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
             testRunner.Run(fixture, "TestMethod1", result);
 
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
@@ -336,14 +334,14 @@ End Function
             var memberName = "TestMethod1";
             var fixtureMember = new TestFixtureMember(memberName);
 
-            var testClassReader = new TestClassReader((VBProject)_testBuilder.ActiveVBProject);
+            var testClassReader = new TestClassReader(_accessTestHelper.ActiveVBProject);
             fixtureMember.TestClassMemberInfo = testClassReader.GetTestClassMemberInfo(fixtureName, memberName);
 
             Assert.That(fixtureMember.TestClassMemberInfo.TestRows[0].IgnoreInfo.Ignore, Is.True);
 
             var rowGenerator = new TestRowGenerator
             {
-                ActiveVBProject = (VBProject)_testBuilder.ActiveVBProject,
+                ActiveVBProject = _accessTestHelper.ActiveVBProject,
                 TestName = fixtureName
             };
             var testRows = rowGenerator.GetTestRows(memberName);
@@ -353,7 +351,7 @@ End Function
             var invocHelper = new InvocationHelper(fixture);
 
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner((VBProject)_testBuilder.ActiveVBProject);
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
             testRunner.Run(fixture, "TestMethod1", result);
 
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
@@ -384,7 +382,7 @@ End Function
             var invocHelper = new InvocationHelper(fixture);
 
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner((VBProject)_testBuilder.ActiveVBProject);
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
             testRunner.Run(fixture, "TestMethod2", result);
 
             var valueAfterTestRun = invocHelper.InvokeMethod("GetCheckValue");
@@ -416,13 +414,13 @@ End Function
             var fixtureName = "clsAccUnitTestClass";
             var testFixtureInstance = _testBuilder.CreateTest(fixtureName);
             var testFixture = new AccessCodeLib.AccUnit.TestFixture(testFixtureInstance);
-            testFixture.FillInstanceMembers((VBProject)_testBuilder.ActiveVBProject);
-            testFixture.FillTestListFromTestClassInstance((VBProject)_testBuilder.ActiveVBProject);
+            testFixture.FillInstanceMembers(_accessTestHelper.ActiveVBProject);
+            testFixture.FillTestListFromTestClassInstance(_accessTestHelper.ActiveVBProject);
 
             var invocHelper = new InvocationHelper(testFixtureInstance);
 
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner((VBProject)_testBuilder.ActiveVBProject);
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
             var methods = new string[] { "TestMethod1", "TestMethod2" };
             testRunner.Run(testFixture, result, methods, null);
 
@@ -455,13 +453,13 @@ End Function
             var fixtureName = "clsAccUnitTestClass";
             var testFixtureInstance = _testBuilder.CreateTest(fixtureName);
             var testFixture = new AccessCodeLib.AccUnit.TestFixture(testFixtureInstance);
-            testFixture.FillInstanceMembers((VBProject)_testBuilder.ActiveVBProject);
-            testFixture.FillTestListFromTestClassInstance((VBProject)_testBuilder.ActiveVBProject);
+            testFixture.FillInstanceMembers(_accessTestHelper.ActiveVBProject);
+            testFixture.FillTestListFromTestClassInstance(_accessTestHelper.ActiveVBProject);
 
             var invocHelper = new InvocationHelper(testFixtureInstance);
 
             var result = new TestResultCollector();
-            var testRunner = new Interop.TestRunner((VBProject)_testBuilder.ActiveVBProject);
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
             var methods = new string[] { "Te?t*[13]" };
             testRunner.Run(testFixture, result, methods, null);
 

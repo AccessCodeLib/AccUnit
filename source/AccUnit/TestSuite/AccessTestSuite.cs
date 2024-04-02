@@ -13,32 +13,14 @@ namespace AccessCodeLib.AccUnit
 
     public class AccessTestSuite : VBATestSuite, IAccessTestSuite
     {
-        private object _hostApplication;
-        public override object HostApplication
+        public AccessTestSuite(AccessApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
+                : base(applicationHelper, testBuilder, testRunner, testSummaryFormatter)
         {
-            get
-            {
-                return _hostApplication;
-            }
-            set
-            {
-                _hostApplication = value;
-                ActiveVBProject = GetCurrentVBProject(_hostApplication);
-                base.HostApplication = _hostApplication;
-            }
+            _applicationHelper = applicationHelper;
         }
 
         private AccessApplicationHelper _applicationHelper;
-        private AccessApplicationHelper ApplicationHelper
-        {
-            get { return _applicationHelper ?? (_applicationHelper = new AccessApplicationHelper(_hostApplication)); }
-        }
-
-        private VBProject GetCurrentVBProject(object app)
-        {
-            return app is null ? null : ApplicationHelper.CurrentVBProject;
-        }
-
+       
         protected override void OnTestStarted(TestClassMemberInfo testClassMemberInfo)
         {
             TransactionManager = null;
@@ -52,7 +34,7 @@ namespace AccessCodeLib.AccUnit
 
         private DaoTransactionManager CreateTransactionManager()
         {
-            return new DaoTransactionManager(_hostApplication);
+            return new DaoTransactionManager(_applicationHelper.Application);
         }
 
         private ITransactionManager TransactionManager { get; set; }
@@ -80,7 +62,7 @@ namespace AccessCodeLib.AccUnit
         {
             using (new BlockLogger())
             {
-                using (new AccessErrorTrappingObserver(ApplicationHelper, ErrorTrapping))
+                using (new AccessErrorTrappingObserver(_applicationHelper, ErrorTrapping))
                 {
                     base.Run();
                 }
@@ -97,7 +79,7 @@ namespace AccessCodeLib.AccUnit
 
         public bool CheckAccessApplicationIsCompiled()
         {
-            return ApplicationHelper.IsCompiled;
+            return _applicationHelper.IsCompiled;
         }
 
         public new IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData)
@@ -143,7 +125,7 @@ namespace AccessCodeLib.AccUnit
 
         void DisposeUnmanagedResources()
         {
-            _hostApplication = null;
+            //_hostApplication = null;
         }
 
         ~AccessTestSuite()

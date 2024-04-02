@@ -1,6 +1,6 @@
 ﻿namespace AccessCodeLib.AccUnit.Interfaces
 {
-    interface ITestSummaryFormatter
+    public interface ITestSummaryFormatter
     {
         int SeparatorMaxLength { get; set; }
         char SeparatorChar { get; set; }
@@ -11,5 +11,7 @@
         string GetTestCaseFinishedText(ITestResult result);
         string GetTestFixtureFinishedText(ITestResult result);
         string GetTestFixtureStartedText(ITestFixture fixture);
+        string GetTestSuiteStartedText(ITestSuite suite);
+        string GetTestSuiteFinishedText(ITestResult summary);
     }
 }
