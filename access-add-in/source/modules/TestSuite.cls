@@ -36,14 +36,17 @@ Public Sub Init(ByVal NewTestSuite As AccUnit.AccessTestSuite)
    Set m_TestSuite = NewTestSuite
 End Sub
 
-Public Sub AppendTestResultReporter(ByVal Reporter As ITestResultReporter)
-   m_TestSuite.AppendTestResultReporter Reporter
-End Sub
-
 Public Property Get TestSuite() As AccUnit.AccessTestSuite
    Set TestSuite = m_TestSuite
 End Property
 
+Public Property Set CodeCoverageTracker(ByVal NewRef As Object)
+   Set m_CodeCoverageTracker = NewRef
+End Property
+
+'####################################
+' AccessTestSuite event handler
+'
 Private Sub m_TestSuite_TestSuiteStarted(ByVal TestSuite As AccUnit.ITestSuite)
 '
 End Sub
@@ -55,10 +58,6 @@ End Sub
 Private Sub m_TestSuite_TestSuiteFinished(ByVal Summary As AccUnit.ITestSummary)
 '
 End Sub
-
-Public Property Set CodeCoverageTracker(ByVal NewRef As Object)
-   Set m_CodeCoverageTracker = NewRef
-End Property
 
 '####################################
 ' IAccessTestSuite
@@ -142,22 +141,18 @@ Private Property Get AccessTestSuite_Summary() As AccUnit.ITestSummary
    Set AccessTestSuite_Summary = m_TestSuite.Summary
 End Property
 
-Private Property Set AccessTestSuite_TestResultCollector(ByVal RHS As AccUnit.ITestResultCollector)
-   Set m_TestSuite.TestResultCollector = RHS
-End Property
-
-Private Property Get AccessTestSuite_TestResultCollector() As AccUnit.ITestResultCollector
-   Set AccessTestSuite_TestResultCollector = m_TestSuite.TestResultCollector
-End Property
+Public Sub AppendTestResultReporter(ByVal Reporter As ITestResultReporter)
+   m_TestSuite.AppendTestResultReporter Reporter
+End Sub
 
 Private Function AccessTestSuite_AppendTestResultReporter(ByVal Reporter As AccUnit.ITestResultReporter) As AccUnit.IAccessTestSuite
    AppendTestResultReporter Reporter
 End Function
 
-Private Property Get AccessTestSuite_TestRunner() As AccUnit.ITestRunner
-   Set AccessTestSuite_TestRunner = m_TestSuite.TestRunner
+Public Property Get TestClassGenerator() As AccUnit.ITestClassGenerator
+   Set TestClassGenerator = m_TestSuite.TestClassGenerator
 End Property
 
 Private Property Get AccessTestSuite_TestClassGenerator() As AccUnit.ITestClassGenerator
-   Set AccessTestSuite_TestClassGenerator = m_TestSuite.TestClassGenerator
+   Set AccessTestSuite_TestClassGenerator = TestClassGenerator
 End Property
