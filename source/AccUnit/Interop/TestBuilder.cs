@@ -1,9 +1,7 @@
 ﻿using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.VBIDETools;
-using Microsoft.Vbe.Interop;
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
 
 namespace AccessCodeLib.AccUnit.Interop
 {
@@ -16,8 +14,6 @@ namespace AccessCodeLib.AccUnit.Interop
 
         [return: MarshalAs(UnmanagedType.IDispatch)]
         new object CreateObject(string className);
-
-        //object ActiveVBProject { [return: MarshalAs(UnmanagedType.IDispatch)] get; }
 
         new void RefreshFactoryCodeModule();
         new void Dispose();
@@ -33,6 +29,5 @@ namespace AccessCodeLib.AccUnit.Interop
                 : base(applicationHelper)
         {
         }
-        //object ITestBuilder.ActiveVBProject => (object)base.ActiveVBProject;
     }
 }

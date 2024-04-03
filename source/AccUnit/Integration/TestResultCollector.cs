@@ -1,16 +1,14 @@
 ﻿using AccessCodeLib.AccUnit.CodeCoverage;
 using AccessCodeLib.AccUnit.Interfaces;
-using System;
-using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Integration
 {
     public class TestResultCollector : TestResultCollection
                 , ITestResultCollector, ITestResultSummaryPrinter, ITestResultCollectorEvents
     {
-        public TestResultCollector(ITestData test) : base(test)
+        public TestResultCollector(ITestSuite testSuite) : base(testSuite)
         {
-            TryInitTestSuiteListener(test as ITestSuite);
+            TryInitTestSuiteListener(testSuite);
         }
 
         public new void Add(ITestResult testResult)

@@ -21,7 +21,7 @@ namespace AccessCodeLib.AccUnit.Interop
     public class TestResultCollector : Integration.TestResultCollector, ITestCollector
                                             , ITestResultCollectorEvents
     {
-        public TestResultCollector(ITestData test) : base(test)
+        public TestResultCollector(ITestSuite test) : base(test)
         {
         }
 

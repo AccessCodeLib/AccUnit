@@ -15,15 +15,14 @@ namespace AccessCodeLib.AccUnit.Interop
 
         new string Name { get; }
         new ITestSummary Summary { get; }
-        new ITestResultCollector TestResultCollector { get; set; }
-        new ITestRunner TestRunner { get; }
-
+        
         new IVBATestSuite AppendTestResultReporter(ITestResultReporter reporter);
         new IVBATestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
         new IVBATestSuite AddByClassName(string className);
         new IVBATestSuite AddFromVBProject();
         new IVBATestSuite Run();
         new IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
+        
         new void Dispose();
 
         #endregion
@@ -45,14 +44,6 @@ namespace AccessCodeLib.AccUnit.Interop
         public VBATestSuite(OfficeApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
                : base(applicationHelper, testBuilder, testRunner, testSummaryFormatter)
         {
-        }
-
-        ITestRunner IVBATestSuite.TestRunner
-        {
-            get
-            {
-                return base.TestRunner as ITestRunner;
-            }
         }
 
         new public IVBATestSuite Add(object testToAdd)

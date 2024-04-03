@@ -14,18 +14,15 @@ namespace AccessCodeLib.AccUnit.Interop
         #region COM visibility of inherited members
 
         new string Name { get; }
-        //new object ActiveVBProject { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)]  set; }
-        //new object HostApplication { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)] set; }
         new ITestSummary Summary { get; }
-        new ITestResultCollector TestResultCollector { get; set; }
-        new ITestRunner TestRunner { get; }
-
+        
         new IAccessTestSuite AppendTestResultReporter(ITestResultReporter reporter);
         new IAccessTestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
         new IAccessTestSuite AddByClassName(string className);
         new IAccessTestSuite AddFromVBProject();
         new IAccessTestSuite Run();
         new IAccessTestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
+        
         new void Dispose();
 
         #endregion
@@ -46,14 +43,6 @@ namespace AccessCodeLib.AccUnit.Interop
         public AccessTestSuite(IAccessApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
                 : base(applicationHelper, testBuilder, testRunner, testSummaryFormatter)
         {
-        }
-
-        ITestRunner IAccessTestSuite.TestRunner
-        {
-            get
-            {
-                return base.TestRunner as ITestRunner;
-            }
         }
 
         public new IAccessTestSuite Reset(ResetMode mode = ResetMode.ResetTestData)
