@@ -151,8 +151,7 @@ End Property
 
 Public Sub ExportAccUnitFiles()
 
-   Dim accFileName As Variant
-   Dim sBit As String
+   Dim AccUnitFileName As Variant
    Dim DllPath As String
 
 On Error GoTo HandleErr
@@ -160,8 +159,8 @@ On Error GoTo HandleErr
    DllPath = CurrentAccUnitConfiguration.AccUnitDllPath
 
    With modApplication.CurrentApplication.Extensions("AppFile")
-      For Each accFileName In AccUnitFileNames
-         .CreateAppFile accFileName, DllPath & accFileName
+      For Each AccUnitFileName In AccUnitFileNames
+         .CreateAppFile AccUnitFileName, DllPath & AccUnitFileName
       Next
    End With
 
@@ -169,7 +168,7 @@ ExitHere:
    Exit Sub
 
 HandleErr:
-   If accFileName = "AccessCodeLib.AccUnit.tlb" Then
+   If AccUnitFileName = "AccessCodeLib.AccUnit.tlb" Then
       Resume Next
    End If
    Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext
@@ -178,14 +177,14 @@ End Sub
 
 Public Sub ImportAccUnitFiles()
 
-   Dim accFileName As Variant
+   Dim AccFileName As Variant
    Dim DllPath As String
 
    DllPath = CurrentAccUnitConfiguration.AccUnitDllPath
 
    With modApplication.CurrentApplication.Extensions("AppFile")
-      For Each accFileName In AccUnitFileNames
-         .SaveAppFile accFileName, DllPath & accFileName, True
+      For Each AccFileName In AccUnitFileNames
+         .SaveAppFile AccFileName, DllPath & AccFileName, True
       Next
    End With
 

@@ -38,18 +38,17 @@ Public Sub Init(ByVal NewTestSuite As AccUnit.VbaTestSuite)
    Set m_TestSuite = NewTestSuite
 End Sub
 
-Public Sub AppendTestResultReporter(ByVal Reporter As ITestResultReporter)
-   m_TestSuite.AppendTestResultReporter Reporter
-End Sub
-
 Public Property Get TestSuite() As AccUnit.VbaTestSuite
    Set TestSuite = m_TestSuite
 End Property
 
-Private Function IVBATestSuite_AppendTestResultReporter(ByVal Reporter As AccUnit.ITestResultReporter) As AccUnit.IVBATestSuite
-   m_TestSuite.AppendTestResultReporter Reporter
-End Function
+Public Property Set CodeCoverageTracker(ByVal NewRef As Object)
+   Set m_CodeCoverageTracker = NewRef
+End Property
 
+'####################################
+' VbaTestSuite event handler
+'
 Private Sub m_TestSuite_TestSuiteFinished(ByVal Summary As AccUnit.ITestSummary)
 '
 End Sub
@@ -62,10 +61,6 @@ Private Sub m_TestSuite_TestTraceMessage(ByVal Message As String, ByVal CodeConv
 '
 End Sub
 
-Public Property Set CodeCoverageTracker(ByVal NewRef As Object)
-   Set m_CodeCoverageTracker = NewRef
-End Property
-
 '####################################
 ' IVBATestSuite
 '
@@ -73,14 +68,6 @@ Private Function IVBATestSuite_Reset(Optional ByVal mode As AccUnit.ResetMode = 
    m_TestSuite.Reset mode
    Set IVBATestSuite_Reset = Me
 End Function
-
-Private Property Set IVBATestSuite_ActiveVBProject(ByVal RHS As Object)
-   Set m_TestSuite.ActiveVBProject = RHS
-End Property
-
-Private Property Get IVBATestSuite_ActiveVBProject() As Object
-   Set IVBATestSuite_ActiveVBProject = m_TestSuite.ActiveVBProject
-End Property
 
 Public Function Add(ByVal testToAdd As Object) As TestSuite
    m_TestSuite.Add testToAdd
@@ -112,14 +99,6 @@ End Function
 Private Sub IVBATestSuite_Dispose()
    m_TestSuite.Dispose
 End Sub
-
-Private Property Set IVBATestSuite_HostApplication(ByVal RHS As Object)
-   Set m_TestSuite.HostApplication = RHS
-End Property
-
-Private Property Get IVBATestSuite_HostApplication() As Object
-   Set IVBATestSuite_HostApplication = m_TestSuite.HostApplication
-End Property
 
 Private Property Get Name() As String
    Name = "TestSuite"
@@ -164,26 +143,21 @@ Private Property Get IVBATestSuite_Summary() As AccUnit.ITestSummary
    Set IVBATestSuite_Summary = m_TestSuite.Summary
 End Property
 
-Private Property Set IVBATestSuite_TestResultCollector(ByVal RHS As AccUnit.ITestResultCollector)
-   Set m_TestSuite.TestResultCollector = RHS
-End Property
+Public Sub AppendTestResultReporter(ByVal Reporter As ITestResultReporter)
+   m_TestSuite.AppendTestResultReporter Reporter
+End Sub
 
-Private Property Get IVBATestSuite_TestResultCollector() As AccUnit.ITestResultCollector
-   Set IVBATestSuite_TestResultCollector = m_TestSuite.TestResultCollector
-End Property
+Private Function IVBATestSuite_AppendTestResultReporter(ByVal Reporter As AccUnit.ITestResultReporter) As AccUnit.IVBATestSuite
+   m_TestSuite.AppendTestResultReporter Reporter
+End Function
 
-Private Property Set IVBATestSuite_TestRunner(ByVal RHS As AccUnit.ITestRunner)
-   Set m_TestSuite.TestRunner = RHS
-End Property
-
-Private Property Get IVBATestSuite_TestRunner() As AccUnit.ITestRunner
-   Set IVBATestSuite_TestRunner = m_TestSuite.TestRunner
+Private Property Get TestClassGenerator() As AccUnit.ITestClassGenerator
+   Set TestClassGenerator = m_TestSuite.TestClassGenerator
 End Property
 
 Private Property Get IVBATestSuite_TestClassGenerator() As AccUnit.ITestClassGenerator
-   Set IVBATestSuite_TestClassGenerator = m_TestSuite.TestClassGenerator
+   Set IVBATestSuite_TestClassGenerator = TestClassGenerator
 End Property
-
 
 
 

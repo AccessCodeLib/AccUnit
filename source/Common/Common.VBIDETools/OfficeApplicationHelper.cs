@@ -6,7 +6,18 @@ using System.Linq;
 
 namespace AccessCodeLib.Common.VBIDETools
 {
-    public class OfficeApplicationHelper : IDisposable
+    public interface IOfficeApplicationHelper
+    {
+        object Application { get; }
+        VBProject CurrentVBProject { get; }
+        string Name { get; }
+        VBE VBE { get; }
+
+        void Dispose();
+        object Run(params object[] parameters);
+    }
+
+    public class OfficeApplicationHelper : IOfficeApplicationHelper, IDisposable
     {
         private object _application;
         private InvocationHelper _invocationHelper;

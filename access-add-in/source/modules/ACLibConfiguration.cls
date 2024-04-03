@@ -260,7 +260,7 @@ Friend Function GetACLibGlobalProperty(ByRef PropertyName As String) As String
 
 End Function
 
-Friend Function SetACLibGlobalProperty(ByRef PropertyName As String, ByRef NewValue As String) As String
+Friend Sub SetACLibGlobalProperty(ByRef PropertyName As String, ByRef NewValue As String)
 
    Dim rst As DAO.Recordset
    Dim SelectSql As String
@@ -277,7 +277,7 @@ Friend Function SetACLibGlobalProperty(ByRef PropertyName As String, ByRef NewVa
    rst.Update
    rst.Close
 
-End Function
+End Sub
 
 Private Property Get ACLibPropertyDb() As DAO.Database
 

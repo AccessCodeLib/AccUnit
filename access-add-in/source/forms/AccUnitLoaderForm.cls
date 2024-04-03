@@ -34,10 +34,6 @@ Private Sub cmdClose_Click()
    DoCmd.Close acForm, Me.Name
 End Sub
 
-Private Property Get CurrentAccUnitDllPath() As String
-   CurrentAccUnitDllPath = Me.txtAccUnitDllPath.Value
-End Property
-
 Private Sub cmdExportAccUnitFiles_Click()
 
 On Error GoTo HandleErr

@@ -902,8 +902,6 @@ Private Function TryBuildArrayCriteria(ByRef FieldName As String, ByVal FieldDat
    Dim itm As Variant
    Dim ItmCriteria As String
 
-   Dim arrFilterValue() As Variant
-
    If Not IsArray(FilterValue) Then
       Exit Function
    End If

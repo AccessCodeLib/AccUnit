@@ -132,6 +132,14 @@ Public Function CodeCoverageTest(ParamArray CodeModulNames() As Variant) As Obje
    Set CodeCoverageTest = CodeCoverageTestSuite
    
 End Function
+
+#If USE_ACCUNIT_TYPELIB Then
+Public Property Get ErrorTrappingObserver() As AccUnit.AccessErrorTrappingObserver
+#Else
+Public Property Get ErrorTrappingObserver() As Object
+#End If
+   Set ErrorTrappingObserver = AccUnitLoaderFactory.AccessErrorTrappingObserver()
+End Property
 ";
 
         private static readonly string ExcelAccUnitLoaderFactoryCode =

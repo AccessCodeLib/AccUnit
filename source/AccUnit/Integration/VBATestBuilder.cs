@@ -10,46 +10,21 @@ using System.Linq;
 
 namespace AccessCodeLib.AccUnit
 {
-    public class VBATestBuilder : IDisposable
+    public class VBATestBuilder : IVBATestBuilder, IDisposable
     {
         private VBProject _vbProject;
 
-        public event NullReferenceEventHandler OfficeApplicationReferenceRequired;
+        public VBATestBuilder(IOfficeApplicationHelper applicationHelper)
+        {
+            OfficeApplicationHelper = applicationHelper;
+            _vbProject = applicationHelper.CurrentVBProject;
+            TestClassFactoryManager = new TestClassFactoryManager(_vbProject, new TestClassReader(_vbProject));
+        }
 
         private TestClassFactoryManager TestClassFactoryManager { get; set; }
         public bool TestToolsActivated { get; private set; }
 
-        internal OfficeApplicationHelper OfficeApplicationHelper { get; private set; }
-
-        public object HostApplication
-        {
-            get { return OfficeApplicationHelper?.Application; }
-            set
-            {
-                OfficeApplicationHelper = ComTools.GetTypeForComObject(value, "Access.Application") != null
-                                                ? new AccessApplicationHelper(value) : new OfficeApplicationHelper(value);
-
-                _vbProject = OfficeApplicationHelper.CurrentVBProject;
-                TestClassFactoryManager = new TestClassFactoryManager(_vbProject, new TestClassReader(_vbProject));
-            }
-        }
-
-        public VBProject ActiveVBProject
-        {
-            get
-            {
-                if (_vbProject is null && HostApplication != null)
-                {
-                    _vbProject = OfficeApplicationHelper.CurrentVBProject;
-                }
-                return _vbProject;
-            }
-            set
-            {
-                _vbProject = value;
-                TestClassFactoryManager = new TestClassFactoryManager(_vbProject, new TestClassReader(_vbProject));
-            }
-        }
+        internal IOfficeApplicationHelper OfficeApplicationHelper { get; private set; }
 
         private void CheckTestManagerInterface(object testToAdd, ITestClassMemberList memberFilter)
         {
@@ -91,12 +66,11 @@ namespace AccessCodeLib.AccUnit
 
         private void InitTestManager(ITestManagerBridge testToAdd, ITestClassMemberList memberFilter = null)
         {
-            new TestManager(testToAdd, memberFilter) { ActiveVBProject = ActiveVBProject, HostApplication = HostApplication };
+            new TestManager(testToAdd, memberFilter) { ActiveVBProject = _vbProject, HostApplication = OfficeApplicationHelper.Application };
         }
 
         public object CreateObject(string className)
         {
-            EnsureOfficeApplicationExists();
             CheckTools(className);
             if (TestClassFactoryManager.EnsureFactoryMethodExists(className))
             {
@@ -121,14 +95,14 @@ namespace AccessCodeLib.AccUnit
 
         private void CheckTools(string className)
         {
-            var modules = new CodeModuleContainer(ActiveVBProject);
+            var modules = new CodeModuleContainer(_vbProject);
             var module = modules.TryGetCodeModule(className);
             if (module is null)
                 return;
 
             if (!TestMessageBox.UsedInCodeModule(module)) return;
 
-            TestMessageBox.CheckTestMessageBoxProcedures(ActiveVBProject);
+            TestMessageBox.CheckTestMessageBoxProcedures(_vbProject);
             TestToolsActivated = true;
         }
 
@@ -138,7 +112,7 @@ namespace AccessCodeLib.AccUnit
         }
 
         private object RunMethodInOfficeApplication(object[] parameters)
-        {  
+        {
             try
             {
                 if (OfficeApplicationHelper.Name.Equals("Microsoft Excel", StringComparison.CurrentCultureIgnoreCase))
@@ -160,28 +134,7 @@ namespace AccessCodeLib.AccUnit
             invokeHelper = new InvocationHelper(wb);
             var wbName = invokeHelper.InvokePropertyGet("Name");
 
-            return string.Concat("'",wbName,"'!",methodName);
-        }
-
-        private void EnsureOfficeApplicationExists()
-        {
-            if (HostApplication is null)
-            {
-                HostApplication = GetOfficeApplication();
-            }
-        }
-
-        private object GetOfficeApplication()
-        {
-            var app = QueryOfficeApplication() ?? throw new NullReferenceException("Office application reference");
-            return app;
-        }
-
-        private object QueryOfficeApplication()
-        {
-            object app = null;
-            OfficeApplicationReferenceRequired?.Invoke(ref app);
-            return app;
+            return string.Concat("'", wbName, "'!", methodName);
         }
 
         #region IDisposable Support

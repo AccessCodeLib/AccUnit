@@ -56,11 +56,6 @@ Public Enum ApplicationHandlerErrors
 End Enum
 
 ' API definitions
-Private Const GCL_HBRBACKGROUND As Long = -10
-Private Const RDW_INVALIDATE As Long = &H1
-Private Const RDW_ERASE As Long = &H4
-Private Const SYSCOLOR_COLOR_APPWORKSPACE As Long = 12
-
 #If VBA7 Then
 
 Private Declare PtrSafe Function FindWindowEx Lib "user32.dll" Alias "FindWindowExA" ( _
@@ -118,8 +113,6 @@ Private m_TransferValue As Variant
 Private m_PublicPath As String               ' Default directory for file explorer
 
 Private m_ApplicationStartFormName As String ' Form that is opened in Start method
-
-Private m_CustomMDIBackgroundColor As Long
 
 'Events
 Public Event BeforeDispose(ByRef ResumeMode As ApplicationHandlerResumeModes, ByRef ResumeMessage As Variant)

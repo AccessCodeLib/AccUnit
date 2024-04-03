@@ -1,32 +1,22 @@
-﻿using Microsoft.Vbe.Interop;
+﻿using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.Common.VBIDETools;
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
 
 namespace AccessCodeLib.AccUnit.Interop
 {
     [ComVisible(true)]
     [Guid("291A478C-4878-4D73-9E2B-309CD3C5F908")]
-    public interface ITestBuilder
+    public interface ITestBuilder : IVBATestBuilder
     {
-        object HostApplication
-        {
-            [return: MarshalAs(UnmanagedType.IDispatch)]
-            get;
-            [param: MarshalAs(UnmanagedType.IDispatch)]
-            set;
-        }
+        [return: MarshalAs(UnmanagedType.IDispatch)]
+        new object CreateTest(string className);
 
         [return: MarshalAs(UnmanagedType.IDispatch)]
-        object CreateTest(string className);
+        new object CreateObject(string className);
 
-        [return: MarshalAs(UnmanagedType.IDispatch)]
-        object CreateObject(string className);
-
-        object ActiveVBProject { [return: MarshalAs(UnmanagedType.IDispatch)] get; }
-
-        void RefreshFactoryCodeModule();
-        void Dispose();
+        new void RefreshFactoryCodeModule();
+        new void Dispose();
     }
 
     [ComVisible(true)]
@@ -35,6 +25,9 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId(Constants.ProgIdLibName + ".TestBuilder")]
     public class TestBuilder : VBATestBuilder, ITestBuilder
     {
-        object ITestBuilder.ActiveVBProject => (object)base.ActiveVBProject;
+        public TestBuilder(IOfficeApplicationHelper applicationHelper)
+                : base(applicationHelper)
+        {
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
@@ -13,18 +14,15 @@ namespace AccessCodeLib.AccUnit.Interop
         #region COM visibility of inherited members
 
         new string Name { get; }
-        new object ActiveVBProject { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)] set; }
-        new object HostApplication { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)] set; }
         new ITestSummary Summary { get; }
-        new ITestResultCollector TestResultCollector { get; set; }
-        new ITestRunner TestRunner { get; set; }
-
+        
         new IVBATestSuite AppendTestResultReporter(ITestResultReporter reporter);
         new IVBATestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
         new IVBATestSuite AddByClassName(string className);
         new IVBATestSuite AddFromVBProject();
         new IVBATestSuite Run();
         new IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
+        
         new void Dispose();
 
         #endregion
@@ -43,22 +41,9 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId("AccUnit.VBATestSuite")]
     public class VBATestSuite : AccUnit.VBATestSuite, IVBATestSuite, IDisposable
     {
-        object IVBATestSuite.ActiveVBProject
+        public VBATestSuite(OfficeApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
+               : base(applicationHelper, testBuilder, testRunner, testSummaryFormatter)
         {
-            get { return base.ActiveVBProject; }
-            set { base.ActiveVBProject = (VBProject)value; }
-        }
-
-        ITestRunner IVBATestSuite.TestRunner
-        {
-            get
-            {
-                return base.TestRunner as ITestRunner;
-            }
-            set
-            {
-                base.TestRunner = value;
-            }
         }
 
         new public IVBATestSuite Add(object testToAdd)
@@ -109,10 +94,6 @@ namespace AccessCodeLib.AccUnit.Interop
         {
             get
             {
-                /*
-                var officeApplicationHelper = ComTools.GetTypeForComObject(HostApplication, "Access.Application") != null
-                                                ? new AccessApplicationHelper(HostApplication) : new OfficeApplicationHelper(HostApplication);
-                */
                 return new TestClassGenerator(ActiveVBProject);
             }
         }
@@ -127,13 +108,5 @@ namespace AccessCodeLib.AccUnit.Interop
         {
             return new TestResultCollector(this);
         }
-
-        //protected override void RaiseTraceMessage(string text)
-        //{
-        //    TestTraceMessage?.Invoke(text, CodeCoverageTracker as ICodeCoverageTracker);
-        //}
-
-        //public new event TestTraceMessageEventHandler TestTraceMessage;
-
     }
 }

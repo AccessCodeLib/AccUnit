@@ -10,14 +10,9 @@ namespace AccessCodeLib.AccUnit.Interop
     [Guid("570D48B4-989D-47CD-852F-F6F8AFE6DD14")]
     public interface ITestRunner : Interfaces.ITestRunner
     {
-        /*
-         * Run(TestClassInstance, "*")                  ... Alle TestMethoden ausführen
-         * Run(TestClassInstance, "MethodenName")       ... Nur einen bestimmten Test ausführen
-         * TODO: Run(TestClassInstance, "*Filter*Text*") ... Nur Test, die dem Filterausdruck entsprechen, ausführen
-         */
         ITestResult Run([MarshalAs(UnmanagedType.IDispatch)] object TestFixtureInstance,
                         string TestMethodName = "*",
-                        Interfaces.ITestResultCollector TestResultCollector = null,
+                        ITestResultCollector TestResultCollector = null,
                         object filterTags = null);
     }
 

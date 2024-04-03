@@ -1072,7 +1072,7 @@ Private Function InsertRecordValuesArrayReturnFieldValue( _
                         ByVal Source As String, ByVal ReturnField As Variant, _
                         ByVal FieldsAndValues As Variant) As Variant
 
-    Dim lngNum As Long, lngAnz As Long, i As Long, anz As Long
+    Dim lngNum As Long, i As Long, FieldIdx As Long
     Dim FieldNames() As Variant, FieldValues() As Variant
     Dim rst As DAO.Recordset
     Dim ErrNo As Long, ErrDesc As String, ErrSource As String
@@ -1083,11 +1083,11 @@ On Error GoTo HandleErr
     ReDim FieldNames(lngNum \ 2)
     ReDim FieldValues(lngNum \ 2)
 
-    anz = 0
+    FieldIdx = -1
     For i = 0 To (lngNum - 2) Step 2
-      FieldNames(anz) = FieldsAndValues(i)
-      FieldValues(anz) = FieldsAndValues(i + 1)
-      anz = anz + 1
+      FieldIdx = FieldIdx + 1
+      FieldNames(FieldIdx) = FieldsAndValues(i)
+      FieldValues(FieldIdx) = FieldsAndValues(i + 1)
     Next i
 
     Set rst = Me.OpenRecordset(Source, dbOpenDynaset)
@@ -1095,7 +1095,7 @@ On Error GoTo HandleErr
 
       .AddNew
       i = 0
-      For i = 0 To (anz - 1)
+      For i = 0 To FieldIdx
          .Fields(FieldNames(i)) = FieldValues(i)
       Next i
       .Update
@@ -1436,23 +1436,24 @@ Private Function CopyRecordsArrayReturnFieldValue(ByVal SqlSource As String, _
 
 On Error GoTo HandleErr
 
-   Dim lngNum As Long, lngAnz As Long, i As Long, iDS As Long, anz As Long
+   Dim lngNum As Long, i As Long, iDS As Long, idx As Long
    Dim strCtl() As Variant, valCtl() As Variant
    Dim rst As Object
-   Dim lngLastCopyField As Long, dsAnz As Long, Start As Long
+   Dim lngLastCopyField As Long, rsCnt As Long, Start As Long
    Dim CopyFieldsAndValues() As Variant
    Dim ErrNo As Long, ErrDesc As String, ErrSource As String
 
    lngNum = UBound(UpdateFieldsAndValues) - LBound(UpdateFieldsAndValues) + 1
 
-   anz = 0
+
    ReDim strCtl((lngNum \ 2) - 1)
    ReDim valCtl((lngNum \ 2) - 1)
 
+   idx = -1
    For i = 0 To (lngNum - 2) Step 2
-     strCtl(anz) = UpdateFieldsAndValues(i)
-     valCtl(anz) = UpdateFieldsAndValues(i + 1)
-     anz = anz + 1
+      idx = idx + 1
+      strCtl(idx) = UpdateFieldsAndValues(i)
+      valCtl(idx) = UpdateFieldsAndValues(i + 1)
    Next i
 
    Set rst = Me.OpenRecordset(SqlSource, dbOpenDynaset)
@@ -1467,7 +1468,7 @@ On Error GoTo HandleErr
     With rst
       .MoveLast
       .MoveFirst
-      dsAnz = .RecordCount
+      rsCnt = .RecordCount
 
       If LastFeldID = 0 Then
           lngLastCopyField = .Fields.Count
@@ -1477,7 +1478,7 @@ On Error GoTo HandleErr
           lngLastCopyField = LastFeldID
       End If
 
-      ReDim CopyFieldsAndValues(dsAnz, lngLastCopyField)
+      ReDim CopyFieldsAndValues(rsCnt, lngLastCopyField)
 
       If StartFeldID > 1 Then Start = StartFeldID - 1 Else Start = 0
 
@@ -1495,14 +1496,14 @@ On Error GoTo HandleErr
       .MoveLast
 
       'Copy values
-      For iDS = 0 To (dsAnz - 1)
+      For iDS = 0 To (rsCnt - 1)
           .AddNew
           For i = Start To (lngLastCopyField - 1)
               If .Fields(i).Type <> dbBinary Then
                   .Fields(i) = CopyFieldsAndValues(iDS, i)
               End If
           Next i
-          For i = 0 To (anz - 1)
+          For i = 0 To idx
             .Fields(strCtl(i)) = valCtl(i)
           Next i
           .Update

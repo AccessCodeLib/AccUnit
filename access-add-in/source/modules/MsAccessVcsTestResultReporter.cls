@@ -114,15 +114,15 @@ Private Sub PrintTestDetailSummary(ByRef TestResults() As AccUnit.ITestResult)
 
 End Sub
 
-Private Sub PrintSubResults(ByVal mainId As String, ByVal resultCol As AccUnit.TestResultCollection)
+Private Sub PrintSubResults(ByVal MainId As String, ByVal ResultCol As AccUnit.TestResultCollection)
 
    Dim i As Long
    Dim r As AccUnit.ITestResult
    Dim ResultID As String
 
-   For i = 1 To resultCol.Count
-      Set r = resultCol.Item(i - 1)
-      ResultID = mainId & "." & i
+   For i = 1 To ResultCol.Count
+      Set r = ResultCol.Item(i - 1)
+      ResultID = MainId & "." & i
       If TypeOf r Is AccUnit.ITestResultSummary Then
          PrintToFile String(3, " ") & ResultID, r.Test.FullName, r.Result, "..."
          PrintSubResults ResultID, r
@@ -159,7 +159,6 @@ Private Sub PrintToFile(ParamArray LogItems())
 End Sub
 
 Private Sub InitVcs()
-   Dim VcsRef As Object
    Set m_VCS = Application.Run(GetVcsAddInRunPath & ".VCS")
 End Sub
 

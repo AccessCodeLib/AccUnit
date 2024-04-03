@@ -1,7 +1,7 @@
-﻿using AccessCodeLib.AccUnit.Interfaces;
+﻿using AccessCodeLib.AccUnit.Configuration;
+using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
-using Microsoft.Vbe.Interop;
 using System;
 
 namespace AccessCodeLib.AccUnit
@@ -12,44 +12,16 @@ namespace AccessCodeLib.AccUnit
 
     public class AccessTestSuite : VBATestSuite, IAccessTestSuite
     {
-        public enum VbaErrorTrapping : short
+        public AccessTestSuite(IAccessApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
+                : base(applicationHelper, testBuilder, testRunner, testSummaryFormatter)
         {
-            BreakOnAllErrors = 0,
-            BreakInClassModule = 1,
-            BreakOnUnhandledErrors = 2
         }
 
-        private object _hostApplication;
-        public override object HostApplication
-        {
-            get
-            {
-                return _hostApplication;
-            }
-            set
-            {
-                _hostApplication = value;
-                ActiveVBProject = GetCurrentVBProject(_hostApplication);
-                base.HostApplication = _hostApplication;
-            }
-        }
-
-        private AccessApplicationHelper _applicationHelper;
-        private AccessApplicationHelper ApplicationHelper
-        {
-            get { return _applicationHelper ?? (_applicationHelper = new AccessApplicationHelper(_hostApplication)); }
-        }
-
-        private VBProject GetCurrentVBProject(object app)
-        {
-            return app is null ? null : ApplicationHelper.CurrentVBProject;
-        }
-
+        protected new IAccessApplicationHelper ApplicationHelper => (IAccessApplicationHelper)base.ApplicationHelper;
+       
         protected override void OnTestStarted(TestClassMemberInfo testClassMemberInfo)
         {
             TransactionManager = null;
-
-            EnsureErrorTrappingForTests();
 
             if (testClassMemberInfo.DoAutoRollback)
             {
@@ -60,7 +32,7 @@ namespace AccessCodeLib.AccUnit
 
         private DaoTransactionManager CreateTransactionManager()
         {
-            return new DaoTransactionManager(_hostApplication);
+            return new DaoTransactionManager(ApplicationHelper.Application);
         }
 
         private ITransactionManager TransactionManager { get; set; }
@@ -84,27 +56,16 @@ namespace AccessCodeLib.AccUnit
             }
         }
 
-        private short _errorTrappingBeforeRun;
         public override IVBATestSuite Run()
         {
             using (new BlockLogger())
             {
-                _errorTrappingBeforeRun = GetAccessErrorTrapping();
-                EnsureErrorTrappingForTests();
-
-                base.Run();
-
-                if (_errorTrappingBeforeRun != (short)ErrorTrapping)
-                    SetAccessErrorTrapping(_errorTrappingBeforeRun);
-
+                using (new AccessErrorTrappingObserver(ApplicationHelper, ErrorTrapping))
+                {
+                    base.Run();
+                }
                 return this;
             }
-        }
-
-        private void EnsureErrorTrappingForTests()
-        {
-            if (GetAccessErrorTrapping() != (short)ErrorTrapping)
-                SetAccessErrorTrapping((short)ErrorTrapping);
         }
 
         private VbaErrorTrapping _errorTrapping = VbaErrorTrapping.BreakOnUnhandledErrors;
@@ -112,18 +73,6 @@ namespace AccessCodeLib.AccUnit
         {
             get { return _errorTrapping; }
             set { _errorTrapping = value; }
-        }
-
-        private const string ErrorTrappingOptionName = "Error Trapping";
-        private short GetAccessErrorTrapping()
-        {
-            var errorTrapping = (short)ApplicationHelper.GetOption(ErrorTrappingOptionName);
-            return errorTrapping;
-        }
-
-        private void SetAccessErrorTrapping(short errortrapping)
-        {
-            ApplicationHelper.SetOption(ErrorTrappingOptionName, errortrapping);
         }
 
         public bool CheckAccessApplicationIsCompiled()
@@ -168,13 +117,12 @@ namespace AccessCodeLib.AccUnit
 
         private void DisposeManagedResources()
         {
-            TransactionManager = null;
-            _applicationHelper = null;
+            // ...
         }
 
         void DisposeUnmanagedResources()
         {
-            _hostApplication = null;
+            TransactionManager = null;
         }
 
         ~AccessTestSuite()

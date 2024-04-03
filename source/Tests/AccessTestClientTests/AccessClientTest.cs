@@ -70,10 +70,8 @@ Public Function AccUnitTestClassFactory_clsAccUnitTestClass() As Object
    Set AccUnitTestClassFactory_clsAccUnitTestClass = New clsAccUnitTestClass
 End Function
 ");
-            var testBuilder = new Interop.TestBuilder
-            {
-                HostApplication = _accessTestHelper.Application
-            };
+            var applicationHelper = new AccessApplicationHelper(_accessTestHelper.Application);
+            var testBuilder = new Interop.TestBuilder(applicationHelper);
 
             var fixture = testBuilder.CreateTest("clsAccUnitTestClass");
 

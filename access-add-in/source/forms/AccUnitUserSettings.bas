@@ -114,9 +114,9 @@ Begin Form
                     OverlapFlags =85
                     TextAlign =1
                     IMESentenceMode =3
-                    Left =2318
+                    Left =2310
                     Top =90
-                    Width =9072
+                    Width =9075
                     Height =405
                     TabIndex =1
                     Name ="txtTestClassNameFormat"
@@ -125,9 +125,9 @@ Begin Form
                     HorizontalAnchor =2
                     ShowDatePicker =0
 
-                    LayoutCachedLeft =2318
+                    LayoutCachedLeft =2310
                     LayoutCachedTop =90
-                    LayoutCachedWidth =11390
+                    LayoutCachedWidth =11385
                     LayoutCachedHeight =495
                     ColumnStart =1
                     ColumnEnd =1
@@ -163,9 +163,9 @@ Begin Form
                     OverlapFlags =85
                     TextAlign =1
                     IMESentenceMode =3
-                    Left =2318
-                    Top =683
-                    Width =9072
+                    Left =2310
+                    Top =675
+                    Width =9075
                     Height =405
                     TabIndex =2
                     Name ="txtImportExportFolder"
@@ -174,10 +174,10 @@ Begin Form
                     HorizontalAnchor =2
                     ShowDatePicker =0
 
-                    LayoutCachedLeft =2318
-                    LayoutCachedTop =683
-                    LayoutCachedWidth =11390
-                    LayoutCachedHeight =1088
+                    LayoutCachedLeft =2310
+                    LayoutCachedTop =675
+                    LayoutCachedWidth =11385
+                    LayoutCachedHeight =1080
                     RowStart =1
                     RowEnd =1
                     ColumnStart =1
@@ -191,7 +191,7 @@ Begin Form
                             OverlapFlags =85
                             TextAlign =1
                             Left =120
-                            Top =683
+                            Top =675
                             Width =2161
                             Height =405
                             Name ="Label130"
@@ -200,9 +200,9 @@ Begin Form
                             RightPadding =0
                             BottomPadding =150
                             LayoutCachedLeft =120
-                            LayoutCachedTop =683
+                            LayoutCachedTop =675
                             LayoutCachedWidth =2281
-                            LayoutCachedHeight =1088
+                            LayoutCachedHeight =1080
                             RowStart =1
                             RowEnd =1
                             LayoutGroup =1
@@ -216,9 +216,9 @@ Begin Form
                     OverlapFlags =85
                     TextAlign =1
                     IMESentenceMode =3
-                    Left =2318
-                    Top =1275
-                    Width =9072
+                    Left =2310
+                    Top =1260
+                    Width =9075
                     Height =405
                     TabIndex =3
                     Name ="txtTemplateFolder"
@@ -227,10 +227,10 @@ Begin Form
                     HorizontalAnchor =2
                     ShowDatePicker =0
 
-                    LayoutCachedLeft =2318
-                    LayoutCachedTop =1275
-                    LayoutCachedWidth =11390
-                    LayoutCachedHeight =1680
+                    LayoutCachedLeft =2310
+                    LayoutCachedTop =1260
+                    LayoutCachedWidth =11385
+                    LayoutCachedHeight =1665
                     RowStart =2
                     RowEnd =2
                     ColumnStart =1
@@ -244,7 +244,7 @@ Begin Form
                             OverlapFlags =85
                             TextAlign =1
                             Left =120
-                            Top =1275
+                            Top =1260
                             Width =2161
                             Height =405
                             Name ="Label132"
@@ -253,9 +253,9 @@ Begin Form
                             RightPadding =0
                             BottomPadding =150
                             LayoutCachedLeft =120
-                            LayoutCachedTop =1275
+                            LayoutCachedTop =1260
                             LayoutCachedWidth =2281
-                            LayoutCachedHeight =1680
+                            LayoutCachedHeight =1665
                             RowStart =2
                             RowEnd =2
                             LayoutGroup =1
@@ -270,9 +270,9 @@ Begin Form
                     TextAlign =1
                     TextFontFamily =49
                     IMESentenceMode =3
-                    Left =2318
-                    Top =1868
-                    Width =9072
+                    Left =2310
+                    Top =1845
+                    Width =9075
                     Height =2835
                     FontSize =10
                     TabIndex =5
@@ -284,10 +284,10 @@ Begin Form
                     VerticalAnchor =2
                     ShowDatePicker =0
 
-                    LayoutCachedLeft =2318
-                    LayoutCachedTop =1868
-                    LayoutCachedWidth =11390
-                    LayoutCachedHeight =4703
+                    LayoutCachedLeft =2310
+                    LayoutCachedTop =1845
+                    LayoutCachedWidth =11385
+                    LayoutCachedHeight =4680
                     RowStart =3
                     RowEnd =3
                     ColumnStart =1
@@ -301,7 +301,7 @@ Begin Form
                             OverlapFlags =85
                             TextAlign =1
                             Left =120
-                            Top =1868
+                            Top =1845
                             Width =2161
                             Height =2835
                             Name ="Label134"
@@ -311,9 +311,9 @@ Begin Form
                             BottomPadding =0
                             VerticalAnchor =2
                             LayoutCachedLeft =120
-                            LayoutCachedTop =1868
+                            LayoutCachedTop =1845
                             LayoutCachedWidth =2281
-                            LayoutCachedHeight =4703
+                            LayoutCachedHeight =4680
                             RowStart =3
                             RowEnd =3
                             LayoutGroup =1

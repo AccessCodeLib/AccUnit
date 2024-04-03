@@ -21,10 +21,6 @@ namespace AccessCodeLib.AccUnit.TestRunner
 
         private readonly VBProject _vbProject;
 
-        public VbaTestRunner()
-        {
-        }
-
         public VbaTestRunner(VBProject vbProject)
         {
             _vbProject = vbProject;

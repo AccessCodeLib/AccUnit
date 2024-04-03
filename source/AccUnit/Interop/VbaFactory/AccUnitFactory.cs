@@ -1,4 +1,7 @@
 ﻿using AccessCodeLib.AccUnit.Configuration;
+using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.Common.VBIDETools;
+using AccessCodeLib.Common.VBIDETools.Integration;
 using Microsoft.Vbe.Interop;
 using System.Runtime.InteropServices;
 
@@ -11,11 +14,12 @@ namespace AccessCodeLib.AccUnit.Interop
         IConstraintBuilder ConstraintBuilder { get; }
         IAssert Assert { get; }
         ITestRunner TestRunner([MarshalAs(UnmanagedType.IDispatch)] object VBProject);
-        ITestBuilder TestBuilder { get; }
+        ITestBuilder TestBuilder([MarshalAs(UnmanagedType.IDispatch)] object hostApplication);
         IConfigurator Configurator([MarshalAs(UnmanagedType.IDispatch)] object VBProject = null);
-        IVBATestSuite VBATestSuite { get; }
-        IAccessTestSuite AccessTestSuite { get; }
+        IVBATestSuite VBATestSuite([MarshalAs(UnmanagedType.IDispatch)] object hostApplication, ITestBuilder testBuilder = null, ITestRunner testRunner = null, ITestSummaryFormatter testSummaryFormatter = null, ITestResultCollector externalTestResultCollector = null);
+        IAccessTestSuite AccessTestSuite([MarshalAs(UnmanagedType.IDispatch)] object hostApplication, ITestBuilder testBuilder = null, ITestRunner testRunner = null, ITestSummaryFormatter testSummaryFormatter = null, ITestResultCollector externalTestResultCollector = null);
         ICodeCoverageTracker CodeCoverageTracker([MarshalAs(UnmanagedType.IDispatch)] object VBProject);
+        IErrorTrappingObserver AccessErrorTrappingObserver([MarshalAs(UnmanagedType.IDispatch)] object HostApplication);
     }
 
     [ComVisible(true)]
@@ -45,12 +49,9 @@ namespace AccessCodeLib.AccUnit.Interop
             return new TestRunner((VBProject)vbProject);
         }
 
-        public ITestBuilder TestBuilder
+        public ITestBuilder TestBuilder(object hostApplication)
         {
-            get
-            {
-                return new TestBuilder();
-            }
+            return new TestBuilder(GetApplicationHelper(hostApplication));
         }
 
         public IConfigurator Configurator(object vbProject = null)
@@ -58,25 +59,72 @@ namespace AccessCodeLib.AccUnit.Interop
             return new Configurator((VBProject)vbProject);
         }
 
-        public IVBATestSuite VBATestSuite
+        public IVBATestSuite VBATestSuite(
+                                    object hostApplication, 
+                                    ITestBuilder testBuilder = null, 
+                                    ITestRunner testRunner = null, 
+                                    ITestSummaryFormatter testSummaryFormatter = null,
+                                    ITestResultCollector externalTestResultCollector = null)
         {
-            get
-            {
-                return new VBATestSuite();
-            }
+            var applicationHelper = GetApplicationHelper(hostApplication);
+
+            if (testRunner == null)
+                testRunner = new TestRunner(applicationHelper.CurrentVBProject);
+
+            if (testBuilder == null)
+                testBuilder = new TestBuilder(applicationHelper);
+
+            if (testSummaryFormatter == null)
+                testSummaryFormatter = new TestSummaryFormatter(TestSuiteUserSettings.Current.SeparatorMaxLength, TestSuiteUserSettings.Current.SeparatorChar);
+
+            var testSuite = new VBATestSuite(applicationHelper, testBuilder, testRunner, testSummaryFormatter);
+
+            if (externalTestResultCollector != null)
+                testSuite.TestResultCollector = externalTestResultCollector;
+
+            return testSuite;
         }
 
-        public IAccessTestSuite AccessTestSuite
+        private OfficeApplicationHelper GetApplicationHelper(object hostApplication)
         {
-            get
-            {
-                return new AccessTestSuite();
-            }
+            return ComTools.GetTypeForComObject(hostApplication, "Access.Application") != null
+                ? new AccessApplicationHelper(hostApplication) : new OfficeApplicationHelper(hostApplication);
+        }
+
+        public IAccessTestSuite AccessTestSuite(
+                                    object hostApplcation, 
+                                    ITestBuilder testBuilder = null, 
+                                    ITestRunner testRunner = null, 
+                                    ITestSummaryFormatter testSummaryFormatter = null,
+                                    ITestResultCollector externalTestResultCollector = null)
+        {
+            var applicationHelper = new AccessApplicationHelper(hostApplcation);
+
+            if (testRunner == null) 
+                testRunner = new TestRunner(applicationHelper.CurrentVBProject);
+
+            if (testBuilder == null)
+                testBuilder = new TestBuilder(applicationHelper);
+
+            if (testSummaryFormatter == null)
+                testSummaryFormatter = new TestSummaryFormatter(TestSuiteUserSettings.Current.SeparatorMaxLength, TestSuiteUserSettings.Current.SeparatorChar);
+
+            var testSuite = new AccessTestSuite(applicationHelper, testBuilder, testRunner, testSummaryFormatter);
+            
+            if (externalTestResultCollector != null)
+                testSuite.TestResultCollector = externalTestResultCollector;
+
+            return testSuite;
         }
 
         public ICodeCoverageTracker CodeCoverageTracker(object vbProject = null)
         {
             return new CodeCoverageTracker((VBProject)vbProject);
+        }
+
+        public IErrorTrappingObserver AccessErrorTrappingObserver(object HostApplication)
+        {
+            return new AccessErrorTrappingObserver(HostApplication);
         }
     }
 }

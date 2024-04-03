@@ -1,4 +1,5 @@
 ﻿using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
@@ -13,18 +14,15 @@ namespace AccessCodeLib.AccUnit.Interop
         #region COM visibility of inherited members
 
         new string Name { get; }
-        new object ActiveVBProject { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)]  set; }
-        new object HostApplication { [return: MarshalAs(UnmanagedType.IDispatch)] get; [param: MarshalAs(UnmanagedType.IDispatch)] set; }
         new ITestSummary Summary { get; }
-        new ITestResultCollector TestResultCollector { get; set; }
-        new ITestRunner TestRunner { get; set; }
-
+        
         new IAccessTestSuite AppendTestResultReporter(ITestResultReporter reporter);
         new IAccessTestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
         new IAccessTestSuite AddByClassName(string className);
         new IAccessTestSuite AddFromVBProject();
         new IAccessTestSuite Run();
         new IAccessTestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
+        
         new void Dispose();
 
         #endregion
@@ -41,16 +39,10 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId("AccUnit.AccessTestSuite")]
     public class AccessTestSuite : AccUnit.AccessTestSuite, IAccessTestSuite
     {
-        ITestRunner IAccessTestSuite.TestRunner
+
+        public AccessTestSuite(IAccessApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
+                : base(applicationHelper, testBuilder, testRunner, testSummaryFormatter)
         {
-            get
-            {
-                return base.TestRunner as ITestRunner;
-            }
-            set
-            {
-                base.TestRunner = value;
-            }
         }
 
         public new IAccessTestSuite Reset(ResetMode mode = ResetMode.ResetTestData)
@@ -103,12 +95,6 @@ namespace AccessCodeLib.AccUnit.Interop
             {
                 return new TestClassGenerator(ActiveVBProject);
             }
-        }
-
-        object IAccessTestSuite.ActiveVBProject
-        {
-            get { return base.ActiveVBProject; }
-            set { base.ActiveVBProject = (VBProject)value;  }
         }
 
         public new IAccessTestSuite AppendTestResultReporter(ITestResultReporter reporter)

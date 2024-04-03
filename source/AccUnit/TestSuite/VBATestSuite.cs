@@ -1,8 +1,8 @@
 ﻿using AccessCodeLib.AccUnit.CodeCoverage;
 using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
-using AccessCodeLib.AccUnit.TestRunner;
 using AccessCodeLib.Common.Tools.Logging;
+using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
@@ -12,12 +12,17 @@ namespace AccessCodeLib.AccUnit
 {
     public class VBATestSuite : IVBATestSuite, IDisposable, ITestData
     {
-        public VBATestSuite()
+        public VBATestSuite(IOfficeApplicationHelper applicationHelper, 
+                            IVBATestBuilder testBuilder, 
+                            ITestRunner testRunner, 
+                            ITestSummaryFormatter testSummaryFormatter)
         {
             using (new BlockLogger())
             {
-                SummaryFormatter = new TestSummaryFormatter(TestSuiteUserSettings.Current.SeparatorMaxLength, TestSuiteUserSettings.Current.SeparatorChar);
-                _testBuilder.OfficeApplicationReferenceRequired += OnOfficeApplicationReferenceRequired;
+                _applicationHelper = applicationHelper;
+                _testBuilder = testBuilder;
+                _summaryFormatter = testSummaryFormatter;
+                SetNewTestRunner(testRunner);
             }
         }
 
@@ -28,10 +33,12 @@ namespace AccessCodeLib.AccUnit
 
         public IEnumerable<ITestFixture> TestFixtures { get { return _testFixtures; } }
 
-        private ITestSummary _testSummary;
-        private TestSummaryFormatter SummaryFormatter { get; set; }
-        private readonly VBATestBuilder _testBuilder = new VBATestBuilder();
+        private readonly IOfficeApplicationHelper _applicationHelper;
+        protected IOfficeApplicationHelper ApplicationHelper { get { return _applicationHelper; } }
 
+        private ITestSummary _testSummary;
+        private readonly ITestSummaryFormatter _summaryFormatter;
+        private readonly IVBATestBuilder _testBuilder;
         private ITestRunner _testRunner;
 
         private ITestResultCollector _testResultCollector;
@@ -72,14 +79,6 @@ namespace AccessCodeLib.AccUnit
 
         #region TestSuite Events
 
-        private void OnTestSuiteStarted(ITestSuite testSuite, ITagList tags)
-        {
-            using (new BlockLogger(testSuite.Name))
-            {
-                RaiseTestSuiteStarted(testSuite);
-            }
-        }
-
         private TestClassMemberInfo GetMemberInfo(string classname, string membername)
         {
             var key = GetTestCaseKey(classname, membername);
@@ -92,22 +91,12 @@ namespace AccessCodeLib.AccUnit
             return memberinfo;
         }
 
-        void OnTestSuiteFinished(ITestSummary testSummary)
-        {
-            if (Cancel) return;
-            using (new BlockLogger(testSummary.ToString()))
-            {
-                RaiseTraceMessage(SummaryFormatter.GetTestSuiteFinishedText(testSummary));
-                RaiseTestSuiteFinished(testSummary);
-            }
-        }
-
         private void OnTestSuiteTestFixtureFinished(ITestResult result)
         {
             if (Cancel) return;
             using (new BlockLogger(result.Message))
             {
-                RaiseTraceMessage(SummaryFormatter.GetTestFixtureFinishedText(result));
+                RaiseTraceMessage(_summaryFormatter.GetTestFixtureFinishedText(result));
                 RaiseTestFixtureFinished(result);
             }
         }
@@ -121,7 +110,7 @@ namespace AccessCodeLib.AccUnit
             }
             using (new BlockLogger(fixture.FullName))
             {
-                RaiseTraceMessage(SummaryFormatter.GetTestFixtureStartedText(fixture));
+                RaiseTraceMessage(_summaryFormatter.GetTestFixtureStartedText(fixture));
                 RaiseTestFixtureStarted(fixture);
             }
         }
@@ -260,7 +249,7 @@ namespace AccessCodeLib.AccUnit
             if (Cancel) return;
             using (new BlockLogger(result.Message))
             {
-                RaiseTraceMessage(SummaryFormatter.GetTestCaseFinishedText(result));
+                RaiseTraceMessage(_summaryFormatter.GetTestCaseFinishedText(result));
                 // TODO: Here, a TestConverter comes along, which does not implement ITestCase, so the following condition always evaluates to false!
                 if (result.Test is ITest test)
                 {
@@ -281,7 +270,7 @@ namespace AccessCodeLib.AccUnit
                 try
                 {
                     if (_testBuilder.TestToolsActivated)
-                        TestMessageBox.DisposeTestMessageBox(_testBuilder.OfficeApplicationHelper);
+                        TestMessageBox.DisposeTestMessageBox(_applicationHelper);
                 }
                 catch (Exception ex)
                 {
@@ -349,36 +338,31 @@ namespace AccessCodeLib.AccUnit
         {
             get
             {
-                if (_testRunner is null)
-                {
-                    _testRunner = new VbaTestRunner(_testBuilder.ActiveVBProject);
-                }
                 return _testRunner;
             }
-            set
-            {
-                if (_testRunner != null)
-                    try
-                    {
-                        _testRunner.TestStarted -= OnTestSuiteTestStarted;
-                        _testRunner.TestFinished -= OnTestSuiteTestFinished;
-                        _testRunner.TestFixtureFinished -= OnTestSuiteTestFixtureFinished;
-                        _testRunner.TestFixtureStarted -= OnTestSuiteTestFixtureStarted;
-                        //_testRunner.TestSuiteStarted -= OnTestSuiteStarted;
-                        //_testRunner.TestSuiteFinished -= OnTestSuiteFinished;
-                    }
-                    catch (Exception ex) { Logger.Log(ex); }
+        }
 
-                _testRunner = value;
-                if (_testRunner != null)
+        private void SetNewTestRunner(ITestRunner testRunner)
+        {
+            if (_testRunner != null)
+            {
+                try
                 {
-                    _testRunner.TestStarted += OnTestSuiteTestStarted;
-                    _testRunner.TestFinished += OnTestSuiteTestFinished;
-                    _testRunner.TestFixtureFinished += OnTestSuiteTestFixtureFinished;
-                    _testRunner.TestFixtureStarted += OnTestSuiteTestFixtureStarted;
-                    //_testRunner.TestSuiteStarted += OnTestSuiteStarted;
-                    //_testRunner.TestSuiteFinished += OnTestSuiteFinished;
+                    _testRunner.TestStarted -= OnTestSuiteTestStarted;
+                    _testRunner.TestFinished -= OnTestSuiteTestFinished;
+                    _testRunner.TestFixtureFinished -= OnTestSuiteTestFixtureFinished;
+                    _testRunner.TestFixtureStarted -= OnTestSuiteTestFixtureStarted;
                 }
+                catch (Exception ex) { Logger.Log(ex); }
+            }
+
+            _testRunner = testRunner;
+            if (_testRunner != null)
+            {
+                _testRunner.TestStarted += OnTestSuiteTestStarted;
+                _testRunner.TestFinished += OnTestSuiteTestFinished;
+                _testRunner.TestFixtureFinished += OnTestSuiteTestFixtureFinished;
+                _testRunner.TestFixtureStarted += OnTestSuiteTestFixtureStarted;
             }
         }
 
@@ -394,9 +378,9 @@ namespace AccessCodeLib.AccUnit
                 _accUnitTests.Add(testToAdd as ITestManagerBridge);
 
             var fixture = new TestFixture(testToAdd);
-            fixture.FillFixtureTags(_testBuilder.ActiveVBProject);
-            fixture.FillInstanceMembers(_testBuilder.ActiveVBProject);
-            fixture.FillTestListFromTestClassInstance(_testBuilder.ActiveVBProject);
+            fixture.FillFixtureTags(_applicationHelper.CurrentVBProject);
+            fixture.FillInstanceMembers(_applicationHelper.CurrentVBProject);
+            fixture.FillTestListFromTestClassInstance(_applicationHelper.CurrentVBProject);
             _testFixtures.Add(fixture);
         }
 
@@ -436,22 +420,6 @@ namespace AccessCodeLib.AccUnit
         {
             _filterTags = new List<ITestItemTag>(filterTags);
             return this;
-        }
-
-        private object _hostApplication;
-        public virtual object HostApplication
-        {
-            get { return _hostApplication; }
-            set
-            {
-                _hostApplication = value;
-                _testBuilder.HostApplication = _hostApplication;
-            }
-        }
-
-        private void OnOfficeApplicationReferenceRequired(ref object returnedObject)
-        {
-            returnedObject = HostApplication;
         }
 
         ITestSuite ITestSuite.Reset(ResetMode mode) { return Reset(mode); }
@@ -502,7 +470,7 @@ namespace AccessCodeLib.AccUnit
             var testResult = TestRunner.Run(this, TestResultCollector, _methodFilter, _filterTags);
             _testSummary = testResult as ITestSummary;
 
-            RaiseTraceMessage(SummaryFormatter.GetTestSummaryText(Summary));
+            RaiseTraceMessage(_summaryFormatter.GetTestSummaryText(Summary));
             RaiseTestSuiteFinished(Summary);
             return this;
         }
@@ -533,17 +501,11 @@ namespace AccessCodeLib.AccUnit
 
         #endregion
 
-        private VBProject _activeVbProject;
         public virtual VBProject ActiveVBProject
         {
             get
             {
-                return _activeVbProject;
-            }
-            set
-            {
-                _activeVbProject = value;
-                _testBuilder.ActiveVBProject = _activeVbProject;
+                return _applicationHelper.CurrentVBProject;
             }
         }
 
@@ -576,12 +538,12 @@ namespace AccessCodeLib.AccUnit
         void DisposeManagedResources()
         {
             _testBuilder.Dispose();
+            _applicationHelper.Dispose();
         }
 
         void DisposeUnmanagedResources()
         {
             _testResultCollector = null;
-            _activeVbProject = null;
         }
 
         public void Dispose()
