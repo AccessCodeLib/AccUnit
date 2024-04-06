@@ -169,18 +169,16 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     {
                         Logger.Log(ex);
                     }
-                    /*
-                    var test = result.Test.Parent as ITest;
-                    if (test != null)
+
+                    if (result.Test.Parent is ITest test)
                     {
                         if (test.RunState == RunState.Ignored)
                         {
-                            if (TestCountChanged != null)
-                                TestCountChanged(-1);
+                            TestCountChanged?.Invoke(-1);
                             return;
                         }
                     }
-                    */
+
                     var memberinfo = GetMemberInfoFromTestCaseResult(result);
                     RaiseTestFinished(result, false, memberinfo);
                 }
