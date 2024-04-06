@@ -188,11 +188,4 @@ namespace AccessCodeLib.AccUnit
             }
         }
     }
-
-    public struct IgnoreInfo
-    {
-        public bool Ignore;
-        public string Comment;
-    }
-
 }

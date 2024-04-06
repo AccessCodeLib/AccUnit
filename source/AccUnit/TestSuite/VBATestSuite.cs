@@ -26,6 +26,8 @@ namespace AccessCodeLib.AccUnit
             }
         }
 
+        public object Parent { get { return null; } }
+
         private readonly List<ITestManagerBridge> _accUnitTests = new List<ITestManagerBridge>();
         private readonly List<ITestFixture> _testFixtures = new List<ITestFixture>();
         private IEnumerable<ITestItemTag> _filterTags = null;
@@ -117,7 +119,7 @@ namespace AccessCodeLib.AccUnit
 
         public bool Cancel { get; set; }
 
-        void OnTestSuiteTestStarted(ITest test, IgnoreInfo ignoreInfo, ITagList tags)
+        void OnTestSuiteTestStarted(ITest test, IgnoreInfo ignoreInfo, IEnumerable<ITestItemTag> tags)
         {
             if (Cancel)
             {
@@ -285,9 +287,9 @@ namespace AccessCodeLib.AccUnit
 
         #region Event-Invocators
 
-        private void RaiseTestSuiteStarted(ITestSuite testSuite)
+        private void RaiseTestSuiteStarted(ITestSuite testSuite, ITagList tags)
         {
-            TestSuiteStarted?.Invoke(testSuite);
+            TestSuiteStarted?.Invoke(testSuite, tags);
         }
 
         private void RaiseTestSuiteFinished(ITestSummary testSummary)
@@ -466,7 +468,7 @@ namespace AccessCodeLib.AccUnit
             {
                 TestResultCollector = NewTestResultCollector();
             }
-            RaiseTestSuiteStarted(this);
+            RaiseTestSuiteStarted(this, new TagList(_filterTags));
             var testResult = TestRunner.Run(this, TestResultCollector, _methodFilter, _filterTags);
             _testSummary = testResult as ITestSummary;
 

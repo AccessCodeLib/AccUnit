@@ -6,6 +6,7 @@ using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.AccUnit.VbeAddIn.Properties;
 using Microsoft.Vbe.Interop;
 using Timer = System.Windows.Forms.Timer;
+using AccessCodeLib.AccUnit.Interfaces;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -194,7 +195,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         #region ad Bridge
 
-        /*
         private AddInManagerBridge _addInManagerBridge;
 
         public AddInManagerBridge Bridge
@@ -221,14 +221,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         void AddInBridgeTestSuiteRequest(out IVBATestSuite suite)
         {
-            suite = _testSuiteManager.TestSuite;
+            suite = null; // _testSuiteManager.TestSuite;
         }
 
         void AddInBridgeHostApplicationInitialized(object application)
         {
             InitOfficeApplicationHelper(application);
         }
-        */
+
         #endregion
 
         private void InitOfficeApplicationHelper(object hostApplication = null)
@@ -462,7 +462,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void DisposeAddInManagerBridge()
         {
-            /*
             using (new BlockLogger())
             {
                 if (_addInManagerBridge == null)
@@ -478,16 +477,13 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     _addInManagerBridge = null;
                 }
             }
-            */
         }
 
-        /*
         private void RemoveEventHandler(AddInManagerBridge addInManagerBridge)
         {
             addInManagerBridge.TestSuiteRequest -= AddInBridgeTestSuiteRequest;
             addInManagerBridge.HostApplicationInitialized -= AddInBridgeHostApplicationInitialized;
         }
-        */
 
         public void Dispose()
         {

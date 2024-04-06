@@ -28,7 +28,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
 
         public ITestResult Run(ITestSuite testSuite, ITestResultCollector testResultCollector, IEnumerable<string> methodFilter = null, IEnumerable<ITestItemTag> filterTags = null)
         {
-            RaiseTestSuiteStarted(testSuite);
+            RaiseTestSuiteStarted(testSuite, filterTags);
             var results = new TestResultCollection(testSuite);
 
             foreach (var tests in testSuite.TestFixtures)
@@ -42,9 +42,9 @@ namespace AccessCodeLib.AccUnit.TestRunner
             return results;
         }
 
-        void RaiseTestSuiteStarted(ITestSuite testSuite)
+        void RaiseTestSuiteStarted(ITestSuite testSuite, IEnumerable<ITestItemTag> tags)
         {
-            TestSuiteStarted?.Invoke(testSuite);
+            TestSuiteStarted?.Invoke(testSuite, tags);
         }
 
         void RaiseTestSuiteFinished(ITestSummary testSummary)

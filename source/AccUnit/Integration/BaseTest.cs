@@ -7,9 +7,19 @@ namespace AccessCodeLib.AccUnit.Integration
         public BaseTest(ITestFixture fixture, ITestClassMemberInfo testClassMemberInfo)
         {
             Fixture = fixture;
+            Parent = fixture;
             Name = testClassMemberInfo.Name;
             MethodName = testClassMemberInfo.Name;
             TestClassMemberInfo = testClassMemberInfo;
+        }
+
+        public BaseTest(ITestFixture fixture, object parentTest, ITestClassMemberInfo testClassMemberInfo)
+        {
+            Fixture = fixture;
+            Name = testClassMemberInfo.Name;
+            MethodName = testClassMemberInfo.Name;
+            TestClassMemberInfo = testClassMemberInfo;
+            Parent = parentTest;
         }
 
         protected virtual string FormattedFullName()
@@ -18,6 +28,8 @@ namespace AccessCodeLib.AccUnit.Integration
         }
 
         public ITestFixture Fixture { get; private set; }
+
+        public object Parent { get; private set; }
 
         public string MethodName { get; private set; }
 

@@ -1,6 +1,7 @@
 ﻿using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interop
@@ -30,9 +31,9 @@ namespace AccessCodeLib.AccUnit.Interop
             base.Add(testResult);
         }
 
-        protected override void RaiseTestSuiteStarted(ITestSuite testSuite)
+        protected override void RaiseTestSuiteStarted(ITestSuite testSuite, IEnumerable<ITestItemTag> tags)
         {
-            TestSuiteStarted?.Invoke(testSuite);
+            TestSuiteStarted?.Invoke(testSuite, tags);
         }
 
         protected override void RaiseTestTraceMessage(string message, CodeCoverage.ICodeCoverageTracker CodeCoverageTracker)

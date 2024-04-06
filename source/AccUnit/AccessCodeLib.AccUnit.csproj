@@ -145,6 +145,7 @@
     <Compile Include="CodeCoverage\ICodeCoverageTracker.cs" />
     <Compile Include="CodeCoverage\ProcedureTracker.cs" />
     <Compile Include="Configuration\ErrorTrappingObserver.cs" />
+    <Compile Include="Integration\IgnoreInfo.cs" />
     <Compile Include="Interfaces\IVBATestBuilder.cs" />
     <Compile Include="Interfaces\VbaErrorTrapping.cs" />
     <Compile Include="Integration\TestResultCollector.cs" />

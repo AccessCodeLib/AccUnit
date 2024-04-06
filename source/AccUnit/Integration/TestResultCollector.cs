@@ -1,5 +1,6 @@
 ﻿using AccessCodeLib.AccUnit.CodeCoverage;
 using AccessCodeLib.AccUnit.Interfaces;
+using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit.Integration
 {
@@ -32,9 +33,9 @@ namespace AccessCodeLib.AccUnit.Integration
             RaisePrintSummary(TestSummary, PrintTestResults);
         }
 
-        protected virtual void RaiseTestSuiteStarted(ITestSuite testSuite)
+        protected virtual void RaiseTestSuiteStarted(ITestSuite testSuite, IEnumerable<ITestItemTag> tags)
         {
-            TestSuiteStarted?.Invoke(testSuite);
+            TestSuiteStarted?.Invoke(testSuite, tags);
         }
 
         protected virtual void RaiseTestTraceMessage(string message, ICodeCoverageTracker CodeCoverageTracker)

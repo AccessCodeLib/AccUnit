@@ -29,6 +29,14 @@ namespace AccessCodeLib.AccUnit
             _testClassInstance = testToAdd;
         }
 
+        public object Parent
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         public ITestFixtureMembers Members
         {
             get

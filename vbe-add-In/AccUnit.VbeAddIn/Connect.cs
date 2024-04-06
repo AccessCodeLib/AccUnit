@@ -20,7 +20,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     /// </summary>
     /// <seealso class='IDTExtensibility2' />
     [ComVisible(true)]
-    [GuidAttribute("61DF0137-0FA6-4DAA-A88A-DBDAEBC94449")]
+    [Guid("F15F18C3-CA43-421E-9585-6A04F51C5786")]
     [ProgId(ComRegistration.ComProgId)]
     public class Connect : Object, Extensibility.IDTExtensibility2, IDisposable
     {
@@ -54,7 +54,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     AddInManager = new AddInManager(_addInInstance);
                     AddInManager.Init();
 
-                    //_addInInstance.Object = AddInManager.Bridge;
+                    _addInInstance.Object = AddInManager.Bridge;
                 }
                 catch (Exception ex)
                 {

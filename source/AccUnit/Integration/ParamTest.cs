@@ -14,6 +14,13 @@ namespace AccessCodeLib.AccUnit.Integration
             Parameters = parameters;
         }
 
+        public ParamTest(ITestFixture fixture, ITest parent, ITestClassMemberInfo testClassMemberInfo, string testRowId, IEnumerable<object> parameters)
+            : base(fixture, parent, testClassMemberInfo)
+        {
+            _testRowId = testRowId;
+            Parameters = parameters;
+        }
+
         protected override string FormattedFullName()
         {
             return $"{Fixture.Name}.{MethodName}.{_testRowId}";
