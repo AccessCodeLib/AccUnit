@@ -1,21 +1,82 @@
-﻿using AccessCodeLib.AccUnit.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AccessCodeLib.AccUnit.CodeCoverage;
+using AccessCodeLib.AccUnit.Interfaces;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
     public class TestResultReporter : ITestResultReporter
     {
+        event TestSuiteStartedEventHandler TestSuiteStarted;
+        event TestSuiteFinishedEventHandler TestSuiteFinished;
+        event TestSuiteResetEventHandler TestSuiteReset;
+        event TestFixtureStartedEventHandler TestFixtureStarted;
+        event FinishedEventHandler TestFixtureFinished;
+        event TestStartedEventHandler TestStarted;
+        event FinishedEventHandler TestFinished;
+        event TestTraceMessageEventHandler TestTraceMessage;
+        
+        private INotifyingTestResultCollector _testResultCollector;  
 
-        private ITestResultCollector _testResultCollector;  
+        public ITestResultCollector TestResultCollector {
+            get { return _testResultCollector; }
+            set {
+                _testResultCollector = value as INotifyingTestResultCollector;
+                InitEventHandler();
+            }   
+        }
 
-        public ITestResultCollector TestResultCollector { get; set; }
+        private void InitEventHandler()
+        {
+            _testResultCollector.TestSuiteStarted += TestResultCollector_TestSuiteStarted;  
+            _testResultCollector.TestSuiteFinished += TestResultCollector_TestSuiteFinished;
+            _testResultCollector.TestSuiteReset += TestResultCollector_TestSuiteReset;
 
+            _testResultCollector.TestFixtureStarted += TestResultCollector_TestFixtureStarted;
+            _testResultCollector.TestFixtureFinished += TestResultCollector_TestFixtureFinished;
 
+            _testResultCollector.TestStarted += TestResultCollector_TestStarted;    
+            _testResultCollector.TestFinished += TestResultCollector_TestFinished;  
+            _testResultCollector.TestTraceMessage += TestResultCollector_TestTraceMessage;
+            
+        }
 
+        private void TestResultCollector_TestSuiteStarted(ITestSuite testSuite)
+        {
+            TestSuiteStarted?.Invoke(testSuite);
+        }
 
+        private void TestResultCollector_TestSuiteFinished(ITestSummary summary)
+        {
+            TestSuiteFinished?.Invoke(summary);   
+        }
+
+        private void TestResultCollector_TestSuiteReset(ResetMode resetmode, ref bool cancel)
+        {
+            TestSuiteReset?.Invoke(resetmode, ref cancel);
+        }
+
+        private void TestResultCollector_TestFixtureStarted(ITestFixture fixture)
+        {
+            TestFixtureStarted?.Invoke(fixture);    
+        }
+
+        private void TestResultCollector_TestFixtureFinished(ITestResult result)
+        {
+            TestFixtureFinished?.Invoke(result);    
+        }
+
+        private void TestResultCollector_TestStarted(ITest test, IgnoreInfo ignoreInfo)
+        {
+            TestStarted?.Invoke(test, ignoreInfo);  
+        }
+
+        private void TestResultCollector_TestFinished(ITestResult result)
+        {
+            TestFinished?.Invoke(result);   
+        }
+
+        private void TestResultCollector_TestTraceMessage(string message, ICodeCoverageTracker CodeCoverageTracker)
+        {
+            TestTraceMessage?.Invoke(message, CodeCoverageTracker); 
+        }
     }
 }
