@@ -6,7 +6,6 @@ using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 namespace AccessCodeLib.AccUnit.TestRunner
@@ -145,6 +144,20 @@ namespace AccessCodeLib.AccUnit.TestRunner
         public ITestResult Run(IRowTest test, IEnumerable<ITestItemTag> filterTags = null)
         {
             var results = new TestResultCollection(test);
+            var ignoreInfo = new IgnoreInfo();
+            RaiseTestStarted(test, ignoreInfo);   
+
+            if (ignoreInfo.Ignore)
+            {
+                var ignoreTestResult = new TestResult(test)
+                {
+                    IsIgnored = true,
+                    Message = ignoreInfo.Comment
+                };
+                RaiseTestFinished(ignoreTestResult);
+                return ignoreTestResult;
+            }
+
             foreach (var paramTest in test.ParamTests)
             {
                 if (filterTags != null)
@@ -158,6 +171,8 @@ namespace AccessCodeLib.AccUnit.TestRunner
                 var result = Run(paramTest);
                 results.Add(result);
             }
+
+            RaiseTestFinished(results);
             return results;
         }
 

@@ -251,8 +251,12 @@ namespace AccessCodeLib.AccUnit
             if (Cancel) return;
             using (new BlockLogger(result.Message))
             {
-                RaiseTraceMessage(_summaryFormatter.GetTestCaseFinishedText(result));
-                // TODO: Here, a TestConverter comes along, which does not implement ITestCase, so the following condition always evaluates to false!
+                if (!(result.Test is IRowTest))
+                {
+                    RaiseTraceMessage(_summaryFormatter.GetTestCaseFinishedText(result));
+                }
+
+                // TODO: Here, a TestConverter comes along, which does not implement ITest, so the following condition always evaluates to false!
                 if (result.Test is ITest test)
                 {
                     var memberinfo = GetMemberInfo(test);
@@ -307,9 +311,9 @@ namespace AccessCodeLib.AccUnit
             TestFixtureStarted?.Invoke(fixture);
         }
 
-        protected virtual void RaiseTestStarted(ITest testcase, IgnoreInfo ignoreInfo)
+        protected virtual void RaiseTestStarted(ITest test, IgnoreInfo ignoreInfo)
         {
-            TestStarted?.Invoke(testcase, ignoreInfo);
+            TestStarted?.Invoke(test, ignoreInfo);
         }
 
         private void RaiseTestFinished(ITestResult result)

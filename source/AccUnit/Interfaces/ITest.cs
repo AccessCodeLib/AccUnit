@@ -7,6 +7,9 @@ namespace AccessCodeLib.AccUnit.Interfaces
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface ITest : ITestData
     {
+        new string Name { get; }
+        new string FullName { get; }
+
         ITestFixture Fixture { get; }
         string MethodName { get; }
         string DisplayName { get; set; }

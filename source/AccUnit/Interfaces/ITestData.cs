@@ -9,7 +9,6 @@ namespace AccessCodeLib.AccUnit.Interfaces
     {
         string Name { get; }
         string FullName { get; }
-
         object Parent { [return: MarshalAs(UnmanagedType.IDispatch)] get; }
     }
 }

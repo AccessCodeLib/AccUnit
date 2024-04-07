@@ -19,6 +19,8 @@ Option Explicit
 
 Implements AccUnit.ITestResultReporter
 
+#Const ShowEventDebugLine = False
+
 Private WithEvents m_TestResultCollector As AccUnit.TestResultCollector
 Attribute m_TestResultCollector.VB_VarHelpID = -1
 
@@ -31,27 +33,39 @@ Private Property Set ITestResultReporter_TestResultCollector(ByVal TestResultCol
 End Property
 
 Private Sub m_TestResultCollector_NewTestResult(ByVal Result As AccUnit.ITestResult)
+#If ShowEventDebugLine Then
    Debug.Print "m_TestResultCollector_NewTestResult"
+#End If
 End Sub '
 
+Private Sub m_TestResultCollector_TestStarted(ByVal Test As AccUnit.ITest, ByVal IgnoreInfo As AccUnit.IgnoreInfo)
+#If ShowEventDebugLine Then
+   Debug.Print "m_TestResultCollector_TestStarted", Test.FullName
+#End If
+End Sub
+
 Private Sub m_TestResultCollector_TestFinished(ByVal Result As AccUnit.ITestResult)
+#If ShowEventDebugLine Then
    Debug.Print "m_TestResultCollector_TestFinished"
+#End If
 End Sub
 
 Private Sub m_TestResultCollector_TestFixtureFinished(ByVal Result As AccUnit.ITestResult)
+#If ShowEventDebugLine Then
    Debug.Print "m_TestResultCollector_TestFixtureFinished"
+#End If
 End Sub
 
 Private Sub m_TestResultCollector_TestFixtureStarted(ByVal TestFixture As AccUnit.ITestFixture)
+#If ShowEventDebugLine Then
    Debug.Print "m_TestResultCollector_TestFixtureStarted"
-End Sub
-
-Private Sub m_TestResultCollector_TestStarted(ByVal Test As AccUnit.ITest, ByVal IgnoreInfo As AccUnit.IgnoreInfo)
-   Debug.Print "m_TestResultCollector_TestStarted"
+#End If
 End Sub
 
 Private Sub m_TestResultCollector_TestSuiteFinished(ByVal Summary As AccUnit.ITestSummary)
+#If ShowEventDebugLine Then
    Debug.Print "m_TestResultCollector_TestSuiteFinished"
+#End If
 End Sub
 
 Private Sub m_TestResultCollector_TestSuiteReset(ByVal Summary As AccUnit.ITestSummary)
@@ -59,7 +73,9 @@ Private Sub m_TestResultCollector_TestSuiteReset(ByVal Summary As AccUnit.ITestS
 End Sub
 
 Private Sub m_TestResultCollector_TestSuiteStarted(ByVal TestSuite As AccUnit.ITestSuite)
+#If ShowEventDebugLine Then
    Debug.Print "m_TestResultCollector_TestSuiteStarted"
+#End If
 End Sub
 
 Private Sub m_TestResultCollector_TestTraceMessage(ByVal Message As String, ByVal CodeCoverageTracker As CodeCoverageTracker)

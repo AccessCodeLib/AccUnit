@@ -35,7 +35,8 @@ namespace AccessCodeLib.AccUnit.Integration
 
         public string FullName { get { return FormattedFullName(); } }
 
-        public string DisplayName { get; set; }
+        protected string _displayName;
+        public string DisplayName { get { return _displayName?? Name; } set { _displayName = value; } }
         public RunState RunState { get; set; }
 
         public string Name { get; private set; }
