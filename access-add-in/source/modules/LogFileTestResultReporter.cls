@@ -41,6 +41,26 @@ Private Property Set TestResultCollector(ByVal TestResultCollectorToListen As Te
    Set m_TestResultCollector = TestResultCollectorToListen
 End Property
 
+Private Sub m_TestResultCollector_TestFinished(ByVal Result As AccUnit.ITestResult)
+'
+End Sub
+
+Private Sub m_TestResultCollector_TestFixtureFinished(ByVal Result As AccUnit.ITestResult)
+'
+End Sub
+
+Private Sub m_TestResultCollector_TestFixtureStarted(ByVal TestFixture As AccUnit.ITestFixture)
+'
+End Sub
+
+Private Sub m_TestResultCollector_TestStarted(ByVal Test As AccUnit.ITest, ByVal IgnoreInfo As AccUnit.IgnoreInfo)
+'
+End Sub
+
+Private Sub m_TestResultCollector_TestSuiteReset(ByVal Summary As AccUnit.ITestSummary)
+'
+End Sub
+
 Private Sub m_TestResultCollector_TestSuiteStarted(ByVal TestSuite As AccUnit.ITestSuite)
    PrintToFile String(LineSeperatorLen, "#")
    PrintToFile Format(Now(), "yyyy-mm-dd hh:nn:ss")

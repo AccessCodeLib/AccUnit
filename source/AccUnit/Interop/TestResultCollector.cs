@@ -37,7 +37,7 @@ namespace AccessCodeLib.AccUnit.Interop
 
         protected override void RaiseTestStarted(ITest test, IgnoreInfo ignoreInfo)
         {
-            TestStarted?.Invoke(test as object, ignoreInfo);
+            TestStarted?.Invoke(test, ignoreInfo);
         }
 
         protected override void RaiseTestTraceMessage(string message, CodeCoverage.ICodeCoverageTracker CodeCoverageTracker)
@@ -62,12 +62,12 @@ namespace AccessCodeLib.AccUnit.Interop
 
         protected override void RaiseTestFixtureStarted(ITestFixture testFixture)
         {
-            TestFixtureStarted?.Invoke(null);
+            TestFixtureStarted?.Invoke(testFixture);
         }
 
         protected override void RaiseTestFixtureFinished(ITestResult result)
         {
-            TestFixtureFinished?.Invoke(null);
+           TestFixtureFinished?.Invoke(result);
         }   
 
         protected override void RaiseTestFinished(ITestResult result)
@@ -92,9 +92,8 @@ namespace AccessCodeLib.AccUnit.Interop
         public new event PrintSummaryEventHandler PrintSummary;
     }
 
-    public delegate void TestSuiteStartedEventHandler(object testSuite);
-    public delegate void TestFixtureStartedEventHandler(object testFixture);
+    //public delegate void TestSuiteStartedEventHandler(ITestSuite testSuite);
     public delegate void TestTraceMessageEventHandler(string Message, ICodeCoverageTracker CodeCoverageTracker);
-    public delegate void TestStartedEventHandler(object test, IgnoreInfo ignoreInfo);
+    //public delegate void TestStartedEventHandler(ITest test, IgnoreInfo ignoreInfo);
 
 }

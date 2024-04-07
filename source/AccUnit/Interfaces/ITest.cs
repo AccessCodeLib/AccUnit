@@ -4,7 +4,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
 {
     [ComVisible(true)]
     [Guid("96AEE906-564B-4A39-B85C-E47F275CFD51")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface ITest : ITestData
     {
         ITestFixture Fixture { get; }

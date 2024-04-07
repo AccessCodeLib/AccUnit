@@ -2,7 +2,7 @@
 
 namespace AccessCodeLib.AccUnit.Integration
 {
-    internal abstract class BaseTest : ITest
+    public abstract class BaseTest : ITest
     {
         public BaseTest(ITestFixture fixture, ITestClassMemberInfo testClassMemberInfo)
         {

@@ -44,12 +44,14 @@ Public Property Set CodeCoverageTracker(ByVal NewRef As Object)
    Set m_CodeCoverageTracker = NewRef
 End Property
 
-'####################################
-' AccessTestSuite event handler
-'
 Private Sub m_TestSuite_TestSuiteStarted(ByVal TestSuite As AccUnit.ITestSuite)
 '
 End Sub
+
+'####################################
+' AccessTestSuite event handler
+'
+
 
 Private Sub m_TestSuite_TestTraceMessage(ByVal Message As String, ByVal CodeCoverageTracker As AccUnit.ICodeCoverageTracker)
 '

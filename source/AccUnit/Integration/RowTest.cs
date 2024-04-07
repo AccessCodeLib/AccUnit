@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit.Integration
 {
-    internal class RowTest : IRowTest
+    public class RowTest : IRowTest
     {
         public RowTest(ITestFixture fixture, TestClassMemberInfo testClassMemberInfo)
         {

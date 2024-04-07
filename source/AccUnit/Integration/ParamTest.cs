@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit.Integration
 {
-    internal class ParamTest : BaseTest, IParamTest
+    public class ParamTest : BaseTest, IParamTest
     {
         private readonly string _testRowId = string.Empty;
 
