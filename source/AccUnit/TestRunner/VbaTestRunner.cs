@@ -6,6 +6,7 @@ using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace AccessCodeLib.AccUnit.TestRunner
@@ -28,12 +29,12 @@ namespace AccessCodeLib.AccUnit.TestRunner
 
         public ITestResult Run(ITestSuite testSuite, ITestResultCollector testResultCollector, IEnumerable<string> methodFilter = null, IEnumerable<ITestItemTag> filterTags = null)
         {
-            RaiseTestSuiteStarted(testSuite, filterTags);
+            RaiseTestSuiteStarted(testSuite);
             var results = new TestResultCollection(testSuite);
 
-            foreach (var tests in testSuite.TestFixtures)
+            foreach (var fixture in testSuite.TestFixtures)
             {
-                var result = Run(tests, testResultCollector, methodFilter, filterTags);
+                var result = Run(fixture, testResultCollector, methodFilter, filterTags);
                 results.Add(result);
             }
 
@@ -42,9 +43,9 @@ namespace AccessCodeLib.AccUnit.TestRunner
             return results;
         }
 
-        void RaiseTestSuiteStarted(ITestSuite testSuite, IEnumerable<ITestItemTag> tags)
+        void RaiseTestSuiteStarted(ITestSuite testSuite/*, IEnumerable<ITestItemTag> tags*/)
         {
-            TestSuiteStarted?.Invoke(testSuite, tags);
+            TestSuiteStarted?.Invoke(testSuite);
         }
 
         void RaiseTestSuiteFinished(ITestSummary testSummary)
@@ -204,7 +205,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
             {
                 var ignoreInfo = new IgnoreInfo();
 
-                RaiseTestStarted(test, ignoreInfo, test.TestClassMemberInfo.Tags);
+                RaiseTestStarted(test, ignoreInfo);
                 if (ignoreInfo.Ignore)
                 {
                     testResult.IsIgnored = true;
@@ -298,9 +299,9 @@ namespace AccessCodeLib.AccUnit.TestRunner
             }
         }
 
-        void RaiseTestStarted(ITest test, IgnoreInfo ignoreInfo, ITagList tags)
+        void RaiseTestStarted(ITest test, IgnoreInfo ignoreInfo)
         {
-            TestStarted?.Invoke(test, ignoreInfo, tags);
+            TestStarted?.Invoke(test, ignoreInfo);
         }
 
         void RaiseTestFinished(ITestResult result)

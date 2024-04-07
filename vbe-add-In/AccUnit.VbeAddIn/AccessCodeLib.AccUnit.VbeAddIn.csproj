@@ -90,6 +90,7 @@
       <DependentUpon>UserControls.resx</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="TestResultReporter.cs" />
     <Compile Include="TestSuiteManager.cs" />
     <Compile Include="UITools.cs" />
     <Compile Include="VbProjectEventArgs.cs" />

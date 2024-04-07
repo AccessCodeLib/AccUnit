@@ -1,7 +1,5 @@
-﻿using AccessCodeLib.AccUnit.Integration;
-using AccessCodeLib.AccUnit.Interfaces;
+﻿using AccessCodeLib.AccUnit.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interop
@@ -20,7 +18,8 @@ namespace AccessCodeLib.AccUnit.Interop
     [ComSourceInterfaces(typeof(ITestResultCollectorComEvents))]
     [ProgId("AccUnit.TestResultCollector")]
     public class TestResultCollector : Integration.TestResultCollector, ITestCollector
-                                            , ITestResultCollectorEvents
+                                            , INotifyingTestResultCollector, ITestResultCollectorEvents
+                                            , ITestResultSummaryPrinter
     {
         public TestResultCollector(ITestSuite test) : base(test)
         {
@@ -31,9 +30,14 @@ namespace AccessCodeLib.AccUnit.Interop
             base.Add(testResult);
         }
 
-        protected override void RaiseTestSuiteStarted(ITestSuite testSuite, IEnumerable<ITestItemTag> tags)
+        protected override void RaiseTestSuiteStarted(ITestSuite testSuite)
         {
-            TestSuiteStarted?.Invoke(testSuite, tags);
+            TestSuiteStarted?.Invoke(testSuite);
+        }
+
+        protected override void RaiseTestStarted(ITest test, IgnoreInfo ignoreInfo)
+        {
+            TestStarted?.Invoke(test as object, ignoreInfo);
         }
 
         protected override void RaiseTestTraceMessage(string message, CodeCoverage.ICodeCoverageTracker CodeCoverageTracker)
@@ -56,14 +60,41 @@ namespace AccessCodeLib.AccUnit.Interop
             PrintSummary?.Invoke(TestSummary, PrintTestResults);
         }
 
+        protected override void RaiseTestFixtureStarted(ITestFixture testFixture)
+        {
+            TestFixtureStarted?.Invoke(null);
+        }
+
+        protected override void RaiseTestFixtureFinished(ITestResult result)
+        {
+            TestFixtureFinished?.Invoke(null);
+        }   
+
+        protected override void RaiseTestFinished(ITestResult result)
+        {
+            TestFinished?.Invoke(result);
+        }
+
+        protected override void RaiseTestSuiteReset(ResetMode resetmode, ref bool cancel)
+        {
+            TestSuiteReset?.Invoke(resetmode, ref cancel);
+        }   
+
+        public new event TestSuiteResetEventHandler TestSuiteReset;
         public new event TestSuiteStartedEventHandler TestSuiteStarted;
+        public new event TestFixtureStartedEventHandler TestFixtureStarted;
+        public new event TestStartedEventHandler TestStarted;
         public new event TestTraceMessageEventHandler TestTraceMessage;
+        public new event FinishedEventHandler TestFinished;
         public new event TestResultEventHandler NewTestResult;
+        public new event FinishedEventHandler TestFixtureFinished;
         public new event TestSuiteFinishedEventHandler TestSuiteFinished;
         public new event PrintSummaryEventHandler PrintSummary;
-
     }
 
+    public delegate void TestSuiteStartedEventHandler(object testSuite);
+    public delegate void TestFixtureStartedEventHandler(object testFixture);
     public delegate void TestTraceMessageEventHandler(string Message, ICodeCoverageTracker CodeCoverageTracker);
+    public delegate void TestStartedEventHandler(object test, IgnoreInfo ignoreInfo);
 
 }

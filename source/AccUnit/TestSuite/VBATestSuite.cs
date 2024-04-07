@@ -112,14 +112,14 @@ namespace AccessCodeLib.AccUnit
             }
             using (new BlockLogger(fixture.FullName))
             {
-                RaiseTraceMessage(_summaryFormatter.GetTestFixtureStartedText(fixture));
                 RaiseTestFixtureStarted(fixture);
+                RaiseTraceMessage(_summaryFormatter.GetTestFixtureStartedText(fixture));
             }
         }
 
         public bool Cancel { get; set; }
 
-        void OnTestSuiteTestStarted(ITest test, IgnoreInfo ignoreInfo, IEnumerable<ITestItemTag> tags)
+        void OnTestSuiteTestStarted(ITest test, IgnoreInfo ignoreInfo)
         {
             if (Cancel)
             {
@@ -167,8 +167,8 @@ namespace AccessCodeLib.AccUnit
                     // TODO ShowAs: This messes up RowTests
                     //testcase.DisplayName = memberinfo.DisplayName;
                 }
-
-                RaiseTestStarted(test, ignoreInfo, memberinfo?.Tags);
+                
+                RaiseTestStarted(test, ignoreInfo);
             }
         }
 
@@ -287,9 +287,9 @@ namespace AccessCodeLib.AccUnit
 
         #region Event-Invocators
 
-        private void RaiseTestSuiteStarted(ITestSuite testSuite, ITagList tags)
+        protected virtual void RaiseTestSuiteStarted(ITestSuite testSuite/*, IEnumerable<ITestItemTag> tags*/)
         {
-            TestSuiteStarted?.Invoke(testSuite, tags);
+            TestSuiteStarted?.Invoke(testSuite);
         }
 
         private void RaiseTestSuiteFinished(ITestSummary testSummary)
@@ -307,9 +307,9 @@ namespace AccessCodeLib.AccUnit
             TestFixtureStarted?.Invoke(fixture);
         }
 
-        private void RaiseTestStarted(ITest testcase, IgnoreInfo ignoreInfo, ITagList tags)
+        protected virtual void RaiseTestStarted(ITest testcase, IgnoreInfo ignoreInfo)
         {
-            TestStarted?.Invoke(testcase, ignoreInfo, tags);
+            TestStarted?.Invoke(testcase, ignoreInfo);
         }
 
         private void RaiseTestFinished(ITestResult result)
@@ -468,7 +468,8 @@ namespace AccessCodeLib.AccUnit
             {
                 TestResultCollector = NewTestResultCollector();
             }
-            RaiseTestSuiteStarted(this, new TagList(_filterTags));
+            //RaiseTestSuiteStarted(this, _filterTags);
+            RaiseTestSuiteStarted(this);
             var testResult = TestRunner.Run(this, TestResultCollector, _methodFilter, _filterTags);
             _testSummary = testResult as ITestSummary;
 

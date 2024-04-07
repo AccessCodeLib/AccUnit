@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using AccessCodeLib.AccUnit.CodeCoverage;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interfaces
@@ -8,6 +9,10 @@ namespace AccessCodeLib.AccUnit.Interfaces
     public interface ITestResultCollector
     {
         void Add(ITestResult TestResult);
+    }
+
+    public interface INotifyingTestResultCollector : ITestResultCollector, ITestResultCollectorEvents
+    {
     }
 
     [ComVisible(true)]
@@ -25,9 +30,14 @@ namespace AccessCodeLib.AccUnit.Interfaces
 
     public interface ITestResultCollectorEvents
     {
+        event TestSuiteResetEventHandler TestSuiteReset;
         event TestSuiteStartedEventHandler TestSuiteStarted;
+        event TestFixtureStartedEventHandler TestFixtureStarted;
+        event TestStartedEventHandler TestStarted;
         event TestTraceMessageEventHandler TestTraceMessage;
+        event FinishedEventHandler TestFinished;
         event TestResultEventHandler NewTestResult;
+        event FinishedEventHandler TestFixtureFinished;
         event TestSuiteFinishedEventHandler TestSuiteFinished;
         event PrintSummaryEventHandler PrintSummary;
     }

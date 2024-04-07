@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
+using AccessCodeLib.Common.VBIDETools.Integration;
 using AccessCodeLib.AccUnit.VbeAddIn.Properties;
 using Microsoft.Vbe.Interop;
 using Timer = System.Windows.Forms.Timer;
@@ -15,9 +16,11 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         private Microsoft.Vbe.Interop.AddIn _addIn;
         private Timer _startupTimer;
         private OfficeApplicationHelper _officeApplicationHelper;
-        /*
-        private readonly VbeIntegrationManager _vbeIntegrationManager = new VbeIntegrationManager();
+        
+        //private readonly VbeIntegrationManager _vbeIntegrationManager = new VbeIntegrationManager();
         private readonly TestSuiteManager _testSuiteManager = new TestSuiteManager();
+
+        /*
         private readonly TagListManager _tagListManager = new TagListManager();
         private readonly TestListAndResultManager _testListAndResultManager = new TestListAndResultManager();
         private readonly TestStarter _testStarter = new TestStarter();
@@ -221,7 +224,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         void AddInBridgeTestSuiteRequest(out IVBATestSuite suite)
         {
-            suite = null; // _testSuiteManager.TestSuite;
+            suite = _testSuiteManager.TestSuite;
         }
 
         void AddInBridgeHostApplicationInitialized(object application)
@@ -233,19 +236,19 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void InitOfficeApplicationHelper(object hostApplication = null)
         {
-            /*
             using (new BlockLogger())
             {
                 _officeApplicationHelper = HostApplicationTools.GetOfficeApplicationHelper(VBE, ref hostApplication);
-                _vbeIntegrationManager.OfficeApplicationHelper = _officeApplicationHelper;
+                //_vbeIntegrationManager.OfficeApplicationHelper = _officeApplicationHelper;
                 _testSuiteManager.OfficeApplicationHelper = _officeApplicationHelper;
 
+                /*
                 if (_vbaProgrammingTools != null)
                 {
                     InitVbaProgrammingTools(_officeApplicationHelper);
                 }
+                */
             }
-            */
         }
 
         private void InitVbaProgrammingTools(OfficeApplicationHelper officeApplicationHelper)
@@ -431,9 +434,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     {
                         Logger.Log(ex);
                     }
+                    */
 
                     _testSuiteManager.Dispose();
-                    */
+                    
                     DisposeAddInManagerBridge();   
 
                 }
