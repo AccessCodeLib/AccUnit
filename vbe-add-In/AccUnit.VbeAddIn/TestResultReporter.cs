@@ -5,14 +5,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 {
     public class TestResultReporter : ITestResultReporter
     {
-        event TestSuiteStartedEventHandler TestSuiteStarted;
-        event TestSuiteFinishedEventHandler TestSuiteFinished;
-        event TestSuiteResetEventHandler TestSuiteReset;
-        event TestFixtureStartedEventHandler TestFixtureStarted;
-        event FinishedEventHandler TestFixtureFinished;
-        event TestStartedEventHandler TestStarted;
-        event FinishedEventHandler TestFinished;
-        event TestTraceMessageEventHandler TestTraceMessage;
+        public event TestSuiteStartedEventHandler TestSuiteStarted;
+        public event TestSuiteFinishedEventHandler TestSuiteFinished;
+        public event TestSuiteResetEventHandler TestSuiteReset;
+        public event TestFixtureStartedEventHandler TestFixtureStarted;
+        public event FinishedEventHandler TestFixtureFinished;
+        public event TestStartedEventHandler TestStarted;
+        public event FinishedEventHandler TestFinished;
+        public event TestTraceMessageEventHandler TestTraceMessage;
         
         private INotifyingTestResultCollector _testResultCollector;  
 

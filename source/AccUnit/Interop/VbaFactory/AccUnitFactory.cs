@@ -20,6 +20,12 @@ namespace AccessCodeLib.AccUnit.Interop
         IAccessTestSuite AccessTestSuite([MarshalAs(UnmanagedType.IDispatch)] object hostApplication, ITestBuilder testBuilder = null, ITestRunner testRunner = null, ITestSummaryFormatter testSummaryFormatter = null, ITestResultCollector externalTestResultCollector = null);
         ICodeCoverageTracker CodeCoverageTracker([MarshalAs(UnmanagedType.IDispatch)] object VBProject);
         IErrorTrappingObserver AccessErrorTrappingObserver([MarshalAs(UnmanagedType.IDispatch)] object HostApplication);
+
+        [ComVisible(false)]
+        IVBATestSuite VBATestSuite(IOfficeApplicationHelper applicationHelper, ITestBuilder testBuilder = null, ITestRunner testRunner = null, ITestSummaryFormatter testSummaryFormatter = null, ITestResultCollector externalTestResultCollector = null);
+        [ComVisible(false)]
+        IAccessTestSuite AccessTestSuite(IAccessApplicationHelper applicationHelper, ITestBuilder testBuilder = null, ITestRunner testRunner = null, ITestSummaryFormatter testSummaryFormatter = null, ITestResultCollector externalTestResultCollector = null);
+
     }
 
     [ComVisible(true)]
@@ -67,7 +73,16 @@ namespace AccessCodeLib.AccUnit.Interop
                                     ITestResultCollector externalTestResultCollector = null)
         {
             var applicationHelper = GetApplicationHelper(hostApplication);
+            return VBATestSuite(applicationHelper, testBuilder, testRunner, testSummaryFormatter, externalTestResultCollector);   
+        }
 
+        public IVBATestSuite VBATestSuite(
+                                    IOfficeApplicationHelper applicationHelper,
+                                    ITestBuilder testBuilder = null,
+                                    ITestRunner testRunner = null,
+                                    ITestSummaryFormatter testSummaryFormatter = null,
+                                    ITestResultCollector externalTestResultCollector = null)
+        {
             if (testRunner == null)
                 testRunner = new TestRunner(applicationHelper.CurrentVBProject);
 
@@ -99,8 +114,18 @@ namespace AccessCodeLib.AccUnit.Interop
                                     ITestResultCollector externalTestResultCollector = null)
         {
             var applicationHelper = new AccessApplicationHelper(hostApplcation);
+            return AccessTestSuite(applicationHelper, testBuilder, testRunner, testSummaryFormatter, externalTestResultCollector);
+        }
 
-            if (testRunner == null) 
+        public IAccessTestSuite AccessTestSuite(
+                                    IAccessApplicationHelper applicationHelper,
+                                    ITestBuilder testBuilder = null,
+                                    ITestRunner testRunner = null,
+                                    ITestSummaryFormatter testSummaryFormatter = null,
+                                    ITestResultCollector externalTestResultCollector = null)
+        {
+
+            if (testRunner == null)
                 testRunner = new TestRunner(applicationHelper.CurrentVBProject);
 
             if (testBuilder == null)
@@ -110,7 +135,7 @@ namespace AccessCodeLib.AccUnit.Interop
                 testSummaryFormatter = new TestSummaryFormatter(TestSuiteUserSettings.Current.SeparatorMaxLength, TestSuiteUserSettings.Current.SeparatorChar);
 
             var testSuite = new AccessTestSuite(applicationHelper, testBuilder, testRunner, testSummaryFormatter);
-            
+
             if (externalTestResultCollector != null)
                 testSuite.TestResultCollector = externalTestResultCollector;
 

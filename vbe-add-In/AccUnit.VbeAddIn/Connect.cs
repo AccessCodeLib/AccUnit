@@ -139,9 +139,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     }
                 }
             }
-            // ReSharper disable EmptyGeneralCatchClause
-            catch { /* */}
-            // ReSharper restore EmptyGeneralCatchClause
+            catch { /* ignore */}
         }
 
         #endregion

@@ -4,9 +4,9 @@ using AccessCodeLib.AccUnit.Interfaces;
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
     [ComVisible(true)]
-    [Guid("1ED5A466-959A-4679-B29C-8B2A5EA7E5F4")]
+    [Guid("E69DF056-1CB6-4977-8554-78F7FFF6BA0A")]
     [ClassInterface(ClassInterfaceType.None)]
-    [ProgIdAttribute("AccUnit.AddInManager")]
+    [ProgId("AccUnit.AddInManager")]
     public class AddInManagerBridge : IAddInManagerBridge
     {
         public delegate void TestSuiteRequestEventHandler(out IVBATestSuite testsuite);
@@ -20,10 +20,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         { 
             set
             {
-                if (HostApplicationInitialized != null)
-                {
-                    HostApplicationInitialized(value);
-                }
+                HostApplicationInitialized?.Invoke(value);
             }
         }
 
@@ -31,16 +28,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             get
             {
-                IVBATestSuite suite;
-                TestSuiteRequest(out suite);
+                TestSuiteRequest(out IVBATestSuite suite);
                 return suite;
             }
         }
-
     }
 
     [ComVisible(true)]
-    [Guid("81C905A1-E218-4743-BA0F-D1DB0033ABF9")]
+    [Guid("0EEEA3E7-68D6-49BA-8536-572E69CCCEF0")]
     public interface IAddInManagerBridge
     {
         IVBATestSuite TestSuite { get; }

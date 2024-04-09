@@ -40,7 +40,7 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId("AccUnit.VBATestSuite")]
     public class VBATestSuite : AccUnit.VBATestSuite, IVBATestSuite, IDisposable
     {
-        public VBATestSuite(OfficeApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
+        public VBATestSuite(IOfficeApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
                : base(applicationHelper, testBuilder, testRunner, testSummaryFormatter)
         {
         }

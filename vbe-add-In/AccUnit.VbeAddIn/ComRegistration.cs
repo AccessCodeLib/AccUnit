@@ -6,7 +6,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 {
     public static class ComRegistration
     {
-        public const string ComProgId = "AccUnit.VBE.Connect";
+        public const string ComProgId = "AccUnit.VbeAddIn.Connect";
         private const string HkcuSubKey = @"Software\Microsoft\VBA\VBE\6.0\Addins\" + ComProgId;
 
         public static void ComRegisterClass(Type t)

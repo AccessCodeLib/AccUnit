@@ -73,7 +73,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        private static IVBATestSuite CreateVbaTestSuite(OfficeApplicationHelper applicationHelper)
+        private LoggerForm _loggerForm; 
+
+        private IVBATestSuite CreateVbaTestSuite(OfficeApplicationHelper applicationHelper)
         {
             using (new BlockLogger())
             {
@@ -82,12 +84,18 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 if (applicationHelper is AccessApplicationHelper)
                 {
                     Logger.Log("Access application");
-                    vbaTestSuite = accUnitFactory.AccessTestSuite(applicationHelper.Application);
+                    vbaTestSuite = accUnitFactory.AccessTestSuite(applicationHelper);
                 }
                 else
                 {
-                    vbaTestSuite = accUnitFactory.VBATestSuite(applicationHelper.Application);
+                    vbaTestSuite = accUnitFactory.VBATestSuite(applicationHelper);
                 }
+
+                if (_loggerForm == null)
+                    _loggerForm = new LoggerForm();
+
+                _loggerForm.Visible = true;  
+                vbaTestSuite.AppendTestResultReporter(new LoggerFormReporter(_loggerForm));
                 return vbaTestSuite;
             }
         }

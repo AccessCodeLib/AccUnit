@@ -13,7 +13,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 {
     internal class AddInManager : IDisposable
     {
-        private Microsoft.Vbe.Interop.AddIn _addIn;
+        private AddIn _addIn;
         private Timer _startupTimer;
         private OfficeApplicationHelper _officeApplicationHelper;
         
@@ -34,7 +34,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         private VbaProgrammingTools _vbaProgrammingTools;
         */
 
-        public AddInManager(Microsoft.Vbe.Interop.AddIn addIn)
+        public AddInManager(AddIn addIn)
         {
             using (new BlockLogger())
             {
