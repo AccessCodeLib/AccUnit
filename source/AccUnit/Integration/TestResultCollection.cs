@@ -91,7 +91,7 @@ namespace AccessCodeLib.AccUnit.Integration
 
         public void Reset()
         {
-            base.Clear();
+            Clear();
 
             ExecutedCount = 0;
             IsErrorCount = 0;

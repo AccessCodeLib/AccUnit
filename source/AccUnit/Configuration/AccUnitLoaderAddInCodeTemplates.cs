@@ -50,10 +50,38 @@ Private m_CodeCoverageTracker As Object
 
 Private Function AccUnitLoaderFactory() As Object
    If m_AccUnitLoaderFactory Is Nothing Then
-      Set m_AccUnitLoaderFactory = Application.Run(GetAddInPath & ""AccUnitLoader.GetAccUnitFactory"")
+      Set m_AccUnitLoaderFactory = GetAccUnitLoaderFactory
    End If
    Set AccUnitLoaderFactory = m_AccUnitLoaderFactory
 End Function
+
+Private Function GetAccUnitLoaderFactory() As Object
+
+   Dim AccUnitVbeAddIn As Object
+   
+   If TryGetAccUnitVbeAddIn(AccUnitVbeAddIn) Then
+      Set GetAccUnitLoaderFactory = AccUnitVbeAddIn.Object
+   Else
+      Set GetAccUnitLoaderFactory = Application.Run(GetAddInPath & ""AccUnitLoader.GetAccUnitFactory"")
+   End If
+
+End Function
+
+Private Function TryGetAccUnitVbeAddIn(ByRef AccUnitVbeAddIn As Object) As Boolean
+   
+   Dim AddIn2check As Object
+   
+   For Each AddIn2check In Application.VBE.Addins
+      If AddIn2check.ProgId = ""AccUnit.VbeAddIn.Connect"" Then
+         If AddIn2check.Connect Then
+            Set AccUnitVbeAddIn = Application.VBE.Addins.Item(""AccUnit.VbeAddIn.Connect"")
+            TryGetAccUnitVbeAddIn = True
+         End If
+      End If
+   Next
+
+End Function
+
 
 #If USE_ACCUNIT_TYPELIB Then
 Private Property Get AccUnitFactory() As AccUnit.AccUnitFactory
@@ -168,9 +196,36 @@ Private m_CodeCoverageTracker As Object
 
 Private Function AccUnitLoaderFactory() As Object
    If m_AccUnitLoaderFactory Is Nothing Then
-      Set m_AccUnitLoaderFactory = GetLoaderAddIn.Application.Run(""GetAccUnitFactory"")
+      Set m_AccUnitLoaderFactory = GetAccUnitLoaderFactory
    End If
    Set AccUnitLoaderFactory = m_AccUnitLoaderFactory
+End Function
+
+Private Function GetAccUnitLoaderFactory() As Object
+
+   Dim AccUnitVbeAddIn As Object
+   
+   If TryGetAccUnitVbeAddIn(AccUnitVbeAddIn) Then
+      Set GetAccUnitLoaderFactory = AccUnitVbeAddIn.Object
+   Else
+      Set GetAccUnitLoaderFactory = GetLoaderAddIn.Application.Run(""GetAccUnitFactory"")
+   End If
+
+End Function
+
+Private Function TryGetAccUnitVbeAddIn(ByRef AccUnitVbeAddIn As Object) As Boolean
+   
+   Dim AddIn2check As Object
+   
+   For Each AddIn2check In Application.VBE.Addins
+      If AddIn2check.ProgId = ""AccUnit.VbeAddIn.Connect"" Then
+         If AddIn2check.Connect Then
+            Set AccUnitVbeAddIn = Application.VBE.Addins.Item(""AccUnit.VbeAddIn.Connect"")
+            TryGetAccUnitVbeAddIn = True
+         End If
+      End If
+   Next
+
 End Function
 
 Private Function GetLoaderAddIn() As Excel.AddIn
