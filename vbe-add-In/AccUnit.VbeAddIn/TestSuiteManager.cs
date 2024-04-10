@@ -1,5 +1,6 @@
 ﻿using System;
 using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.AccUnit.Interop;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
@@ -16,7 +17,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         public event TestCountChangedEventHandler TestCountChanged;
         */
 
-        private IVBATestSuite _vbaTestSuite;
+        private Interfaces.IVBATestSuite _vbaTestSuite;
         private readonly ITestResultReporter _testResultReporter = new TestResultReporter();
         public ITestResultReporter TestResultReporter
         {
@@ -33,7 +34,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        public IVBATestSuite TestSuite
+        public Interfaces.IVBATestSuite TestSuite
         {
             get
             {
@@ -73,13 +74,11 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        private LoggerForm _loggerForm; 
-
-        private IVBATestSuite CreateVbaTestSuite(OfficeApplicationHelper applicationHelper)
+        private Interfaces.IVBATestSuite CreateVbaTestSuite(OfficeApplicationHelper applicationHelper)
         {
             using (new BlockLogger())
             {
-                IVBATestSuite vbaTestSuite;
+                Interfaces.IVBATestSuite vbaTestSuite;
                 var accUnitFactory = new Interop.AccUnitFactory();
                 if (applicationHelper is AccessApplicationHelper)
                 {
@@ -91,12 +90,26 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     vbaTestSuite = accUnitFactory.VBATestSuite(applicationHelper);
                 }
 
-                if (_loggerForm == null)
-                    _loggerForm = new LoggerForm();
-
-                _loggerForm.Visible = true;  
-                vbaTestSuite.AppendTestResultReporter(new LoggerFormReporter(_loggerForm));
+                vbaTestSuite.AppendTestResultReporter(new LoggerFormReporter());
                 return vbaTestSuite;
+            }
+        }
+
+        public IAssert Assert
+        {
+            get
+            {
+                var accUnitFactory = new Interop.AccUnitFactory();
+                return accUnitFactory.Assert;
+            }
+        }
+
+        public IConstraintBuilder ConstraintBuilder
+        {
+            get
+            {
+                var accUnitFactory = new Interop.AccUnitFactory();
+                return accUnitFactory.ConstraintBuilder;
             }
         }
 

@@ -1,5 +1,5 @@
 ﻿using System.Runtime.InteropServices;
-using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.AccUnit.Interop;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -9,8 +9,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     [ProgId("AccUnit.AddInManager")]
     public class AddInManagerBridge : IAddInManagerBridge
     {
-        public delegate void TestSuiteRequestEventHandler(out IVBATestSuite testsuite);
+        public delegate void TestSuiteRequestEventHandler(out Interfaces.IVBATestSuite testsuite);
         public event TestSuiteRequestEventHandler TestSuiteRequest;
+
+        public delegate void ConstraintBuilderRequestEventHandler(out IConstraintBuilder constraintBuilder);
+        public event ConstraintBuilderRequestEventHandler ConstraintBuilderRequest;
+
+        public delegate void AssertRequestEventHandler(out IAssert assert);
+        public event AssertRequestEventHandler AssertRequest;
 
         public delegate void HostApplicationInitializedEventHandler(object hostapplication);
 
@@ -24,12 +30,30 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        public IVBATestSuite TestSuite
+        public Interfaces.IVBATestSuite TestSuite(TestReportOutput OutputTo = TestReportOutput.DebugPrint)
+        {
+                Interfaces.IVBATestSuite suite = null;
+                TestSuiteRequest?.Invoke(out suite);
+                return suite;
+        }
+
+        public IConstraintBuilder ConstraintBuilder
         {
             get
             {
-                TestSuiteRequest(out IVBATestSuite suite);
-                return suite;
+                IConstraintBuilder constraintBuilder = null;
+                ConstraintBuilderRequest?.Invoke(out constraintBuilder);
+                return constraintBuilder;
+            }
+        }
+
+        public IAssert Assert
+        {
+            get
+            {
+                IAssert assert = null;
+                AssertRequest?.Invoke(out assert);
+                return assert;
             }
         }
     }
@@ -38,7 +62,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     [Guid("0EEEA3E7-68D6-49BA-8536-572E69CCCEF0")]
     public interface IAddInManagerBridge
     {
-        IVBATestSuite TestSuite { get; }
         object Application { set; }
+        Interfaces.IVBATestSuite TestSuite(TestReportOutput OutputTo = TestReportOutput.DebugPrint);
+        IConstraintBuilder ConstraintBuilder { get; }
+        IAssert Assert { get; }
     }
+
+    public enum TestReportOutput
+    {
+        DebugPrint = 1,
+        LogFile = 2
+    }   
 }

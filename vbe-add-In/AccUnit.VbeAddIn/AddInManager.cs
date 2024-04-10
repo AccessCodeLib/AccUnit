@@ -219,7 +219,19 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 _addInManagerBridge = new AddInManagerBridge();
                 _addInManagerBridge.TestSuiteRequest += AddInBridgeTestSuiteRequest;
                 _addInManagerBridge.HostApplicationInitialized += AddInBridgeHostApplicationInitialized;
+                _addInManagerBridge.ConstraintBuilderRequest += AddInBridgeConstraintBuilderRequest;    
+                _addInManagerBridge.AssertRequest += AddInBridgeAssertRequest;  
             }
+        }
+
+        private void AddInBridgeAssertRequest(out Interop.IAssert assert)
+        {
+            assert = _testSuiteManager.Assert;
+        }
+
+        private void AddInBridgeConstraintBuilderRequest(out Interop.IConstraintBuilder constraintBuilder)
+        {
+            constraintBuilder = _testSuiteManager.ConstraintBuilder;    
         }
 
         void AddInBridgeTestSuiteRequest(out IVBATestSuite suite)
