@@ -107,23 +107,5 @@ namespace AccessCodeLib.AccUnit.Interop
         {
             return new TestResultCollector(this);
         }
-
-        //protected override void RaiseTestSuiteStarted(ITestSuite testSuite)
-        //{
-        //    TestSuiteStarted?.Invoke(this);
-        //}
-
-        //protected override void RaiseTestStarted(ITest test, IgnoreInfo ignoreInfo)
-        //{
-        //    TestStarted?.Invoke(test, ignoreInfo);
-        //}
-
-        //public new event TestSuiteStartedEventHandler TestSuiteStarted;
-       // public new event TestStartedEventHandler TestStarted;
-
     }
-
-    //public delegate void TestSuiteStartedEventHandler(ITestSuite testSuite);
-    //public delegate void TestStartedEventHandler(ITest test, IgnoreInfo ignoreInfo);
-
 }

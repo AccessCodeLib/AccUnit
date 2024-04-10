@@ -24,13 +24,14 @@ namespace AccessCodeLib.AccUnit.Interop
         public TestResultCollector(ITestSuite test) : base(test)
         {
         }
-
-        protected override void RaiseTestTraceMessage(string message, CodeCoverage.ICodeCoverageTracker CodeCoverageTracker)
+        
+        protected new void RaiseTestTraceMessage(string message, CodeCoverage.ICodeCoverageTracker CodeCoverageTracker)
         {
             TestTraceMessage?.Invoke(message, CodeCoverageTracker as ICodeCoverageTracker);
         }
 
         public new event TestTraceMessageEventHandler TestTraceMessage;
+        
     }
 
     public delegate void TestTraceMessageEventHandler(string Message, ICodeCoverageTracker CodeCoverageTracker);

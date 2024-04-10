@@ -411,8 +411,11 @@ namespace AccessCodeLib.AccUnit
 
         public virtual IVBATestSuite AddFromVBProject()
         {
+            RaiseTraceMessage("AddFromVBProject:reset");
             Reset(ResetMode.RemoveTests);
+            RaiseTraceMessage("AddFromVBProject:AddToTestSuite");
             AddToTestSuite(_testBuilder.CreateTestsFromVBProject());
+            RaiseTraceMessage("AddFromVBProject:Completed");
             return this;
         }
 
@@ -440,15 +443,19 @@ namespace AccessCodeLib.AccUnit
                     return this;
             }
 
+            RaiseTraceMessage("Reset: _testSummary");
             _testSummary?.Reset();
 
+            RaiseTraceMessage("Reset: testSummaryCollector");
             if (TestResultCollector is ITestSummaryTestResultCollector testSummaryCollector)
                 testSummaryCollector.Summary.Reset();
 
             //ConstantsReader.Clear();
+            RaiseTraceMessage("Reset: _accUnitTests");
             _accUnitTests.Clear();
 
             // clear Memberinfo (maybe source code changed)
+            RaiseTraceMessage("Reset: _testCaseInfos");
             _testCaseInfos.Clear();
 
             if ((mode & ResetMode.DeleteFactoryModule) == ResetMode.DeleteFactoryModule)

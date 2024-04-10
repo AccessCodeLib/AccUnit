@@ -64,22 +64,22 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void TestResultCollector_TestFinished(ITestResult result)
         {
-            LogStringToTextBox("TestFinished");
+            //LogStringToTextBox("TestFinished");
         }
 
         private void TestResultCollector_TestStarted(ITest test, IgnoreInfo ignoreInfo)
         {
-            LogStringToTextBox("TestStarted");
+            LogStringToTextBox(test.DisplayName + "...");
         }
 
         private void TestResultCollector_TestFixtureFinished(ITestResult result)
         {
-            LogStringToTextBox("TestFixtureFinished");
+            //LogStringToTextBox("TestFixtureFinished");
         }
 
         private void TestResultCollector_TestFixtureStarted(ITestFixture fixture)
         {
-            LogStringToTextBox("TestFixtureStarted");
+            //LogStringToTextBox("TestFixtureStarted");
         }
 
         private void LogStringToTextBox(string message)
@@ -110,8 +110,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void TestResultCollector_TestTraceMessage(string message, ICodeCoverageTracker CodeCoverageTracker)
         {
-            //LogStringToTextBox(message);
-            LogStringToTextBox("TestTraceMessage");
+            LogStringToTextBox(message);
         }
     }
 }

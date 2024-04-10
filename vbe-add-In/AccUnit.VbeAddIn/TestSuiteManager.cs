@@ -83,7 +83,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 if (applicationHelper is AccessApplicationHelper)
                 {
                     Logger.Log("Access application");
-                    vbaTestSuite = accUnitFactory.AccessTestSuite(applicationHelper);
+                    //vbaTestSuite = accUnitFactory.AccessTestSuite(applicationHelper);
+                    vbaTestSuite = accUnitFactory.VBATestSuite(applicationHelper);
                 }
                 else
                 {

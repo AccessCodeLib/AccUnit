@@ -91,7 +91,22 @@ namespace AccessCodeLib.AccUnit.Integration
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            base.Clear();
+
+            ExecutedCount = 0;
+            IsErrorCount = 0;
+            IsFailureCount = 0;
+            IsIgnoredCount = 0;
+            IsPassedCount = 0;
+
+            Executed = false;
+            IsError = false;
+            IsFailure = false;
+            IsIgnored = false;
+            IsPassed = false;
+            Message = string.Empty;
+
+            ElapsedTime = 0;
         }
 
         public ITestData Test { get; private set; }

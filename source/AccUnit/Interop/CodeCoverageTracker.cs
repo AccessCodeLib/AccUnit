@@ -6,12 +6,12 @@ namespace AccessCodeLib.AccUnit.Interop
 {
     [ComVisible(true)]
     [Guid("ED31BE77-E17D-42FA-95F9-5280798B22CD")]
-    public interface ICodeCoverageTracker : IDisposable
+    public interface ICodeCoverageTracker : IDisposable, CodeCoverage.ICodeCoverageTracker
     {
-        ICodeCoverageTracker Add(string CodeModuleName);
-        void Track(string CodeModulName, string ProcedureName, int LineNo);
-        string GetReport(string CodeModuleName = "*", string ProcedureName = "*", bool ShowCoverageDetails = false);
-        void Clear(string CodeModuleName = null);
+        new ICodeCoverageTracker Add(string CodeModuleName);
+        new void Track(string CodeModulName, string ProcedureName, int LineNo);
+        new string GetReport(string CodeModuleName = "*", string ProcedureName = "*", bool ShowCoverageDetails = false);
+        new void Clear(string CodeModuleName = null);
         new void Dispose();
     }
 
