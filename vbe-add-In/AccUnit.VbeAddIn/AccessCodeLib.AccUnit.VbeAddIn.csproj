@@ -72,12 +72,19 @@
     <Compile Include="AddInManagerBridge.cs" />
     <Compile Include="ComRegistration.cs" />
     <Compile Include="Connect.cs" />
+    <Compile Include="LoggerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LoggerControl.Designer.cs">
+      <DependentUpon>LoggerControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="LoggerForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="LoggerForm.Designer.cs">
       <DependentUpon>LoggerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="LoggerControlReporter.cs" />
     <Compile Include="LoggerFormReporter.cs" />
     <Compile Include="MessageEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,6 +107,13 @@
     <Compile Include="TestResultReporter.cs" />
     <Compile Include="TestSuiteManager.cs" />
     <Compile Include="UITools.cs" />
+    <Compile Include="VbideUserControlHost.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="VbideUserControlHost.Designer.cs">
+      <DependentUpon>VbideUserControlHost.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VbideUserControl.cs" />
     <Compile Include="VbProjectEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +150,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="LoggerControl.resx">
+      <DependentUpon>LoggerControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoggerForm.resx">
       <DependentUpon>LoggerForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -146,6 +163,9 @@
     <EmbeddedResource Include="Resources\UserControls.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>UserControls.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VbideUserControlHost.resx">
+      <DependentUpon>VbideUserControlHost.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

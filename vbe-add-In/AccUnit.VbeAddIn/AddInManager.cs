@@ -8,6 +8,8 @@ using AccessCodeLib.AccUnit.VbeAddIn.Properties;
 using Microsoft.Vbe.Interop;
 using Timer = System.Windows.Forms.Timer;
 using AccessCodeLib.AccUnit.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -144,9 +146,21 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             using (new BlockLogger())
             {
+                _testSuiteManager.TestResultReporterRequest += TestSuiteManager_TestResultReporterRequest;
+
                 //_testStarter.TestSuiteManager = _testSuiteManager;
                 //_testListAndResultManager.TestSuiteManager = _testSuiteManager;
             }
+        }
+
+        private void TestSuiteManager_TestResultReporterRequest(out System.Collections.Generic.IEnumerable<ITestResultReporter> reporters)
+        {
+            reporters = new List<ITestResultReporter>();
+
+            var vbeControl = new VbideUserControl<LoggerControl>(AddIn, "AccUnit Test Result Logger", LoggerControlInfo.PositionGuid, new LoggerControl());
+
+            reporters.Append(new LoggerControlReporter(vbeControl));
+
         }
 
         private void InitVbeIntegrationManager()
@@ -244,8 +258,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             InitOfficeApplicationHelper(application);
         }
 
-        #endregion
-
         private void InitOfficeApplicationHelper(object hostApplication = null)
         {
             using (new BlockLogger())
@@ -263,6 +275,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
+        #endregion
+
         private void InitVbaProgrammingTools(OfficeApplicationHelper officeApplicationHelper)
         {
             /*
@@ -274,6 +288,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         }
 
         #region ad VbeWindow
+
+
 
         private void InitVbeWindows()
         {
@@ -372,11 +388,11 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        public static string SimplyVbUnitVersion => "3.0";
-
         private VBE VBE => AddIn.VBE;
 
         private Microsoft.Vbe.Interop.AddIn AddIn => _addIn;
+
+
 
         #region IDisposable Support
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.AccUnit.Interop;
 using AccessCodeLib.Common.Tools.Logging;
@@ -12,17 +14,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         public delegate void TestSuiteInitializedEventHandler(ITestSuite suite);
         public event TestSuiteInitializedEventHandler TestSuiteInitialized;
 
+        public delegate void TestResultReporterRequestEventHandler(out IEnumerable<ITestResultReporter> reporters);
+        public event TestResultReporterRequestEventHandler TestResultReporterRequest;
+
         /*
         public delegate void TestCountChangedEventHandler(int number);
         public event TestCountChangedEventHandler TestCountChanged;
         */
 
         private Interfaces.IVBATestSuite _vbaTestSuite;
-        private readonly ITestResultReporter _testResultReporter = new TestResultReporter();
-        public ITestResultReporter TestResultReporter
-        {
-            get { return _testResultReporter; }
-        }
 
         private OfficeApplicationHelper _officeApplicationHelper;
         public OfficeApplicationHelper OfficeApplicationHelper
@@ -61,7 +61,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 try
                 {
                     _vbaTestSuite = CreateVbaTestSuite(OfficeApplicationHelper);
-                    _vbaTestSuite?.AppendTestResultReporter(_testResultReporter);
                 }
                 catch (Exception ex)
                 {
@@ -90,7 +89,18 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     vbaTestSuite = accUnitFactory.VBATestSuite(applicationHelper);
                 }
 
-                vbaTestSuite.AppendTestResultReporter(new LoggerFormReporter());
+                IEnumerable<ITestResultReporter> reporters = null;
+                TestResultReporterRequest?.Invoke(out reporters);
+                if (reporters == null)
+                {
+                    reporters = new List<ITestResultReporter>();
+                    reporters.Append(new LoggerFormReporter());
+                }
+                foreach (ITestResultReporter reporter in reporters)
+                {
+                    vbaTestSuite.AppendTestResultReporter(reporter);
+                }
+
                 return vbaTestSuite;
             }
         }
