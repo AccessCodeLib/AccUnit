@@ -158,9 +158,7 @@
     <Compile Include="Interop\ITestResultCollectorComEvents.cs" />
     <Compile Include="Interop\TestResultCollector.cs" />
     <Compile Include="~trash\CodeModuleMemberWithMarker.cs" />
-    <Compile Include="~trash\CompareTypeHelper.cs" />
     <Compile Include="Integration\MessageBoxData.cs" />
-    <Compile Include="~trash\UITools.cs" />
     <Compile Include="Configuration\AccUnitLoaderAddInCodeTemplates.cs" />
     <Compile Include="Interop\TestClassGenerator.cs" />
     <Compile Include="Configuration\TestClassTemplate.cs" />
@@ -170,7 +168,6 @@
     <Compile Include="Interop\CodeCoverageTracker.cs" />
     <Compile Include="Interop\ITestSummaryPrinter.cs" />
     <Compile Include="TestSuite\AccessTestSuite.cs" />
-    <Compile Include="~trash\StringTools.cs" />
     <Compile Include="Configuration\AccUnitVBAReference.cs" />
     <Compile Include="Configuration\AccUnitVBAReferences.cs" />
     <Compile Include="Configuration\Configurator.cs" />
