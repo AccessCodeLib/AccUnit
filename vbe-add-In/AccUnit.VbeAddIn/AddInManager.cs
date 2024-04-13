@@ -10,6 +10,7 @@ using Timer = System.Windows.Forms.Timer;
 using AccessCodeLib.AccUnit.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -153,14 +154,13 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        private void TestSuiteManager_TestResultReporterRequest(out System.Collections.Generic.IEnumerable<ITestResultReporter> reporters)
+        private void TestSuiteManager_TestResultReporterRequest(ref IList<ITestResultReporter> reporters)
         {
-            reporters = new List<ITestResultReporter>();
-
-            var vbeControl = new VbideUserControl<LoggerControl>(AddIn, "AccUnit Test Result Logger", LoggerControlInfo.PositionGuid, new LoggerControl());
-
-            reporters.Append(new LoggerControlReporter(vbeControl));
-
+            var loggerControl = new LoggerControl();
+            loggerControl.LogTextBox.AppendText("...");
+            var vbeControl = new VbeUserControl<LoggerControl>(AddIn, "AccUnit Test Result Logger", LoggerControlInfo.PositionGuid, loggerControl);
+            
+            reporters.Add(new LoggerControlReporter(vbeControl));
         }
 
         private void InitVbeIntegrationManager()

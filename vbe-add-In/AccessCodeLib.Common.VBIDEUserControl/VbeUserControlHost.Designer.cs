@@ -1,6 +1,6 @@
-﻿namespace AccessCodeLib.AccUnit.VbeAddIn
+﻿namespace AccessCodeLib.Common.VBIDETools
 {
-    partial class VbideUserControlHost
+    partial class VbeUserControlHost
     {
         /// <summary> 
         /// Erforderliche Designervariable.

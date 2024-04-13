@@ -13,6 +13,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         public LoggerFormReporter()
         {
+            LoggerForm.Visible = true;
         }
 
         private LoggerForm LoggerForm
@@ -37,6 +38,17 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             _loggerForm.FormClosed -= LoggerForm_FormClosed;
             _loggerForm = null;
+        }
+
+        public void Log(string message)
+        {
+            LogStringToTextBox(message);
+        }   
+
+        private void LogStringToTextBox(string message)
+        {
+            //append message to new line    
+            LoggerForm.LogTextBox.AppendText(message + "\r\n");
         }
 
         public ITestResultCollector TestResultCollector
@@ -80,12 +92,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         private void TestResultCollector_TestFixtureStarted(ITestFixture fixture)
         {
             //LogStringToTextBox("TestFixtureStarted");
-        }
-
-        private void LogStringToTextBox(string message)
-        {
-            //append message to new line    
-            LoggerForm.LogTextBox.AppendText(message + "\r\n");
         }
 
         private void TestResultCollector_TestSuiteStarted(ITestSuite testSuite)

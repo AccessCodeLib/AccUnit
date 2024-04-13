@@ -107,13 +107,6 @@
     <Compile Include="TestResultReporter.cs" />
     <Compile Include="TestSuiteManager.cs" />
     <Compile Include="UITools.cs" />
-    <Compile Include="VbideUserControlHost.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="VbideUserControlHost.Designer.cs">
-      <DependentUpon>VbideUserControlHost.cs</DependentUpon>
-    </Compile>
-    <Compile Include="VbideUserControl.cs" />
     <Compile Include="VbProjectEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +121,10 @@
     <ProjectReference Include="..\..\source\Common\Common.VBIDETools\AccessCodeLib.Common.VBIDETools.csproj">
       <Project>{9fa679c2-82c0-42dc-a34f-f78a9012eeeb}</Project>
       <Name>AccessCodeLib.Common.VBIDETools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AccessCodeLib.Common.VBIDEUserControl\AccessCodeLib.Common.VbeUserControlHost.csproj">
+      <Project>{bad451d4-1493-4bc6-88e1-1def459f0f04}</Project>
+      <Name>AccessCodeLib.Common.VbeUserControlHost</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -163,9 +160,6 @@
     <EmbeddedResource Include="Resources\UserControls.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>UserControls.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="VbideUserControlHost.resx">
-      <DependentUpon>VbideUserControlHost.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

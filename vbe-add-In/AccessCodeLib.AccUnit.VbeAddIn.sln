@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessCodeLib.Common.VBIDET
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessCodeLib.AccUnit", "..\source\AccUnit\AccessCodeLib.AccUnit.csproj", "{1575D69A-C503-4149-B3A9-2CE188B19C15}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessCodeLib.Common.VbeUserControlHost", "AccessCodeLib.Common.VBIDEUserControl\AccessCodeLib.Common.VbeUserControlHost.csproj", "{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AzureCI|Any CPU = AzureCI|Any CPU
@@ -96,6 +98,24 @@ Global
 		{1575D69A-C503-4149-B3A9-2CE188B19C15}.Release|x64.Build.0 = Release|x64
 		{1575D69A-C503-4149-B3A9-2CE188B19C15}.Release|x86.ActiveCfg = Release|x86
 		{1575D69A-C503-4149-B3A9-2CE188B19C15}.Release|x86.Build.0 = Release|x86
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.AzureCI|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.AzureCI|Any CPU.Build.0 = Debug|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.AzureCI|x64.ActiveCfg = Debug|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.AzureCI|x64.Build.0 = Debug|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.AzureCI|x86.ActiveCfg = Debug|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.AzureCI|x86.Build.0 = Debug|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.Debug|x64.Build.0 = Debug|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.Debug|x86.Build.0 = Debug|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.Release|x64.ActiveCfg = Release|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.Release|x64.Build.0 = Release|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.Release|x86.ActiveCfg = Release|Any CPU
+		{BAD451D4-1493-4BC6-88E1-1DEF459F0F04}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

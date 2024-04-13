@@ -14,7 +14,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         public delegate void TestSuiteInitializedEventHandler(ITestSuite suite);
         public event TestSuiteInitializedEventHandler TestSuiteInitialized;
 
-        public delegate void TestResultReporterRequestEventHandler(out IEnumerable<ITestResultReporter> reporters);
+        public delegate void TestResultReporterRequestEventHandler(ref IList<ITestResultReporter> reporters);
         public event TestResultReporterRequestEventHandler TestResultReporterRequest;
 
         /*
@@ -89,13 +89,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     vbaTestSuite = accUnitFactory.VBATestSuite(applicationHelper);
                 }
 
-                IEnumerable<ITestResultReporter> reporters = null;
-                TestResultReporterRequest?.Invoke(out reporters);
-                if (reporters == null)
-                {
-                    reporters = new List<ITestResultReporter>();
-                    reporters.Append(new LoggerFormReporter());
-                }
+                IList<ITestResultReporter> reporters = new List<ITestResultReporter>();
+                TestResultReporterRequest?.Invoke(ref reporters);
                 foreach (ITestResultReporter reporter in reporters)
                 {
                     vbaTestSuite.AppendTestResultReporter(reporter);

@@ -1,35 +1,27 @@
 ﻿using AccessCodeLib.AccUnit.CodeCoverage;
 using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.Common.VBIDETools;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
     internal class LoggerControlReporter : ITestResultReporter
     {
-        private VbideUserControl<LoggerControl> _vbideUserControl;
-        private LoggerControl _loggerControl;
+        private readonly VbeUserControl<LoggerControl> _vbeUserControl;
+        private readonly LoggerControl _loggerControl;
 
         private INotifyingTestResultCollector _testResultCollector;
 
-        public LoggerControlReporter(VbideUserControl<LoggerControl> vbideUserControl)
+        public LoggerControlReporter(VbeUserControl<LoggerControl> vbeUserControl)
         {
-            _vbideUserControl = vbideUserControl;
-            _loggerControl = vbideUserControl.Control;
+            _vbeUserControl = vbeUserControl;
+            _loggerControl = vbeUserControl.Control;
         }
 
         private LoggerControl LoggerControl
         {
             get {
-                if (_loggerControl == null)
-                {
-                    InitLoggerControl();
-                }
                 return _loggerControl;
             }
-        }
-
-        private void InitLoggerControl()
-        {
-            _loggerControl = new LoggerControl();
         }
 
         public ITestResultCollector TestResultCollector
@@ -37,8 +29,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             get { return _testResultCollector; }
             set
             {
+                LogStringToTextBox("TestResultCollector set");
                 _testResultCollector = value as INotifyingTestResultCollector;
+                if (_testResultCollector == null)
+                {
+                    LogStringToTextBox("_testResultCollector is null");
+                }
                 InitEventHandler();
+                LogStringToTextBox("InitEventHandler completed");
             }
         }
 
@@ -76,14 +74,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         }
 
         private void LogStringToTextBox(string message)
-        {
-            //append message to new line    
+        { 
             LoggerControl.LogTextBox.AppendText(message + "\r\n");
         }
 
         private void TestResultCollector_TestSuiteStarted(ITestSuite testSuite)
         {
             LoggerControl.LogTextBox.Clear();
+            _vbeUserControl.Show();
             LogStringToTextBox("TS started ...");
             if (testSuite is VBATestSuite vbaTestSuite)
                 LogStringToTextBox(vbaTestSuite.ActiveVBProject.Name);
