@@ -15,7 +15,17 @@
             </TreeView.ItemContainerStyle>
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type local:TestItem}" ItemsSource="{Binding Children}">
-                    <TextBlock Text="{Binding Name}" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox  Grid.Column="0" IsChecked="{Binding IsSelected}" Margin="0,0,10,0" />
+                        <TextBlock Grid.Column="1" Text="{Binding Name}" Margin="0,0,10,0" />
+                        <TextBlock Grid.Column="2" Text="{Binding Result}" />
+                        
+                    </Grid>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>

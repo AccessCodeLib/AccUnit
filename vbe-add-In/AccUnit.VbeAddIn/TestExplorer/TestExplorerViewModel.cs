@@ -62,7 +62,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             _testResultCollector.TestFixtureFinished += TestResultCollector_TestFixtureFinished;
             _testResultCollector.TestStarted += TestResultCollector_TestStarted;
             _testResultCollector.TestFinished += TestResultCollector_TestFinished;
-
         }
 
         private void TestResultCollector_TestSuiteStarted(ITestSuite testSuite)
@@ -91,7 +90,13 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         private void TestResultCollector_TestFixtureFinished(ITestResult result)
         {
-            //LogStringToTextBox("TestFixtureFinished");
+            var testItem = FindTestItem(result.Test);
+            if (testItem == null)
+            {
+                return;
+            }   
+            testItem.Result = result.Result.ToString();
+            OnPropertyChanged(nameof(TestItems));
         }
 
         private void TestResultCollector_TestStarted(ITest test, IgnoreInfo ignoreInfo)
@@ -104,7 +109,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             else
             {
                 if (test.Parent is IRowTest)
-                    parentItem.Children.Add(new TestItem { Name =  ((IRowTestItem)test).RowId });
+                    parentItem.Children.Add(new TestItem { Name =  ((IRowTestId)test).RowId });
                 else
                     parentItem.Children.Add(new TestItem { Name = test.Name });
                 parentItem.IsExpanded = true;   
@@ -114,7 +119,13 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         private void TestResultCollector_TestFinished(ITestResult result)
         {
-            //LogStringToTextBox("TestFinished");
+            var testItem = FindTestItem(result.Test);
+            if (testItem == null)
+            {
+                return;
+            }   
+            testItem.Result = result.Result.ToString();
+            OnPropertyChanged(nameof(TestItems));
         }
 
         private void TestResultCollector_TestSuiteReset(ResetMode resetmode, ref bool cancel)
@@ -154,6 +165,26 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             return fixtureItem.Children.FirstOrDefault(ti => ti.Name == parentTest.Name);
         }
 
+        private TestItem FindTestItem(ITestData testData)
+        {
+            TestItem parentItem = null;
+            ITest test = testData as ITest;
+            if (test != null)
+            {
+                parentItem = FindParentTestItem(test);
+            }
+            if (parentItem == null)
+            {
+                return TestItems.FirstOrDefault(ti => ti.Name == testData.Name);
+            }
+
+            if (test is IRowTestId rowTestId)
+            {
+                return parentItem.Children.FirstOrDefault(ti => ti.Name == rowTestId.RowId);
+            }   
+
+            return parentItem.Children.FirstOrDefault(ti => ti.Name == testData.Name);
+        }
     }
 
     public static class TestExplorerInfo

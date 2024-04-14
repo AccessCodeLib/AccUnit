@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit.Integration
 {
-    public class ParamTest : BaseTest, IParamTest, IRowTestItem
+    public class ParamTest : BaseTest, IParamTest, IRowTestId
     {
         private readonly string _testRowId = string.Empty;
 
@@ -31,7 +31,7 @@ namespace AccessCodeLib.AccUnit.Integration
         public string RowId => _testRowId;
     }
 
-    public interface IRowTestItem
+    public interface IRowTestId
     {
         string RowId { get; }   
     }

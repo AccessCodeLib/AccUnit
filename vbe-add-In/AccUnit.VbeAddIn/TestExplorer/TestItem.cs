@@ -11,7 +11,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
     public class TestItem : INotifyPropertyChanged
     {
         public string Name { get; set; }
+        public string FullName { get; set; }
         public ObservableCollection<TestItem> Children { get; set; } = new ObservableCollection<TestItem>();
+        public string Result { get; set; }
+
         private bool _isExpanded;
         public bool IsExpanded
         {
