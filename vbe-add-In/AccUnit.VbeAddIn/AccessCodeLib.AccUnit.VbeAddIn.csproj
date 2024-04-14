@@ -135,6 +135,12 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="TestComponentsEventArgs.cs" />
+    <Compile Include="TestExplorer\TestExplorerManager.cs" />
+    <Compile Include="TestExplorer\TestExplorerTreeView.xaml.cs">
+      <DependentUpon>TestExplorerTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TestExplorer\TestExplorerViewModel.cs" />
+    <Compile Include="TestExplorer\TestItem.cs" />
     <Compile Include="TestListControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -220,6 +226,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="LoggerBoxControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TestExplorer\TestExplorerTreeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

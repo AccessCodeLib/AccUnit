@@ -11,6 +11,7 @@ using AccessCodeLib.AccUnit.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using AccessCodeLib.AccUnit.VbeAddIn.TestExplorer;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -155,18 +156,21 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         }
 
         private void TestSuiteManager_TestResultReporterRequest(ref IList<ITestResultReporter> reporters)
-        {
-            
+        {            
             var loggerControl = new LoggerControl();
             loggerControl.LogTextBox.AppendText("...");
             var vbeControl = new VbeUserControl<LoggerControl>(AddIn, "AccUnit Test Result Logger", LoggerControlInfo.PositionGuid, loggerControl);
-            
             reporters.Add(new LoggerControlReporter(vbeControl));
             
+            /*
             var loggerControl2 = new LoggerBoxControl();
             var vbeControl2 = new VbeUserControl<LoggerBoxControl>(AddIn, "AccUnit Test Result Logger 2", LoggerBoxControlInfo.PositionGuid, loggerControl2);
-
             reporters.Add(new LoggerBoxControlReporter(vbeControl2));
+            */
+
+            var testExplorer = new TestExplorerTreeView();
+            var vbeControl3 = new VbeUserControl<TestExplorerTreeView>(AddIn, "AccUnit Test Explorer", TestExplorerInfo.PositionGuid, testExplorer);
+            reporters.Add(new TestExplorerManager(vbeControl3));
         }
 
         private void InitVbeIntegrationManager()
