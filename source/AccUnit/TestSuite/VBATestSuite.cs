@@ -435,6 +435,15 @@ namespace AccessCodeLib.AccUnit
 
         public virtual IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData)
         {
+            /*
+                None = 0,
+                ResetTestData = 1,
+                RemoveTests = 2,
+                ResetTestSuite = 4,
+                RefreshFactoryModule = 8,
+                DeleteFactoryModule = 16
+            */
+
             if (TestSuiteReset != null)
             {
                 var cancel = false;
@@ -457,6 +466,12 @@ namespace AccessCodeLib.AccUnit
             // clear Memberinfo (maybe source code changed)
             RaiseTraceMessage("Reset: _testCaseInfos");
             _testCaseInfos.Clear();
+
+            if ((mode & ResetMode.RemoveTests) == ResetMode.RemoveTests)
+            {
+                RaiseTraceMessage("Reset: _testFixtures");
+                _testFixtures.Clear();
+            }
 
             if ((mode & ResetMode.DeleteFactoryModule) == ResetMode.DeleteFactoryModule)
             {
