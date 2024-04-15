@@ -25,9 +25,10 @@ namespace AccessCodeLib.AccUnit.Interop
         {
         }
         
-        protected new void RaiseTestTraceMessage(string message, CodeCoverage.ICodeCoverageTracker CodeCoverageTracker)
+        protected override void RaiseTestTraceMessage(string message, CodeCoverage.ICodeCoverageTracker CodeCoverageTracker)
         {
             TestTraceMessage?.Invoke(message, CodeCoverageTracker as ICodeCoverageTracker);
+            base.RaiseTestTraceMessage(message, CodeCoverageTracker);
         }
 
         public new event TestTraceMessageEventHandler TestTraceMessage;
