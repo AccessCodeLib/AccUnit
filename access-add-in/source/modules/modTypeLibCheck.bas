@@ -57,9 +57,9 @@ On Error Resume Next
    CheckMissingReference VBProjectRef, ReferenceFixed
 
    ReferenceFixed = ReferenceFixed Or FileFixed
-   If Len(ReferenceFixedMessage) > 0 Then
-      If Left(ReferenceFixedMessage, 2) = vbNewLine Then
-         ReferenceFixedMessage = Mid(ReferenceFixedMessage, 3)
+   If VBA.Len(ReferenceFixedMessage) > 0 Then
+      If VBA.Left$(ReferenceFixedMessage, 2) = VBA.vbNewLine Then
+         ReferenceFixedMessage = VBA.Mid$(ReferenceFixedMessage, 3)
       End If
    End If
 

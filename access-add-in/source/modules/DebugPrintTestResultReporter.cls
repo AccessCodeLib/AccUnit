@@ -78,7 +78,7 @@ Private Sub m_TestResultCollector_TestSuiteStarted(ByVal TestSuite As AccUnit.IT
 #End If
 End Sub
 
-Private Sub m_TestResultCollector_TestTraceMessage(ByVal Message As String, ByVal CodeCoverageTracker As CodeCoverageTracker)
+Private Sub m_TestResultCollector_TestTraceMessage(ByVal Message As String, ByVal CodeCoverageTracker As ICodeCoverageTracker)
    If Message Like "* [*][*][*]*" Then
       Message = Replace(Message, vbNewLine, vbTab)
    ElseIf Message Like "* ~~~*" Then
