@@ -1,6 +1,7 @@
 ﻿using AccessCodeLib.AccUnit.CodeCoverage;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.VBIDETools;
+using System.Windows;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -73,7 +74,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         }
 
         private void LogStringToTextBox(string message)
-        { 
+        {
             LoggerControl.LogTextBox.AppendText(message + "\r\n");
         }
 

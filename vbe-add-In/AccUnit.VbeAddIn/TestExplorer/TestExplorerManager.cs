@@ -13,6 +13,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         private readonly VbeUserControl<TestExplorerTreeView> _vbeUserControl;
         private readonly TestExplorerTreeView _treeView;
         private readonly TestExplorerViewModel _viewModel;
+        private INotifyingTestResultCollector _testResultCollector; 
         
         public TestExplorerManager(VbeUserControl<TestExplorerTreeView> vbeUserControl)
         {
@@ -27,8 +28,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             set
             {
                 _viewModel.TestResultCollector = value;
+                _testResultCollector = value as INotifyingTestResultCollector;
+                _testResultCollector.TestSuiteStarted += TestResultCollector_TestSuiteStarted;  
             }
         }
 
+        private void TestResultCollector_TestSuiteStarted(ITestSuite testSuite)
+        {
+            _vbeUserControl.Visible = true; 
+        }
     }
 }

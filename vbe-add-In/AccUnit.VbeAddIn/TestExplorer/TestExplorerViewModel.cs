@@ -1,11 +1,12 @@
 ﻿using AccessCodeLib.AccUnit.CodeCoverage;
 using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
-using System;
+using System.Windows;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using static System.Net.Mime.MediaTypeNames;
+using System.Windows.Documents;
+using System;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 {
@@ -13,17 +14,11 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
     {
         public TestExplorerViewModel()
         {
-            TestItems = new ObservableCollection<TestItem>
-            {
-                new TestItem { Name = "Root", Children = {
-                    new TestItem { Name = "Child 1" },
-                    new TestItem { Name = "Child 2" }
-                }}
-            };
+            TestItems = new TestItems();
         }
 
-        private ObservableCollection<TestItem> _testItems;
-        public ObservableCollection<TestItem> TestItems
+        private TestItems _testItems;
+        public TestItems TestItems
         {
             get => _testItems;
             set
@@ -67,7 +62,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         private void TestResultCollector_TestSuiteStarted(ITestSuite testSuite)
         {
             TestItems.Clear();
-            OnPropertyChanged(nameof(TestItems));
+            //OnPropertyChanged(nameof(TestItems));
 
             //ClearLogMessages();
             //_vbeUserControl.Show();
@@ -85,7 +80,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         private void TestResultCollector_TestFixtureStarted(ITestFixture fixture)
         {
             TestItems.Add(new TestItem { Name = fixture.Name });
-            OnPropertyChanged(nameof(TestItems));
+                //OnPropertyChanged(nameof(TestItems));
         }
 
         private void TestResultCollector_TestFixtureFinished(ITestResult result)
@@ -94,9 +89,11 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             if (testItem == null)
             {
                 return;
-            }   
+            }
             testItem.Result = result.Result.ToString();
-            OnPropertyChanged(nameof(TestItems));
+            testItem.IsExpanded = !result.Success;
+            //OnPropertyChanged(nameof(TestItems));
+            OnPropertyChanged(nameof(testItem.IsExpanded));
         }
 
         private void TestResultCollector_TestStarted(ITest test, IgnoreInfo ignoreInfo)
@@ -109,12 +106,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             else
             {
                 if (test.Parent is IRowTest)
-                    parentItem.Children.Add(new TestItem { Name =  ((IRowTestId)test).RowId });
+                    parentItem.Children.Add(new TestItem { Name = ((IRowTestId)test).RowId });
                 else
                     parentItem.Children.Add(new TestItem { Name = test.Name });
-                parentItem.IsExpanded = true;   
+                parentItem.IsExpanded = true;
             }
-            OnPropertyChanged(nameof(TestItems));
+            //OnPropertyChanged(nameof(TestItems));
         }
 
         private void TestResultCollector_TestFinished(ITestResult result)
@@ -123,15 +120,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             if (testItem == null)
             {
                 return;
-            }   
+            }
             testItem.Result = result.Result.ToString();
-            OnPropertyChanged(nameof(TestItems));
+            testItem.IsExpanded = !result.Success;
+            OnPropertyChanged(nameof(testItem.IsExpanded));
         }
 
         private void TestResultCollector_TestSuiteReset(ResetMode resetmode, ref bool cancel)
         {
-            //ClearLogMessages();
-            //LogStringToTextBox("TestSuite reset");
+            TestItems.Clear();
         }
 
         private void TestResultCollector_TestTraceMessage(string message, ICodeCoverageTracker CodeCoverageTracker)

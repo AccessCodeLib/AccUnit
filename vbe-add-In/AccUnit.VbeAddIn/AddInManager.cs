@@ -167,10 +167,11 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             var vbeControl2 = new VbeUserControl<LoggerBoxControl>(AddIn, "AccUnit Test Result Logger 2", LoggerBoxControlInfo.PositionGuid, loggerControl2);
             reporters.Add(new LoggerBoxControlReporter(vbeControl2));
             */
-
+            
             var testExplorer = new TestExplorerTreeView();
             var vbeControl3 = new VbeUserControl<TestExplorerTreeView>(AddIn, "AccUnit Test Explorer", TestExplorerInfo.PositionGuid, testExplorer);
             reporters.Add(new TestExplorerManager(vbeControl3));
+            
         }
 
         private void InitVbeIntegrationManager()

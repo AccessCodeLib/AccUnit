@@ -21,8 +21,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
     /// </summary>
     public partial class TestExplorerTreeView : UserControl
     {
-        public ObservableCollection<TestItem> TestItems { get; set; }
-
         public TestExplorerTreeView()
         {
             InitializeComponent();
