@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessCodeLib.Common.VBIDET
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessCodeLib.AccUnit", "..\source\AccUnit\AccessCodeLib.AccUnit.csproj", "{1575D69A-C503-4149-B3A9-2CE188B19C15}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{21839B1B-5233-411F-8993-9631D5A5BA34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfUserControlsTests", "Tests\WpfUserControlsTests\WpfUserControlsTests.csproj", "{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AzureCI|Any CPU = AzureCI|Any CPU
@@ -96,9 +100,30 @@ Global
 		{1575D69A-C503-4149-B3A9-2CE188B19C15}.Release|x64.Build.0 = Release|x64
 		{1575D69A-C503-4149-B3A9-2CE188B19C15}.Release|x86.ActiveCfg = Release|x86
 		{1575D69A-C503-4149-B3A9-2CE188B19C15}.Release|x86.Build.0 = Release|x86
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.AzureCI|Any CPU.ActiveCfg = Debug|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.AzureCI|Any CPU.Build.0 = Debug|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.AzureCI|x64.ActiveCfg = Debug|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.AzureCI|x64.Build.0 = Debug|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.AzureCI|x86.ActiveCfg = Debug|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.AzureCI|x86.Build.0 = Debug|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.Debug|x64.Build.0 = Debug|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.Debug|x86.Build.0 = Debug|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.Release|x64.ActiveCfg = Release|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.Release|x64.Build.0 = Release|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.Release|x86.ActiveCfg = Release|Any CPU
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF} = {21839B1B-5233-411F-8993-9631D5A5BA34}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7937BEBA-24F9-4A3C-987E-8801C4C58F6C}
