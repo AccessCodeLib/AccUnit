@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 using AccessCodeLib.AccUnit.VbeAddIn.TestExplorer;
+using AccessCodeLib.AccUnit.Configuration;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -21,22 +22,27 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         private Timer _startupTimer;
         private OfficeApplicationHelper _officeApplicationHelper;
         
-        //private readonly VbeIntegrationManager _vbeIntegrationManager = new VbeIntegrationManager();
+        private readonly VbeIntegrationManager _vbeIntegrationManager = new VbeIntegrationManager();
         private readonly TestSuiteManager _testSuiteManager = new TestSuiteManager();
+
+        private readonly AccUnitCommandBarAdapter _commandBarsAdapter;
+        private readonly TestStarter _testStarter = new TestStarter();
+
+        private readonly TestExplorerManager _testExplorerManager;
 
         /*
         private readonly TagListManager _tagListManager = new TagListManager();
         private readonly TestListAndResultManager _testListAndResultManager = new TestListAndResultManager();
-        private readonly TestStarter _testStarter = new TestStarter();
         
-        private readonly AccUnitCommandBarAdapter _commandBarsAdapter;
         private readonly DialogManager _dialogManager = new DialogManager();
         private readonly TestTemplateGenerator _testTemplateGenerator = new TestTemplateGenerator();
         private AccSpecCommandBarAdapterClient _accSpecCommandBarAdapterClient;
         private AccSpecManager _accSpecManager;
 
-        private VbaProgrammingTools _vbaProgrammingTools;
+        
         */
+
+        //private VbaProgrammingTools _vbaProgrammingTools;
 
         public AddInManager(AddIn addIn)
         {
@@ -47,16 +53,22 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 /*
                 _tagListManager.AddIn = addIn;
                 _testListAndResultManager.AddIn = addIn;
+               
 
                 if (Settings.Default.VbaProgrammingToolsEnabled)
                 {
                     _vbaProgrammingTools = new VbaProgrammingTools();
                 }
                 */
+
                 InitOfficeApplicationHelper();
                 //InitAccSpec();
 
-                //_commandBarsAdapter = new AccUnitCommandBarAdapter(VBE);
+                var testExplorer = new TestExplorerTreeView();
+                var vbeControl = new VbeUserControl<TestExplorerTreeView>(AddIn, "AccUnit Test Explorer", TestExplorerInfo.PositionGuid, testExplorer,false);
+                _testExplorerManager = new TestExplorerManager(vbeControl);
+
+                _commandBarsAdapter = new AccUnitCommandBarAdapter(VBE);
             }
         }
 
@@ -112,15 +124,18 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             using (new BlockLogger())
             {
-                /*
                 _commandBarsAdapter.Init();
+               
+                _commandBarsAdapter.AddClient(_vbeIntegrationManager);
                 _commandBarsAdapter.AddClient(_testStarter);
+                /*
                 _commandBarsAdapter.AddClient(_testListAndResultManager);
                 _commandBarsAdapter.AddClient(_tagListManager);
                 _commandBarsAdapter.AddClient(_testTemplateGenerator);
-                _commandBarsAdapter.AddClient(_vbeIntegrationManager);
+                
                 _commandBarsAdapter.AddClient(_dialogManager);
-
+                */
+                /*
                 if (UserSettings.Current.IsAccSpecEnabled)
                 {
                     _commandBarsAdapter.AddClient(_accSpecCommandBarAdapterClient);
@@ -150,7 +165,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 _testSuiteManager.TestResultReporterRequest += TestSuiteManager_TestResultReporterRequest;
 
-                //_testStarter.TestSuiteManager = _testSuiteManager;
+                _testStarter.TestSuiteManager = _testSuiteManager;
                 //_testListAndResultManager.TestSuiteManager = _testSuiteManager;
             }
         }
@@ -168,25 +183,20 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             reporters.Add(new LoggerBoxControlReporter(vbeControl2));
             */
             
-            var testExplorer = new TestExplorerTreeView();
-            var vbeControl3 = new VbeUserControl<TestExplorerTreeView>(AddIn, "AccUnit Test Explorer", TestExplorerInfo.PositionGuid, testExplorer);
-            reporters.Add(new TestExplorerManager(vbeControl3));
-            
+            reporters.Add(_testExplorerManager);
         }
 
         private void InitVbeIntegrationManager()
         {
-            /*
             using (new BlockLogger())
             {
-                _tagListManager.VbeIntegrationManager = _vbeIntegrationManager;
-                _testListAndResultManager.VbeIntegrationManager = _vbeIntegrationManager;
+                //_tagListManager.VbeIntegrationManager = _vbeIntegrationManager;
+                //_testListAndResultManager.VbeIntegrationManager = _vbeIntegrationManager;
                 _testStarter.VbeIntegrationManager = _vbeIntegrationManager;
-                _testTemplateGenerator.VbeIntegrationManager = _vbeIntegrationManager;
+                //_testTemplateGenerator.VbeIntegrationManager = _vbeIntegrationManager;
 
                 _vbeIntegrationManager.VBProjectChanged += VbeIntegrationManagerOnVBProjectChanged;
             }
-            */
         }
 
         void VbeIntegrationManagerOnVBProjectChanged(object sender, VbProjectEventArgs e)
@@ -203,10 +213,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 vbaTestSuite.HostApplication = _officeApplicationHelper.Application;
                 vbaTestSuite.ActiveVBProject = e.VBProject;
             }
-
-            TestClassManager.ApplicationHelper = _officeApplicationHelper;
-            _accSpecManager.VbeManager = new VbeManager(_officeApplicationHelper.CurrentVBProject);
             */
+            TestClassManager.ApplicationHelper = _officeApplicationHelper;
+            //_accSpecManager.VbeManager = new VbeManager(_officeApplicationHelper.CurrentVBProject);
+            
         }
 
         void OnScanningForTestModules(object sender, EventArgs e)
@@ -219,7 +229,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             */
         }
 
-        //private TestClassManager TestClassManager => _vbeIntegrationManager.TestClassManager;
+        private TestClassManager TestClassManager => _vbeIntegrationManager.TestClassManager;
 
         #region ad Bridge
 
@@ -274,7 +284,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             using (new BlockLogger())
             {
                 _officeApplicationHelper = HostApplicationTools.GetOfficeApplicationHelper(VBE, ref hostApplication);
-                //_vbeIntegrationManager.OfficeApplicationHelper = _officeApplicationHelper;
+                _vbeIntegrationManager.OfficeApplicationHelper = _officeApplicationHelper;
                 _testSuiteManager.OfficeApplicationHelper = _officeApplicationHelper;
 
                 /*

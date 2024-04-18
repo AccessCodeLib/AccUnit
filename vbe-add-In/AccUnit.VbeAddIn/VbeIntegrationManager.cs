@@ -1,0 +1,430 @@
+﻿using System;
+using System.Linq;
+using System.Windows.Forms;
+using AccessCodeLib.AccUnit.Configuration;
+using AccessCodeLib.AccUnit.Tools;
+using AccessCodeLib.Common.Tools.Logging;
+using AccessCodeLib.Common.VBIDETools;
+using AccessCodeLib.Common.VBIDETools.Commandbar;
+using AccessCodeLib.Common.VBIDETools.Templates;
+using Microsoft.Office.Core;
+using Microsoft.Vbe.Interop;
+
+namespace AccessCodeLib.AccUnit.VbeAddIn
+{
+    class VbeIntegrationManager : IDisposable, ICommandBarsAdapterClient
+    {
+        private readonly VbeAdapter _vbeAdapter = new VbeAdapter();
+        private readonly ImportExportManager _importExportManager = new ImportExportManager();
+        private TestClassManager _testClassManager;
+
+        public VbeIntegrationManager()
+        {
+            _importExportManager.TestClassesImported += ImportExportManagerTestClassesImported;
+        }
+
+        public event EventHandler<VbProjectEventArgs> VBProjectChanged;
+        public event EventHandler ScanningForTestModules;
+
+        public OfficeApplicationHelper OfficeApplicationHelper
+        {
+            get { return _vbeAdapter.OfficeApplicationHelper; }
+            set
+            {
+                _vbeAdapter.OfficeApplicationHelper = value;
+                _importExportManager.TestClassManager = TestClassManager;
+            }
+        }
+
+        public VbeAdapter VbeAdapter
+        {
+            get { return _vbeAdapter; }
+        }
+
+        void ImportExportManagerTestClassesImported(object sender, EventArgs e)
+        {
+            if (!(OfficeApplicationHelper is AccessApplicationHelper)) return;
+            ((AccessApplicationHelper)OfficeApplicationHelper).RunCommand(AccessApplicationHelper.AcCommand.AcCmdCompileAndSaveAllModules);
+        }
+
+        private VBProject ActiveVBProject
+        {
+            get { return _vbeAdapter.ActiveVBProject; }
+        }
+
+        public TestClassManager TestClassManager
+        {
+            get
+            {
+                if (_testClassManager == null)
+                    InitTestClassManager();
+
+                return _testClassManager;
+            }
+        }
+
+        private void InitTestClassManager()
+        {
+            _testClassManager = new TestClassManager(OfficeApplicationHelper);
+            _importExportManager.TestClassManager = _testClassManager;
+            _testClassManager.RepairActiveVBProjectCOMException += TestClassManagerOnRepairActiveVbProjectComException;
+            _testClassManager.ScanningForTestModules += TestClassManagerOnScanningForTestModules;
+        }
+
+        void TestClassManagerOnScanningForTestModules(object sender, EventArgs e)
+        {
+            RaiseScanningForTestModules();
+        }
+
+        public object HostApplication
+        {
+            get { return OfficeApplicationHelper.Application; }
+        }
+
+        void RemoveTestEnvironment()
+        {
+            if (MessageBox.Show(Resources.UserControls.RemoveEnvironmentMessageBoxText,
+                                Resources.UserControls.RemoveEnvironmentMessageBoxCaption,
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Exclamation) != DialogResult.Yes) return;
+
+                TestClassManager.RemoveTestComponents(true, true);
+        }
+
+        private void CreateTestMethodInActiveCodePane()
+        {
+            var dialog = new InsertTestMethodDialog();
+            dialog.CommitMethodName += InsertTestMethodDialogCommitMethodName;
+            dialog.ShowDialog();
+        }
+
+        private void CreateTestMethodInActiveCodePane(string methodUnderTest, string stateUnderTest, string expectedBehaviour)
+        {
+            using (new BlockLogger())
+            {
+                if (string.IsNullOrEmpty(methodUnderTest))
+                    methodUnderTest = "MethodUnderTest";
+                var memberInfo = new CodeModuleMember(methodUnderTest, vbext_ProcKind.vbext_pk_Proc, true);
+                var methodText = TestCodeGenerator.GenerateProcedureCode(memberInfo, stateUnderTest, expectedBehaviour);
+
+                var activeCodePane = _vbeAdapter.ActiveCodePane;
+                var startLine = VbeCodePaneTools.GetStartLineFromCodePaneSelection(activeCodePane);
+                VbeCodePaneTools.InsertText(activeCodePane, methodText, startLine);
+            }
+        }
+
+        public TestClassInfo GetTestClassInfoFromSelectedComponent()
+        {
+            var selectedComponent = _vbeAdapter.VBE.SelectedVBComponent;
+            if (selectedComponent == null)
+                return null; // no active test
+
+            if (selectedComponent.Type != vbext_ComponentType.vbext_ct_ClassModule)
+                return null;
+
+            if (!TestClassReader.IsTestClassCodeModul(selectedComponent.CodeModule))
+                return null;
+
+            var className = selectedComponent.Name;
+            var memberInfo = GetTestClassMemberInfoFromCodePane(selectedComponent.CodeModule.CodePane);
+
+            TestClassInfo testclass;
+            if (memberInfo != null)
+            {
+                var members = new TestClassMemberList { memberInfo };
+                testclass = new TestClassInfo(className, members);
+            }
+            else
+            {
+                testclass = new TestClassInfo(className);
+            }
+            return testclass;
+        }
+
+        private static TestClassMemberInfo GetTestClassMemberInfoFromCodePane(_CodePane codepane)
+        {
+            vbext_ProcKind procKind;
+            var procName = VbeCodePaneTools.GetCodeModuleMemberNameFromCodePane(codepane, out procKind);
+
+            if (procKind == vbext_ProcKind.vbext_pk_Proc && procName != null)
+            {
+                return new TestClassMemberInfo(procName);
+            }
+            return null;
+        }
+
+        void InsertTestMethodDialogCommitMethodName(object sender, CommitInsertTestMethodEventArgs e)
+        {
+            CreateTestMethodInActiveCodePane(e.MethodUnderTest, e.StateUnderTest, e.ExpectedBehaviour);
+        }
+
+        void TestClassManagerOnRepairActiveVbProjectComException(object sender, EventArgs e)
+        {
+            try
+            {
+                RepairTestSuiteCOMException();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+        }
+
+        private void RaiseScanningForTestModules()
+        {
+            if (ScanningForTestModules != null)
+                ScanningForTestModules(this, EventArgs.Empty);
+        }
+
+        private void RepairTestSuiteCOMException()
+        {
+            if (VBProjectChanged != null)
+                VBProjectChanged(this, new VbProjectEventArgs(OfficeApplicationHelper.CurrentVBProject));
+
+            TestClassManager.ApplicationHelper = OfficeApplicationHelper;
+        }
+
+        public void ShowMissingApplicationInfo()
+        {
+            if (HostApplication == null)
+            {
+                UITools.ShowMessage(Resources.MessageStrings.MissingHostApplicationReference);
+            }
+        }
+
+        #region ICommandBarsAdapterClient support
+
+        public void SubscribeToCommandBarAdapter(VbeCommandBarAdapter commandBarAdapter)
+        {
+            using (new BlockLogger())
+            {
+                _importExportManager.SubscribeToCommandBarAdapter(commandBarAdapter);
+                CreateShortcutMenuItems(commandBarAdapter);
+            }
+        }
+
+        private void CreateShortcutMenuItems(VbeCommandBarAdapter commandBarAdapter)
+        {
+            var accUnitCommandBarAdapter = commandBarAdapter as AccUnitCommandBarAdapter;
+
+            if (accUnitCommandBarAdapter != null)
+            {
+                var menu = accUnitCommandBarAdapter.AccUnitSubMenu;
+                CreateAccUnitToolsSubMenuItems(commandBarAdapter, menu);
+            }
+
+            var commandBar = commandBarAdapter.CommandBarCodeWindow;
+            const int objectBrowserControlID = 473;
+            CreateAccUnitShortcutMenuItems(commandBarAdapter, commandBar, objectBrowserControlID);
+
+            commandBar = commandBarAdapter.CommandBarProjectWindow;
+            const int printControlID = 4;
+            CreateAccUnitShortcutMenuItems(commandBarAdapter, commandBar, printControlID);
+
+        }
+
+        private void CreateAccUnitToolsSubMenuItems(VbeCommandBarAdapter commandBarAdapter, CommandBarPopup menu)
+        {
+            var buttonData = new CommandbarButtonData
+                                 {
+                                     Caption = Resources.VbeCommandbars.ToolsRemoveTestEnvironmentCommandButtonCaption,
+                                     Description = string.Empty,
+                                     FaceId = 478,
+                                     BeginGroup = true
+                                 };
+            commandBarAdapter.AddCommandBarButton(menu, buttonData, AccUnitMenuItemsRemoveTestEnvironment);
+        }
+
+        private void CreateAccUnitShortcutMenuItems(VbeCommandBarAdapter accUnitMenuItems, CommandBar commandBar, int controlID)
+        {
+            var objectBrowserControlIndex = VbeCommandBarAdapter.GetButtonIndex(commandBar, controlID);
+            var buttonData = new CommandbarButtonData
+                             {
+                                 Caption = Resources.VbeCommandbars.InsertTestMethodCommandbarButtonCaption,
+                                 Description = string.Empty,
+                                 FaceId = 559,
+                                 BeginGroup = true,
+                                 Index = objectBrowserControlIndex
+                             };
+            accUnitMenuItems.AddCommandBarButton(commandBar, buttonData, AccUnitMenuItemsInsertTestMethod);
+        }
+
+        void AccUnitMenuItemsRemoveTestEnvironment(CommandBarButton ctrl, ref bool cancelDefault)
+        {
+            RemoveTestEnvironment();
+        }
+
+        void AccUnitMenuItemsInsertTestMethod(CommandBarButton ctrl, ref bool cancelDefault)
+        {
+            if (SelectedVbComponentIsTestClass)
+                CreateTestMethodInActiveCodePane();
+            else
+                CreateTestMethodFromSelectedVbComponent();
+        }
+
+        private bool SelectedVbComponentIsTestClass
+        {
+            get
+            {
+                return TestClassReader.IsTestClassCodeModul(_vbeAdapter.VBE.SelectedVBComponent.CodeModule);
+            }
+        }
+
+        private CodeModule _newCodeModule;
+        private void CreateTestMethodFromSelectedVbComponent()
+        {
+            var dialog = new GenerateTestMethodsFromCodeModuleDialog(Properties.Settings.Default.TestClassNameFormat)
+                             {
+                                 CurrentCodeModule = GetCodeModuleInfoWithMarkerFromSelectedVbComponent()
+                             };
+            dialog.InsertMethods += InsertTestMethodsDialogCommitMethodName;
+            dialog.ShowDialog();
+            if (_newCodeModule == null) return;
+            _newCodeModule.CodePane.Show();
+            _newCodeModule.CodePane.Window.SetFocus();
+            _newCodeModule = null;
+        }
+
+        private void InsertTestMethodsDialogCommitMethodName(object sender, CommitInsertTestMethodsEventArgs e)
+        {
+            var testClassGenerator = new TestClassGenerator(ActiveVBProject);
+            try
+            {
+                using (new BlockLogger($"{e.TestClass}.{e.MethodsUnderTest}_{e.StateUnderTest}_{e.ExpectedBehaviour}"))
+                {
+                    _newCodeModule = testClassGenerator.InsertTestMethods(e.TestClass, e.MethodsUnderTest, e.StateUnderTest, e.ExpectedBehaviour);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                e.Cancel = true;
+            }
+        }
+
+        private CodeModuleInfo GetCodeModuleInfoWithMarkerFromSelectedVbComponent()
+        {
+            var vbc = _vbeAdapter.VBE.SelectedVBComponent;
+            var reader = new CodeModuleReader(vbc.CodeModule);
+            var codemoduleInfo = reader.CodeModuleInfo;
+
+            var codePane = _vbeAdapter.ActiveCodePane;
+            var activeMemberName = (codePane == null || codePane.CodeModule != vbc.CodeModule) ? null : VbeCodePaneTools.GetCodeModuleMemberNameFromCodePane(codePane);
+
+            var markAll = (activeMemberName == null);
+            var publicMembers = codemoduleInfo.Members.FindAll(m => m.IsPublic);
+
+            var newMembers = new CodeModuleMemberList();
+            newMembers.AddRange(publicMembers.Select(newMember => new CodeModuleMemberWithMarker(newMember.Name, newMember.ProcKind, newMember.IsPublic, newMember.DeclarationString, markAll)).Cast<CodeModuleMember>());
+            if (!markAll)
+            {
+                var markedMember = (CodeModuleMemberWithMarker) newMembers.Find(m => m.Name == activeMemberName);
+                if (markedMember != null) markedMember.Marked = true;
+                var info = activeMemberName;
+                if (markedMember != null) info += string.Format(": {0}", markedMember.Marked);
+                Logger.Log(info);
+            }
+            
+            codemoduleInfo.Members = newMembers;
+            return codemoduleInfo;
+        }
+
+        public void InsertTestTemplate(string templatekey)
+        {
+            var templates = UserSettings.Current.TestTemplates;
+            var template = templates[templatekey];
+            var name = FindFreeClassName(template.Name);
+            do
+            {
+                if (DialogResult.OK != UITools.InputBox(Resources.UserControls.InsertTestTemplateInputboxTitle,
+                                                    Resources.UserControls.InsertTestTemplateInputboxPromptText,
+                                                    ref name))
+                    return;
+
+            } while (!InsertTestTemplate(template, name));
+        }
+
+        private string FindFreeClassName(string defaultName)
+        {
+            var codeModuleContainer = new CodeModuleContainer(ActiveVBProject);
+            var newClassName = defaultName;
+            var i = 0;
+            while (codeModuleContainer.Exists(newClassName))
+            {
+                newClassName = string.Format("{0}{1}", defaultName, ++i);
+            }
+            return newClassName;
+        }
+
+        private bool InsertTestTemplate(CodeTemplate template, string className)
+        {
+            try
+            {
+                TestClassManager.InsertTestTemplate(template, className);
+                return true;
+            }
+            catch (ArgumentException ex)
+            {
+                UITools.ShowMessage(ex.Message);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                UITools.ShowException(ex);
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region IDisposable Support
+
+        bool _disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+
+            if (disposing)
+            {
+                DisposeManagedResources();
+            }
+
+            //DisposeUnmanagedResources();
+            _disposed = true;
+        }
+
+        //private void DisposeUnmanagedResources()
+        //{
+        //}
+
+        private void DisposeManagedResources()
+        {
+            if (_testClassManager != null)
+            {
+                _testClassManager.Dispose();
+                _testClassManager = null;
+            }
+
+            _importExportManager.Dispose();
+            _vbeAdapter.Dispose();
+        }
+
+        public void Dispose()
+        {
+            using (new BlockLogger())
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        ~VbeIntegrationManager()
+        {
+            Dispose(false);
+        }
+
+        #endregion
+
+    }
+}

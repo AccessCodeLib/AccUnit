@@ -157,7 +157,7 @@
     <Compile Include="Interop\InteropConverter.cs" />
     <Compile Include="Interop\ITestResultCollectorComEvents.cs" />
     <Compile Include="Interop\TestResultCollector.cs" />
-    <Compile Include="~trash\CodeModuleMemberWithMarker.cs" />
+    <Compile Include="Integration\CodeModuleMemberWithMarker.cs" />
     <Compile Include="Integration\MessageBoxData.cs" />
     <Compile Include="Configuration\AccUnitLoaderAddInCodeTemplates.cs" />
     <Compile Include="Interop\TestClassGenerator.cs" />
