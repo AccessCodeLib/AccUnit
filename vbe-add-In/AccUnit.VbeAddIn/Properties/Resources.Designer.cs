@@ -63,9 +63,39 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap noaction_gray {
+            get {
+                object obj = ResourceManager.GetObject("noaction_gray", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap refresh_green_16x16 {
             get {
                 object obj = ResourceManager.GetObject("refresh_green_16x16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap result_failed_16x16 {
+            get {
+                object obj = ResourceManager.GetObject("result_failed_16x16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap result_success_16x16 {
+            get {
+                object obj = ResourceManager.GetObject("result_success_16x16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

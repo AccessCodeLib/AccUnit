@@ -2,6 +2,8 @@ using System;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Interop;
+using System.Windows.Media.Imaging;
 using AccessCodeLib.AccUnit.VbeAddIn.Resources;
 using AccessCodeLib.Common.Tools.Logging;
 
@@ -93,5 +95,29 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             return Icon.FromHandle(bmp.GetHicon());
         }
+
+        public static BitmapSource ConvertBitmapToBitmapSource(Bitmap bitmap)
+        {
+            var hBitmap = bitmap.GetHbitmap();
+            BitmapSource bitmapSource;
+
+            try
+            {
+                bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(
+                    hBitmap,
+                    IntPtr.Zero,
+                    System.Windows.Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions());
+            }
+            finally
+            {
+                DeleteObject(hBitmap);
+            }
+
+            return bitmapSource;
+        }
+
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        private static extern bool DeleteObject(IntPtr hObject);
     }
 }

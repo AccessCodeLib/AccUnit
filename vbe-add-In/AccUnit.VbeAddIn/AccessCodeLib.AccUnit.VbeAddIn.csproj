@@ -234,5 +234,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\noaction_gray.png" />
+    <Content Include="Resources\result_failed_16x16.png" />
+    <Content Include="Resources\result_success_16x16.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

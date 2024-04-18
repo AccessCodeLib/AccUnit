@@ -92,6 +92,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             }
             testItem.Result = result.Result.ToString();
             testItem.IsExpanded = !result.Success;
+            testItem.TestResult = result;
             //OnPropertyChanged(nameof(TestItems));
             OnPropertyChanged(nameof(testItem.IsExpanded));
         }
@@ -123,6 +124,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             }
             testItem.Result = result.Result.ToString();
             testItem.IsExpanded = !result.Success;
+            testItem.TestResult = result;
             OnPropertyChanged(nameof(testItem.IsExpanded));
         }
 
