@@ -166,6 +166,13 @@
     <Compile Include="SelectListControl.Designer.cs">
       <DependentUpon>SelectListControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="SelectLists\CheckableItem.cs" />
+    <Compile Include="SelectLists\CheckableItemList.cs" />
+    <Compile Include="SelectLists\ICheckableItem.cs" />
+    <Compile Include="SelectLists\SelectListBox.xaml.cs">
+      <DependentUpon>SelectListBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SelectLists\SelectListBoxViewModel.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="TestClassSelectionForm.cs">
       <SubType>Form</SubType>
@@ -294,6 +301,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="SelectLists\SelectListBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TestExplorer\TestExplorerTreeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -322,5 +333,6 @@
     <None Include="Resources\result_failed_16x161.png" />
     <Content Include="Resources\result_success_16x16.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
