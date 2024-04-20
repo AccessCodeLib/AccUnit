@@ -101,7 +101,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     InitVbeIntegrationManager();
                     //_testListAndResultManager.TagListManager = _tagListManager;
                     //_testStarter.TestListAndResultManager = _testListAndResultManager;
-                    //_testStarter.ShowUIMessage += OnShowUIMessage;
+                    _testStarter.ShowUIMessage += OnShowUIMessage;
 
                     InitCommandBarsAdapter();
                 }
@@ -125,9 +125,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             using (new BlockLogger())
             {
                 _commandBarsAdapter.Init();
-               
-                _commandBarsAdapter.AddClient(_vbeIntegrationManager);
                 _commandBarsAdapter.AddClient(_testStarter);
+                _commandBarsAdapter.AddClient(_vbeIntegrationManager);
+                
                 /*
                 _commandBarsAdapter.AddClient(_testListAndResultManager);
                 _commandBarsAdapter.AddClient(_tagListManager);

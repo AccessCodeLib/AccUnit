@@ -17,9 +17,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     class TestStarter : IDisposable, ICommandBarsAdapterClient
     {
         bool _referencesChecked;
-        private bool _breakOnAllErrorsForNextRun;
+        //private bool _breakOnAllErrorsForNextRun;
         //private TestListAndResultManager _testListAndResultManager;
-        private TestExplorerManager _testExplorerManager;
+        //private TestExplorerManager _testExplorerManager;
         private CommandBarEvents _accUnitSubMenuEvents;
         private int _accUnitSubMenuRunCurrentTestIndex;
         private CommandBarButton _codeWindowRunCurrentTestButton;
@@ -320,7 +320,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     AddRunButtonsToAccUnitCommandBar(accUnitCommandbarAdapter);
                 }
 
-                //VbeIntegrationManager.VbeAdapter.MainWindowRButtonDown += OnVbeMainWindowRButtonDown;
+                VbeIntegrationManager.VbeAdapter.MainWindowRButtonDown += OnVbeMainWindowRButtonDown;
 
                 RegisterHotKeys();
             }

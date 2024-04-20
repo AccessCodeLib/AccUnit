@@ -141,6 +141,12 @@
 
 Remove environment?</value>
   </data>
+  <data name="SelectListCommitButtonText" xml:space="preserve">
+    <value>Commit</value>
+  </data>
+  <data name="SelectListSelectAllCheckboxCaption" xml:space="preserve">
+    <value>Select All</value>
+  </data>
   <data name="TagListUserControlCommitButtonText" xml:space="preserve">
     <value>use filter</value>
   </data>
@@ -148,19 +154,25 @@ Remove environment?</value>
     <value>AccUnit Tag List</value>
   </data>
   <data name="TestClassSelectionFormCaptionExport" xml:space="preserve">
-    <value>Export and remove tests</value>
+    <value>Export Tests</value>
   </data>
   <data name="TestClassSelectionFormCaptionImport" xml:space="preserve">
-    <value>Import tests</value>
+    <value>Import Tests</value>
   </data>
-  <data name="TestClassSelectionFormCommitTextExport" xml:space="preserve">
-    <value>export &amp; remove</value>
+  <data name="TestClassSelectionFormCommitTestExport" xml:space="preserve">
+    <value>Export</value>
   </data>
-  <data name="TestClassSelectionFormCommitTextImport" xml:space="preserve">
-    <value>import</value>
+  <data name="TestClassSelectionFormCommitTestExportAndRemove" xml:space="preserve">
+    <value>Export &amp; Remove</value>
+  </data>
+  <data name="TestClassSelectionFormCommitTestImport" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="TestClassSelectionFormOptionalCheckBoxTextExport" xml:space="preserve">
+    <value>Remove Tests</value>
   </data>
   <data name="TestListUserControlCommitButtonText" xml:space="preserve">
-    <value>&amp;Run tests</value>
+    <value>&amp;Run Tests</value>
   </data>
   <data name="TestListUserControlInfoCaption" xml:space="preserve">
     <value>AccUnit Test List</value>

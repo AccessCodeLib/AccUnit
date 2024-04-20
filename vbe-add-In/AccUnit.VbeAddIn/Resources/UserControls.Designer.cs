@@ -127,6 +127,24 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Commit ähnelt.
+        /// </summary>
+        internal static string SelectListCommitButtonText {
+            get {
+                return ResourceManager.GetString("SelectListCommitButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Select All ähnelt.
+        /// </summary>
+        internal static string SelectListSelectAllCheckboxCaption {
+            get {
+                return ResourceManager.GetString("SelectListSelectAllCheckboxCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die use filter ähnelt.
         /// </summary>
         internal static string TagListUserControlCommitButtonText {
@@ -145,7 +163,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Export and remove tests ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Export Tests ähnelt.
         /// </summary>
         internal static string TestClassSelectionFormCaptionExport {
             get {
@@ -154,7 +172,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Import tests ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Import Tests ähnelt.
         /// </summary>
         internal static string TestClassSelectionFormCaptionImport {
             get {
@@ -163,25 +181,43 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die export &amp; remove ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Export ähnelt.
         /// </summary>
-        internal static string TestClassSelectionFormCommitTextExport {
+        internal static string TestClassSelectionFormCommitTestExport {
             get {
-                return ResourceManager.GetString("TestClassSelectionFormCommitTextExport", resourceCulture);
+                return ResourceManager.GetString("TestClassSelectionFormCommitTestExport", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die import ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Export &amp; Remove ähnelt.
         /// </summary>
-        internal static string TestClassSelectionFormCommitTextImport {
+        internal static string TestClassSelectionFormCommitTestExportAndRemove {
             get {
-                return ResourceManager.GetString("TestClassSelectionFormCommitTextImport", resourceCulture);
+                return ResourceManager.GetString("TestClassSelectionFormCommitTestExportAndRemove", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die &amp;Run tests ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Import ähnelt.
+        /// </summary>
+        internal static string TestClassSelectionFormCommitTestImport {
+            get {
+                return ResourceManager.GetString("TestClassSelectionFormCommitTestImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Remove Tests ähnelt.
+        /// </summary>
+        internal static string TestClassSelectionFormOptionalCheckBoxTextExport {
+            get {
+                return ResourceManager.GetString("TestClassSelectionFormOptionalCheckBoxTextExport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die &amp;Run Tests ähnelt.
         /// </summary>
         internal static string TestListUserControlCommitButtonText {
             get {

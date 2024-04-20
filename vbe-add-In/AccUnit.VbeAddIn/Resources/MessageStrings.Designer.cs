@@ -90,6 +90,25 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Tests exported:
+        ///{0} ähnelt.
+        /// </summary>
+        internal static string TestExportedCommitMessage {
+            get {
+                return ResourceManager.GetString("TestExportedCommitMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Tests imported ähnelt.
+        /// </summary>
+        internal static string TestImportedCommitMessage {
+            get {
+                return ResourceManager.GetString("TestImportedCommitMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die The content of the previous message has been copied to the clipboard. ähnelt.
         /// </summary>
         internal static string UITools_ShowException_message_has_been_copied_to_the_clipboard {

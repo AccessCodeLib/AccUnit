@@ -89,6 +89,8 @@
     <Compile Include="AxHostConverter.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="TestImportExport\CheckableCodeModuleInfo.cs" />
+    <Compile Include="SelectLists\CheckableItemsEventArgs.cs" />
     <Compile Include="CommitMethodNameEventArgs.cs" />
     <Compile Include="ComRegistration.cs" />
     <Compile Include="Connect.cs" />
@@ -98,7 +100,10 @@
     <Compile Include="GenerateTestMethodsFromCodeModuleDialog.Designer.cs">
       <DependentUpon>GenerateTestMethodsFromCodeModuleDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="ImportExportManager.cs" />
+    <Compile Include="TestImportExport\ImportExportWindow.xaml.cs">
+      <DependentUpon>ImportExportWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TestImportExport\ImportExportManager.cs" />
     <Compile Include="InsertTestMethodDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,6 +140,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="ReleayCommand.cs" />
     <Compile Include="Resources\Icons.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -167,12 +173,11 @@
       <DependentUpon>SelectListControl.cs</DependentUpon>
     </Compile>
     <Compile Include="SelectLists\CheckableItem.cs" />
-    <Compile Include="SelectLists\CheckableItemList.cs" />
     <Compile Include="SelectLists\ICheckableItem.cs" />
-    <Compile Include="SelectLists\SelectListBox.xaml.cs">
-      <DependentUpon>SelectListBox.xaml</DependentUpon>
+    <Compile Include="SelectLists\SelectControl.xaml.cs">
+      <DependentUpon>SelectControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SelectLists\SelectListBoxViewModel.cs" />
+    <Compile Include="SelectLists\SelectControlViewModel.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="TestClassSelectionForm.cs">
       <SubType>Form</SubType>
@@ -272,10 +277,12 @@
     <EmbeddedResource Include="Resources\UserControls.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>UserControls.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\VbeCommandbars.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>VbeCommandbars.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="SelectListControl.de.resx">
       <DependentUpon>SelectListControl.cs</DependentUpon>
@@ -297,11 +304,15 @@
     <None Include="Resources\refresh_green_16x16.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="TestImportExport\ImportExportWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="LoggerBoxControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SelectLists\SelectListBox.xaml">
+    <Page Include="SelectLists\SelectControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -320,17 +331,13 @@
     <None Include="Resources\runtest_16x16.png" />
     <None Include="Resources\running_green_16x16.png" />
     <None Include="Resources\result_unknown_16x16.png" />
-    <None Include="Resources\result_success_16x161.png" />
     <None Include="Resources\filter_16x16.png" />
     <None Include="Resources\importfromfolder_16x16.png" />
     <None Include="Resources\lock_16x16.png" />
     <None Include="Resources\movetofolder_16x16.png" />
-    <Content Include="Resources\noaction_gray.png" />
-    <None Include="Resources\noaction_gray1.png" />
+    <None Include="Resources\noaction_gray.png" />
     <None Include="Resources\play_green_16x16.png" />
-    <None Include="Resources\refresh_green_16x161.png" />
     <Content Include="Resources\result_failed_16x16.png" />
-    <None Include="Resources\result_failed_16x161.png" />
     <Content Include="Resources\result_success_16x16.png" />
   </ItemGroup>
   <ItemGroup />

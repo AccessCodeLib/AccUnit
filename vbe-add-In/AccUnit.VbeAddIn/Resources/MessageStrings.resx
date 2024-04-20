@@ -128,6 +128,13 @@ Please call 'Application.VBE.AddIns("AccUnit.GUI.Connect").Object.Application = 
     <value>'{0}' no longer exists.
 Please update the test list.</value>
   </data>
+  <data name="TestExportedCommitMessage" xml:space="preserve">
+    <value>Tests exported:
+{0}</value>
+  </data>
+  <data name="TestImportedCommitMessage" xml:space="preserve">
+    <value>Tests imported</value>
+  </data>
   <data name="UITools_ShowException_message_has_been_copied_to_the_clipboard" xml:space="preserve">
     <value>The content of the previous message has been copied to the clipboard.</value>
   </data>

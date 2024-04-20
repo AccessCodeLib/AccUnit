@@ -103,9 +103,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap noaction_gray1 {
+        internal static System.Drawing.Bitmap noaction_gray {
             get {
-                object obj = ResourceManager.GetObject("noaction_gray1", resourceCulture);
+                object obj = ResourceManager.GetObject("noaction_gray", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -133,9 +133,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap result_failed {
+        internal static System.Drawing.Bitmap result_failed_16x16 {
             get {
-                object obj = ResourceManager.GetObject("result_failed", resourceCulture);
+                object obj = ResourceManager.GetObject("result_failed_16x16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -143,9 +143,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap result_success {
+        internal static System.Drawing.Bitmap result_success_16x16 {
             get {
-                object obj = ResourceManager.GetObject("result_success", resourceCulture);
+                object obj = ResourceManager.GetObject("result_success_16x16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

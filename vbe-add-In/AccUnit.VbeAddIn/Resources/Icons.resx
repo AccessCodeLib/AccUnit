@@ -130,20 +130,20 @@
   <data name="MoveToFolder" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>movetofolder_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="noaction_gray1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>noaction_gray1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="noaction_gray" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>noaction_gray.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="play_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>play_green_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="refresh_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>refresh_green_16x161.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>refresh_green_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="result_failed" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>result_failed_16x161.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="result_failed_16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>result_failed_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="result_success" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>result_success_16x161.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="result_success_16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>result_success_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="result_unknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>result_unknown_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

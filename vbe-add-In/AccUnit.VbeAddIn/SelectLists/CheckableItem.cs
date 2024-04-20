@@ -2,9 +2,16 @@
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
+
     public class CheckableItem : ICheckableItem
     {
-        private bool _isChecked;
+        public CheckableItem(string name, bool isChecked = false)
+        {
+            _name = name;   
+            _isChecked = isChecked; 
+        }
+
+        private bool _isChecked = false;
         public bool IsChecked
         {
             get { return _isChecked; }
@@ -18,7 +25,18 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        public string Name { get; set; }
+        private string _name;   
+        public string Name {
+            get { return _name; }   
+            set
+            {
+                if (_name != value)
+                {
+                    _name = value;
+                    OnPropertyChanged("Name");
+                }
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

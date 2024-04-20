@@ -143,8 +143,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private static TestClassMemberInfo GetTestClassMemberInfoFromCodePane(_CodePane codepane)
         {
-            vbext_ProcKind procKind;
-            var procName = VbeCodePaneTools.GetCodeModuleMemberNameFromCodePane(codepane, out procKind);
+            var procName = VbeCodePaneTools.GetCodeModuleMemberNameFromCodePane(codepane, out vbext_ProcKind procKind);
 
             if (procKind == vbext_ProcKind.vbext_pk_Proc && procName != null)
             {
@@ -178,8 +177,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void RepairTestSuiteCOMException()
         {
-            if (VBProjectChanged != null)
-                VBProjectChanged(this, new VbProjectEventArgs(OfficeApplicationHelper.CurrentVBProject));
+            VBProjectChanged?.Invoke(this, new VbProjectEventArgs(OfficeApplicationHelper.CurrentVBProject));
 
             TestClassManager.ApplicationHelper = OfficeApplicationHelper;
         }

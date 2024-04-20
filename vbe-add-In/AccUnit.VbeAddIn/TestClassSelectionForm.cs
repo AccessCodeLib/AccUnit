@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using AccessCodeLib.AccUnit.Common;
 using AccessCodeLib.Common.VBIDETools;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
@@ -33,12 +32,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 case SelectionMode.Export:
                     Text = Resources.UserControls.TestClassSelectionFormCaptionExport;
                     Icon = UITools.ConvertBitmapToIcon(Resources.Icons.MoveToFolder);
-                    testListUserControl.SetCommitButtonLayout(Resources.UserControls.TestClassSelectionFormCommitTextExport, Resources.Icons.MoveToFolder);    
+                    testListUserControl.SetCommitButtonLayout(Resources.UserControls.TestClassSelectionFormCommitTestExport, Resources.Icons.MoveToFolder);    
                     break;
                 case SelectionMode.Import:
                     Text = Resources.UserControls.TestClassSelectionFormCaptionImport;
                     Icon = UITools.ConvertBitmapToIcon(Resources.Icons.ImportFromFolder);
-                    testListUserControl.SetCommitButtonLayout(Resources.UserControls.TestClassSelectionFormCommitTextImport, Resources.Icons.ImportFromFolder);
+                    testListUserControl.SetCommitButtonLayout(Resources.UserControls.TestClassSelectionFormCommitTestImport, Resources.Icons.ImportFromFolder);
                     break;
                 default:
                     throw new NotImplementedException();
