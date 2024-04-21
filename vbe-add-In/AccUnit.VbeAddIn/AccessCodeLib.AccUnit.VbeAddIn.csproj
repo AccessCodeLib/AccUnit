@@ -89,7 +89,9 @@
     <Compile Include="AxHostConverter.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="GetTestClassInfoEventArgs.cs" />
     <Compile Include="RunTestsEventArgs.cs" />
+    <Compile Include="SelectLists\CheckableTestItemsEventArgs.cs" />
     <Compile Include="TestClassListEventArgs.cs" />
     <Compile Include="TestExplorer\TestExplorerView.xaml.cs">
       <DependentUpon>TestExplorerView.xaml</DependentUpon>

@@ -1,43 +1,140 @@
-﻿using AccessCodeLib.AccUnit.Interfaces;
-using System;
-using System.Collections.Generic;
+﻿using AccessCodeLib.AccUnit.Integration;
+using AccessCodeLib.AccUnit.Interfaces;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 {
-    public class TestItems : ObservableCollection<TestItem>
+    public class TestClassInfoTestItems : TestItems
     {
-    }   
-
-    public class TestItem : CheckableItem, INotifyPropertyChanged
-    {
-        //public string Name { get; set; }
-        public TestItem(string name, bool isChecked = false)
-            : base(name, isChecked)
+        protected override void AddMembers(TestItem parent)
         {
+            var testClassInfoTestItem = (TestClassInfoTestItem)parent;
+            var testClassInfo = testClassInfoTestItem.TestClassInfo;
+            
+            if (testClassInfo.Members == null)
+                return; 
+
+            foreach (var member in testClassInfo.Members)
+            {
+                var testClassMemberInfoTestItem = new TestClassMemberInfoTestItem(member);
+                parent.Children.Add(testClassMemberInfoTestItem);
+            }
+        }
+    }
+
+    public class TestClassMemberInfoTestItems : TestItems
+    {
+        /*
+        protected override void AddMembers(TestItem parent)
+        {
+            var testClassInfoTestItem = (TestClassMemberInfoTestItem)parent;
+            var testClassMemberInfo = testClassInfoTestItem.TestClassMemberInfo;
+           // UITools.ShowMessage($"TestClassMemberInfoTestItem.AddMembers: {testClassMemberInfo.Name}");
+ 
+            if (testClassMemberInfo.TestRows == null)
+            {
+                //UITools.ShowMessage($"TestClassMemberInfoTestItem.AddMembers: {testClassMemberInfo.Name} - TestRows == null");  
+                return;
+            }
+
+            //UITools.ShowMessage($"TestClassMemberInfoTestItem.AddMembers: {testClassMemberInfo.Name} - TestRows == {testClassMemberInfo.TestRows.Count}");
+
+            foreach (var member in testClassMemberInfo.TestRows)
+            {
+                var testItem = new TestItem(member);
+            //    UITools.ShowMessage($"TestClassInfoTestItems.AddMembers: {testItem.Name}");
+               // testClassInfoTestItem.Children.Add(testItem);
+            }
+        }
+        */
+    }
+
+    public class TestRowTestItems : TestItems
+    {
+        protected override void AddMembers(TestItem parent)
+        {
+            /*
+            var testRowTestItem = (TestRowTestItem)parent;
+            var testClassMemberInfo = testRowTestItem.TestClassMemberInfo;
+            // UITools.ShowMessage($"TestClassMemberInfoTestItem.AddMembers: {testClassMemberInfo.Name}");
+
+            if (testClassMemberInfo.TestRows == null)
+                return;
+
+            foreach (var member in testClassMemberInfo.TestRows)
+            {
+                var testItem = new TestItem(member.Name);
+                //    UITools.ShowMessage($"TestClassInfoTestItems.AddMembers: {testItem.Name}");
+                testClassInfoTestItem.Children.Add(testItem);
+            }
+            */
+        }
+    }
+
+    public class TestItems : ObservableCollection<TestItem> 
+    {
+        public new void Add(TestItem item)
+        {
+            base.Add(item);
+            AddMembers(item);   
         }
 
-        public TestItem(TestClassInfo testClassInfo, bool isChecked = false)
-            : base(testClassInfo.Name, isChecked)
+        protected virtual void AddMembers(TestItem parent)
+        {
+            //parent.Children.
+        }
+
+
+    }   
+
+    public class TestClassInfoTestItem : TestItem
+    {
+        public TestClassInfoTestItem(TestClassInfo testClassInfo, bool isChecked = false)
+            : base(testClassInfo.Name, testClassInfo.Name, isChecked)
         {
             TestClassInfo = testClassInfo;
-            FullName = testClassInfo.Name;  
+        }
+
+        protected override void SetChildren()
+        {
+            Children = new TestClassMemberInfoTestItems();
         }
 
         public TestClassInfo TestClassInfo { get; set; }
+    }
 
-        public string FullName { get; set; }
-        public TestItems Children { get; set; } = new TestItems();
+    public class TestClassMemberInfoTestItem : TestItem
+    {
+        public TestClassMemberInfoTestItem(TestClassMemberInfo testClassMemberInfo, bool isChecked = false)
+            : base(testClassMemberInfo.FullName, testClassMemberInfo.Name, isChecked)
+        {
+            TestClassMemberInfo = testClassMemberInfo;
+        }
+
+        protected override void SetChildren()
+        {
+            Children = new TestRowTestItems();
+        }
+
+        public TestClassMemberInfo TestClassMemberInfo { get; set; }
+    }
+
+    public class TestItem : CheckableItem, INotifyPropertyChanged
+    {
+        public TestItem(string fullName, string name, bool isChecked = false)
+            : base(fullName, name, isChecked)
+        {
+            SetChildren();
+        }
+
+        protected virtual void SetChildren()
+        {
+            Children = new TestItems();
+        }
+
+        public TestItems Children { get; set; }
 
         private ITestResult _testResult;    
         public ITestResult TestResult
@@ -91,14 +188,28 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
                 if (TestResult == null)
                     return null;
 
-                if (TestResult.Success)
-                    return UITools.ConvertBitmapToBitmapSource(Properties.Resources.result_success_16x16);
-
                 if (TestResult.IsFailure || TestResult.IsError)
                     return UITools.ConvertBitmapToBitmapSource(Properties.Resources.result_failed_16x16);
 
-                if (TestResult.IsIgnored)
-                    return UITools.ConvertBitmapToBitmapSource(Properties.Resources.noaction_gray);
+                if (TestResult.Success)
+                {
+                    if (TestResult is ITestSummary summary)
+                    {
+                        if (summary.Passed == 0)
+                            return UITools.ConvertBitmapToBitmapSource(Properties.Resources.noaction_gray);
+                    }
+                    else
+                    {
+                        if (TestResult.IsIgnored)
+                            return UITools.ConvertBitmapToBitmapSource(Properties.Resources.noaction_gray);
+                    }
+
+                    return UITools.ConvertBitmapToBitmapSource(Properties.Resources.result_success_16x16);
+                }
+
+                if (TestResult.IsPassed)
+                    return UITools.ConvertBitmapToBitmapSource(Properties.Resources.result_success_16x16);
+
 
                 if (TestResult.Executed == false)
                     return UITools.ConvertBitmapToBitmapSource(Properties.Resources.noaction_gray);

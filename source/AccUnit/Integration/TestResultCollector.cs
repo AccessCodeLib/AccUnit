@@ -52,9 +52,10 @@ namespace AccessCodeLib.AccUnit.Integration
             TestFinished?.Invoke(result);
         }
 
-        protected virtual void RaiseTestStarted(ITest test, IgnoreInfo ignoreInfo)
+        protected virtual void RaiseTestStarted(ITest test, ref IgnoreInfo ignoreInfo)
         {
-            TestStarted?.Invoke(test, ignoreInfo);
+            //ignoreInfo.Ignore = false;
+            TestStarted?.Invoke(test, ref ignoreInfo);
         }
 
         void ITestResultSummaryPrinter.PrintSummary(ITestSummary TestSummary, bool PrintTestResults)

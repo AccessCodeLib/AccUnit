@@ -64,9 +64,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             TestFixtureFinished?.Invoke(result);    
         }
 
-        private void TestResultCollector_TestStarted(ITest test, IgnoreInfo ignoreInfo)
+        private void TestResultCollector_TestStarted(ITest test, ref IgnoreInfo ignoreInfo)
         {
-            TestStarted?.Invoke(test, ignoreInfo);  
+            TestStarted?.Invoke(test, ref ignoreInfo);  
         }
 
         private void TestResultCollector_TestFinished(ITestResult result)

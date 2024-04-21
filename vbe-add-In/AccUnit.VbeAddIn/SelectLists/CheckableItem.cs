@@ -7,6 +7,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     {
         public CheckableItem(string name, bool isChecked = false)
         {
+            _fullName = name;
+            _name = name;
+            _isChecked = isChecked;
+        }
+
+        public CheckableItem(string fullName, string name, bool isChecked = false)
+        {
+            _fullName = fullName;   
             _name = name;   
             _isChecked = isChecked; 
         }
@@ -28,6 +36,20 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             _isChecked = value;
             OnPropertyChanged(nameof(IsChecked));
+        }
+
+        private string _fullName;
+        public string FullName
+        {
+            get { return _fullName; }
+            set
+            {
+                if (_fullName != value)
+                {
+                    _fullName = value;
+                    OnPropertyChanged("FullName");
+                }
+            }
         }
 
         private string _name;   

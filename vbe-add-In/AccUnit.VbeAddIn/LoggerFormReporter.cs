@@ -79,7 +79,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             //LogStringToTextBox("TestFinished");
         }
 
-        private void TestResultCollector_TestStarted(ITest test, IgnoreInfo ignoreInfo)
+        private void TestResultCollector_TestStarted(ITest test, ref IgnoreInfo ignoreInfo)
         {
             LogStringToTextBox(test.DisplayName + "...");
         }

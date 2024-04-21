@@ -54,6 +54,7 @@ namespace AccessCodeLib.AccUnit
         }
 
         public string Name { get; private set; }
+        public string FullName { get { return string.Format("{0}.{1}", Parent.Name, Name); } }
         public TestClassInfo Parent
         {
             get

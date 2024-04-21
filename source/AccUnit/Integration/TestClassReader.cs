@@ -48,6 +48,15 @@ namespace AccessCodeLib.AccUnit
             }
         }
 
+        public TestClassInfo GetTestClassInfo(string classname, bool initMembers)
+        {
+            using (new BlockLogger())
+            {
+                var vbc = VbProject.VBComponents.Item(classname);
+                return GetTestClassInfo(vbc, initMembers);
+            }
+        }
+
         private static TestClassInfo GetTestClassInfo(_VBComponent vbc, bool initMembers)
         {
             using (new BlockLogger(vbc.CodeModule.Name))
@@ -98,23 +107,27 @@ namespace AccessCodeLib.AccUnit
             {
                 var reader = new CodeModuleReader(VbProject.VBComponents.Item(classname).CodeModule);
                 var memberInfo = new TestClassMemberInfo(membername, reader.GetProcedureHeader(membername));
-
-                var rowGenerator = new TestRowGenerator
-                {
-                    ActiveVBProject = (VBProject)VbProject,
-                    TestName = classname
-                };
-                var testRows = rowGenerator.GetTestRows(membername);
-
-                memberInfo.TestRows.AddRange(testRows);
-
+                FillTestRows(classname, memberInfo, (VBProject)VbProject);
                 return memberInfo;
             }
         }
 
+        private static void FillTestRows(string className, TestClassMemberInfo memberInfo, VBProject vbProject)
+        {
+            var rowGenerator = new TestRowGenerator
+            {
+                ActiveVBProject = vbProject,
+                TestName = className
+            };
+            var testRows = rowGenerator.GetTestRows(memberInfo.Name);
+
+            memberInfo.TestRows.AddRange(testRows);
+        }
+
         private static TestClassMemberInfo GetTestClassMemberInfo(CodeModuleMember member, CodeModuleReader reader)
         {
-            return new TestClassMemberInfo(member.Name, reader.GetProcedureHeader(member.Name, member.ProcKind));
+            return new TestClassMemberInfo(member.Name, 
+                                           reader.GetProcedureHeader(member.Name, member.ProcKind));
         }
 
         public static bool IsTestClassCodeModul(_CodeModule codeModule)

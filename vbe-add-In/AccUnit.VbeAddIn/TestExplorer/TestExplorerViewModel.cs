@@ -22,13 +22,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         public event EventHandler<RunTestsEventArgs> RunTests;
         public event EventHandler CancelTestRun;
+        public event EventHandler<GetTestClassInfoEventArgs> GetTestClassInfo;
 
         public TestExplorerViewModel()
         {
             _selectAllCheckBoxText = Resources.UserControls.SelectListSelectAllCheckboxCaption;
             _commitButtonText = Resources.UserControls.TestExplorerCommitButtonText;
 
-            TestItems = new TestItems();
+            TestItems = new TestClassInfoTestItems();
             RefreshCommand = new RelayCommand(Refresh);
             CommitCommand = new RelayCommand(Commit);
         }
@@ -83,7 +84,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
             foreach (var item in TestItems.ToList())
             {
-                if (!testSuite.TestFixtures.Any(tf => tf.Name == item.Name))
+                if (!testSuite.TestFixtures.Any(tf => tf.FullName == item.FullName))
                 {
                     //TestItems.Remove(item);
                 }
@@ -111,7 +112,19 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             {
                 return;
             }
-            TestItems.Add(new TestItem(fixture.Name));
+            AddTestClassInfoTestItem(fixture.Name); 
+        }
+
+        private void AddTestClassInfoTestItem(string className)
+        {
+            var testClassInfoEventArgs = new GetTestClassInfoEventArgs(className);
+            GetTestClassInfo?.Invoke(this, testClassInfoEventArgs);
+            if (testClassInfoEventArgs.TestClassInfo == null)
+            {
+                throw new Exception("Test class info not found for test fixture " + className);
+            }
+
+            TestItems.Add(new TestClassInfoTestItem(testClassInfoEventArgs.TestClassInfo));
         }
 
         private void TestResultCollector_TestFixtureFinished(ITestResult result)
@@ -122,7 +135,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
                 return;
             }
             testItem.Result = result.Result.ToString();
-            testItem.IsExpanded = !result.Success;
+            testItem.IsExpanded = result.IsFailure || result.IsError;
             //if (result.Success)
             //{
             //    testItem.IsChecked = false; 
@@ -131,11 +144,18 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             OnPropertyChanged(nameof(testItem.IsExpanded));
         }
 
-        private void TestResultCollector_TestStarted(ITest test, IgnoreInfo ignoreInfo)
+        private void TestResultCollector_TestStarted(ITest test, ref IgnoreInfo ignoreInfo)
         {
             var testItem = FindTestItem(test);
             if (testItem != null)
             {
+                if (!testItem.IsChecked)
+                {
+                    ignoreInfo.Ignore = true;
+                    ignoreInfo.Comment = "Test is not selected";    
+                    return;
+                }
+
                 var parent = FindParentTestItem(test);
                 if (parent != null)
                 {
@@ -147,14 +167,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             var parentItem = FindParentTestItem(test);
             if (parentItem == null)
             {
-                TestItems.Add(new TestItem(test.Name, true));
+                AddTestClassInfoTestItem(test.Name);
             }
             else
             {
                 if (test.Parent is IRowTest)
-                    parentItem.Children.Add(new TestItem(((IRowTestId)test).RowId));
+                    parentItem.Children.Add(new TestItem(test.FullName, ((IRowTestId)test).RowId));
                 else
-                    parentItem.Children.Add(new TestItem(test.Name));
+                    parentItem.Children.Add(new TestItem(test.FullName, test.Name));
                 parentItem.IsExpanded = true;
             }
             //OnPropertyChanged(nameof(TestItems));
@@ -167,8 +187,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             {
                 return;
             }
+
             testItem.Result = result.Result.ToString();
-            testItem.IsExpanded = !result.Success;
+            testItem.IsExpanded = result.IsFailure || result.IsError;
             testItem.TestResult = result;
             if (result.Success)
             {
@@ -180,10 +201,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         private void TestResultCollector_TestSuiteReset(ResetMode resetmode, ref bool cancel)
         {
-            if (resetmode == ResetMode.RemoveTests)
-            {
-                TestItems.Clear();
-            }
+            //if (resetmode == ResetMode.RemoveTests)
+            //{
+            //    TestItems.Clear();
+            //}
         }
 
         private void TestResultCollector_TestTraceMessage(string message, ICodeCoverageTracker CodeCoverageTracker)
@@ -191,7 +212,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             //LogStringToTextBox(message);
         }
         #endregion
-
 
         private TestItem FindParentTestItem(ITest test)
         {
@@ -203,18 +223,18 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
             if (test.Parent is ITestFixture testFixture)
             {
-                return TestItems.FirstOrDefault(ti => ti.Name == testFixture.Name);
+                return TestItems.FirstOrDefault(ti => ti.FullName == testFixture.FullName);
             }
 
             if (test.Parent is IRowTest rowTest)
             {
                 var rowTestFixtureItem = FindParentTestItem(rowTest);  
-                return rowTestFixtureItem.Children.FirstOrDefault(ti => ti.Name == rowTest.Name);
+                return rowTestFixtureItem.Children.FirstOrDefault(ti => ti.FullName == rowTest.FullName);
             }
 
             var parentTest = test.Parent as ITest;
             var fixtureItem = FindParentTestItem(parentTest);   
-            return fixtureItem.Children.FirstOrDefault(ti => ti.Name == parentTest.Name);
+            return fixtureItem.Children.FirstOrDefault(ti => ti.FullName == parentTest.FullName);
         }
 
         private TestItem FindTestItem(ITestData testData)
@@ -227,15 +247,16 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             }
             if (parentItem == null)
             {
-                return TestItems.FirstOrDefault(ti => ti.Name == testData.Name);
+                return TestItems.FirstOrDefault(ti => ti.FullName == testData.FullName);
             }
 
+            /*
             if (test is IRowTestId rowTestId)
             {
-                return parentItem.Children.FirstOrDefault(ti => ti.Name == rowTestId.RowId);
+                return parentItem.Children.FirstOrDefault(ti => ti.FullName == rowTestId.RowId);
             }   
-
-            return parentItem.Children.FirstOrDefault(ti => ti.Name == testData.Name);
+            */
+            return parentItem.Children.FirstOrDefault(ti => ti.FullName == testData.FullName);
         }
 
 
@@ -305,7 +326,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         protected virtual void Commit()
         {
             TestClassList list = new TestClassList();
-            list.AddRange(TestItems.Where(ti => ti.IsChecked).Select(ti => ti.TestClassInfo));
+            list.AddRange(TestItems.Where(ti => ti.IsChecked).Select(ti => ((TestClassInfoTestItem)ti).TestClassInfo));
             RunTests?.Invoke(this, new RunTestsEventArgs(list));
         }
 

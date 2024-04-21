@@ -119,7 +119,7 @@ namespace AccessCodeLib.AccUnit
 
         public bool Cancel { get; set; }
 
-        void OnTestSuiteTestStarted(ITest test, IgnoreInfo ignoreInfo)
+        void OnTestSuiteTestStarted(ITest test, ref IgnoreInfo ignoreInfo)
         {
             if (Cancel)
             {
@@ -133,11 +133,13 @@ namespace AccessCodeLib.AccUnit
                 var ignoreMember = false;
                 if (memberinfo != null)
                 {
-                    ignoreInfo = memberinfo.IgnoreInfo;
-                    ignoreMember = ignoreInfo.Ignore;
+                    var memberIgnoreInfo = memberinfo.IgnoreInfo;
+                    ignoreMember = memberIgnoreInfo.Ignore;
                     if (ignoreMember)
                     {
                         SetRunstateToIgnored(test);
+                        ignoreInfo.Ignore = true;
+                        ignoreInfo.Comment = memberIgnoreInfo.Comment;  
                     }
                 }
 
@@ -168,7 +170,7 @@ namespace AccessCodeLib.AccUnit
                     //testcase.DisplayName = memberinfo.DisplayName;
                 }
                 
-                RaiseTestStarted(test, ignoreInfo);
+                RaiseTestStarted(test, ref ignoreInfo);
             }
         }
 
@@ -311,9 +313,9 @@ namespace AccessCodeLib.AccUnit
             TestFixtureStarted?.Invoke(fixture);
         }
 
-        protected virtual void RaiseTestStarted(ITest test, IgnoreInfo ignoreInfo)
+        protected virtual void RaiseTestStarted(ITest test, ref IgnoreInfo ignoreInfo)
         {
-            TestStarted?.Invoke(test, ignoreInfo);
+            TestStarted?.Invoke(test, ref ignoreInfo);
         }
 
         private void RaiseTestFinished(ITestResult result)

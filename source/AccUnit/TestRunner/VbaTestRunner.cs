@@ -145,7 +145,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
         {
             var results = new TestResultCollection(test);
             var ignoreInfo = new IgnoreInfo();
-            RaiseTestStarted(test, ignoreInfo);   
+            RaiseTestStarted(test, ref ignoreInfo);   
 
             if (ignoreInfo.Ignore)
             {
@@ -219,8 +219,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
             using (var invocationHelper = new InvocationHelper(testFixture.Instance))
             {
                 var ignoreInfo = new IgnoreInfo();
-
-                RaiseTestStarted(test, ignoreInfo);
+                RaiseTestStarted(test, ref ignoreInfo);
                 if (ignoreInfo.Ignore)
                 {
                     testResult.IsIgnored = true;
@@ -314,9 +313,9 @@ namespace AccessCodeLib.AccUnit.TestRunner
             }
         }
 
-        void RaiseTestStarted(ITest test, IgnoreInfo ignoreInfo)
+        void RaiseTestStarted(ITest test, ref IgnoreInfo ignoreInfo)
         {
-            TestStarted?.Invoke(test, ignoreInfo);
+            TestStarted?.Invoke(test, ref ignoreInfo);
         }
 
         void RaiseTestFinished(ITestResult result)

@@ -42,6 +42,11 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             {
                 CancelTestRun?.Invoke(sender, e);
             };
+
+            _viewModel.GetTestClassInfo += (sender, e) =>
+            {
+                e.TestClassInfo = VbeIntegrationManager.TestClassManager.GetTestClassInfo(e.ClassName, true);
+            };  
         }   
 
         public VbeIntegrationManager VbeIntegrationManager { get; set; }
@@ -131,13 +136,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         private void FillTestsFromVbProject()
         {
             _viewModel.TestItems.Clear();
-            var testItems = VbeIntegrationManager.TestClassManager.GetTestClassListFromVBProject(false);   
+            var testItems = VbeIntegrationManager.TestClassManager.GetTestClassListFromVBProject(true);   
             foreach (var testItem in testItems)
             {
-                _viewModel.TestItems.Add(new TestItem(testItem, false));
+                _viewModel.TestItems.Add(new TestClassInfoTestItem(testItem, false));
             }
         }
-
 
         #endregion
 
