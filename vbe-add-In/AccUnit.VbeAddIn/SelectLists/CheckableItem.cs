@@ -32,7 +32,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        protected virtual void SetChecked(bool value)
+        internal virtual void SetChecked(bool value)
         {
             _isChecked = value;
             OnPropertyChanged(nameof(IsChecked));

@@ -2,6 +2,7 @@
 using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
 using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
@@ -41,7 +42,50 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             set
             {
                 _testItems = value;
+                TestItems.CollectionChanged += OnChildrenCollectionChanged;
                 OnPropertyChanged(nameof(TestItems));
+            }
+        }
+
+        private void OnChildrenCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (var item in e.NewItems)
+                {
+                    if (item is TestItem testItem)
+                    {
+                        testItem.PropertyChanged += OnChildPropertyChanged;
+                    }
+                }
+            }
+        }
+
+        private void OnChildPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(TestItem.IsChecked)) 
+            {
+                if (sender is TestItem testItem)
+                {
+                    if (!testItem.IsChecked)
+                    {
+                        if (SelectAll == true)
+                        {
+                            _selectAll = false;
+                            OnPropertyChanged(nameof(SelectAll));
+                        }
+                    }
+                    else if (SelectAll == false)
+                    {
+                        foreach (var item in TestItems)
+                        {
+                            if (!item.IsChecked)
+                                return;
+                        }
+                        _selectAll = true;
+                        OnPropertyChanged(nameof(SelectAll));
+                    }
+                }
             }
         }
 
@@ -274,7 +318,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
                     {
                         foreach (var item in TestItems)
                         {
-                            item.IsChecked = value;
+                            item.SetChecked(value);
                         }
                     }
                     OnPropertyChanged(nameof(SelectAll));
