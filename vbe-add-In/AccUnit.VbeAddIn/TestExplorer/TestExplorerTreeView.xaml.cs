@@ -7,7 +7,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         public TestExplorerTreeView()
         {
             InitializeComponent();
-            DataContext = new TestExplorerViewModel();
+            //DataContext = new TestExplorerViewModel();
         }
     }
 }

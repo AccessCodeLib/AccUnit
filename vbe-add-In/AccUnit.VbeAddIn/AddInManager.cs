@@ -64,8 +64,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 InitOfficeApplicationHelper();
                 //InitAccSpec();
 
-                var testExplorer = new TestExplorerTreeView();
-                var vbeControl = new VbeUserControl<TestExplorerTreeView>(AddIn, "AccUnit Test Explorer", TestExplorerInfo.PositionGuid, testExplorer,false);
+                var testExplorer = new TestExplorerView();
+                var vbeControl = new VbeUserControl<TestExplorerView>(AddIn, "AccUnit Test Explorer", TestExplorerInfo.PositionGuid, testExplorer, false);
                 _testExplorerManager = new TestExplorerManager(vbeControl);
 
                 _commandBarsAdapter = new AccUnitCommandBarAdapter(VBE);
@@ -99,8 +99,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     InitTestSuiteManager();
                     InitVbeWindows();
                     InitVbeIntegrationManager();
+
                     //_testListAndResultManager.TagListManager = _tagListManager;
-                    //_testStarter.TestListAndResultManager = _testListAndResultManager;
+                    //_testStarter.te = _testListAndResultManager;
+                    _testExplorerManager.RunTests += OnRunTests;    
                     _testStarter.ShowUIMessage += OnShowUIMessage;
 
                     InitCommandBarsAdapter();
@@ -110,6 +112,11 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     UITools.ShowException(ex);
                 }
             }
+        }
+
+        private void OnRunTests(object sender, RunTestsEventArgs e)
+        {
+            _testStarter.RunTests(e.TestClassList);
         }
 
         static void OnShowUIMessage(object sender, MessageEventArgs e)
@@ -127,6 +134,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 _commandBarsAdapter.Init();
                 _commandBarsAdapter.AddClient(_testStarter);
                 _commandBarsAdapter.AddClient(_vbeIntegrationManager);
+                _commandBarsAdapter.AddClient(_testExplorerManager);
                 
                 /*
                 _commandBarsAdapter.AddClient(_testListAndResultManager);
@@ -166,6 +174,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 _testSuiteManager.TestResultReporterRequest += TestSuiteManager_TestResultReporterRequest;
 
                 _testStarter.TestSuiteManager = _testSuiteManager;
+                
                 //_testListAndResultManager.TestSuiteManager = _testSuiteManager;
             }
         }
@@ -176,14 +185,11 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             loggerControl.LogTextBox.AppendText("...");
             var vbeControl = new VbeUserControl<LoggerControl>(AddIn, "AccUnit Test Result Logger", LoggerControlInfo.PositionGuid, loggerControl);
             reporters.Add(new LoggerControlReporter(vbeControl));
-            
-            /*
-            var loggerControl2 = new LoggerBoxControl();
-            var vbeControl2 = new VbeUserControl<LoggerBoxControl>(AddIn, "AccUnit Test Result Logger 2", LoggerBoxControlInfo.PositionGuid, loggerControl2);
-            reporters.Add(new LoggerBoxControlReporter(vbeControl2));
-            */
-            
-            reporters.Add(_testExplorerManager);
+
+            if (!reporters.Contains(_testExplorerManager))
+            {
+                reporters.Add(_testExplorerManager);
+            }
         }
 
         private void InitVbeIntegrationManager()
@@ -192,7 +198,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 //_tagListManager.VbeIntegrationManager = _vbeIntegrationManager;
                 //_testListAndResultManager.VbeIntegrationManager = _vbeIntegrationManager;
+                _testExplorerManager.VbeIntegrationManager = _vbeIntegrationManager;
                 _testStarter.VbeIntegrationManager = _vbeIntegrationManager;
+                
                 //_testTemplateGenerator.VbeIntegrationManager = _vbeIntegrationManager;
 
                 _vbeIntegrationManager.VBProjectChanged += VbeIntegrationManagerOnVBProjectChanged;

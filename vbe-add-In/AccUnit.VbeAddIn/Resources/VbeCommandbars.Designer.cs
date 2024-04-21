@@ -223,11 +223,11 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die &amp;Test List ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die &amp;Test Explorer ähnelt.
         /// </summary>
-        internal static string ViewTestListCommandbarButtonCaption {
+        internal static string ViewTestExplorerCommandbarButtonCaption {
             get {
-                return ResourceManager.GetString("ViewTestListCommandbarButtonCaption", resourceCulture);
+                return ResourceManager.GetString("ViewTestExplorerCommandbarButtonCaption", resourceCulture);
             }
         }
         

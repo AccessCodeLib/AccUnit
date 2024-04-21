@@ -181,8 +181,8 @@
   <data name="ViewTagListCommandbarButtonCaption" xml:space="preserve">
     <value>Tag List</value>
   </data>
-  <data name="ViewTestListCommandbarButtonCaption" xml:space="preserve">
-    <value>&amp;Test List</value>
+  <data name="ViewTestExplorerCommandbarButtonCaption" xml:space="preserve">
+    <value>&amp;Test Explorer</value>
   </data>
   <data name="ViewTestResultCommandbarButtonCaption" xml:space="preserve">
     <value>Test &amp;Results</value>

@@ -84,20 +84,18 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        private void RunTests(ICollection<TestClassInfo> testClassList)
+        public void RunTests(ICollection<TestClassInfo> testClassList)
         {
             try
             {
                 if (testClassList.Count > 0)
                 {
-                    /*
                     var missingTestClass = TestClassManager.FindFirstMissingTestClassInVBProject(testClassList);
                     if (missingTestClass != null)
                     {
                         UITools.ShowMessage(string.Format(Resources.MessageStrings.MissingTestClassInVBProject, missingTestClass.Name));
                         return;
                     }
-                    */
                     RunTests(testClassList, ResetMode.RemoveTests);
                 }
             }
@@ -131,15 +129,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void RunTests(IEnumerable<TestClassInfo> list, ResetMode resetmode)
         {
-            /*
-            if (_testExplorerManager != null)
-                _testExplorerManager..Visible = true;
-            */
             var testSuite = TestSuite.Reset(ResetMode.RemoveTests) as IVBATestSuite;
             CheckReferences();
 
-            var accessSuite = testSuite as AccessTestSuite;
-            if (accessSuite != null)
+            if (testSuite is AccessTestSuite accessSuite)
             {
                 // TODO ScanningForTestModules: This triggers the ScanningForTestModules event, checkout if necessary
                 if (!CheckAccessApplicationIsCompiledAndRefreshFactoryModule(accessSuite))
@@ -158,14 +151,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             AddTestsAndTryToRepairComException(testSuite, list, resetmode);
             
             testSuite.Run();
-
-            /*
-            if (TestListAndResultManager != null)
-            {
-                TestListAndResultManager.TestListAndResultWindow.Visible = true;
-                TestListAndResultManager.TestListAndResultWindow.Control.ShowTestSuiteResult(testSuite);
-            }
-            */
         }
 
         private bool CheckAccessApplicationIsCompiledAndRefreshFactoryModule(AccessTestSuite accessSuite)

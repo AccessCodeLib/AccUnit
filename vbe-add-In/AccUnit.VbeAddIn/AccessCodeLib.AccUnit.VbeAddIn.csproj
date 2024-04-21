@@ -89,6 +89,11 @@
     <Compile Include="AxHostConverter.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="RunTestsEventArgs.cs" />
+    <Compile Include="TestClassListEventArgs.cs" />
+    <Compile Include="TestExplorer\TestExplorerView.xaml.cs">
+      <DependentUpon>TestExplorerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TestImportExport\CheckableCodeModuleInfo.cs" />
     <Compile Include="SelectLists\CheckableItemsEventArgs.cs" />
     <Compile Include="CommitMethodNameEventArgs.cs" />
@@ -192,6 +197,7 @@
     </Compile>
     <Compile Include="TestExplorer\TestExplorerViewModel.cs" />
     <Compile Include="TestExplorer\TestItem.cs" />
+    <Compile Include="TestExplorer\TestListAndResultManager.cs" />
     <Compile Include="TestListControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -304,6 +310,10 @@
     <None Include="Resources\refresh_green_16x16.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="TestExplorer\TestExplorerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TestImportExport\ImportExportWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

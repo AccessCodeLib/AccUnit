@@ -219,9 +219,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die &amp;Run Tests ähnelt.
         /// </summary>
-        internal static string TestListUserControlCommitButtonText {
+        internal static string TestExplorerCommitButtonText {
             get {
-                return ResourceManager.GetString("TestListUserControlCommitButtonText", resourceCulture);
+                return ResourceManager.GetString("TestExplorerCommitButtonText", resourceCulture);
             }
         }
         

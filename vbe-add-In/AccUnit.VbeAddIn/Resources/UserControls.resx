@@ -171,7 +171,7 @@ Remove environment?</value>
   <data name="TestClassSelectionFormOptionalCheckBoxTextExport" xml:space="preserve">
     <value>Remove Tests</value>
   </data>
-  <data name="TestListUserControlCommitButtonText" xml:space="preserve">
+  <data name="TestExplorerCommitButtonText" xml:space="preserve">
     <value>&amp;Run Tests</value>
   </data>
   <data name="TestListUserControlInfoCaption" xml:space="preserve">

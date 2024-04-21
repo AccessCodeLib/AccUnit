@@ -1,20 +1,36 @@
 ﻿using AccessCodeLib.AccUnit.CodeCoverage;
 using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
-using System.Windows;
-using System.Collections.ObjectModel;
+using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Documents;
-using System;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 {
     public class TestExplorerViewModel : ITestResultReporter, INotifyPropertyChanged
     {
+        private string _selectAllCheckBoxText = Resources.UserControls.SelectListSelectAllCheckboxCaption;
+        private string _commitButtonText = Resources.UserControls.SelectListCommitButtonText;
+
+        //public delegate void CommitSelectedTestItemsEventHandler(TestExplorerViewModel sender, CheckableTestItemsEventArgs e);
+        //public event CommitSelectedTestItemsEventHandler ItemsSelected;
+
+        public delegate void RefreshTestItemListEventHandler(TestExplorerViewModel sender, CheckableTestItemsEventArgs e);
+        public event RefreshTestItemListEventHandler RefreshList;
+
+        public event EventHandler<RunTestsEventArgs> RunTests;
+        public event EventHandler CancelTestRun;
+
         public TestExplorerViewModel()
         {
+            _selectAllCheckBoxText = Resources.UserControls.SelectListSelectAllCheckboxCaption;
+            _commitButtonText = Resources.UserControls.TestExplorerCommitButtonText;
+
             TestItems = new TestItems();
+            RefreshCommand = new RelayCommand(Refresh);
+            CommitCommand = new RelayCommand(Commit);
         }
 
         private TestItems _testItems;
@@ -61,7 +77,18 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         private void TestResultCollector_TestSuiteStarted(ITestSuite testSuite)
         {
-            TestItems.Clear();
+            //TestItems.Clear();
+
+            // remove all items that are not in the current test suite
+
+            foreach (var item in TestItems.ToList())
+            {
+                if (!testSuite.TestFixtures.Any(tf => tf.Name == item.Name))
+                {
+                    //TestItems.Remove(item);
+                }
+            }
+
             //OnPropertyChanged(nameof(TestItems));
 
             //ClearLogMessages();
@@ -79,8 +106,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         private void TestResultCollector_TestFixtureStarted(ITestFixture fixture)
         {
-            TestItems.Add(new TestItem { Name = fixture.Name });
-                //OnPropertyChanged(nameof(TestItems));
+            var testItem = FindTestItem(fixture);
+            if (testItem != null)
+            {
+                return;
+            }
+            TestItems.Add(new TestItem(fixture.Name));
         }
 
         private void TestResultCollector_TestFixtureFinished(ITestResult result)
@@ -92,24 +123,38 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             }
             testItem.Result = result.Result.ToString();
             testItem.IsExpanded = !result.Success;
+            //if (result.Success)
+            //{
+            //    testItem.IsChecked = false; 
+            //}
             testItem.TestResult = result;
-            //OnPropertyChanged(nameof(TestItems));
             OnPropertyChanged(nameof(testItem.IsExpanded));
         }
 
         private void TestResultCollector_TestStarted(ITest test, IgnoreInfo ignoreInfo)
         {
+            var testItem = FindTestItem(test);
+            if (testItem != null)
+            {
+                var parent = FindParentTestItem(test);
+                if (parent != null)
+                {
+                    parent.IsExpanded = true;
+                }   
+                return;
+            }
+
             var parentItem = FindParentTestItem(test);
             if (parentItem == null)
             {
-                TestItems.Add(new TestItem { Name = test.Name, IsExpanded = true });
+                TestItems.Add(new TestItem(test.Name, true));
             }
             else
             {
                 if (test.Parent is IRowTest)
-                    parentItem.Children.Add(new TestItem { Name = ((IRowTestId)test).RowId });
+                    parentItem.Children.Add(new TestItem(((IRowTestId)test).RowId));
                 else
-                    parentItem.Children.Add(new TestItem { Name = test.Name });
+                    parentItem.Children.Add(new TestItem(test.Name));
                 parentItem.IsExpanded = true;
             }
             //OnPropertyChanged(nameof(TestItems));
@@ -125,12 +170,20 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             testItem.Result = result.Result.ToString();
             testItem.IsExpanded = !result.Success;
             testItem.TestResult = result;
+            if (result.Success)
+            {
+                testItem.IsChecked = false;
+                OnPropertyChanged(nameof(testItem.IsChecked));
+            }
             OnPropertyChanged(nameof(testItem.IsExpanded));
         }
 
         private void TestResultCollector_TestSuiteReset(ResetMode resetmode, ref bool cancel)
         {
-            TestItems.Clear();
+            if (resetmode == ResetMode.RemoveTests)
+            {
+                TestItems.Clear();
+            }
         }
 
         private void TestResultCollector_TestTraceMessage(string message, ICodeCoverageTracker CodeCoverageTracker)
@@ -184,6 +237,78 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
             return parentItem.Children.FirstOrDefault(ti => ti.Name == testData.Name);
         }
+
+
+        private bool _selectAll = false;
+
+        public bool SelectAll
+        {
+            get { return _selectAll; }
+            set
+            {
+                if (_selectAll != value)
+                {
+                    _selectAll = value;
+                    if (TestItems != null)
+                    {
+                        foreach (var item in TestItems)
+                        {
+                            item.IsChecked = value;
+                        }
+                    }
+                    OnPropertyChanged(nameof(SelectAll));
+                }
+            }
+        }
+
+        public string SelectAllCheckBoxText
+        {
+            get => _selectAllCheckBoxText;
+            set
+            {
+                if (_selectAllCheckBoxText != value)
+                {
+                    _selectAllCheckBoxText = value;
+                    OnPropertyChanged(nameof(SelectAllCheckBoxText));
+                }
+            }
+        }
+
+        public string CommitButtonText
+        {
+            get => _commitButtonText;
+            set
+            {
+                if (_commitButtonText != value)
+                {
+                    _commitButtonText = value;
+                    OnPropertyChanged(nameof(CommitButtonText));
+                }
+            }
+        }
+
+        public ICommand RefreshCommand { get; }
+        public ICommand CommitCommand { get; }
+        public ImageSource RefreshCommandImageSource
+        {
+            get
+            {
+                return UITools.ConvertBitmapToBitmapSource(Resources.Icons.refresh_green);
+            }
+        }
+
+        protected void Refresh()
+        {
+            RefreshList?.Invoke(this, new CheckableTestItemsEventArgs(TestItems));
+        }
+
+        protected virtual void Commit()
+        {
+            TestClassList list = new TestClassList();
+            list.AddRange(TestItems.Where(ti => ti.IsChecked).Select(ti => ti.TestClassInfo));
+            RunTests?.Invoke(this, new RunTestsEventArgs(list));
+        }
+
     }
 
     public static class TestExplorerInfo

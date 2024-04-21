@@ -19,10 +19,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 if (_isChecked != value)
                 {
-                    _isChecked = value;
-                    OnPropertyChanged("IsChecked");
+                    SetChecked(value);
                 }
             }
+        }
+
+        protected virtual void SetChecked(bool value)
+        {
+            _isChecked = value;
+            OnPropertyChanged(nameof(IsChecked));
         }
 
         private string _name;   

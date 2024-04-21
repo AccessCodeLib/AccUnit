@@ -19,9 +19,23 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
     {
     }   
 
-    public class TestItem : INotifyPropertyChanged
+    public class TestItem : CheckableItem, INotifyPropertyChanged
     {
-        public string Name { get; set; }
+        //public string Name { get; set; }
+        public TestItem(string name, bool isChecked = false)
+            : base(name, isChecked)
+        {
+        }
+
+        public TestItem(TestClassInfo testClassInfo, bool isChecked = false)
+            : base(testClassInfo.Name, isChecked)
+        {
+            TestClassInfo = testClassInfo;
+            FullName = testClassInfo.Name;  
+        }
+
+        public TestClassInfo TestClassInfo { get; set; }
+
         public string FullName { get; set; }
         public TestItems Children { get; set; } = new TestItems();
 
@@ -54,14 +68,22 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
                 }
             }
         }
-        public bool IsSelected { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
+        protected override void SetChecked(bool value)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            base.SetChecked(value);
+            ChangeChildrenCheckedState(value);
+            //OnPropertyChanged(nameof(IsChecked));
         }
 
+        private void ChangeChildrenCheckedState(bool isChecked)
+        {
+            foreach (var item in Children)
+            {
+                item.IsChecked = isChecked;
+            }
+        }
+       
         public ImageSource ImageSource
         {
             get
