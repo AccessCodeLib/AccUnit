@@ -216,9 +216,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             else
             {
                 if (test.Parent is IRowTest)
-                    parentItem.Children.Add(new TestItem(test.FullName, ((IRowTestId)test).RowId));
+                    parentItem.Children.Add(new TestItem(test.FullName, ((IRowTestId)test).RowId, parentItem.IsChecked));
                 else
-                    parentItem.Children.Add(new TestItem(test.FullName, test.Name));
+                    parentItem.Children.Add(new TestItem(test.FullName, test.Name, parentItem.IsChecked));
                 parentItem.IsExpanded = true;
             }
             //OnPropertyChanged(nameof(TestItems));

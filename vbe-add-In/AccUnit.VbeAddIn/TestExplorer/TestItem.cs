@@ -191,9 +191,30 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             { 
                 _testResult = value;
                 OnPropertyChanged(nameof(TestResult));
-                OnPropertyChanged("ImageSource");
+                ImageSource = CalculatedImageSource;
+
+                if (_testResult != null && _testResult.IsIgnored && _testResult.Success )
+                {
+                    if (_testResult is ITestSummary summary)
+                    {
+                        if (summary.Passed != 0)
+                        {
+                            return;
+                        }   
+                    }
+                    SetChildsToIgnored();
+                }
             }
         }
+
+        private void SetChildsToIgnored()
+        {
+            foreach (var item in Children)
+            {
+                item.ImageSource = UITools.ConvertBitmapToBitmapSource(Properties.Resources.noaction_gray); 
+            }
+        }
+
         public string Result { get; set; }
 
         private bool _isExpanded;
@@ -224,8 +245,19 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
                 item.SetChecked(isChecked);
             }
         }
-       
+
+        private ImageSource _imageSource;
         public ImageSource ImageSource
+        {
+            get { return _imageSource; }
+            set
+            {
+                _imageSource = value;   
+                OnPropertyChanged(nameof(ImageSource)); 
+            }
+        }
+
+        private ImageSource CalculatedImageSource
         {
             get
             {
