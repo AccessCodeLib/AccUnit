@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using AccessCodeLib.AccUnit.Configuration;
 using AccessCodeLib.AccUnit.Interfaces;
@@ -103,6 +104,56 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 throw;
             }
         }
+
+        public async Task RunTestsAsync(ICollection<TestClassInfo> testClassList, bool BreakOnAllErrors = false)
+        {
+            try
+            {
+                if (testClassList.Count > 0)
+                {
+                    _breakOnAllErrorsForNextRun = BreakOnAllErrors;
+                    var missingTestClass = TestClassManager.FindFirstMissingTestClassInVBProject(testClassList);
+                    if (missingTestClass != null)
+                    {
+                        UITools.ShowMessage(string.Format(Resources.MessageStrings.MissingTestClassInVBProject, missingTestClass.Name));
+                        return;
+                    }
+                    await RunTestsAsync(testClassList, ResetMode.RemoveTests);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ShowMessage(ex))
+                    return;
+
+                throw;
+            }
+        }
+
+        private async Task RunTestsAsync(IEnumerable<TestClassInfo> list, ResetMode resetmode)
+        {
+            var testSuite = TestSuite.Reset(ResetMode.RemoveTests) as IVBATestSuite;
+            CheckReferences();
+
+            if (testSuite is AccessTestSuite accessSuite)
+            {
+                // TODO ScanningForTestModules: This triggers the ScanningForTestModules event, checkout if necessary
+                if (!CheckAccessApplicationIsCompiledAndRefreshFactoryModule(accessSuite))
+                    return;
+
+                if (_breakOnAllErrorsForNextRun)
+                {
+                    accessSuite.ErrorTrapping = VbaErrorTrapping.BreakOnAllErrors;
+                    _breakOnAllErrorsForNextRun = false;
+                }
+            }
+
+            // TODO ScanningForTestModules: This triggers the ScanningForTestModules event, checkout if necessary
+            AddTests(testSuite, list, resetmode);
+
+            await Task.Run(() => testSuite.Run());
+        }
+
 
         private bool ShowMessage(Exception ex)
         {

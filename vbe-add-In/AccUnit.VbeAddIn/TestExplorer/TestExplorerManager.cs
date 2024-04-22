@@ -5,11 +5,15 @@ using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Commandbar;
 using Microsoft.Office.Core;
 using System;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 {
     internal class TestExplorerManager : ITestResultReporter, ICommandBarsAdapterClient
     {
+        private SynchronizationContext _uiContext;
+
         private readonly VbeUserControl<TestExplorerView> _vbeUserControl;
         private readonly TestExplorerViewModel _viewModel;
         private INotifyingTestResultCollector _testResultCollector;
@@ -19,6 +23,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         public TestExplorerManager(VbeUserControl<TestExplorerView> vbeUserControl)
         {
+            _uiContext = SynchronizationContext.Current;
+
             _vbeUserControl = vbeUserControl;
             _viewModel = new TestExplorerViewModel();
             _vbeUserControl.Control.DataContext = _viewModel;
@@ -64,7 +70,11 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         private void TestResultCollector_TestSuiteStarted(ITestSuite testSuite)
         {
-            _vbeUserControl.Visible = true; 
+            //_vbeUserControl.Visible = true; 
+            _uiContext.Send(_ =>
+            {
+                _vbeUserControl.Visible = true;
+            }, null);
         }
 
  #region ICommandBarsAdapterClient support

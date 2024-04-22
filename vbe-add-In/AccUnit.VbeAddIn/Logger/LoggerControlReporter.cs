@@ -1,6 +1,8 @@
 ﻿using AccessCodeLib.AccUnit.CodeCoverage;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.VBIDETools;
+using System;
+using System.Windows.Forms;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -70,15 +72,21 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             //LogStringToTextBox("TestFixtureStarted");
         }
 
-        private void LogStringToTextBox(string message)
-        {
-            LoggerControl.LogTextBox.AppendText(message + "\r\n");
-        }
-
         private void TestResultCollector_TestSuiteStarted(ITestSuite testSuite)
         {
-            LoggerControl.LogTextBox.Clear();
-            _vbeUserControl.Show();
+            ClearTextBox();
+            if (LoggerControl.InvokeRequired)
+            {
+                LoggerControl.Invoke(new Action(() =>
+                {
+                    _vbeUserControl.Show();
+                }));
+            }
+            else
+            {
+                _vbeUserControl.Show();
+            }
+            
         }
 
         private void TestResultCollector_TestSuiteFinished(ITestSummary summary)
@@ -89,7 +97,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void TestResultCollector_TestSuiteReset(ResetMode resetmode, ref bool cancel)
         {
-            LoggerControl.LogTextBox.Clear();
+            ClearTextBox();
             LogStringToTextBox("TestSuite reset");
         }
 
@@ -97,5 +105,38 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             LogStringToTextBox(message);
         }
+
+        private void LogStringToTextBox(string message)
+        {
+            //LoggerControl.LogTextBox.AppendText(message + "\r\n");
+            if (LoggerControl.InvokeRequired)
+            {
+                LoggerControl.Invoke(new Action(() =>
+                {
+                    LoggerControl.LogTextBox.AppendText(message + "\r\n");
+                }));
+            }
+            else
+            {
+                LoggerControl.LogTextBox.AppendText(message + "\r\n");
+            }
+        }
+
+        private void ClearTextBox()
+        {
+            //LoggerControl.LogTextBox.Clear();
+            if (LoggerControl.InvokeRequired)
+            {
+                LoggerControl.Invoke(new Action(() =>
+                {
+                    LoggerControl.LogTextBox.Clear();
+                }));
+            }
+            else
+            {
+                LoggerControl.LogTextBox.Clear();
+            }
+        }
+
     }
 }

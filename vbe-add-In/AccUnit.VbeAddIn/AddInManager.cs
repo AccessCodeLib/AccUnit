@@ -11,6 +11,7 @@ using AccessCodeLib.AccUnit.Interfaces;
 using System.Collections.Generic;
 using AccessCodeLib.AccUnit.VbeAddIn.TestExplorer;
 using AccessCodeLib.AccUnit.Configuration;
+using System.Windows.Media;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -115,6 +116,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         private void OnRunTests(object sender, RunTestsEventArgs e)
         {
             _testStarter.RunTests(e.TestClassList, e.BreakOnAllErrors);
+
+            // run tests in extra thread:
+            //_ = _testStarter.RunTestsAsync(e.TestClassList, e.BreakOnAllErrors);    
         }
 
         static void OnShowUIMessage(object sender, MessageEventArgs e)

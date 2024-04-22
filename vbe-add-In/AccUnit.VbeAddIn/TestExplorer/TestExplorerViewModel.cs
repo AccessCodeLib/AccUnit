@@ -1,10 +1,12 @@
 ﻿using AccessCodeLib.AccUnit.CodeCoverage;
 using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.Common.VBIDETools;
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -12,6 +14,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 {
     public class TestExplorerViewModel : ITestResultReporter, INotifyPropertyChanged
     {
+        private SynchronizationContext _uiContext;
+
         private string _selectAllCheckBoxText = Resources.UserControls.SelectListSelectAllCheckboxCaption;
         private string _commitButtonText = Resources.UserControls.SelectListCommitButtonText;
 
@@ -27,6 +31,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         public TestExplorerViewModel()
         {
+            _uiContext = SynchronizationContext.Current;
+
             _selectAllCheckBoxText = Resources.UserControls.SelectListSelectAllCheckboxCaption;
             _commitButtonText = Resources.UserControls.TestExplorerCommitButtonText;
 
@@ -122,17 +128,28 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         private void TestResultCollector_TestSuiteStarted(ITestSuite testSuite)
         {
+            _uiContext.Send(_ =>
+            {
+                // remove all items that are not in the current test suite
+                foreach (var item in TestItems.ToList())
+                {
+                    if (!testSuite.TestFixtures.Any(tf => tf.FullName == item.FullName))
+                    {
+                        TestItems.Remove(item);
+                    }
+                }
+            }, null);
+
             //TestItems.Clear();
 
             // remove all items that are not in the current test suite
-
-            foreach (var item in TestItems.ToList())
-            {
-                if (!testSuite.TestFixtures.Any(tf => tf.FullName == item.FullName))
-                {
-                    TestItems.Remove(item);
-                }
-            }
+            //foreach (var item in TestItems.ToList())
+            //{
+            //    if (!testSuite.TestFixtures.Any(tf => tf.FullName == item.FullName))
+            //    {
+            //        TestItems.Remove(item);
+            //    }
+            //}
 
             //OnPropertyChanged(nameof(TestItems));
 
@@ -151,12 +168,16 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         private void TestResultCollector_TestFixtureStarted(ITestFixture fixture)
         {
-            var testItem = FindTestItem(fixture);
-            if (testItem != null)
+            _uiContext.Send(_ =>
             {
-                return;
-            }
-            AddTestClassInfoTestItem(fixture.Name); 
+                var testItem = FindTestItem(fixture);
+                if (testItem != null)
+                {
+                    return;
+                }
+                AddTestClassInfoTestItem(fixture.Name);
+            }, null);
+            
         }
 
         private void AddTestClassInfoTestItem(string className)
@@ -172,77 +193,89 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         private void TestResultCollector_TestFixtureFinished(ITestResult result)
         {
-            var testItem = FindTestItem(result.Test);
-            if (testItem == null)
+            _uiContext.Send(_ =>
             {
-                return;
-            }
-            testItem.Result = result.Result.ToString();
-            testItem.IsExpanded = result.IsFailure || result.IsError;
-            //if (result.Success)
-            //{
-            //    testItem.IsChecked = false; 
-            //}
-            testItem.TestResult = result;
-            OnPropertyChanged(nameof(testItem.IsExpanded));
+                var testItem = FindTestItem(result.Test);
+                if (testItem == null)
+                {
+                    return;
+                }
+                testItem.Result = result.Result.ToString();
+                testItem.IsExpanded = result.IsFailure || result.IsError;
+                //if (result.Success)
+                //{
+                //    testItem.IsChecked = false; 
+                //}
+                testItem.TestResult = result;
+                OnPropertyChanged(nameof(testItem.IsExpanded));
+            }, null);
+            
         }
 
         private void TestResultCollector_TestStarted(ITest test, ref IgnoreInfo ignoreInfo)
         {
-            var testItem = FindTestItem(test);
-            if (testItem != null)
+            var ignoreInfoCopy = ignoreInfo;
+            _uiContext.Send(_ =>
             {
-                if (!testItem.IsChecked)
+                var testItem = FindTestItem(test);
+                if (testItem != null)
                 {
-                    ignoreInfo.Ignore = true;
-                    ignoreInfo.Comment = "Test is not selected";    
+                    if (!testItem.IsChecked)
+                    {
+                        ignoreInfoCopy.Ignore = true;
+                        ignoreInfoCopy.Comment = "Test is not selected";
+                        return;
+                    }
+
+                    var parent = FindParentTestItem(test);
+                    if (parent != null)
+                    {
+                        parent.IsExpanded = true;
+                    }
                     return;
                 }
 
-                var parent = FindParentTestItem(test);
-                if (parent != null)
+                var parentItem = FindParentTestItem(test);
+                if (parentItem == null)
                 {
-                    parent.IsExpanded = true;
-                }   
-                return;
-            }
-
-            var parentItem = FindParentTestItem(test);
-            if (parentItem == null)
-            {
-                AddTestClassInfoTestItem(test.Name);
-            }
-            else
-            {
-                TestItem child;
-                if (test.Parent is IRowTest)
-                    child = new TestItem(test.FullName, ((IRowTestId)test).RowId, parentItem.IsChecked);
+                    AddTestClassInfoTestItem(test.Name);
+                }
                 else
-                    child = new TestItem(test.FullName, test.Name, parentItem.IsChecked);
-                child.IsChecked = true;
-                parentItem.Children.Add(child);
-                parentItem.IsExpanded = true;
-            }
+                {
+                    TestItem child;
+                    if (test.Parent is IRowTest)
+                        child = new TestItem(test.FullName, ((IRowTestId)test).RowId, parentItem.IsChecked);
+                    else
+                        child = new TestItem(test.FullName, test.Name, parentItem.IsChecked);
+                    child.IsChecked = true;
+                    parentItem.Children.Add(child);
+                    parentItem.IsExpanded = true;
+                }
+            }, null);
+            ignoreInfo = ignoreInfoCopy;
             //OnPropertyChanged(nameof(TestItems));
         }
 
         private void TestResultCollector_TestFinished(ITestResult result)
         {
-            var testItem = FindTestItem(result.Test);
-            if (testItem == null)
+            _uiContext.Send(_ =>
             {
-                return;
-            }
+                var testItem = FindTestItem(result.Test);
+                if (testItem == null)
+                {
+                    return;
+                }
 
-            testItem.Result = result.Result.ToString();
-            testItem.IsExpanded = result.IsFailure || result.IsError;
-            testItem.TestResult = result;
-            if (result.Success)
-            {
-                testItem.IsChecked = false;
-                OnPropertyChanged(nameof(testItem.IsChecked));
-            }
-            OnPropertyChanged(nameof(testItem.IsExpanded));
+                testItem.Result = result.Result.ToString();
+                testItem.IsExpanded = result.IsFailure || result.IsError;
+                testItem.TestResult = result;
+                if (result.Success)
+                {
+                    testItem.IsChecked = false;
+                    OnPropertyChanged(nameof(testItem.IsChecked));
+                }
+                OnPropertyChanged(nameof(testItem.IsExpanded));
+            }, null);
         }
 
         private void TestResultCollector_TestSuiteReset(ResetMode resetmode, ref bool cancel)
