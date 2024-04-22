@@ -116,7 +116,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void OnRunTests(object sender, RunTestsEventArgs e)
         {
-            _testStarter.RunTests(e.TestClassList);
+            _testStarter.RunTests(e.TestClassList, e.BreakOnAllErrors);
         }
 
         static void OnShowUIMessage(object sender, MessageEventArgs e)
@@ -185,6 +185,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             loggerControl.LogTextBox.AppendText("...");
             var vbeControl = new VbeUserControl<LoggerControl>(AddIn, "AccUnit Test Result Logger", LoggerControlInfo.PositionGuid, loggerControl);
             reporters.Add(new LoggerControlReporter(vbeControl));
+            /* WPF not refeshing during test run ...
+            var loggerControl = new LoggerBoxControl();
+            loggerControl.LoggerTextBox.AppendText("...");
+            var vbeControl = new VbeUserControl<LoggerBoxControl>(AddIn, "AccUnit Test Result Logger", LoggerControlInfo.PositionGuid, loggerControl);
+            reporters.Add(new LoggerBoxControlReporter(vbeControl));
+            */
 
             if (!reporters.Contains(_testExplorerManager))
             {

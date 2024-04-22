@@ -157,22 +157,22 @@ Remove environment?</value>
     <value>Export Tests</value>
   </data>
   <data name="TestClassSelectionFormCaptionImport" xml:space="preserve">
-    <value>Import Tests</value>
+    <value />
   </data>
   <data name="TestClassSelectionFormCommitTestExport" xml:space="preserve">
-    <value>Export</value>
+    <value>_Export</value>
   </data>
   <data name="TestClassSelectionFormCommitTestExportAndRemove" xml:space="preserve">
-    <value>Export &amp; Remove</value>
+    <value>_Export &amp; Remove</value>
   </data>
   <data name="TestClassSelectionFormCommitTestImport" xml:space="preserve">
-    <value>Import</value>
+    <value>_Import</value>
   </data>
   <data name="TestClassSelectionFormOptionalCheckBoxTextExport" xml:space="preserve">
     <value>Remove Tests</value>
   </data>
   <data name="TestExplorerCommitButtonText" xml:space="preserve">
-    <value>&amp;Run Tests</value>
+    <value>_Run Tests</value>
   </data>
   <data name="TestListUserControlInfoCaption" xml:space="preserve">
     <value>AccUnit Test List</value>

@@ -21,7 +21,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
             foreach (var member in testClassInfo.Members)
             {
-                var testClassMemberInfoTestItem = new TestClassMemberInfoTestItem(member);
+                var testClassMemberInfoTestItem = new TestClassMemberInfoTestItem(member,true);
                 parent.Children.Add(testClassMemberInfoTestItem);
             }
         }

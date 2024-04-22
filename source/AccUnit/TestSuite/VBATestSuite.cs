@@ -454,24 +454,24 @@ namespace AccessCodeLib.AccUnit
                     return this;
             }
 
-            RaiseTraceMessage("Reset: _testSummary");
+            //RaiseTraceMessage("Reset: _testSummary");
             _testSummary?.Reset();
 
-            RaiseTraceMessage("Reset: testSummaryCollector");
+            //RaiseTraceMessage("Reset: testSummaryCollector");
             if (TestResultCollector is ITestSummaryTestResultCollector testSummaryCollector)
                 testSummaryCollector.Summary.Reset();
 
             //ConstantsReader.Clear();
-            RaiseTraceMessage("Reset: _accUnitTests");
+            //RaiseTraceMessage("Reset: _accUnitTests");
             _accUnitTests.Clear();
 
             // clear Memberinfo (maybe source code changed)
-            RaiseTraceMessage("Reset: _testCaseInfos");
+            //RaiseTraceMessage("Reset: _testCaseInfos");
             _testCaseInfos.Clear();
 
             if ((mode & ResetMode.RemoveTests) == ResetMode.RemoveTests)
             {
-                RaiseTraceMessage("Reset: _testFixtures");
+                //RaiseTraceMessage("Reset: _testFixtures");
                 _testFixtures.Clear();
             }
 

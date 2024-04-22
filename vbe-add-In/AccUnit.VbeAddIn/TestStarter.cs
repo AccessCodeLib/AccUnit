@@ -17,7 +17,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     class TestStarter : IDisposable, ICommandBarsAdapterClient
     {
         bool _referencesChecked;
-        //private bool _breakOnAllErrorsForNextRun;
+        private bool _breakOnAllErrorsForNextRun;
         //private TestListAndResultManager _testListAndResultManager;
         //private TestExplorerManager _testExplorerManager;
         private CommandBarEvents _accUnitSubMenuEvents;
@@ -84,12 +84,13 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        public void RunTests(ICollection<TestClassInfo> testClassList)
+        public void RunTests(ICollection<TestClassInfo> testClassList, bool BreakOnAllErrors = false)
         {
             try
             {
                 if (testClassList.Count > 0)
                 {
+                    _breakOnAllErrorsForNextRun = BreakOnAllErrors; 
                     var missingTestClass = TestClassManager.FindFirstMissingTestClassInVBProject(testClassList);
                     if (missingTestClass != null)
                     {
@@ -129,8 +130,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void RunTests(IEnumerable<TestClassInfo> list, ResetMode resetmode)
         {
-            //var testSuite = TestSuite.Reset(ResetMode.RemoveTests) as IVBATestSuite;
-            var testSuite = TestSuite.Reset(resetmode) as IVBATestSuite;
+            var testSuite = TestSuite.Reset(ResetMode.RemoveTests) as IVBATestSuite;
             CheckReferences();
 
             if (testSuite is AccessTestSuite accessSuite)
@@ -139,18 +139,16 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 if (!CheckAccessApplicationIsCompiledAndRefreshFactoryModule(accessSuite))
                     return;
 
-                /*
                 if (_breakOnAllErrorsForNextRun)
                 {
-                    accessSuite.ErrorTrapping = AccessTestSuite.VbaErrorTrapping.BreakOnAllErrors;
+                    accessSuite.ErrorTrapping = VbaErrorTrapping.BreakOnAllErrors;
                     _breakOnAllErrorsForNextRun = false;
                 }
-                */
             }
 
             // TODO ScanningForTestModules: This triggers the ScanningForTestModules event, checkout if necessary
-            AddTestsAndTryToRepairComException(testSuite, list, resetmode);
-            
+            AddTests(testSuite, list, resetmode);
+
             testSuite.Run();
         }
 
@@ -164,9 +162,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 saveModules = accessSuite.ActiveVBProject.Saved;
             }
-            // ReSharper disable EmptyGeneralCatchClause
             catch { }
-            // ReSharper restore EmptyGeneralCatchClause
 
             try // issue #37
             {
@@ -186,8 +182,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
             try // issue #68 (try to compile)
             {
-                var access = VbeIntegrationManager.OfficeApplicationHelper as AccessApplicationHelper;
-                if (access != null)
+                if (VbeIntegrationManager.OfficeApplicationHelper is AccessApplicationHelper access)
                 {
                     access.RunCommand(AccessApplicationHelper.AcCommand.AcCmdCompileAndSaveAllModules);
                     if (access.IsCompiled)
@@ -219,33 +214,30 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
+        /*
         private void AddTestsAndTryToRepairComException(IVBATestSuite testSuite, IEnumerable<TestClassInfo> list, ResetMode resetmode)
         {
             try
             {
                 AddTests(testSuite, list, resetmode);
             }
-            /*
             catch (COMException comEx)  // issue #37
             {
                 Logger.Log(comEx);
                 RepairTestSuiteCOMException();
                 AddTests(testSuite, list, resetmode);
             }
-            */
             catch (Exception ex)
             {
                 Logger.Log(ex);
-                /*
                 if (HostApplication == null)
                 {
                     throw new MissingHostException();
                 }
-                */
                 throw;
             }
         }
-        /*
+
         private void RepairTestSuiteCOMException()
         {
             if (TestSuite is AccessTestSuite)

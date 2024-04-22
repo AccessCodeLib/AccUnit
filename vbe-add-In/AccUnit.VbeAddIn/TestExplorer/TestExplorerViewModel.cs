@@ -130,7 +130,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             {
                 if (!testSuite.TestFixtures.Any(tf => tf.FullName == item.FullName))
                 {
-                    //TestItems.Remove(item);
+                    TestItems.Remove(item);
                 }
             }
 
@@ -167,8 +167,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             {
                 throw new Exception("Test class info not found for test fixture " + className);
             }
-
-            TestItems.Add(new TestClassInfoTestItem(testClassInfoEventArgs.TestClassInfo));
+            TestItems.Add(new TestClassInfoTestItem(testClassInfoEventArgs.TestClassInfo,true));
         }
 
         private void TestResultCollector_TestFixtureFinished(ITestResult result)
@@ -215,10 +214,13 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             }
             else
             {
+                TestItem child;
                 if (test.Parent is IRowTest)
-                    parentItem.Children.Add(new TestItem(test.FullName, ((IRowTestId)test).RowId, parentItem.IsChecked));
+                    child = new TestItem(test.FullName, ((IRowTestId)test).RowId, parentItem.IsChecked);
                 else
-                    parentItem.Children.Add(new TestItem(test.FullName, test.Name, parentItem.IsChecked));
+                    child = new TestItem(test.FullName, test.Name, parentItem.IsChecked);
+                child.IsChecked = true;
+                parentItem.Children.Add(child);
                 parentItem.IsExpanded = true;
             }
             //OnPropertyChanged(nameof(TestItems));
@@ -304,7 +306,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         }
 
 
-        private bool _selectAll = false;
+        private bool _selectAll = true;
 
         public bool SelectAll
         {

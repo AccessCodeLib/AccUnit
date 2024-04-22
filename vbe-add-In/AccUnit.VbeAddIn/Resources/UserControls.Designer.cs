@@ -172,7 +172,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Import Tests ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die  ähnelt.
         /// </summary>
         internal static string TestClassSelectionFormCaptionImport {
             get {
@@ -181,7 +181,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Export ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die _Export ähnelt.
         /// </summary>
         internal static string TestClassSelectionFormCommitTestExport {
             get {
@@ -190,7 +190,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Export &amp; Remove ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die _Export &amp; Remove ähnelt.
         /// </summary>
         internal static string TestClassSelectionFormCommitTestExportAndRemove {
             get {
@@ -199,7 +199,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Import ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die _Import ähnelt.
         /// </summary>
         internal static string TestClassSelectionFormCommitTestImport {
             get {
@@ -217,7 +217,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die &amp;Run Tests ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die _Run Tests ähnelt.
         /// </summary>
         internal static string TestExplorerCommitButtonText {
             get {

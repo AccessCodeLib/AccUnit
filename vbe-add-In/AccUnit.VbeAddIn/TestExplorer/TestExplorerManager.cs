@@ -139,7 +139,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             var testItems = VbeIntegrationManager.TestClassManager.GetTestClassListFromVBProject(true);   
             foreach (var testItem in testItems)
             {
-                _viewModel.TestItems.Add(new TestClassInfoTestItem(testItem, false));
+                _viewModel.TestItems.Add(new TestClassInfoTestItem(testItem, true));
             }
         }
 

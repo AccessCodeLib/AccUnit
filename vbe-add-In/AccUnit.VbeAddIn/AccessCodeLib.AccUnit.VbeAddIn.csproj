@@ -117,24 +117,24 @@
     <Compile Include="InsertTestMethodDialog.Designer.cs">
       <DependentUpon>InsertTestMethodDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="LoggerBoxControl.xaml.cs">
+    <Compile Include="Logger\LoggerBoxControl.xaml.cs">
       <DependentUpon>LoggerBoxControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LoggerControl.cs">
+    <Compile Include="Logger\LoggerControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="LoggerControl.Designer.cs">
+    <Compile Include="Logger\LoggerControl.Designer.cs">
       <DependentUpon>LoggerControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="LoggerBoxControlReporter.cs" />
-    <Compile Include="LoggerForm.cs">
+    <Compile Include="Logger\LoggerBoxControlReporter.cs" />
+    <Compile Include="Logger\LoggerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LoggerForm.Designer.cs">
+    <Compile Include="Logger\LoggerForm.Designer.cs">
       <DependentUpon>LoggerForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="LoggerControlReporter.cs" />
-    <Compile Include="LoggerFormReporter.cs" />
+    <Compile Include="Logger\LoggerControlReporter.cs" />
+    <Compile Include="Logger\LoggerFormReporter.cs" />
     <Compile Include="MessageEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -260,10 +260,10 @@
     <EmbeddedResource Include="InsertTestMethodDialog.resx">
       <DependentUpon>InsertTestMethodDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LoggerControl.resx">
+    <EmbeddedResource Include="Logger\LoggerControl.resx">
       <DependentUpon>LoggerControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LoggerForm.resx">
+    <EmbeddedResource Include="Logger\LoggerForm.resx">
       <DependentUpon>LoggerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -320,7 +320,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LoggerBoxControl.xaml">
+    <Page Include="Logger\LoggerBoxControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,32 +1,28 @@
 ﻿using AccessCodeLib.AccUnit.CodeCoverage;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.VBIDETools;
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Windows;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
-    public class LoggerBoxControlReporter : ITestResultReporter, INotifyPropertyChanged
+    internal class LoggerControlReporter : ITestResultReporter
     {
-        private readonly VbeUserControl<LoggerBoxControl> _vbeUserControl;
-        private readonly LoggerBoxControl _loggerControl;
+        private readonly VbeUserControl<LoggerControl> _vbeUserControl;
+        private readonly LoggerControl _loggerControl;
 
         private INotifyingTestResultCollector _testResultCollector;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public LoggerBoxControlReporter(VbeUserControl<LoggerBoxControl> vbeUserControl)
+        public LoggerControlReporter(VbeUserControl<LoggerControl> vbeUserControl)
         {
             _vbeUserControl = vbeUserControl;
             _loggerControl = vbeUserControl.Control;
-            //_loggerControl.DataContext = this;
-            //LogMessages.CollectionChanged += (s, e) => OnPropertyChanged(nameof(LogMessagesText));
         }
 
-        private void OnPropertyChanged(string v)
+        private LoggerControl LoggerControl
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(v));
+            get {
+                return _loggerControl;
+            }
         }
 
         public ITestResultCollector TestResultCollector
@@ -34,37 +30,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             get { return _testResultCollector; }
             set
             {
-                LogStringToTextBox("TestResultCollector set");
                 _testResultCollector = value as INotifyingTestResultCollector;
                 if (_testResultCollector == null)
                 {
-                    LogStringToTextBox("_testResultCollector is null");
+                    LogStringToTextBox("TestResultCollector is null");
                 }
                 InitEventHandler();
-                LogStringToTextBox("InitEventHandler completed");
             }
         }
-
-        public ObservableCollection<string> LogMessages { get; } = new ObservableCollection<string>();
-
-        public string LogMessagesText
-        {
-            get { return string.Join("\r\n", LogMessages); }
-        }
-
-        private void LogStringToTextBox(string message)
-        {
-            //LogMessages.Add(message);
-            _loggerControl.LoggerTextBox.AppendText(message + "\r\n");
-            //OnPropertyChanged(nameof(LogMessagesText));
-        }
-
-        private void ClearLogMessages()
-        {
-            LogMessages.Clear();
-            _loggerControl.LoggerTextBox.Clear();
-            OnPropertyChanged(nameof(LogMessagesText));
-        }   
 
         private void InitEventHandler()
         {
@@ -76,7 +49,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             _testResultCollector.TestFixtureFinished += TestResultCollector_TestFixtureFinished;
             _testResultCollector.TestStarted += TestResultCollector_TestStarted;    
             _testResultCollector.TestFinished += TestResultCollector_TestFinished;  
-
         }
 
         private void TestResultCollector_TestFinished(ITestResult result)
@@ -99,24 +71,26 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             //LogStringToTextBox("TestFixtureStarted");
         }
 
+        private void LogStringToTextBox(string message)
+        {
+            LoggerControl.LogTextBox.AppendText(message + "\r\n");
+        }
+
         private void TestResultCollector_TestSuiteStarted(ITestSuite testSuite)
         {
-            ClearLogMessages();
+            LoggerControl.LogTextBox.Clear();
             _vbeUserControl.Show();
-            LogStringToTextBox("TS started ...");
-            if (testSuite is VBATestSuite vbaTestSuite)
-                LogStringToTextBox(vbaTestSuite.ActiveVBProject.Name);
         }
 
         private void TestResultCollector_TestSuiteFinished(ITestSummary summary)
         {
             //LogStringToTextBox(summary.ToString());
-            LogStringToTextBox("TS finished.");
+            //LogStringToTextBox("TS finished.");
         }
 
         private void TestResultCollector_TestSuiteReset(ResetMode resetmode, ref bool cancel)
         {
-            ClearLogMessages();
+            LoggerControl.LogTextBox.Clear();
             LogStringToTextBox("TestSuite reset");
         }
 
@@ -124,11 +98,5 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             LogStringToTextBox(message);
         }
-    }
-
-    public static class LoggerBoxControlInfo
-    {
-        public const string ProgID = @"AccUnit.VbeAddIn.LoggerBoxControlInfo";
-        public const string PositionGuid = @"3DE8AA0C-8D8D-427F-B8BD-14594B60BCE1";
     }
 }
