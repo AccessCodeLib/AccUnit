@@ -9,8 +9,6 @@ using Microsoft.Vbe.Interop;
 using Timer = System.Windows.Forms.Timer;
 using AccessCodeLib.AccUnit.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
-using System.Collections;
 using AccessCodeLib.AccUnit.VbeAddIn.TestExplorer;
 using AccessCodeLib.AccUnit.Configuration;
 
@@ -53,7 +51,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 /*
                 _tagListManager.AddIn = addIn;
                 _testListAndResultManager.AddIn = addIn;
-               
+
 
                 if (Settings.Default.VbaProgrammingToolsEnabled)
                 {
@@ -180,7 +178,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         }
 
         private void TestSuiteManager_TestResultReporterRequest(ref IList<ITestResultReporter> reporters)
-        {            
+        {
             var loggerControl = new LoggerControl();
             loggerControl.LogTextBox.AppendText("...");
             var vbeControl = new VbeUserControl<LoggerControl>(AddIn, "AccUnit Test Result Logger", LoggerControlInfo.PositionGuid, loggerControl);
@@ -482,10 +480,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     DisposeStartUpTimer();
                     //_testListAndResultManager.Dispose();
                     DisposeVbaProgrammingTools();
-                    /*
+                   
                     _testStarter.Dispose();
 
-                    _testTemplateGenerator.Dispose();
+                    //_testTemplateGenerator.Dispose();
 
                     _vbeIntegrationManager.Dispose();
 
@@ -497,7 +495,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     {
                         Logger.Log(ex);
                     }
-                    */
 
                     _testSuiteManager.Dispose();
                     

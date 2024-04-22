@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using AccessCodeLib.AccUnit.Configuration;
 using AccessCodeLib.AccUnit.Interfaces;
-using AccessCodeLib.AccUnit.VbeAddIn.TestExplorer;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Commandbar;
@@ -18,14 +16,11 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     {
         bool _referencesChecked;
         private bool _breakOnAllErrorsForNextRun;
-        //private TestListAndResultManager _testListAndResultManager;
-        //private TestExplorerManager _testExplorerManager;
         private CommandBarEvents _accUnitSubMenuEvents;
         private int _accUnitSubMenuRunCurrentTestIndex;
         private CommandBarButton _codeWindowRunCurrentTestButton;
         private CommandBarButton _projectWindowRunCurrentTestButton;
 
-        
         public VbeIntegrationManager VbeIntegrationManager { get; set; }
 
         void OnVbeMainWindowRButtonDown(object sender, EventArgs e)
@@ -150,6 +145,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             AddTests(testSuite, list, resetmode);
 
             testSuite.Run();
+            //Task.Run(() => testSuite.Run());
         }
 
         private bool CheckAccessApplicationIsCompiledAndRefreshFactoryModule(AccessTestSuite accessSuite)
@@ -338,8 +334,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         void OnAccUnitSubMenuEventsClick(object commandBarControl, ref bool handled, ref bool cancelDefault)
         {
-            var mnu = commandBarControl as CommandBarPopup;
-            if (mnu == null)
+            if (!(commandBarControl is CommandBarPopup mnu))
                 return;
 
             mnu.Controls[_accUnitSubMenuRunCurrentTestIndex].Enabled = ActiveCodeModuleIsTestClass;
