@@ -11,7 +11,6 @@ using AccessCodeLib.AccUnit.Interfaces;
 using System.Collections.Generic;
 using AccessCodeLib.AccUnit.VbeAddIn.TestExplorer;
 using AccessCodeLib.AccUnit.Configuration;
-using System.Windows.Media;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -31,7 +30,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         /*
         private readonly TagListManager _tagListManager = new TagListManager();
-        private readonly TestListAndResultManager _testListAndResultManager = new TestListAndResultManager();
         
         private readonly DialogManager _dialogManager = new DialogManager();
         private readonly TestTemplateGenerator _testTemplateGenerator = new TestTemplateGenerator();
@@ -99,8 +97,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     InitVbeWindows();
                     InitVbeIntegrationManager();
 
-                    //_testListAndResultManager.TagListManager = _tagListManager;
-                    //_testStarter.te = _testListAndResultManager;
                     _testExplorerManager.RunTests += OnRunTests;    
                     _testStarter.ShowUIMessage += OnShowUIMessage;
 
@@ -116,9 +112,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         private void OnRunTests(object sender, RunTestsEventArgs e)
         {
             _testStarter.RunTests(e.TestClassList, e.BreakOnAllErrors);
-
-            // run tests in extra thread:
-            //_ = _testStarter.RunTestsAsync(e.TestClassList, e.BreakOnAllErrors);    
         }
 
         static void OnShowUIMessage(object sender, MessageEventArgs e)
@@ -139,12 +132,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 _commandBarsAdapter.AddClient(_testExplorerManager);
                 
                 /*
-                _commandBarsAdapter.AddClient(_testListAndResultManager);
                 _commandBarsAdapter.AddClient(_tagListManager);
                 _commandBarsAdapter.AddClient(_testTemplateGenerator);
                 
                 _commandBarsAdapter.AddClient(_dialogManager);
                 */
+
                 /*
                 if (UserSettings.Current.IsAccSpecEnabled)
                 {
@@ -174,10 +167,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             using (new BlockLogger())
             {
                 _testSuiteManager.TestResultReporterRequest += TestSuiteManager_TestResultReporterRequest;
-
                 _testStarter.TestSuiteManager = _testSuiteManager;
-                
-                //_testListAndResultManager.TestSuiteManager = _testSuiteManager;
             }
         }
 
@@ -187,7 +177,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             loggerControl.LogTextBox.AppendText("...");
             var vbeControl = new VbeUserControl<LoggerControl>(AddIn, "AccUnit Test Result Logger", LoggerControlInfo.PositionGuid, loggerControl);
             reporters.Add(new LoggerControlReporter(vbeControl));
-            /* WPF not refeshing during test run ...
+
+            /* WPF not refeshing during test run (without async test run) ...
             var loggerControl = new LoggerBoxControl();
             loggerControl.LoggerTextBox.AppendText("...");
             var vbeControl = new VbeUserControl<LoggerBoxControl>(AddIn, "AccUnit Test Result Logger", LoggerControlInfo.PositionGuid, loggerControl);
@@ -205,7 +196,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             using (new BlockLogger())
             {
                 //_tagListManager.VbeIntegrationManager = _vbeIntegrationManager;
-                //_testListAndResultManager.VbeIntegrationManager = _vbeIntegrationManager;
                 _testExplorerManager.VbeIntegrationManager = _vbeIntegrationManager;
                 _testStarter.VbeIntegrationManager = _vbeIntegrationManager;
                 
@@ -313,20 +303,16 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         }
 
         #endregion
-
+        /*
         private void InitVbaProgrammingTools(OfficeApplicationHelper officeApplicationHelper)
         {
-            /*
             using (new BlockLogger())
             {
                 _vbaProgrammingTools.OfficeApplicationHelper = officeApplicationHelper;
             }
-            */
         }
-
+        */
         #region ad VbeWindow
-
-
 
         private void InitVbeWindows()
         {
@@ -355,6 +341,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             */
         }
 
+        /*
         private void InitStartUpTimer(int interval, bool start)
         {
             if (_startupTimer == null)
@@ -366,6 +353,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             if (start) 
                 _startupTimer.Start();
         }
+        */
 
         private void DisposeStartUpTimer()
         {
@@ -427,8 +415,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private VBE VBE => AddIn.VBE;
 
-        private Microsoft.Vbe.Interop.AddIn AddIn => _addIn;
-
+        private AddIn AddIn => _addIn;
 
 
         #region IDisposable Support
@@ -482,7 +469,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 try
                 {
                     DisposeStartUpTimer();
-                    //_testListAndResultManager.Dispose();
                     DisposeVbaProgrammingTools();
                    
                     _testStarter.Dispose();

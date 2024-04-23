@@ -195,10 +195,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
                 _disposed = true;
 
-                if (Disposed != null)
-                {
-                    Disposed(this);
-                }
+                Disposed?.Invoke(this);
             }
         }
 

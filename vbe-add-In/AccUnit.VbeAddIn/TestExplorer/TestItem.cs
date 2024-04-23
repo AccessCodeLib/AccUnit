@@ -1,17 +1,14 @@
-﻿using AccessCodeLib.AccUnit.Integration;
-using AccessCodeLib.AccUnit.Interfaces;
-using System;
+﻿using AccessCodeLib.AccUnit.Interfaces;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Media;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 {
     public class TestClassInfoTestItems : TestItems
     {
-        protected override void AddMembers(TestItem parent)
+        protected override void PerformActionOnAddedItem(TestItem parent)
         {
             var testClassInfoTestItem = (TestClassInfoTestItem)parent;
             var testClassInfo = testClassInfoTestItem.TestClassInfo;
@@ -29,51 +26,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
     public class TestClassMemberInfoTestItems : TestItems
     {
-        /*
-        protected override void AddMembers(TestItem parent)
-        {
-            var testClassInfoTestItem = (TestClassMemberInfoTestItem)parent;
-            var testClassMemberInfo = testClassInfoTestItem.TestClassMemberInfo;
-           // UITools.ShowMessage($"TestClassMemberInfoTestItem.AddMembers: {testClassMemberInfo.Name}");
- 
-            if (testClassMemberInfo.TestRows == null)
-            {
-                //UITools.ShowMessage($"TestClassMemberInfoTestItem.AddMembers: {testClassMemberInfo.Name} - TestRows == null");  
-                return;
-            }
-
-            //UITools.ShowMessage($"TestClassMemberInfoTestItem.AddMembers: {testClassMemberInfo.Name} - TestRows == {testClassMemberInfo.TestRows.Count}");
-
-            foreach (var member in testClassMemberInfo.TestRows)
-            {
-                var testItem = new TestItem(member);
-            //    UITools.ShowMessage($"TestClassInfoTestItems.AddMembers: {testItem.Name}");
-               // testClassInfoTestItem.Children.Add(testItem);
-            }
-        }
-        */
     }
 
     public class TestRowTestItems : TestItems
     {
-        protected override void AddMembers(TestItem parent)
-        {
-            /*
-            var testRowTestItem = (TestRowTestItem)parent;
-            var testClassMemberInfo = testRowTestItem.TestClassMemberInfo;
-            // UITools.ShowMessage($"TestClassMemberInfoTestItem.AddMembers: {testClassMemberInfo.Name}");
-
-            if (testClassMemberInfo.TestRows == null)
-                return;
-
-            foreach (var member in testClassMemberInfo.TestRows)
-            {
-                var testItem = new TestItem(member.Name);
-                //    UITools.ShowMessage($"TestClassInfoTestItems.AddMembers: {testItem.Name}");
-                testClassInfoTestItem.Children.Add(testItem);
-            }
-            */
-        }
     }
 
     public class TestItems : ObservableCollection<TestItem> 
@@ -81,15 +37,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         public new void Add(TestItem item)
         {
             base.Add(item);
-            AddMembers(item);   
+            PerformActionOnAddedItem(item);   
         }
 
-        protected virtual void AddMembers(TestItem parent)
+        protected virtual void PerformActionOnAddedItem(TestItem parent)
         {
-            //parent.Children.
         }
-
-
     }   
 
     public class TestClassInfoTestItem : TestItem
@@ -193,6 +146,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
                 OnPropertyChanged(nameof(TestResult));
                 ImageSource = CalculatedImageSource;
 
+                Result = _testResult == null ? null : (Children.Count == 0 ? _testResult.Message : _testResult.Result);
+                OnPropertyChanged(nameof(Result));
+
                 if (_testResult != null && _testResult.IsIgnored && _testResult.Success )
                 {
                     if (_testResult is ITestSummary summary)
@@ -235,7 +191,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         {
             base.SetChecked(value);
             ChangeChildrenCheckedState(value);
-            //OnPropertyChanged(nameof(IsChecked));
         }
 
         private void ChangeChildrenCheckedState(bool isChecked)
@@ -293,8 +248,5 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
                 return null;
             }
         }
-
-        // + Duration, Result, Message ...
     }
-
 }

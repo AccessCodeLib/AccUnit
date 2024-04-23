@@ -82,7 +82,6 @@ Private Function TryGetAccUnitVbeAddIn(ByRef AccUnitVbeAddIn As Object) As Boole
 
 End Function
 
-
 #If USE_ACCUNIT_TYPELIB Then
 Private Property Get AccUnitFactory() As AccUnit.AccUnitFactory
 #Else
@@ -117,6 +116,7 @@ Public Property Get TestSuite(Optional ByVal OutputTo As TestReportOutput = Defa
 Public Property Get TestSuite(Optional ByVal OutputTo As TestReportOutput = DefaultTestReportOutput) As Object
 #End If
    Set TestSuite = AccUnitLoaderFactory.TestSuite(OutputTo)
+   TestSuite.Reset ResetMode_ResetTestSuite + ResetMode_RemoveTests
 End Property
 
 Public Sub RunAllTests()

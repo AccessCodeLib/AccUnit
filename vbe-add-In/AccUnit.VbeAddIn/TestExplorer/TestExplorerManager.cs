@@ -1,30 +1,23 @@
-﻿using AccessCodeLib.AccUnit.Configuration;
-using AccessCodeLib.AccUnit.Interfaces;
+﻿using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Commandbar;
 using Microsoft.Office.Core;
 using System;
-using System.Threading;
-using System.Windows.Forms;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 {
     internal class TestExplorerManager : ITestResultReporter, ICommandBarsAdapterClient
     {
-        private SynchronizationContext _uiContext;
-
         private readonly VbeUserControl<TestExplorerView> _vbeUserControl;
         private readonly TestExplorerViewModel _viewModel;
         private INotifyingTestResultCollector _testResultCollector;
 
         public event EventHandler<RunTestsEventArgs> RunTests;
-        public event EventHandler CancelTestRun;
+        //public event EventHandler CancelTestRun;
 
         public TestExplorerManager(VbeUserControl<TestExplorerView> vbeUserControl)
         {
-            _uiContext = SynchronizationContext.Current;
-
             _vbeUserControl = vbeUserControl;
             _viewModel = new TestExplorerViewModel();
             _vbeUserControl.Control.DataContext = _viewModel;
@@ -43,12 +36,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             {
                 RunTests?.Invoke(sender, e);
             };  
-
+            /*
             _viewModel.CancelTestRun += (sender, e) =>
             {
                 CancelTestRun?.Invoke(sender, e);
             };
-
+            */
             _viewModel.GetTestClassInfo += (sender, e) =>
             {
                 e.TestClassInfo = VbeIntegrationManager.TestClassManager.GetTestClassInfo(e.ClassName, true);
@@ -70,11 +63,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         private void TestResultCollector_TestSuiteStarted(ITestSuite testSuite)
         {
-            //_vbeUserControl.Visible = true; 
-            _uiContext.Send(_ =>
-            {
-                _vbeUserControl.Visible = true;
-            }, null);
+            _vbeUserControl.Visible = true; 
         }
 
  #region ICommandBarsAdapterClient support
@@ -154,6 +143,5 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         }
 
         #endregion
-
     }
 }
