@@ -46,8 +46,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         public event EventHandler<MessageEventArgs> ShowUIMessage;
         public event EventHandler ScanningForTestModules;
-        
-        private void RunCurrentTests(ResetMode resetmode = ResetMode.RemoveTests)
+
+        private void RunCurrentTests(ResetMode resetmode = ResetMode.RemoveTests | ResetMode.ResetTestSuite)
         {
             try
             {
@@ -125,7 +125,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void RunTests(IEnumerable<TestClassInfo> list, ResetMode resetmode)
         {
-            var testSuite = TestSuite.Reset(ResetMode.RemoveTests) as IVBATestSuite;
+            var testSuite = TestSuite.Reset(resetmode) as IVBATestSuite;
             CheckReferences();
 
             if (testSuite is AccessTestSuite accessSuite)

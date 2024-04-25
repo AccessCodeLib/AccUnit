@@ -101,20 +101,20 @@
     <Compile Include="CommitMethodNameEventArgs.cs" />
     <Compile Include="ComRegistration.cs" />
     <Compile Include="Connect.cs" />
-    <Compile Include="GenerateTestMethodsFromCodeModuleDialog.cs">
+    <Compile Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GenerateTestMethodsFromCodeModuleDialog.Designer.cs">
+    <Compile Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialog.Designer.cs">
       <DependentUpon>GenerateTestMethodsFromCodeModuleDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="TestImportExport\ImportExportWindow.xaml.cs">
       <DependentUpon>ImportExportWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="TestImportExport\ImportExportManager.cs" />
-    <Compile Include="InsertTestMethodDialog.cs">
+    <Compile Include="InsertTestMethod\InsertTestMethodDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InsertTestMethodDialog.Designer.cs">
+    <Compile Include="InsertTestMethod\InsertTestMethodDialog.Designer.cs">
       <DependentUpon>InsertTestMethodDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Logger\LoggerBoxControl.xaml.cs">
@@ -140,7 +140,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="ReleayCommand.cs" />
+    <Compile Include="RelayCommand.cs" />
     <Compile Include="Resources\Icons.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -179,12 +179,6 @@
     </Compile>
     <Compile Include="SelectLists\SelectControlViewModel.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="TestClassSelectionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TestClassSelectionForm.Designer.cs">
-      <DependentUpon>TestClassSelectionForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="TestComponentsEventArgs.cs" />
     <Compile Include="TestExplorer\TestExplorerManager.cs" />
     <Compile Include="TestExplorer\TestExplorerTreeView.xaml.cs">
@@ -202,10 +196,10 @@
     <Compile Include="TestResultReporter.cs" />
     <Compile Include="TestStarter.cs" />
     <Compile Include="TestSuiteManager.cs" />
-    <Compile Include="TriStateCheckBoxesTreeView.cs">
+    <Compile Include="InsertTestMethod\TriStateCheckBoxesTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TriStateCheckBoxesTreeView.Designer.cs">
+    <Compile Include="InsertTestMethod\TriStateCheckBoxesTreeView.Designer.cs">
       <DependentUpon>TriStateCheckBoxesTreeView.cs</DependentUpon>
     </Compile>
     <Compile Include="UITools.cs" />
@@ -247,10 +241,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="GenerateTestMethodsFromCodeModuleDialog.resx">
+    <EmbeddedResource Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialog.resx">
       <DependentUpon>GenerateTestMethodsFromCodeModuleDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="InsertTestMethodDialog.resx">
+    <EmbeddedResource Include="InsertTestMethod\InsertTestMethodDialog.resx">
       <DependentUpon>InsertTestMethodDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Logger\LoggerControl.resx">
@@ -287,9 +281,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SelectListControl.resx">
       <DependentUpon>SelectListControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestClassSelectionForm.resx">
-      <DependentUpon>TestClassSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TestListControl.de.resx">
       <DependentUpon>TestListControl.cs</DependentUpon>

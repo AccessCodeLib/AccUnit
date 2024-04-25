@@ -14,15 +14,16 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <CheckBox Grid.Column="0" Content="{Binding SelectAllCheckBoxText, FallbackValue='Select All'}" IsChecked="{Binding SelectAll, Mode=TwoWay}" Margin="5"/>
-            <CheckBox Grid.Column="1" Content="{Binding OptionalCheckBoxText}" IsChecked="{Binding OptionalCheckboxChecked}" Visibility="{Binding OptionalCheckboxVisibility}" Margin="5"/>
-            <Button Grid.Column="2" Content="{Binding CommitButtonText, FallbackValue='Commit'}" Command="{Binding CommitCommand}" Margin="5"/>
-                <Button Grid.Column="3" Command="{Binding RefreshCommand}" Margin="5">
+            <CheckBox Grid.Column="0" Content="{Binding SelectAllCheckBoxText, FallbackValue='Select All'}" IsChecked="{Binding SelectAll, Mode=TwoWay}" Margin="7 5"/>
+            <CheckBox Grid.Column="2" Content="{Binding OptionalCheckBoxText}" IsChecked="{Binding OptionalCheckboxChecked}" Visibility="{Binding OptionalCheckboxVisibility}" Margin="5"/>
+            <Button Grid.Column="3" Content="{Binding CommitButtonText, FallbackValue='Commit'}" Command="{Binding CommitCommand}" Margin="5" Padding="5 0"/>
+                <Button Grid.Column="4" Command="{Binding RefreshCommand}" Margin="5">
                     <Button.Content>
                     <Image Source="{Binding RefreshCommandImageSource}" Width="16" Height="16"/>
                     </Button.Content>

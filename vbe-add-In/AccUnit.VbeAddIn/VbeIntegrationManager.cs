@@ -191,8 +191,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void RaiseScanningForTestModules()
         {
-            if (ScanningForTestModules != null)
-                ScanningForTestModules(this, EventArgs.Empty);
+            ScanningForTestModules?.Invoke(this, EventArgs.Empty);
         }
 
         private void RepairTestSuiteCOMException()
@@ -223,9 +222,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void CreateShortcutMenuItems(VbeCommandBarAdapter commandBarAdapter)
         {
-            var accUnitCommandBarAdapter = commandBarAdapter as AccUnitCommandBarAdapter;
-
-            if (accUnitCommandBarAdapter != null)
+            if (commandBarAdapter is AccUnitCommandBarAdapter accUnitCommandBarAdapter)
             {
                 var menu = accUnitCommandBarAdapter.AccUnitSubMenu;
                 CreateAccUnitToolsSubMenuItems(commandBarAdapter, menu);
