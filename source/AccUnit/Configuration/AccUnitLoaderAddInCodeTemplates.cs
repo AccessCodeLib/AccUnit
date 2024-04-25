@@ -42,6 +42,10 @@ Public Enum StringCompareMode
     StringCompareMode_TextCompare = 1
     StringCompareMode_vbNullStringEqualEmptyString = 4
 End Enum
+Public Enum ResetMode
+    ResetMode_RemoveTests = 2
+    ResetMode_ResetTestSuite = 4
+End Enum
 #End If
 
 Private Const DefaultTestReportOutput As Long = TestReportOutput.DebugPrint

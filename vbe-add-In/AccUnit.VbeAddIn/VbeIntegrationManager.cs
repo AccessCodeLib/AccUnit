@@ -81,7 +81,27 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             get { return OfficeApplicationHelper.Application; }
         }
 
-        void RemoveTestEnvironment()
+        private void SetTestEnvironment()
+        {   
+            var configurator = new Configurator(ActiveVBProject);
+            configurator.InsertAccUnitLoaderFactoryModule(AccUnitTypeLibIsReferenced, true);
+        }
+
+        private bool AccUnitTypeLibIsReferenced
+        {
+            get
+            {
+                foreach (Reference reference in ActiveVBProject.References)
+                {
+                    if (reference.IsBroken) continue;   
+                    if (reference.Name == "AccUnit")
+                        return true;
+                }   
+                return false;
+            }
+        }
+
+        private void RemoveTestEnvironment()
         {
             if (MessageBox.Show(Resources.UserControls.RemoveEnvironmentMessageBoxText,
                                 Resources.UserControls.RemoveEnvironmentMessageBoxCaption,
@@ -223,13 +243,31 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void CreateAccUnitToolsSubMenuItems(VbeCommandBarAdapter commandBarAdapter, CommandBarPopup menu)
         {
+            CreateAccUnitToolsSetTestEnvironmentSubMenuItem(commandBarAdapter, menu);   
+            CreateAccUnitToolsRemoveTestEnvironmentSubMenuItem(commandBarAdapter, menu);
+        }
+
+        private void CreateAccUnitToolsSetTestEnvironmentSubMenuItem(VbeCommandBarAdapter commandBarAdapter, CommandBarPopup menu)
+        {
             var buttonData = new CommandbarButtonData
-                                 {
-                                     Caption = Resources.VbeCommandbars.ToolsRemoveTestEnvironmentCommandButtonCaption,
-                                     Description = string.Empty,
-                                     FaceId = 478,
-                                     BeginGroup = true
-                                 };
+            {
+                Caption = Resources.VbeCommandbars.ToolsSetTestEnvironmentCommandButtonCaption,
+                Description = string.Empty,
+                FaceId = 589,
+                BeginGroup = true
+            };
+            commandBarAdapter.AddCommandBarButton(menu, buttonData, AccUnitMenuItemsSetTestEnvironment);
+        }
+
+        private void CreateAccUnitToolsRemoveTestEnvironmentSubMenuItem(VbeCommandBarAdapter commandBarAdapter, CommandBarPopup menu)
+        {
+            var buttonData = new CommandbarButtonData
+            {
+                Caption = Resources.VbeCommandbars.ToolsRemoveTestEnvironmentCommandButtonCaption,
+                Description = string.Empty,
+                FaceId = 478,
+                BeginGroup = false
+            };
             commandBarAdapter.AddCommandBarButton(menu, buttonData, AccUnitMenuItemsRemoveTestEnvironment);
         }
 
@@ -245,6 +283,11 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                                  Index = objectBrowserControlIndex
                              };
             accUnitMenuItems.AddCommandBarButton(commandBar, buttonData, AccUnitMenuItemsInsertTestMethod);
+        }
+
+        void AccUnitMenuItemsSetTestEnvironment(CommandBarButton ctrl, ref bool cancelDefault)
+        {
+            SetTestEnvironment();
         }
 
         void AccUnitMenuItemsRemoveTestEnvironment(CommandBarButton ctrl, ref bool cancelDefault)
@@ -423,6 +466,5 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         }
 
         #endregion
-
     }
 }

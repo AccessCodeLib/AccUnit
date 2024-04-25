@@ -205,6 +205,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Set test environment ähnelt.
+        /// </summary>
+        internal static string ToolsSetTestEnvironmentCommandButtonCaption {
+            get {
+                return ResourceManager.GetString("ToolsSetTestEnvironmentCommandButtonCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die &amp;Options... ähnelt.
         /// </summary>
         internal static string ToolsUserSettingFormCommandbarButtonCaption {
