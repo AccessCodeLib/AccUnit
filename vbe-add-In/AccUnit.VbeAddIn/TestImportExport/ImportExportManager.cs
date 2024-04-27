@@ -164,8 +164,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             using (new BlockLogger())
             {
-                var accUnitCommandBarAdapter = commandBarAdapter as AccUnitCommandBarAdapter;
-                if (accUnitCommandBarAdapter == null) return;
+                if (!(commandBarAdapter is AccUnitCommandBarAdapter accUnitCommandBarAdapter)) return;
 
                 var menu = accUnitCommandBarAdapter.AccUnitSubMenu;
                 var buttonData = new CommandbarButtonData

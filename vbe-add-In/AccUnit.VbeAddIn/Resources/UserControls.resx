@@ -123,6 +123,15 @@
   <data name="InputBoxButtonOkCaption" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="InsertTestMethodExpectedLabelCaption" xml:space="preserve">
+    <value>Expected behaviour</value>
+  </data>
+  <data name="InsertTestMethodMethodNameLabelCaption" xml:space="preserve">
+    <value>Method under test</value>
+  </data>
+  <data name="InsertTestMethodStateLabelCaption" xml:space="preserve">
+    <value>State under test</value>
+  </data>
   <data name="InsertTestMethodUserControlInfoCaption" xml:space="preserve">
     <value>Insert new test method</value>
   </data>

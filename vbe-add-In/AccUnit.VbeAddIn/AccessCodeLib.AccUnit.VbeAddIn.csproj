@@ -90,6 +90,13 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="GetTestClassInfoEventArgs.cs" />
+    <Compile Include="InsertTestMethod\InsertTestMethodDialog.xaml.cs">
+      <DependentUpon>InsertTestMethodDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InsertTestMethod\InsertTestMethodViewModel.cs" />
+    <Compile Include="InsertTestMethod\InsertTestMethodControl.xaml.cs">
+      <DependentUpon>InsertTestMethodControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RunTestsEventArgs.cs" />
     <Compile Include="SelectLists\CheckableTestItemsEventArgs.cs" />
     <Compile Include="TestClassListEventArgs.cs" />
@@ -111,12 +118,6 @@
       <DependentUpon>ImportExportWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="TestImportExport\ImportExportManager.cs" />
-    <Compile Include="InsertTestMethod\InsertTestMethodDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InsertTestMethod\InsertTestMethodDialog.Designer.cs">
-      <DependentUpon>InsertTestMethodDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="Logger\LoggerBoxControl.xaml.cs">
       <DependentUpon>LoggerBoxControl.xaml</DependentUpon>
     </Compile>
@@ -244,9 +245,6 @@
     <EmbeddedResource Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialog.resx">
       <DependentUpon>GenerateTestMethodsFromCodeModuleDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="InsertTestMethod\InsertTestMethodDialog.resx">
-      <DependentUpon>InsertTestMethodDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Logger\LoggerControl.resx">
       <DependentUpon>LoggerControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -293,6 +291,14 @@
     <None Include="Resources\refresh_green_16x16.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="InsertTestMethod\InsertTestMethodDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="InsertTestMethod\InsertTestMethodControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TestExplorer\TestExplorerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

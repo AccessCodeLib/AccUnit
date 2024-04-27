@@ -79,6 +79,33 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Expected behaviour ähnelt.
+        /// </summary>
+        internal static string InsertTestMethodExpectedLabelCaption {
+            get {
+                return ResourceManager.GetString("InsertTestMethodExpectedLabelCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Method under test ähnelt.
+        /// </summary>
+        internal static string InsertTestMethodMethodNameLabelCaption {
+            get {
+                return ResourceManager.GetString("InsertTestMethodMethodNameLabelCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die State under test ähnelt.
+        /// </summary>
+        internal static string InsertTestMethodStateLabelCaption {
+            get {
+                return ResourceManager.GetString("InsertTestMethodStateLabelCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Insert new test method ähnelt.
         /// </summary>
         internal static string InsertTestMethodUserControlInfoCaption {

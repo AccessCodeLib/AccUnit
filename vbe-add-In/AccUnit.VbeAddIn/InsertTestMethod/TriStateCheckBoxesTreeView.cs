@@ -849,11 +849,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 		protected virtual void OnBeforeTriStateCheck(
 			TreeViewCancelTriStateEventArgs args )
 		{
-			if ( BeforeTriStateCheck != null )
-			{
-				BeforeTriStateCheck( this, args );
-			}
-		}
+            BeforeTriStateCheck?.Invoke(this, args);
+        }
 
 		/// <summary>
 		/// Raises the <see cref="AfterTriStateCheck"/> event.
@@ -862,12 +859,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 		protected virtual void OnAfterTriStateCheck(
 			TreeViewTriStateEventArgs args )
 		{
-			if ( AfterTriStateCheck != null )
-			{
-				AfterTriStateCheck( this, args );
-			}
+            AfterTriStateCheck?.Invoke(this, args);
 
-			CheckPerformAutoStepsAfterTriStateCheck( args );
+            CheckPerformAutoStepsAfterTriStateCheck( args );
 		}
 
 		/// <summary>

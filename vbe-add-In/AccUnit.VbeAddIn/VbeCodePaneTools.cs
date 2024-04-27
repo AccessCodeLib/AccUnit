@@ -6,23 +6,19 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     {
         public static string GetCodeModuleMemberNameFromCodePane(_CodePane codepane)
         {
-            vbext_ProcKind procKind;
-            return GetCodeModuleMemberNameFromCodePane(codepane, out procKind);
+            return GetCodeModuleMemberNameFromCodePane(codepane, out _);
         }
 
         public static string GetCodeModuleMemberNameFromCodePane(_CodePane codepane, out vbext_ProcKind procKind)
         {
             var startLine = GetStartLineFromCodePaneSelection(codepane);
             var codemodule = codepane.CodeModule;
-            // ReSharper disable UseIndexedProperty
             return codemodule.get_ProcOfLine(startLine, out procKind);
-            // ReSharper restore UseIndexedProperty
         }
 
         public static int GetStartLineFromCodePaneSelection(_CodePane codepane)
         {
-            int startLine, startColumn, endLine, endColumn;
-            codepane.GetSelection(out startLine, out startColumn, out endLine, out endColumn);
+            codepane.GetSelection(out int startLine, out _, out _, out _);
             return startLine;
         }
 
@@ -34,8 +30,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         public static string GetSelectedText(_CodePane codepane)
         {
-            int startLine, startColumn, endLine, endColumn;
-            codepane.GetSelection(out startLine, out startColumn, out endLine, out endColumn);
+            codepane.GetSelection(out int startLine, out int startColumn, out int endLine, out int endColumn);
 
             var text = codepane.CodeModule.Lines[startLine, endLine - startLine + 1];
 

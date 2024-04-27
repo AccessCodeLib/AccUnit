@@ -113,9 +113,25 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void CreateTestMethodInActiveCodePane()
         {
-            var dialog = new InsertTestMethodDialog();
-            dialog.CommitMethodName += InsertTestMethodDialogCommitMethodName;
+            var insertTestMethodDataContext = new InsertTestMethodViewModel();
+            var dialog = new InsertTestMethodDialog(insertTestMethodDataContext);
+
+            insertTestMethodDataContext.InsertTestMethod += (sender, e) =>
+            {
+                InsertTestMethodDialogCommitMethodName(sender, e);
+                dialog.Close();
+            };
+            insertTestMethodDataContext.Canceled += (sender, e) => dialog.Close();  
+
             dialog.ShowDialog();
+        }
+
+        private void InsertTestMethodDialogCommitMethodName(InsertTestMethodViewModel sender, TestNamePartsEventArgs e)
+        {
+            var methodUnderTest = e.Items.FirstOrDefault(i => i.Name == InsertTestMethodViewModel.TestNamePart_MethodName)?.Value;   
+            var stateUnderTest = e.Items.FirstOrDefault(i => i.Name == InsertTestMethodViewModel.TestNamePart_State)?.Value; 
+            var expectedBehaviour = e.Items.FirstOrDefault(i => i.Name == InsertTestMethodViewModel.TestNamePart_Expected)?.Value;
+            CreateTestMethodInActiveCodePane(methodUnderTest, stateUnderTest, expectedBehaviour);  
         }
 
         private void CreateTestMethodInActiveCodePane(string methodUnderTest, string stateUnderTest, string expectedBehaviour)
@@ -129,6 +145,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
                 var activeCodePane = _vbeAdapter.ActiveCodePane;
                 var startLine = VbeCodePaneTools.GetStartLineFromCodePaneSelection(activeCodePane);
+
+                //Todo: check if startLine is inside a method   
+
                 VbeCodePaneTools.InsertText(activeCodePane, methodText, startLine);
             }
         }

@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethodControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AccessCodeLib.AccUnit.VbeAddIn"
+             d:DataContext="{d:DesignInstance Type=local:InsertTestMethodViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="90" d:DesignWidth="180"
+             Height="Auto">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" d:Height="60"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ItemsControl Grid.Row="0" d:DataContext="{d:DesignInstance Type=local:InsertTestMethodViewModel}" ItemsSource="{Binding TestNameParts}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{Binding DataContext.MaxCaptionLabelWidth, RelativeSource={RelativeSource AncestorType=ItemsControl}, FallbackValue='50'}"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="{Binding Caption}" Margin="5" />
+                        <TextBox Grid.Column="1" Text="{Binding Value, Mode=TwoWay}" Margin="10 5" BorderThickness="1pt" />
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="{Binding CommitButtonText, FallbackValue='Commit'}" Command="{Binding CommitCommand}" Margin="10 5" Padding="5 3" />
+            <Button Grid.Column="2" Content="{Binding CancelButtonText, FallbackValue='Cancel'}" Command="{Binding CancelCommand}" Margin="10 5" Padding="5 3" />
+        </Grid>
+        
+    </Grid>
+</UserControl>
