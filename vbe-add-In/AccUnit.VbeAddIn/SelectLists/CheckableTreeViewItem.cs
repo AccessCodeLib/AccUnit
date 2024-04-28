@@ -2,12 +2,20 @@
 using System.ComponentModel;
 using System.Windows.Media;
 
-namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
+namespace AccessCodeLib.AccUnit.VbeAddIn
 {
-    public class CheckableTreeViewItem<T> : CheckableItem
-        where T : CheckableItem
+    public class CheckableTreeViewItem : CheckableTreeViewItemBase<CheckableItem>
     {
         public CheckableTreeViewItem(string fullName, string name, bool isChecked = false)
+            : base(fullName, name, isChecked)
+        {
+        }
+    }
+
+    public class CheckableTreeViewItemBase<T> : CheckableItem, ICheckableTreeViewItem<T> 
+        where T : CheckableItem
+    {
+        public CheckableTreeViewItemBase(string fullName, string name, bool isChecked = false)
             : base(fullName, name, isChecked)
         {
             SetChildren();
@@ -27,7 +35,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             {
                 foreach (var item in e.NewItems)
                 {
-                    if (item is CheckableTreeViewItem<T> tvItem)
+                    if (item is CheckableTreeViewItemBase<T> tvItem)
                     {
                         tvItem.PropertyChanged += OnChildPropertyChanged;
                     }
@@ -39,7 +47,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         {
             if (e.PropertyName == nameof(IsChecked))
             {
-                if (sender is CheckableTreeViewItem<T> tvItem)
+                if (sender is CheckableTreeViewItemBase<T> tvItem)
                 {
                     if (tvItem.IsChecked)
                     {
@@ -88,9 +96,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
                 item.SetChecked(isChecked);
             }
         }
-
-        
-
 
         private ImageSource _imageSource;
         public ImageSource ImageSource

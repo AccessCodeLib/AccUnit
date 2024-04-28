@@ -4,7 +4,7 @@ using System.Windows.Media;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 {
-    public class TestItem : CheckableTreeViewItem<TestItem>
+    public class TestItem : CheckableTreeViewItemBase<TestItem>
     {
         public TestItem(string fullName, string name, bool isChecked = false)
             : base(fullName, name, isChecked)

@@ -2,7 +2,6 @@
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
-
     public class CheckableItem : ICheckableItem
     {
         public CheckableItem(string name, bool isChecked = false)

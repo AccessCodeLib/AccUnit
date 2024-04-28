@@ -1,13 +1,12 @@
 ﻿using System.Windows.Controls;
 
-namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
+namespace AccessCodeLib.AccUnit.VbeAddIn
 {
     public partial class CheckableTreeView : UserControl
     {
         public CheckableTreeView()
         {
             InitializeComponent();
-            //DataContext = new TestExplorerViewModel();
         }
     }
 }

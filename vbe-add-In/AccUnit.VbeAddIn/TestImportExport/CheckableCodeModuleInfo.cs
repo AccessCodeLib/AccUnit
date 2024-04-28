@@ -5,7 +5,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     public class CheckableCodeModuleInfo : CheckableItem
     {
         private CodeModuleInfo _codeModule; 
-        public CheckableCodeModuleInfo(CodeModuleInfo codeModule, bool isChecked = false) : base(codeModule.Name, codeModule.Name, isChecked)
+        public CheckableCodeModuleInfo(CodeModuleInfo codeModule, bool isChecked = false) 
+            : base(codeModule.Name, codeModule.Name, isChecked)
         {
             _codeModule = codeModule;
         }
