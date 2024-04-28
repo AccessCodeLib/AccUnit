@@ -4,9 +4,7 @@ using System.Windows.Media;
 using System.Windows;
 using System.ComponentModel;
 using System;
-using AccessCodeLib.AccUnit.VbeAddIn.TestExplorer;
 using System.Windows.Input;
-using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -102,41 +100,4 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         }
 
     }
-
-    public interface ITestNamePart
-    {
-        string Name { get; }   
-        string Caption { get; } 
-        string Value { get; set; }
-    }
-
-    internal class TestNamePart : ITestNamePart
-    {
-        public TestNamePart(string name, string caption)
-        {
-            Name = name;
-            Caption = caption;
-        }
-
-        public string Name { get; private set; }
-        public string Caption { get; private set; }
-        public string Value { get; set; }
-    }
-
-    public class TestNamePartsEventArgs : EventArgs
-    {
-        public TestNamePartsEventArgs()
-        {
-        }
-
-        public TestNamePartsEventArgs(ICollection<ITestNamePart> items)
-        {
-            Items = items;
-        }
-
-        public ICollection<ITestNamePart> Items { get; set; }
-    }
-
 }
-
-

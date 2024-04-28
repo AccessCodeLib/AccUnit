@@ -9,11 +9,11 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
         }
 
-        public CheckableTestItemsEventArgs(TestItems items)
+        public CheckableTestItemsEventArgs(CheckableItems<TestItem> items)
         {
             Items = items;
         }
 
-        public TestItems Items { get; set; }
+        public CheckableItems<TestItem> Items { get; set; }
     }
 }

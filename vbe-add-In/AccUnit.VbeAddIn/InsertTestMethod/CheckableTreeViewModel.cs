@@ -1,28 +1,28 @@
 ﻿using AccessCodeLib.AccUnit.Integration;
 using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.AccUnit.VbeAddIn.TestExplorer;
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Security.Policy;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
+namespace AccessCodeLib.AccUnit.VbeAddIn
 {
-    public class TestExplorerViewModel : ITestResultReporter, INotifyPropertyChanged
+    public class CheckableTreeViewModel : INotifyPropertyChanged
     {
         private string _selectAllCheckBoxText = Resources.UserControls.SelectListSelectAllCheckboxCaption;
         private string _commitButtonText = Resources.UserControls.SelectListCommitButtonText;
 
-        public delegate void RefreshTestItemListEventHandler(TestExplorerViewModel sender, CheckableTestItemsEventArgs e);
+        public delegate void RefreshTestItemListEventHandler(CheckableTreeViewModel sender, CheckableTestItemsEventArgs e);
         public event RefreshTestItemListEventHandler RefreshList;
 
         public event EventHandler<RunTestsEventArgs> RunTests;
         //public event EventHandler CancelTestRun;
         public event EventHandler<GetTestClassInfoEventArgs> GetTestClassInfo;
 
-        public TestExplorerViewModel()
+        public CheckableTreeViewModel()
         {
             _selectAllCheckBoxText = Resources.UserControls.SelectListSelectAllCheckboxCaption;
             _commitButtonText = Resources.UserControls.TestExplorerCommitButtonText;

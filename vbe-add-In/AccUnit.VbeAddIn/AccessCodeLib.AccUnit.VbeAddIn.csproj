@@ -90,6 +90,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="GetTestClassInfoEventArgs.cs" />
+    <Compile Include="CheckableItems.cs" />
     <Compile Include="InsertTestMethod\InsertTestMethodDialog.xaml.cs">
       <DependentUpon>InsertTestMethodDialog.xaml</DependentUpon>
     </Compile>
@@ -97,9 +98,20 @@
     <Compile Include="InsertTestMethod\InsertTestMethodControl.xaml.cs">
       <DependentUpon>InsertTestMethodControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="InsertTestMethod\ITestNamePart.cs" />
+    <Compile Include="InsertTestMethod\CheckableTreeViewModel.cs" />
+    <Compile Include="InsertTestMethod\TestNamePart.cs" />
+    <Compile Include="InsertTestMethod\TestNamePartsEventArgs.cs" />
     <Compile Include="RunTestsEventArgs.cs" />
     <Compile Include="SelectLists\CheckableTestItemsEventArgs.cs" />
     <Compile Include="TestClassListEventArgs.cs" />
+    <Compile Include="InsertTestMethod\CheckableTreeView.xaml.cs">
+      <DependentUpon>CheckableTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CheckableTreeViewItem.cs" />
+    <Compile Include="TestExplorer\TestClassInfoTestItem.cs" />
+    <Compile Include="TestExplorer\TestClassInfoTestItems.cs" />
+    <Compile Include="TestExplorer\TestClassMemberInfoTestItem.cs" />
     <Compile Include="TestExplorer\TestExplorerView.xaml.cs">
       <DependentUpon>TestExplorerView.xaml</DependentUpon>
     </Compile>
@@ -298,6 +310,10 @@
     <Page Include="InsertTestMethod\InsertTestMethodControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="InsertTestMethod\CheckableTreeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="TestExplorer\TestExplorerView.xaml">
       <SubType>Designer</SubType>
