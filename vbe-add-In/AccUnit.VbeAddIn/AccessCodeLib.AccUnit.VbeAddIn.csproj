@@ -89,6 +89,9 @@
     <Compile Include="AxHostConverter.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialog.xaml.cs">
+      <DependentUpon>GenerateTestMethodsFromCodeModuleDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="InsertTestMethod\CodeModuleInfoTreeViewItem.cs" />
     <Compile Include="GetTestClassInfoEventArgs.cs" />
     <Compile Include="SelectLists\CheckableItems.cs" />
@@ -122,11 +125,11 @@
     <Compile Include="CommitMethodNameEventArgs.cs" />
     <Compile Include="ComRegistration.cs" />
     <Compile Include="Connect.cs" />
-    <Compile Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialog.cs">
+    <Compile Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialogWinForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialog.Designer.cs">
-      <DependentUpon>GenerateTestMethodsFromCodeModuleDialog.cs</DependentUpon>
+    <Compile Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialogWinForm.Designer.cs">
+      <DependentUpon>GenerateTestMethodsFromCodeModuleDialogWinForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TestImportExport\ImportExportWindow.xaml.cs">
       <DependentUpon>ImportExportWindow.xaml</DependentUpon>
@@ -256,8 +259,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialog.resx">
-      <DependentUpon>GenerateTestMethodsFromCodeModuleDialog.cs</DependentUpon>
+    <EmbeddedResource Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialogWinForm.resx">
+      <DependentUpon>GenerateTestMethodsFromCodeModuleDialogWinForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Logger\LoggerControl.resx">
       <DependentUpon>LoggerControl.cs</DependentUpon>
@@ -305,6 +308,10 @@
     <None Include="Resources\refresh_green_16x16.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="InsertTestMethod\InsertTestMethodDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

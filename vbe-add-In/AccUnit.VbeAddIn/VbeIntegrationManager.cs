@@ -330,7 +330,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         private CodeModule _newCodeModule;
         private void CreateTestMethodFromSelectedVbComponent()
         {
-            var dialog = new GenerateTestMethodsFromCodeModuleDialog(Properties.Settings.Default.TestClassNameFormat)
+            var dialog = new GenerateTestMethodsFromCodeModuleDialogWinForm(Properties.Settings.Default.TestClassNameFormat)
                              {
                                  CurrentCodeModule = GetCodeModuleInfoWithMarkerFromSelectedVbComponent()
                              };

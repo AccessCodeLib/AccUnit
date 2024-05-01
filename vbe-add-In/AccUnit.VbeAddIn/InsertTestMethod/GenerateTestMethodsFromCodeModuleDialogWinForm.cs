@@ -8,7 +8,7 @@ using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
-	public partial class GenerateTestMethodsFromCodeModuleDialog : Form
+	public partial class GenerateTestMethodsFromCodeModuleDialogWinForm : Form
 	{
 	    private static string _testClassNameFormat;
 	    private const string ModuleUnderTestPlaceholder = "%ModuleUnderTest%";
@@ -16,7 +16,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
 		private CodeModuleInfo _currentCodeModule;
 
-		public GenerateTestMethodsFromCodeModuleDialog(string testClassNameFormat)
+		public GenerateTestMethodsFromCodeModuleDialogWinForm(string testClassNameFormat)
 		{
 		    _testClassNameFormat = testClassNameFormat;
 		    InitializeComponent();
