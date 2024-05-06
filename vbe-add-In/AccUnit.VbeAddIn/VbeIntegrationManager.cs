@@ -7,6 +7,7 @@ using AccessCodeLib.Common.VBIDETools.Templates;
 using Microsoft.Office.Core;
 using Microsoft.Vbe.Interop;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -354,11 +355,19 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void SetDialogPosition(System.Windows.Window dialog)
         {
-            var width = (dialog.MaxWidth + dialog.MinWidth) / 2;
-            var height = (dialog.MaxHeight + dialog.MinHeight) / 2;
-           
-            dialog.Top = _vbeAdapter.VBE.MainWindow.Top + _vbeAdapter.VBE.MainWindow.Height / 2 - height / 2;
-            dialog.Left = _vbeAdapter.VBE.MainWindow.Left + _vbeAdapter.VBE.MainWindow.Width / 2 - width / 2;
+            var scaleFactor = GetScalingFactor();
+            var width = dialog.MinWidth;
+            var height = dialog.MaxHeight;
+
+            dialog.Top = (_vbeAdapter.VBE.MainWindow.Top + _vbeAdapter.VBE.MainWindow.Height / 2) / scaleFactor - height / 2;
+            dialog.Left = (_vbeAdapter.VBE.MainWindow.Left + _vbeAdapter.VBE.MainWindow.Width / 2) / scaleFactor - width / 2;
+        }
+
+        private float GetScalingFactor()
+        {
+            Graphics g = Graphics.FromHwnd(IntPtr.Zero);
+            float dpiX = g.DpiX;
+            return dpiX / 96;  // 96 DPI = 100%
         }
 
         private CodeModule InsertTestMethodsDialogCommitMethodName(object sender, CommitInsertTestMethodsEventArgs e)
