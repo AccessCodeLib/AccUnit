@@ -123,8 +123,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             };
             insertTestMethodDataContext.Canceled += (sender, e) => dialog.Close();
 
-            dialog.Top = _vbeAdapter.ActiveCodePane.Window.Top + _vbeAdapter.ActiveCodePane.Window.Height / 2;
-            dialog.Left = _vbeAdapter.ActiveCodePane.Window.Left + _vbeAdapter.ActiveCodePane.Window.Width / 2;
+            SetDialogPosition(dialog);
             dialog.ShowDialog();
         }
 
@@ -332,7 +331,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         public object VBETools { get; private set; }
 
-        //private CodeModule _newCodeModule;
         private void CreateTestMethodFromSelectedVbComponent()
         {
             var generateTestMethodsFromCodeModuleDataContext = new GenerateTestMethodsFromCodeModuleViewModel(GetCodeModuleInfoWithMarkerFromSelectedVbComponent());
@@ -350,9 +348,17 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             };
             generateTestMethodsFromCodeModuleDataContext.Canceled += (sender, e) => dialog.Close();
 
-            dialog.Top = _vbeAdapter.ActiveCodePane.Window.Top + _vbeAdapter.ActiveCodePane.Window.Height / 2;
-            dialog.Left = _vbeAdapter.ActiveCodePane.Window.Left + _vbeAdapter.ActiveCodePane.Window.Width / 2;
+            SetDialogPosition(dialog);
             dialog.ShowDialog();
+        }
+
+        private void SetDialogPosition(System.Windows.Window dialog)
+        {
+            var width = (dialog.MaxWidth + dialog.MinWidth) / 2;
+            var height = (dialog.MaxHeight + dialog.MinHeight) / 2;
+           
+            dialog.Top = _vbeAdapter.VBE.MainWindow.Top + _vbeAdapter.VBE.MainWindow.Height / 2 - height / 2;
+            dialog.Left = _vbeAdapter.VBE.MainWindow.Left + _vbeAdapter.VBE.MainWindow.Width / 2 - width / 2;
         }
 
         private CodeModule InsertTestMethodsDialogCommitMethodName(object sender, CommitInsertTestMethodsEventArgs e)
