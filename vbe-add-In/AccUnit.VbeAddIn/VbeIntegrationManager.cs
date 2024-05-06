@@ -327,35 +327,42 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        private CodeModule _newCodeModule;
+        //private CodeModule _newCodeModule;
         private void CreateTestMethodFromSelectedVbComponent()
         {
-            var dialog = new GenerateTestMethodsFromCodeModuleDialogWinForm(Properties.Settings.Default.TestClassNameFormat)
-                             {
-                                 CurrentCodeModule = GetCodeModuleInfoWithMarkerFromSelectedVbComponent()
-                             };
-            dialog.InsertMethods += InsertTestMethodsDialogCommitMethodName;
+            var generateTestMethodsFromCodeModuleDataContext = new GenerateTestMethodsFromCodeModuleViewModel(GetCodeModuleInfoWithMarkerFromSelectedVbComponent());
+            var dialog = new GenerateTestMethodsFromCodeModuleDialog(generateTestMethodsFromCodeModuleDataContext);
+
+            generateTestMethodsFromCodeModuleDataContext.InsertTestMethods += (sender, e) =>
+            {
+                var newCodeModule = InsertTestMethodsDialogCommitMethodName(sender, e);
+                dialog.Close();
+                if (newCodeModule != null)
+                {
+                    newCodeModule.CodePane.Show();
+                    newCodeModule.CodePane.Window.SetFocus();
+                }
+            };
+            generateTestMethodsFromCodeModuleDataContext.Canceled += (sender, e) => dialog.Close();
+
             dialog.ShowDialog();
-            if (_newCodeModule == null) return;
-            _newCodeModule.CodePane.Show();
-            _newCodeModule.CodePane.Window.SetFocus();
-            _newCodeModule = null;
         }
 
-        private void InsertTestMethodsDialogCommitMethodName(object sender, CommitInsertTestMethodsEventArgs e)
+        private CodeModule InsertTestMethodsDialogCommitMethodName(object sender, CommitInsertTestMethodsEventArgs e)
         {
             var testClassGenerator = new TestClassGenerator(ActiveVBProject);
             try
             {
                 using (new BlockLogger($"{e.TestClass}.{e.MethodsUnderTest}_{e.StateUnderTest}_{e.ExpectedBehaviour}"))
                 {
-                    _newCodeModule = testClassGenerator.InsertTestMethods(e.TestClass, e.MethodsUnderTest, e.StateUnderTest, e.ExpectedBehaviour);
+                    return testClassGenerator.InsertTestMethods(e.TestClass, e.MethodsUnderTest, e.StateUnderTest, e.ExpectedBehaviour);
                 }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
                 e.Cancel = true;
+                return null;    
             }
         }
 

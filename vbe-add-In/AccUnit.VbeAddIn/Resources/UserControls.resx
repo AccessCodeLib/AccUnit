@@ -123,6 +123,12 @@
   <data name="InputBoxButtonOkCaption" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="InsertTestMethodCancelButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="InsertTestMethodCommitButtonText" xml:space="preserve">
+    <value>Commit</value>
+  </data>
   <data name="InsertTestMethodExpectedLabelCaption" xml:space="preserve">
     <value>Expected behaviour</value>
   </data>

@@ -12,6 +12,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         }
     }
 
+    public class CheckableCodeModulTreeViewItem : CheckableTreeViewItemBase<CheckableCodeModuleMember>
+    {
+        public CheckableCodeModulTreeViewItem(string fullName, string name, bool isChecked = false)
+            : base(fullName, name, isChecked)
+        {
+        }
+    }
+
     public class CheckableTreeViewItemBase<T> : CheckableItem, ICheckableTreeViewItem<T> 
         where T : CheckableItem
     {
@@ -47,7 +55,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             if (e.PropertyName == nameof(IsChecked))
             {
-                if (sender is CheckableTreeViewItemBase<T> tvItem)
+                //if (sender is CheckableTreeViewItemBase<T> tvItem)
+                if (sender is ICheckableItem tvItem)
                 {
                     if (tvItem.IsChecked)
                     {
@@ -85,9 +94,20 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         internal override void SetChecked(bool value)
         {
+            //SetChecked(value, true);
             base.SetChecked(value);
             ChangeChildrenCheckedState(value);
         }
+        /*
+        internal virtual void SetChecked(bool value, bool changeChildrenCheckedState)
+        {
+            base.SetChecked(value);
+            if (changeChildrenCheckedState)
+            {
+                ChangeChildrenCheckedState(value);
+            }
+        }
+        */
 
         private void ChangeChildrenCheckedState(bool isChecked)
         {

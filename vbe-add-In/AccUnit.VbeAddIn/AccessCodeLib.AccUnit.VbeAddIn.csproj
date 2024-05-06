@@ -94,6 +94,7 @@
     </Compile>
     <Compile Include="InsertTestMethod\CodeModuleInfoTreeViewItem.cs" />
     <Compile Include="GetTestClassInfoEventArgs.cs" />
+    <Compile Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleViewModel.cs" />
     <Compile Include="SelectLists\CheckableItems.cs" />
     <Compile Include="SelectLists\ICheckableTreeViewItem.cs" />
     <Compile Include="InsertTestMethod\InsertTestMethodDialog.xaml.cs">
@@ -120,7 +121,7 @@
     <Compile Include="TestExplorer\TestExplorerView.xaml.cs">
       <DependentUpon>TestExplorerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TestImportExport\CheckableCodeModuleInfo.cs" />
+    <Compile Include="SelectLists\CheckableCodeModuleInfo.cs" />
     <Compile Include="SelectLists\CheckableItemsEventArgs.cs" />
     <Compile Include="CommitMethodNameEventArgs.cs" />
     <Compile Include="ComRegistration.cs" />

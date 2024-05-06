@@ -3,6 +3,22 @@ using System.Windows.Input;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
+    public interface IButtonCommand : ICommand
+    {
+        string Caption { get; }    
+    }
+
+    public class ButtonRelayCommand : RelayCommand, IButtonCommand
+    {
+        public ButtonRelayCommand(Action execute, string caption, Func<bool> canExecute = null) 
+            : base(execute, canExecute)
+        {
+            Caption = caption;  
+        }
+
+        public string Caption { get; } 
+    }
+
     public class RelayCommand : ICommand
     {
         private readonly Action execute;

@@ -2,6 +2,26 @@
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
+    public class CheckableCodeModuleMember : CheckableItem
+    {
+        private readonly CodeModuleMemberWithMarker _member;
+
+        public CheckableCodeModuleMember(CodeModuleMemberWithMarker member)
+            : base(member.Name, member.Name, member.Marked)
+        {
+            _member = member;   
+        }
+
+        internal override void SetChecked(bool value)
+        {
+            base.SetChecked(value);
+            _member.Marked = value;
+            OnPropertyChanged(nameof(IsChecked));
+        }
+
+
+    }
+
     public class CheckableItem : ICheckableItem
     {
         public CheckableItem(string name, bool isChecked = false)
@@ -13,13 +33,13 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         public CheckableItem(string fullName, string name, bool isChecked = false)
         {
-            _fullName = fullName;   
-            _name = name;   
-            _isChecked = isChecked; 
+            _fullName = fullName;
+            _name = name;
+            _isChecked = isChecked;
         }
 
         private bool _isChecked = false;
-        public bool IsChecked
+        public virtual bool IsChecked
         {
             get { return _isChecked; }
             set
@@ -51,9 +71,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        private string _name;   
-        public string Name {
-            get { return _name; }   
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
             set
             {
                 if (_name != value)

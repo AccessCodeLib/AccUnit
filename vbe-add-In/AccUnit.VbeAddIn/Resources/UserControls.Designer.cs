@@ -79,6 +79,24 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Cancel ähnelt.
+        /// </summary>
+        internal static string InsertTestMethodCancelButtonText {
+            get {
+                return ResourceManager.GetString("InsertTestMethodCancelButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Commit ähnelt.
+        /// </summary>
+        internal static string InsertTestMethodCommitButtonText {
+            get {
+                return ResourceManager.GetString("InsertTestMethodCommitButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Expected behaviour ähnelt.
         /// </summary>
         internal static string InsertTestMethodExpectedLabelCaption {

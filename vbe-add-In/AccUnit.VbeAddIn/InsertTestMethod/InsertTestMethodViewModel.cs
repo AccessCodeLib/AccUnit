@@ -29,8 +29,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 new TestNamePart(TestNamePart_Expected, Resources.UserControls.InsertTestMethodExpectedLabelCaption)
             };
             MaxCaptionLabelWidth = MeasureCaptionLabelWidth();
-            CancelCommand = new RelayCommand(Cancel);
-            CommitCommand = new RelayCommand(Commit);
+            CancelCommand = new ButtonRelayCommand(Cancel, Resources.UserControls.InsertTestMethodCancelButtonText);
+            CommitCommand = new ButtonRelayCommand(Commit, Resources.UserControls.InsertTestMethodCommitButtonText);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -85,14 +85,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             return formattedText.WidthIncludingTrailingWhitespace;
         }
 
-        public ICommand CancelCommand { get; }
+        public IButtonCommand CancelCommand { get; }
 
         protected void Cancel()
         {
             Canceled?.Invoke(this, EventArgs.Empty);    
         }
 
-        public ICommand CommitCommand { get; }
+        public IButtonCommand CommitCommand { get; }
 
         protected virtual void Commit()
         {

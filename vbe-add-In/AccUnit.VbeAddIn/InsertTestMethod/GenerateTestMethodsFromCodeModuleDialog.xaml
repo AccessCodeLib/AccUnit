@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AccessCodeLib.AccUnit.VbeAddIn"
+             d:DataContext="{d:DesignInstance Type=local:GenerateTestMethodsFromCodeModuleViewModel}"
              Title="{Binding Title, FallbackValue='Testmethoden einfügen'}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="600">
     <Grid Background="#EEEEEE">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -26,13 +27,11 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Elemente in der ersten Zeile -->
                 <Label Grid.Row="0" Grid.Column="0" Content="Zu testendes Modul" Margin="0 5"/>
-                <TextBox Grid.Row="0" Grid.Column="1" Text="Value 1" Margin="5"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentCodeModule.Name}" Margin="5"/>
 
-                <!-- Elemente in der zweiten Zeile -->
                 <Label Grid.Row="1" Grid.Column="0" Content="Name der Testklasse" Margin="0 5"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Text="Value 2" Margin="5"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding TestClassName}" Margin="5"/>
             </Grid>
             <Label>Members für die Testklassen erzeugt werden sollen:</Label>
         </StackPanel>
@@ -50,14 +49,14 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="0" Content="Getesteter Zustand" Margin="5"/>
-                <TextBox Grid.Row="0" Grid.Column="1" Text="StateUnderTest" Margin="5"/>
+                <Label Grid.Row="0" Grid.Column="0" Content="{Binding StateTestNamePart.Caption, FallbackValue='State under test'}" Margin="5"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding StateTestNamePart.Value, FallbackValue='StateUnderTest'}" Margin="5"/>
 
-                <Label Grid.Row="1" Grid.Column="0" Content="Erwartetes Verhalten" Margin="5"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Text="ExpectedBehaviour" Margin="5"/>
+                <Label Grid.Row="1" Grid.Column="0" Content="{Binding ExpectedTestNamePart.Caption, FallbackValue='Expected behaviour'}" Margin="5"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ExpectedTestNamePart.Value, FallbackValue='ExpectedBehaviour'}" Margin="5"/>
 
-                <Label Grid.Row="2" Grid.Column="0" Content="Name der Testmethode" Margin="5"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="&lt;Member&gt;_StateUnderTest_ExpectedBehaviour" Margin="5"/>
+                <Label Grid.Row="2" Grid.Column="0" Content="{Binding MethodNameSyntax.Caption}" Margin="5"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MethodNameSyntax.Value}" Margin="5"/>
             </Grid>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -65,8 +64,8 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="{Binding CommitButtonText, FallbackValue='Commit'}" Command="{Binding CommitCommand}" Margin="10 5" Padding="5 3" />
-                <Button Grid.Column="2" Content="{Binding CancelButtonText, FallbackValue='Cancel'}" Command="{Binding CancelCommand}" Margin="10 5" Padding="5 3" />
+                <Button Grid.Column="0" Content="{Binding CommitCommand.Caption, FallbackValue='[Commit]'}" Command="{Binding CommitCommand}" Margin="10 5" Padding="5 3" />
+                <Button Grid.Column="2" Content="{Binding CancelCommand.Caption, FallbackValue='[Cancel]'}" Command="{Binding CancelCommand}" Margin="10 5" Padding="5 3" />
             </Grid>
         </StackPanel>
     </Grid>
