@@ -95,6 +95,8 @@
     <Compile Include="InsertTestMethod\CodeModuleInfoTreeViewItem.cs" />
     <Compile Include="GetTestClassInfoEventArgs.cs" />
     <Compile Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleViewModel.cs" />
+    <Compile Include="InsertTestMethod\CheckableCodeModuleMember.cs" />
+    <Compile Include="InsertTestMethod\CheckableCodeModulTreeViewItem.cs" />
     <Compile Include="SelectLists\CheckableItems.cs" />
     <Compile Include="SelectLists\ICheckableTreeViewItem.cs" />
     <Compile Include="InsertTestMethod\InsertTestMethodDialog.xaml.cs">
@@ -126,12 +128,6 @@
     <Compile Include="CommitMethodNameEventArgs.cs" />
     <Compile Include="ComRegistration.cs" />
     <Compile Include="Connect.cs" />
-    <Compile Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialogWinForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialogWinForm.Designer.cs">
-      <DependentUpon>GenerateTestMethodsFromCodeModuleDialogWinForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="TestImportExport\ImportExportWindow.xaml.cs">
       <DependentUpon>ImportExportWindow.xaml</DependentUpon>
     </Compile>
@@ -185,12 +181,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>VbeCommandbars.resx</DependentUpon>
     </Compile>
-    <Compile Include="SelectListControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="SelectListControl.Designer.cs">
-      <DependentUpon>SelectListControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="SelectLists\CheckableItem.cs" />
     <Compile Include="SelectLists\ICheckableItem.cs" />
     <Compile Include="SelectLists\SelectControl.xaml.cs">
@@ -206,21 +196,9 @@
     <Compile Include="TestExplorer\TestExplorerViewModel.cs" />
     <Compile Include="TestExplorer\TestItem.cs" />
     <Compile Include="TestExplorer\TestListAndResultManager.cs" />
-    <Compile Include="TestListControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="TestListControl.Designer.cs">
-      <DependentUpon>TestListControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="TestResultReporter.cs" />
     <Compile Include="TestStarter.cs" />
     <Compile Include="TestSuiteManager.cs" />
-    <Compile Include="InsertTestMethod\TriStateCheckBoxesTreeView.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="InsertTestMethod\TriStateCheckBoxesTreeView.Designer.cs">
-      <DependentUpon>TriStateCheckBoxesTreeView.cs</DependentUpon>
-    </Compile>
     <Compile Include="UITools.cs" />
     <Compile Include="VbeCodePaneTools.cs" />
     <Compile Include="VbeIntegrationManager.cs" />
@@ -260,9 +238,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialogWinForm.resx">
-      <DependentUpon>GenerateTestMethodsFromCodeModuleDialogWinForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Logger\LoggerControl.resx">
       <DependentUpon>LoggerControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -291,18 +266,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>VbeCommandbars.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SelectListControl.de.resx">
-      <DependentUpon>SelectListControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SelectListControl.resx">
-      <DependentUpon>SelectListControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestListControl.de.resx">
-      <DependentUpon>TestListControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestListControl.resx">
-      <DependentUpon>TestListControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

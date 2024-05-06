@@ -135,6 +135,16 @@
   <data name="InsertTestMethodMethodNameLabelCaption" xml:space="preserve">
     <value>Method under test</value>
   </data>
+  <data name="InsertTestMethodsCodeModuleToTestLabelCaption" xml:space="preserve">
+    <value>Module to test</value>
+  </data>
+  <data name="InsertTestMethodsSelectedModuleInstruction" xml:space="preserve">
+    <value>Here you can insert tests for members of the selected module.
+Please select the members for which tests should be created.</value>
+  </data>
+  <data name="InsertTestMethodsSelectMemberCaption" xml:space="preserve">
+    <value>Select members to test:</value>
+  </data>
   <data name="InsertTestMethodStateLabelCaption" xml:space="preserve">
     <value>State under test</value>
   </data>
@@ -172,7 +182,7 @@ Remove environment?</value>
     <value>Export Tests</value>
   </data>
   <data name="TestClassSelectionFormCaptionImport" xml:space="preserve">
-    <value />
+    <value>Import Tests</value>
   </data>
   <data name="TestClassSelectionFormCommitTestExport" xml:space="preserve">
     <value>_Export</value>

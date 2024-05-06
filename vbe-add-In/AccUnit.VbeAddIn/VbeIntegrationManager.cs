@@ -121,8 +121,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 InsertTestMethodDialogCommitMethodName(sender, e);
                 dialog.Close();
             };
-            insertTestMethodDataContext.Canceled += (sender, e) => dialog.Close();  
+            insertTestMethodDataContext.Canceled += (sender, e) => dialog.Close();
 
+            dialog.Top = _vbeAdapter.ActiveCodePane.Window.Top + _vbeAdapter.ActiveCodePane.Window.Height / 2;
+            dialog.Left = _vbeAdapter.ActiveCodePane.Window.Left + _vbeAdapter.ActiveCodePane.Window.Width / 2;
             dialog.ShowDialog();
         }
 
@@ -191,12 +193,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             return null;
         }
 
-        void InsertTestMethodDialogCommitMethodName(object sender, CommitInsertTestMethodEventArgs e)
+        private void InsertTestMethodDialogCommitMethodName(object sender, CommitInsertTestMethodEventArgs e)
         {
             CreateTestMethodInActiveCodePane(e.MethodUnderTest, e.StateUnderTest, e.ExpectedBehaviour);
         }
 
-        void TestClassManagerOnRepairActiveVbProjectComException(object sender, EventArgs e)
+        private void TestClassManagerOnRepairActiveVbProjectComException(object sender, EventArgs e)
         {
             try
             {
@@ -327,6 +329,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
+        public object VBETools { get; private set; }
+
         //private CodeModule _newCodeModule;
         private void CreateTestMethodFromSelectedVbComponent()
         {
@@ -345,6 +349,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             };
             generateTestMethodsFromCodeModuleDataContext.Canceled += (sender, e) => dialog.Close();
 
+            dialog.Top = _vbeAdapter.ActiveCodePane.Window.Top + _vbeAdapter.ActiveCodePane.Window.Height / 2;
+            dialog.Left = _vbeAdapter.ActiveCodePane.Window.Left + _vbeAdapter.ActiveCodePane.Window.Width / 2;
             dialog.ShowDialog();
         }
 

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Forms;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -6,7 +7,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     {
         public GenerateTestMethodsFromCodeModuleDialog(GenerateTestMethodsFromCodeModuleViewModel dataContext)
         {
-            DataContext = dataContext;  
+            DataContext = dataContext;
             InitializeComponent();
         }
     }
