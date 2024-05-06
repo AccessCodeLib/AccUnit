@@ -1,5 +1,4 @@
-﻿using AccessCodeLib.AccUnit.CodeCoverage;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interfaces
@@ -44,5 +43,5 @@ namespace AccessCodeLib.AccUnit.Interfaces
 
     public delegate void TestResultEventHandler(ITestResult Result);
     public delegate void PrintSummaryEventHandler(ITestSummary TestSummary, bool PrintTestResults);
-    
+
 }

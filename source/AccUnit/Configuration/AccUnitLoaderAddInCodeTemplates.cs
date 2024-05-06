@@ -18,7 +18,7 @@ namespace AccessCodeLib.AccUnit.Configuration
 
         private void AddAccUnitLoaderFactory(bool useAccUnitTypeLib, string hostAppName)
         {
-            var code = hostAppName.Equals("Microsoft Access",System.StringComparison.OrdinalIgnoreCase) ? AccessAccUnitLoaderFactoryCode : ExcelAccUnitLoaderFactoryCode;
+            var code = hostAppName.Equals("Microsoft Access", System.StringComparison.OrdinalIgnoreCase) ? AccessAccUnitLoaderFactoryCode : ExcelAccUnitLoaderFactoryCode;
 
             code = code.Replace("{UseAccUnitTypeLib}", useAccUnitTypeLib ? "1" : "0");
             Add(new CodeTemplate(@"AccUnit_Factory", vbext_ComponentType.vbext_ct_StdModule, code));

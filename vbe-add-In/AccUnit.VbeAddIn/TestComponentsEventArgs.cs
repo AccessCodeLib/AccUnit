@@ -1,6 +1,6 @@
-﻿using System;
+﻿using AccessCodeLib.Common.VBIDETools;
+using System;
 using System.Collections.Generic;
-using AccessCodeLib.Common.VBIDETools;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {

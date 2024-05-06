@@ -12,9 +12,9 @@ namespace AccessCodeLib.AccUnit
 {
     public class VBATestSuite : IVBATestSuite, IDisposable, ITestData
     {
-        public VBATestSuite(IOfficeApplicationHelper applicationHelper, 
-                            IVBATestBuilder testBuilder, 
-                            ITestRunner testRunner, 
+        public VBATestSuite(IOfficeApplicationHelper applicationHelper,
+                            IVBATestBuilder testBuilder,
+                            ITestRunner testRunner,
                             ITestSummaryFormatter testSummaryFormatter)
         {
             using (new BlockLogger())
@@ -52,11 +52,11 @@ namespace AccessCodeLib.AccUnit
                 {
                     _testResultCollector = NewTestResultCollector();
                 }
-                return _testResultCollector;    
+                return _testResultCollector;
             }
             set
             {
-                _testResultCollector = value;   
+                _testResultCollector = value;
             }
         }
 
@@ -139,7 +139,7 @@ namespace AccessCodeLib.AccUnit
                     {
                         SetRunstateToIgnored(test);
                         ignoreInfo.Ignore = true;
-                        ignoreInfo.Comment = memberIgnoreInfo.Comment;  
+                        ignoreInfo.Comment = memberIgnoreInfo.Comment;
                     }
                 }
 
@@ -169,7 +169,7 @@ namespace AccessCodeLib.AccUnit
                     // TODO ShowAs: This messes up RowTests
                     //testcase.DisplayName = memberinfo.DisplayName;
                 }
-                
+
                 RaiseTestStarted(test, ref ignoreInfo);
             }
         }
@@ -325,7 +325,7 @@ namespace AccessCodeLib.AccUnit
 
         protected virtual void RaiseTraceMessage(string text)
         {
-            TestTraceMessage?.Invoke(text, CodeCoverageTracker);    
+            TestTraceMessage?.Invoke(text, CodeCoverageTracker);
         }
 
         #endregion

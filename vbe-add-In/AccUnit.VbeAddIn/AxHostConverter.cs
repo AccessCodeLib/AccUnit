@@ -1,8 +1,8 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
-using AccessCodeLib.AccUnit.VbeAddIn.Resources;
+﻿using AccessCodeLib.AccUnit.VbeAddIn.Resources;
 using AccessCodeLib.Common.Tools.Logging;
 using stdole;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {

@@ -33,6 +33,6 @@ namespace AccessCodeLib.AccUnit.Integration
 
     public interface IRowTestId
     {
-        string RowId { get; }   
+        string RowId { get; }
     }
 }

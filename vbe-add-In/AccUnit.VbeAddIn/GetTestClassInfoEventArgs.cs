@@ -9,7 +9,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             ClassName = className;
         }
 
-        public string ClassName { get; }   
+        public string ClassName { get; }
         public TestClassInfo TestClassInfo { get; set; }
     }
 }

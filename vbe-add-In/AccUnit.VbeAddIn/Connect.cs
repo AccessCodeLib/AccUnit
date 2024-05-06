@@ -1,6 +1,6 @@
-﻿using System;
+﻿using AccessCodeLib.Common.Tools.Logging;
+using System;
 using System.Runtime.InteropServices;
-using AccessCodeLib.Common.Tools.Logging;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -82,7 +82,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 {
                     Dispose();
                 }
-                catch(Exception xcp)
+                catch (Exception xcp)
                 {
                     Logger.Log(xcp);
                 }

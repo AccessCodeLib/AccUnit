@@ -14,14 +14,14 @@ namespace AccessCodeLib.AccUnit.Interop
 
         new string Name { get; }
         new ITestSummary Summary { get; }
-        
+
         new IVBATestSuite AppendTestResultReporter(ITestResultReporter reporter);
         new IVBATestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
         new IVBATestSuite AddByClassName(string className);
         new IVBATestSuite AddFromVBProject();
         new IVBATestSuite Run();
         new IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
-        
+
         new void Dispose();
 
         #endregion
@@ -29,7 +29,7 @@ namespace AccessCodeLib.AccUnit.Interop
         IVBATestSuite SelectTests(object TestNameFilter);
         IVBATestSuite Filter(object FilterTags);
         ITestClassGenerator TestClassGenerator { get; }
-        
+
 
     }
 

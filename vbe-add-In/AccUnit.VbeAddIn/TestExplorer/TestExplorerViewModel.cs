@@ -4,7 +4,6 @@ using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Security.Policy;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -60,7 +59,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         private void OnChildPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(TestItem.IsChecked)) 
+            if (e.PropertyName == nameof(TestItem.IsChecked))
             {
                 if (sender is TestItem testItem)
                 {
@@ -136,7 +135,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         private void TestResultCollector_TestFixtureStarted(ITestFixture fixture)
         {
-            
+
             var testItem = FindTestItem(fixture);
             if (testItem != null)
             {
@@ -153,7 +152,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             {
                 throw new Exception("Test class info not found for test fixture " + className);
             }
-            TestItems.Add(new TestClassInfoTestItem(testClassInfoEventArgs.TestClassInfo,true));
+            TestItems.Add(new TestClassInfoTestItem(testClassInfoEventArgs.TestClassInfo, true));
         }
 
         private void TestResultCollector_TestFixtureFinished(ITestResult result)
@@ -232,7 +231,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             if ((resetmode & ResetMode.ResetTestSuite) == ResetMode.ResetTestSuite)
             {
                 TestItems.Clear();
-            }   
+            }
         }
         #endregion
 
@@ -251,12 +250,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
             if (test.Parent is IRowTest rowTest)
             {
-                var rowTestFixtureItem = FindParentTestItem(rowTest);  
+                var rowTestFixtureItem = FindParentTestItem(rowTest);
                 return rowTestFixtureItem.Children.FirstOrDefault(ti => ti.FullName == rowTest.FullName);
             }
 
             var parentTest = test.Parent as ITest;
-            var fixtureItem = FindParentTestItem(parentTest);   
+            var fixtureItem = FindParentTestItem(parentTest);
             return fixtureItem.Children.FirstOrDefault(ti => ti.FullName == parentTest.FullName);
         }
 

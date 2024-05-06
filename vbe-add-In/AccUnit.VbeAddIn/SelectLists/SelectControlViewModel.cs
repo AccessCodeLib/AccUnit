@@ -1,5 +1,4 @@
-﻿using AccessCodeLib.AccUnit.Integration;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -10,7 +9,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 {
     public class SelectControlViewModel : INotifyPropertyChanged
     {
-        private string _selectAllCheckBoxText = Resources.UserControls.SelectListSelectAllCheckboxCaption;   
+        private string _selectAllCheckBoxText = Resources.UserControls.SelectListSelectAllCheckboxCaption;
         private string _commitButtonText = Resources.UserControls.SelectListCommitButtonText;
 
         public delegate void CommitSelectedItemsEventHandler(SelectControlViewModel sender, CheckableItemsEventArgs e);
@@ -26,8 +25,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         }
 
         public SelectControlViewModel(
-                                string title, 
-                                string selectAllCheckBoxText, 
+                                string title,
+                                string selectAllCheckBoxText,
                                 string commitButtonText,
                                 bool optionalCheckBoxVisibility = false,
                                 string optionalCheckBoxText = null)
@@ -36,8 +35,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             _selectAllCheckBoxText = selectAllCheckBoxText;
             _commitButtonText = commitButtonText;
             _title = title;
-            OptionalCheckboxVisibility = optionalCheckBoxVisibility;    
-            OptionalCheckBoxText = optionalCheckBoxText;    
+            OptionalCheckboxVisibility = optionalCheckBoxVisibility;
+            OptionalCheckBoxText = optionalCheckBoxText;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -76,7 +75,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                         {
                             item.IsChecked = value;
                         }
-                    }   
+                    }
                     OnPropertyChanged(nameof(SelectAll));
                 }
             }
@@ -120,7 +119,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         protected virtual void Refresh()
         {
-            RefreshList?.Invoke(this, new CheckableItemsEventArgs(Items));   
+            RefreshList?.Invoke(this, new CheckableItemsEventArgs(Items));
         }
 
         protected virtual void Commit()
@@ -131,13 +130,13 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             if (close)
             {
                 //Close();
-            }   
+            }
         }
 
         public ICollection<ICheckableItem> SelectedItems
         {
             get => Items.Where(i => i.IsChecked).ToList();
-        }  
+        }
 
         private ObservableCollection<ICheckableItem> _items = new ObservableCollection<ICheckableItem>();
         public ObservableCollection<ICheckableItem> Items
@@ -153,16 +152,17 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        
 
-        public string OptionalCheckBoxText { get; private set; } 
-        public bool OptionalCheckboxVisibility { get; private set; } = false;   
 
-        private bool _optionalCheckboxChecked = false;  
+        public string OptionalCheckBoxText { get; private set; }
+        public bool OptionalCheckboxVisibility { get; private set; } = false;
+
+        private bool _optionalCheckboxChecked = false;
         public bool OptionalCheckboxChecked
         {
-            get { return _optionalCheckboxChecked; }   
-            set {
+            get { return _optionalCheckboxChecked; }
+            set
+            {
                 _optionalCheckboxChecked = value;
                 OnPropertyChanged(nameof(OptionalCheckboxChecked));
             }

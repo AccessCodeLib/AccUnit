@@ -453,7 +453,7 @@ namespace AccessCodeLib.AccUnit.Configuration
                 var reader = new TestClassReader(ActiveVBProject);
                 return reader.GetTestClassInfo(className, initMembers);
             }
-        }   
+        }
 
         public CodeModule InsertTestTemplate(CodeTemplate template, string templateName)
         {

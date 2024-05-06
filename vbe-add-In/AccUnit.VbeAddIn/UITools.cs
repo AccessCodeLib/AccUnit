@@ -1,11 +1,11 @@
+using AccessCodeLib.AccUnit.VbeAddIn.Resources;
+using AccessCodeLib.Common.Tools.Logging;
 using System;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
-using AccessCodeLib.AccUnit.VbeAddIn.Resources;
-using AccessCodeLib.Common.Tools.Logging;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -41,7 +41,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
 
         public static DialogResult ShowMessage(string message, MessageBoxButtons buttons = MessageBoxButtons.OK,
-                                               MessageBoxIcon icon = MessageBoxIcon.Information, 
+                                               MessageBoxIcon icon = MessageBoxIcon.Information,
                                                MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1)
         {
             return MessageBox.Show(message, Application.ProductName, buttons, icon, defaultButton);

@@ -126,7 +126,7 @@ namespace AccessCodeLib.AccUnit
 
         private static TestClassMemberInfo GetTestClassMemberInfo(CodeModuleMember member, CodeModuleReader reader)
         {
-            return new TestClassMemberInfo(member.Name, 
+            return new TestClassMemberInfo(member.Name,
                                            reader.GetProcedureHeader(member.Name, member.ProcKind));
         }
 

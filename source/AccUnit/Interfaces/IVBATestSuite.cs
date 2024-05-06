@@ -1,5 +1,4 @@
-﻿using Microsoft.Vbe.Interop;
-using System;
+﻿using System;
 
 namespace AccessCodeLib.AccUnit.Interfaces
 {

@@ -6,13 +6,13 @@
         {
             var testClassInfoTestItem = (TestClassInfoTestItem)item;
             var testClassInfo = testClassInfoTestItem.TestClassInfo;
-            
+
             if (testClassInfo.Members == null)
-                return; 
+                return;
 
             foreach (var member in testClassInfo.Members)
             {
-                var testClassMemberInfoTestItem = new TestClassMemberInfoTestItem(member,true);
+                var testClassMemberInfoTestItem = new TestClassMemberInfoTestItem(member, true);
                 item.Children.Add(testClassMemberInfoTestItem);
             }
         }

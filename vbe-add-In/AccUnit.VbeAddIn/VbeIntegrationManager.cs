@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
-using AccessCodeLib.AccUnit.Configuration;
+﻿using AccessCodeLib.AccUnit.Configuration;
 using AccessCodeLib.AccUnit.Tools;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
@@ -9,6 +6,9 @@ using AccessCodeLib.Common.VBIDETools.Commandbar;
 using AccessCodeLib.Common.VBIDETools.Templates;
 using Microsoft.Office.Core;
 using Microsoft.Vbe.Interop;
+using System;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -82,7 +82,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         }
 
         private void SetTestEnvironment()
-        {   
+        {
             var configurator = new Configurator(ActiveVBProject);
             configurator.InsertAccUnitLoaderFactoryModule(AccUnitTypeLibIsReferenced, true);
         }
@@ -93,10 +93,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 foreach (Reference reference in ActiveVBProject.References)
                 {
-                    if (reference.IsBroken) continue;   
+                    if (reference.IsBroken) continue;
                     if (reference.Name == "AccUnit")
                         return true;
-                }   
+                }
                 return false;
             }
         }
@@ -108,7 +108,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                                 MessageBoxButtons.YesNo,
                                 MessageBoxIcon.Exclamation) != DialogResult.Yes) return;
 
-                TestClassManager.RemoveTestComponents(true, true);
+            TestClassManager.RemoveTestComponents(true, true);
         }
 
         private void CreateTestMethodInActiveCodePane()
@@ -128,12 +128,13 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             dialog.ShowDialog();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "default interface, but not used")]
         private void InsertTestMethodDialogCommitMethodName(InsertTestMethodViewModel sender, TestNamePartsEventArgs e)
         {
-            var methodUnderTest = e.Items.FirstOrDefault(i => i.Name == InsertTestMethodViewModel.TestNamePart_MethodName)?.Value;   
-            var stateUnderTest = e.Items.FirstOrDefault(i => i.Name == InsertTestMethodViewModel.TestNamePart_State)?.Value; 
+            var methodUnderTest = e.Items.FirstOrDefault(i => i.Name == InsertTestMethodViewModel.TestNamePart_MethodName)?.Value;
+            var stateUnderTest = e.Items.FirstOrDefault(i => i.Name == InsertTestMethodViewModel.TestNamePart_State)?.Value;
             var expectedBehaviour = e.Items.FirstOrDefault(i => i.Name == InsertTestMethodViewModel.TestNamePart_Expected)?.Value;
-            CreateTestMethodInActiveCodePane(methodUnderTest, stateUnderTest, expectedBehaviour);  
+            CreateTestMethodInActiveCodePane(methodUnderTest, stateUnderTest, expectedBehaviour);
         }
 
         private void CreateTestMethodInActiveCodePane(string methodUnderTest, string stateUnderTest, string expectedBehaviour)
@@ -261,7 +262,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void CreateAccUnitToolsSubMenuItems(VbeCommandBarAdapter commandBarAdapter, CommandBarPopup menu)
         {
-            CreateAccUnitToolsSetTestEnvironmentSubMenuItem(commandBarAdapter, menu);   
+            CreateAccUnitToolsSetTestEnvironmentSubMenuItem(commandBarAdapter, menu);
             CreateAccUnitToolsRemoveTestEnvironmentSubMenuItem(commandBarAdapter, menu);
         }
 
@@ -293,13 +294,13 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             var objectBrowserControlIndex = VbeCommandBarAdapter.GetButtonIndex(commandBar, controlID);
             var buttonData = new CommandbarButtonData
-                             {
-                                 Caption = Resources.VbeCommandbars.InsertTestMethodCommandbarButtonCaption,
-                                 Description = string.Empty,
-                                 FaceId = 559,
-                                 BeginGroup = true,
-                                 Index = objectBrowserControlIndex
-                             };
+            {
+                Caption = Resources.VbeCommandbars.InsertTestMethodCommandbarButtonCaption,
+                Description = string.Empty,
+                FaceId = 559,
+                BeginGroup = true,
+                Index = objectBrowserControlIndex
+            };
             accUnitMenuItems.AddCommandBarButton(commandBar, buttonData, AccUnitMenuItemsInsertTestMethod);
         }
 
@@ -368,7 +369,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 Logger.Log(ex);
                 e.Cancel = true;
-                return null;    
+                return null;
             }
         }
 
@@ -388,13 +389,13 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             newMembers.AddRange(publicMembers.Select(newMember => new CodeModuleMemberWithMarker(newMember.Name, newMember.ProcKind, newMember.IsPublic, newMember.DeclarationString, markAll)).Cast<CodeModuleMember>());
             if (!markAll)
             {
-                var markedMember = (CodeModuleMemberWithMarker) newMembers.Find(m => m.Name == activeMemberName);
+                var markedMember = (CodeModuleMemberWithMarker)newMembers.Find(m => m.Name == activeMemberName);
                 if (markedMember != null) markedMember.Marked = true;
                 var info = activeMemberName;
                 if (markedMember != null) info += string.Format(": {0}", markedMember.Marked);
                 Logger.Log(info);
             }
-            
+
             codemoduleInfo.Members = newMembers;
             return codemoduleInfo;
         }

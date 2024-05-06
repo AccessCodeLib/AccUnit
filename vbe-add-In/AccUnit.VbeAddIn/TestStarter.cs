@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using AccessCodeLib.AccUnit.Configuration;
+﻿using AccessCodeLib.AccUnit.Configuration;
 using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Commandbar;
 using Microsoft.Office.Core;
 using Microsoft.Vbe.Interop;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -54,7 +54,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 TestClassInfo testclass = VbeIntegrationManager.GetTestClassInfoFromSelectedComponent();
                 if (testclass != null)
                 {
-                    var list = new TestClassList {testclass};
+                    var list = new TestClassList { testclass };
                     RunTests(list, resetmode);
                 }
             }
@@ -74,7 +74,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 if (ShowMessage(ex))
                     return;
-                
+
                 throw;
             }
         }
@@ -85,7 +85,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 if (testClassList.Count > 0)
                 {
-                    _breakOnAllErrorsForNextRun = BreakOnAllErrors; 
+                    _breakOnAllErrorsForNextRun = BreakOnAllErrors;
                     var missingTestClass = TestClassManager.FindFirstMissingTestClassInVBProject(testClassList);
                     if (missingTestClass != null)
                     {
@@ -189,7 +189,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 Logger.Log(ex);
             }
-            
+
             return DialogResult.Cancel != UITools.ShowMessage(Resources.MessageStrings.Application_not_saved_in_compiled_state,
                                                               MessageBoxButtons.OKCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2
                                               );
@@ -284,7 +284,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 AddRunButtonsToProjectExplorerContextMenu(commandBarAdapter);
                 AddRunButtonsToCodeWindowContextMenu(commandBarAdapter);
-                
+
                 if (commandBarAdapter is AccUnitCommandBarAdapter accUnitCommandbarAdapter)
                 {
                     AddRunButtonsToAccUnitSubMenu(accUnitCommandbarAdapter);
@@ -371,20 +371,20 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        private CommandBarButton CreateCommandBarItems(VbeCommandBarAdapter commandBarAdapter, 
-                                                       CommandBar commandBar, 
-                                                       int? positionBefore, 
+        private CommandBarButton CreateCommandBarItems(VbeCommandBarAdapter commandBarAdapter,
+                                                       CommandBar commandBar,
+                                                       int? positionBefore,
                                                        bool usePicture)
         {
             var runCurrentTestButton = AddRunCurrentTestsCommandBarButton(commandBarAdapter, commandBar, positionBefore, usePicture);
             AddRunAllTestsCommandBarButton(commandBarAdapter, commandBar, runCurrentTestButton.Index + 1, usePicture);
-            
+
             return runCurrentTestButton;
         }
 
         private CommandBarButton AddRunCurrentTestsCommandBarButton(VbeCommandBarAdapter commandBarAdapter,
-                                                                    CommandBar commandBar, 
-                                                                    int? positionBefore, 
+                                                                    CommandBar commandBar,
+                                                                    int? positionBefore,
                                                                     bool usePicture)
         {
             var buttonData = new CommandbarButtonData
@@ -404,9 +404,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             return button;
         }
 
-        private CommandBarButton AddRunAllTestsCommandBarButton(VbeCommandBarAdapter commandBarAdapter, 
+        private CommandBarButton AddRunAllTestsCommandBarButton(VbeCommandBarAdapter commandBarAdapter,
                                                                 CommandBar commandBar,
-                                                                int? positionBefore, 
+                                                                int? positionBefore,
                                                                 bool usePicture)
         {
             var buttonData = new CommandbarButtonData
@@ -478,7 +478,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void CheckReferences(bool constrainedCheck = false)
         {
-            
+
             if (!constrainedCheck && _referencesChecked)
                 return;
             /*

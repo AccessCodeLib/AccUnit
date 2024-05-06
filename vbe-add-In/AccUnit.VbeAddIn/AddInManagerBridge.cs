@@ -1,5 +1,5 @@
-﻿using System.Runtime.InteropServices;
-using AccessCodeLib.AccUnit.Interop;
+﻿using AccessCodeLib.AccUnit.Interop;
+using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -22,8 +22,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         public event HostApplicationInitializedEventHandler HostApplicationInitialized;
 
-        public object Application 
-        { 
+        public object Application
+        {
             set
             {
                 HostApplicationInitialized?.Invoke(value);
@@ -32,9 +32,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         public Interfaces.IVBATestSuite TestSuite(TestReportOutput OutputTo = TestReportOutput.DebugPrint)
         {
-                Interfaces.IVBATestSuite suite = null;
-                TestSuiteRequest?.Invoke(out suite);
-                return suite;
+            Interfaces.IVBATestSuite suite = null;
+            TestSuiteRequest?.Invoke(out suite);
+            return suite;
         }
 
         public IConstraintBuilder ConstraintBuilder
@@ -72,5 +72,5 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     {
         DebugPrint = 1,
         LogFile = 2
-    }   
+    }
 }

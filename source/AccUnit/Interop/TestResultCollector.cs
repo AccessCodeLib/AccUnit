@@ -24,7 +24,7 @@ namespace AccessCodeLib.AccUnit.Interop
         public TestResultCollector(ITestSuite test) : base(test)
         {
         }
-        
+
         protected override void RaiseTestTraceMessage(string message, CodeCoverage.ICodeCoverageTracker CodeCoverageTracker)
         {
             TestTraceMessage?.Invoke(message, CodeCoverageTracker as ICodeCoverageTracker);
@@ -32,7 +32,7 @@ namespace AccessCodeLib.AccUnit.Interop
         }
 
         public new event TestTraceMessageEventHandler TestTraceMessage;
-        
+
     }
 
     public delegate void TestTraceMessageEventHandler(string Message, ICodeCoverageTracker CodeCoverageTracker);

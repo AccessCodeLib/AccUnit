@@ -1,10 +1,10 @@
-﻿using System;
-using AccessCodeLib.AccUnit.VbeAddIn.Properties;
+﻿using AccessCodeLib.AccUnit.VbeAddIn.Properties;
 using AccessCodeLib.AccUnit.VbeAddIn.Resources;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools.Commandbar;
 using Microsoft.Office.Core;
 using Microsoft.Vbe.Interop;
+using System;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -12,7 +12,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     {
         private const string AccUnitCommandBarName = "AccUnit";
 
-        public AccUnitCommandBarAdapter(VBE vbe) 
+        public AccUnitCommandBarAdapter(VBE vbe)
             : base(vbe)
         { }
 

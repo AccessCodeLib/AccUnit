@@ -21,7 +21,7 @@ namespace AccessCodeLib.AccUnit.Integration
         {
             if (testSuite != null)
             {
-                testSuite.TestSuiteReset += RaiseTestSuiteReset;    
+                testSuite.TestSuiteReset += RaiseTestSuiteReset;
                 testSuite.TestSuiteStarted += RaiseTestSuiteStarted;
                 testSuite.TestFixtureStarted += RaiseTestFixtureStarted;
                 testSuite.TestStarted += RaiseTestStarted;
@@ -29,12 +29,12 @@ namespace AccessCodeLib.AccUnit.Integration
                 testSuite.TestFinished += RaiseTestFinished;
                 testSuite.TestFixtureFinished += RaiseTestFixtureFinished;
                 testSuite.TestSuiteFinished += RaiseTestSuiteFinished;
-            }   
+            }
         }
 
         protected virtual void RaiseTestSuiteReset(ResetMode resetmode, ref bool cancel)
         {
-            TestSuiteReset?.Invoke(resetmode, ref cancel);  
+            TestSuiteReset?.Invoke(resetmode, ref cancel);
         }
 
         protected virtual void RaiseTestFixtureFinished(ITestResult result)
@@ -70,7 +70,7 @@ namespace AccessCodeLib.AccUnit.Integration
 
         protected virtual void RaiseTestTraceMessage(string message, ICodeCoverageTracker CodeCoverageTracker)
         {
-            TestTraceMessage?.Invoke(message, CodeCoverageTracker); 
+            TestTraceMessage?.Invoke(message, CodeCoverageTracker);
         }
 
         protected virtual void RaiseNewTestResult(ITestResult testResult)
@@ -100,5 +100,5 @@ namespace AccessCodeLib.AccUnit.Integration
         public event PrintSummaryEventHandler PrintSummary;
     }
 
-    
+
 }

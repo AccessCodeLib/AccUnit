@@ -7,8 +7,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     {
         public CommitInsertTestMethodEventArgs(string methodUnderTest, string stateUnderTest, string expectedBehaviour)
         {
-            MethodUnderTest   = methodUnderTest;
-            StateUnderTest    = stateUnderTest;
+            MethodUnderTest = methodUnderTest;
+            StateUnderTest = stateUnderTest;
             ExpectedBehaviour = expectedBehaviour;
         }
 

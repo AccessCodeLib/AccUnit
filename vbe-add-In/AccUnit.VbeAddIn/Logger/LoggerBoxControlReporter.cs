@@ -57,7 +57,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             LogMessages.Clear();
             _loggerControl.LoggerTextBox.Clear();
             OnPropertyChanged(nameof(LogMessagesText));
-        }   
+        }
 
         private void InitEventHandler()
         {
@@ -67,8 +67,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             _testResultCollector.TestTraceMessage += TestResultCollector_TestTraceMessage;
             _testResultCollector.TestFixtureStarted += TestResultCollector_TestFixtureStarted;
             _testResultCollector.TestFixtureFinished += TestResultCollector_TestFixtureFinished;
-            _testResultCollector.TestStarted += TestResultCollector_TestStarted;    
-            _testResultCollector.TestFinished += TestResultCollector_TestFinished;  
+            _testResultCollector.TestStarted += TestResultCollector_TestStarted;
+            _testResultCollector.TestFinished += TestResultCollector_TestFinished;
 
         }
 
@@ -100,7 +100,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void TestResultCollector_TestSuiteFinished(ITestSummary summary)
         {
-           //
+            //
         }
 
         private void TestResultCollector_TestSuiteReset(ResetMode resetmode, ref bool cancel)

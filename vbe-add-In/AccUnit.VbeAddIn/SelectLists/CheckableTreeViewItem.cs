@@ -12,7 +12,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         }
     }
 
-    public class CheckableTreeViewItemBase<T> : CheckableItem, ICheckableTreeViewItem<T> 
+    public class CheckableTreeViewItemBase<T> : CheckableItem, ICheckableTreeViewItem<T>
         where T : CheckableItem
     {
         public CheckableTreeViewItemBase(string fullName, string name, bool isChecked = false)
@@ -87,7 +87,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             SetChecked(value, true);
         }
-        
+
         internal virtual void SetChecked(bool value, bool changeChildrenCheckedState)
         {
             base.SetChecked(value);

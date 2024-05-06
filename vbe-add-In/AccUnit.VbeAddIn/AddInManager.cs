@@ -1,16 +1,16 @@
-﻿using System;
-using System.Diagnostics;
-using System.Reflection;
+﻿using AccessCodeLib.AccUnit.Configuration;
+using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.AccUnit.VbeAddIn.Properties;
+using AccessCodeLib.AccUnit.VbeAddIn.TestExplorer;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Integration;
-using AccessCodeLib.AccUnit.VbeAddIn.Properties;
 using Microsoft.Vbe.Interop;
-using Timer = System.Windows.Forms.Timer;
-using AccessCodeLib.AccUnit.Interfaces;
+using System;
 using System.Collections.Generic;
-using AccessCodeLib.AccUnit.VbeAddIn.TestExplorer;
-using AccessCodeLib.AccUnit.Configuration;
+using System.Diagnostics;
+using System.Reflection;
+using Timer = System.Windows.Forms.Timer;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -19,7 +19,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         private AddIn _addIn;
         private Timer _startupTimer;
         private OfficeApplicationHelper _officeApplicationHelper;
-        
+
         private readonly VbeIntegrationManager _vbeIntegrationManager = new VbeIntegrationManager();
         private readonly TestSuiteManager _testSuiteManager = new TestSuiteManager();
 
@@ -97,7 +97,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     InitVbeWindows();
                     InitVbeIntegrationManager();
 
-                    _testExplorerManager.RunTests += OnRunTests;    
+                    _testExplorerManager.RunTests += OnRunTests;
                     _testStarter.ShowUIMessage += OnShowUIMessage;
 
                     InitCommandBarsAdapter();
@@ -130,7 +130,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 _commandBarsAdapter.AddClient(_testStarter);
                 _commandBarsAdapter.AddClient(_vbeIntegrationManager);
                 _commandBarsAdapter.AddClient(_testExplorerManager);
-                
+
                 /*
                 _commandBarsAdapter.AddClient(_tagListManager);
                 _commandBarsAdapter.AddClient(_testTemplateGenerator);
@@ -198,7 +198,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 //_tagListManager.VbeIntegrationManager = _vbeIntegrationManager;
                 _testExplorerManager.VbeIntegrationManager = _vbeIntegrationManager;
                 _testStarter.VbeIntegrationManager = _vbeIntegrationManager;
-                
+
                 //_testTemplateGenerator.VbeIntegrationManager = _vbeIntegrationManager;
 
                 _vbeIntegrationManager.VBProjectChanged += VbeIntegrationManagerOnVBProjectChanged;
@@ -222,7 +222,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             */
             TestClassManager.ApplicationHelper = _officeApplicationHelper;
             //_accSpecManager.VbeManager = new VbeManager(_officeApplicationHelper.CurrentVBProject);
-            
+
         }
 
         void OnScanningForTestModules(object sender, EventArgs e)
@@ -260,8 +260,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 _addInManagerBridge = new AddInManagerBridge();
                 _addInManagerBridge.TestSuiteRequest += AddInBridgeTestSuiteRequest;
                 _addInManagerBridge.HostApplicationInitialized += AddInBridgeHostApplicationInitialized;
-                _addInManagerBridge.ConstraintBuilderRequest += AddInBridgeConstraintBuilderRequest;    
-                _addInManagerBridge.AssertRequest += AddInBridgeAssertRequest;  
+                _addInManagerBridge.ConstraintBuilderRequest += AddInBridgeConstraintBuilderRequest;
+                _addInManagerBridge.AssertRequest += AddInBridgeAssertRequest;
             }
         }
 
@@ -272,7 +272,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void AddInBridgeConstraintBuilderRequest(out Interop.IConstraintBuilder constraintBuilder)
         {
-            constraintBuilder = _testSuiteManager.ConstraintBuilder;    
+            constraintBuilder = _testSuiteManager.ConstraintBuilder;
         }
 
         void AddInBridgeTestSuiteRequest(out IVBATestSuite suite)
@@ -375,7 +375,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 {
                     _startupTimer.Tick -= StartupTimerTick;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Logger.Log(ex);
                 }
@@ -386,7 +386,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     _startupTimer = null;
                     Logger.Log("_startupTimer disposed");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Logger.Log(ex);
                 }
@@ -436,7 +436,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     }
                     catch (Exception ex)
                     {
-                       Logger.Log(ex);
+                        Logger.Log(ex);
                     }
                 }
 
@@ -470,7 +470,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 {
                     DisposeStartUpTimer();
                     DisposeVbaProgrammingTools();
-                   
+
                     _testStarter.Dispose();
 
                     //_testTemplateGenerator.Dispose();
@@ -479,7 +479,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
                     try
                     {
-                        _commandBarsAdapter.Dispose(); 
+                        _commandBarsAdapter.Dispose();
                     }
                     catch (Exception ex)
                     {
@@ -487,8 +487,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     }
 
                     _testSuiteManager.Dispose();
-                    
-                    DisposeAddInManagerBridge();   
+
+                    DisposeAddInManagerBridge();
 
                 }
                 catch (Exception ex)

@@ -66,14 +66,14 @@ namespace AccessCodeLib.AccUnit.Interop
         }
 
         public IVBATestSuite VBATestSuite(
-                                    object hostApplication, 
-                                    ITestBuilder testBuilder = null, 
-                                    ITestRunner testRunner = null, 
+                                    object hostApplication,
+                                    ITestBuilder testBuilder = null,
+                                    ITestRunner testRunner = null,
                                     ITestSummaryFormatter testSummaryFormatter = null,
                                     ITestResultCollector externalTestResultCollector = null)
         {
             var applicationHelper = GetApplicationHelper(hostApplication);
-            return VBATestSuite(applicationHelper, testBuilder, testRunner, testSummaryFormatter, externalTestResultCollector);   
+            return VBATestSuite(applicationHelper, testBuilder, testRunner, testSummaryFormatter, externalTestResultCollector);
         }
 
         public IVBATestSuite VBATestSuite(
@@ -107,9 +107,9 @@ namespace AccessCodeLib.AccUnit.Interop
         }
 
         public IAccessTestSuite AccessTestSuite(
-                                    object hostApplcation, 
-                                    ITestBuilder testBuilder = null, 
-                                    ITestRunner testRunner = null, 
+                                    object hostApplcation,
+                                    ITestBuilder testBuilder = null,
+                                    ITestRunner testRunner = null,
                                     ITestSummaryFormatter testSummaryFormatter = null,
                                     ITestResultCollector externalTestResultCollector = null)
         {

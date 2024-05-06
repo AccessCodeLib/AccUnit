@@ -20,7 +20,7 @@ namespace AccessCodeLib.AccUnit.Configuration
         void ExportTestClasses(string ExportPath = null, [MarshalAs(UnmanagedType.IDispatch)] object VBProject = null, bool ExportTestComponents = true);
         void ImportTestClasses(string FileNameFilter = null, string ImportPath = null, [MarshalAs(UnmanagedType.IDispatch)] object VBProject = null);
 
-        IUserSettings UserSettings { get; } 
+        IUserSettings UserSettings { get; }
     }
 
     [ComVisible(true)]
@@ -40,7 +40,7 @@ namespace AccessCodeLib.AccUnit.Configuration
             _vbProject = vbproject;
         }
 
-        public void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib = false, bool removeIfExists = false, 
+        public void InsertAccUnitLoaderFactoryModule(bool UseAccUnitTypeLib = false, bool removeIfExists = false,
                     object vbProject = null, object HostApplication = null)
         {
             if (vbProject != null)
@@ -114,7 +114,8 @@ namespace AccessCodeLib.AccUnit.Configuration
                 {
                     refName = reference.Name;
                 }
-                catch {
+                catch
+                {
                     refName = "";
                 }
 
@@ -153,7 +154,7 @@ namespace AccessCodeLib.AccUnit.Configuration
             {
                 return Configuration.UserSettings.Current;
             }
-        }   
+        }
 
         /*
         public static void CheckAccUnitVBAReferences(VBProject vbProject)

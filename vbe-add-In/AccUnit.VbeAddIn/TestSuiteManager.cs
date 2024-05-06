@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using AccessCodeLib.AccUnit.Interfaces;
+﻿using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.AccUnit.Interop;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
+using System;
+using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -27,8 +27,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         public OfficeApplicationHelper OfficeApplicationHelper
         {
             get { return _officeApplicationHelper; }
-            set 
-            { 
+            set
+            {
                 _officeApplicationHelper = value;
             }
         }
@@ -164,7 +164,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 {
                     _vbaTestSuite = null;
                 }
-            }   
+            }
         }
 
         public void Dispose()

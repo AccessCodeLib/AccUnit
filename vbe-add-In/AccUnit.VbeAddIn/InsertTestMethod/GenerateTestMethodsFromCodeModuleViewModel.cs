@@ -24,7 +24,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             CurrentCodeModule = currentCodeModule;
 
             _codeModuleToTestInfo = new StringValueLabelControlSource(
-                                            "CodeModuleToTestInfo", 
+                                            "CodeModuleToTestInfo",
                                              Resources.UserControls.InsertTestMethodsCodeModuleToTestLabelCaption
                                              , currentCodeModule.Name);
 
@@ -35,10 +35,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             _stateTestNamePart = new NotifyTestNamePart(TestNamePart_State, Resources.UserControls.InsertTestMethodStateLabelCaption);
             _stateTestNamePart.PropertyChanged += OnNotifyTestNamePartValueChanged;
 
-            _expectedTestNamePart = new NotifyTestNamePart(TestNamePart_Expected, Resources.UserControls.InsertTestMethodExpectedLabelCaption);   
+            _expectedTestNamePart = new NotifyTestNamePart(TestNamePart_Expected, Resources.UserControls.InsertTestMethodExpectedLabelCaption);
             _expectedTestNamePart.PropertyChanged += OnNotifyTestNamePartValueChanged;
 
-            _methodNameSyntax = new StringValueLabelControlSource("MethodeNameSyntax", "Test name", "<MethodName>_{State}_{Expected}");    
+            _methodNameSyntax = new StringValueLabelControlSource("MethodeNameSyntax", "Test name", "<MethodName>_{State}_{Expected}");
 
             CancelCommand = new ButtonRelayCommand(Cancel, Resources.UserControls.InsertTestMethodCancelButtonText);
             CommitCommand = new ButtonRelayCommand(Commit, Resources.UserControls.InsertTestMethodCommitButtonText);
@@ -48,7 +48,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         }
 
         public string SelectedModuleInstruction => Resources.UserControls.InsertTestMethodsSelectedModuleInstruction;
-        public string SelectMemberCaption => Resources.UserControls.InsertTestMethodsSelectMemberCaption;  
+        public string SelectMemberCaption => Resources.UserControls.InsertTestMethodsSelectMemberCaption;
 
         public CodeModuleInfo CurrentCodeModule { get; set; }
 
@@ -82,7 +82,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             if (methods.Any())
             {
                 methods = methods.OrderBy(p => p.Name);
-                var methodsGroup = new CheckableCodeModuleGroupTreeViewItem("Methods", "Methods", false);                
+                var methodsGroup = new CheckableCodeModuleGroupTreeViewItem("Methods", "Methods", false);
                 _memberGroups.Add(methodsGroup);
                 FillMemberGroup(methodsGroup, methods);
             }
@@ -96,7 +96,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 var propertiesGroup = new CheckableCodeModuleGroupTreeViewItem("Properties", "Properties", false);
                 _memberGroups.Add(propertiesGroup);
                 FillMemberGroup(propertiesGroup, properties);
-            }   
+            }
         }
 
         private IEnumerable<CodeModuleMember> AppendProperties(IEnumerable<CodeModuleMember> members, vbext_ProcKind procKind)
@@ -140,8 +140,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        public IEnumerable<string> MethodNamesToTest 
-        { 
+        public IEnumerable<string> MethodNamesToTest
+        {
             get
             {
                 return Items
@@ -168,8 +168,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private string FormatMethodeNamePart(string partNameValue)
         {
-            var part = partNameValue?.Replace(" ", "_");    
-            return string.IsNullOrEmpty(part) ? "" : $"_{part}";    
+            var part = partNameValue?.Replace(" ", "_");
+            return string.IsNullOrEmpty(part) ? "" : $"_{part}";
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -207,7 +207,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         protected virtual void Commit()
         {
-            InsertTestMethods?.Invoke(this, 
+            InsertTestMethods?.Invoke(this,
                 new CommitInsertTestMethodsEventArgs(TestClassName.Value, MethodNamesToTest, StateTestNamePart.Value, ExpectedTestNamePart.Value));
         }
     }

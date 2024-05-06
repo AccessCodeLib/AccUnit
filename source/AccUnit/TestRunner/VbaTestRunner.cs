@@ -145,7 +145,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
         {
             var results = new TestResultCollection(test);
             var ignoreInfo = new IgnoreInfo();
-            RaiseTestStarted(test, ref ignoreInfo);   
+            RaiseTestStarted(test, ref ignoreInfo);
 
             if (ignoreInfo.Ignore)
             {

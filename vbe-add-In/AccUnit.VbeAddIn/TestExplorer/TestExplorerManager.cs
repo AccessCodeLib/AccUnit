@@ -30,12 +30,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             _viewModel.RefreshList += (sender, e) =>
             {
                 FillTestsFromVbProject();
-            };  
+            };
 
             _viewModel.RunTests += (sender, e) =>
             {
                 RunTests?.Invoke(sender, e);
-            };  
+            };
             /*
             _viewModel.CancelTestRun += (sender, e) =>
             {
@@ -45,8 +45,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             _viewModel.GetTestClassInfo += (sender, e) =>
             {
                 e.TestClassInfo = VbeIntegrationManager.TestClassManager.GetTestClassInfo(e.ClassName, true);
-            };  
-        }   
+            };
+        }
 
         public VbeIntegrationManager VbeIntegrationManager { get; set; }
 
@@ -57,16 +57,16 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             {
                 _viewModel.TestResultCollector = value;
                 _testResultCollector = value as INotifyingTestResultCollector;
-                _testResultCollector.TestSuiteStarted += TestResultCollector_TestSuiteStarted;  
+                _testResultCollector.TestSuiteStarted += TestResultCollector_TestSuiteStarted;
             }
         }
 
         private void TestResultCollector_TestSuiteStarted(ITestSuite testSuite)
         {
-            _vbeUserControl.Visible = true; 
+            _vbeUserControl.Visible = true;
         }
 
- #region ICommandBarsAdapterClient support
+        #region ICommandBarsAdapterClient support
 
         public void SubscribeToCommandBarAdapter(VbeCommandBarAdapter commandBarAdapter)
         {
@@ -135,7 +135,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         private void FillTestsFromVbProject()
         {
             _viewModel.TestItems.Clear();
-            var testItems = VbeIntegrationManager.TestClassManager.GetTestClassListFromVBProject(true);   
+            var testItems = VbeIntegrationManager.TestClassManager.GetTestClassListFromVBProject(true);
             foreach (var testItem in testItems)
             {
                 _viewModel.TestItems.Add(new TestClassInfoTestItem(testItem, true));

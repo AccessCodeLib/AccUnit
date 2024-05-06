@@ -20,7 +20,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private LoggerControl LoggerControl
         {
-            get {
+            get
+            {
                 return _loggerControl;
             }
         }
@@ -43,7 +44,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             _testResultCollector.TestSuiteStarted += TestResultCollector_TestSuiteStarted;
             _testResultCollector.TestSuiteReset += TestResultCollector_TestSuiteReset;
-            _testResultCollector.TestTraceMessage += TestResultCollector_TestTraceMessage; 
+            _testResultCollector.TestTraceMessage += TestResultCollector_TestTraceMessage;
         }
 
         private void TestResultCollector_TestSuiteStarted(ITestSuite testSuite)
@@ -60,7 +61,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 _vbeUserControl.Show();
             }
-            
+
         }
 
         private void TestResultCollector_TestSuiteReset(ResetMode resetmode, ref bool cancel)

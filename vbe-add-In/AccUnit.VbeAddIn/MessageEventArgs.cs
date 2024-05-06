@@ -3,16 +3,16 @@ using System.Windows.Forms;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
-    class MessageEventArgs: EventArgs
+    class MessageEventArgs : EventArgs
     {
         private readonly string _message;
         private readonly MessageBoxButtons _buttons;
         private readonly MessageBoxIcon _icon;
         private readonly MessageBoxDefaultButton _defaultButton;
 
-        public MessageEventArgs(string message, 
+        public MessageEventArgs(string message,
                                 MessageBoxButtons buttons,
-                                MessageBoxIcon icon, 
+                                MessageBoxIcon icon,
                                 MessageBoxDefaultButton defaultButton)
         {
             _message = message;

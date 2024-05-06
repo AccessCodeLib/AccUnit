@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.Vbe.Interop;
+﻿using Microsoft.Vbe.Interop;
+using System;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {

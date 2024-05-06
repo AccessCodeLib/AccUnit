@@ -1,10 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Windows.Media;
-using System.Windows;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System;
-using System.Windows.Input;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Media;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -47,12 +46,13 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         private int _maxCaptionLabelWidth = 0;
         public int MaxCaptionLabelWidth
         {
-            get { 
+            get
+            {
                 if (_maxCaptionLabelWidth == 0)
                 {
                     _maxCaptionLabelWidth = MeasureCaptionLabelWidth();
                 }
-                return  _maxCaptionLabelWidth;
+                return _maxCaptionLabelWidth;
             }
             set
             {
@@ -89,14 +89,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         protected void Cancel()
         {
-            Canceled?.Invoke(this, EventArgs.Empty);    
+            Canceled?.Invoke(this, EventArgs.Empty);
         }
 
         public IButtonCommand CommitCommand { get; }
 
         protected virtual void Commit()
         {
-            InsertTestMethod?.Invoke(this, new TestNamePartsEventArgs(_testNameParts)); 
+            InsertTestMethod?.Invoke(this, new TestNamePartsEventArgs(_testNameParts));
         }
 
     }

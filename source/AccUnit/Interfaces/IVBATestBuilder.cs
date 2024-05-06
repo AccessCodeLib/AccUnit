@@ -1,6 +1,4 @@
-﻿using AccessCodeLib.AccUnit.Interfaces;
-using Microsoft.Vbe.Interop;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit.Interfaces
@@ -11,7 +9,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
         //object HostApplication { get; }
     }
 
-    public interface ITestBuilder : IDisposable  
+    public interface ITestBuilder : IDisposable
     {
         bool TestToolsActivated { get; }
         object CreateObject(string className);

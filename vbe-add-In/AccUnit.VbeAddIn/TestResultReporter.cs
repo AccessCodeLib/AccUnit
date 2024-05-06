@@ -13,30 +13,32 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         public event TestStartedEventHandler TestStarted;
         public event FinishedEventHandler TestFinished;
         public event TestTraceMessageEventHandler TestTraceMessage;
-        
-        private INotifyingTestResultCollector _testResultCollector;  
 
-        public ITestResultCollector TestResultCollector {
+        private INotifyingTestResultCollector _testResultCollector;
+
+        public ITestResultCollector TestResultCollector
+        {
             get { return _testResultCollector; }
-            set {
+            set
+            {
                 _testResultCollector = value as INotifyingTestResultCollector;
                 InitEventHandler();
-            }   
+            }
         }
 
         private void InitEventHandler()
         {
-            _testResultCollector.TestSuiteStarted += TestResultCollector_TestSuiteStarted;  
+            _testResultCollector.TestSuiteStarted += TestResultCollector_TestSuiteStarted;
             _testResultCollector.TestSuiteFinished += TestResultCollector_TestSuiteFinished;
             _testResultCollector.TestSuiteReset += TestResultCollector_TestSuiteReset;
 
             _testResultCollector.TestFixtureStarted += TestResultCollector_TestFixtureStarted;
             _testResultCollector.TestFixtureFinished += TestResultCollector_TestFixtureFinished;
 
-            _testResultCollector.TestStarted += TestResultCollector_TestStarted;    
-            _testResultCollector.TestFinished += TestResultCollector_TestFinished;  
+            _testResultCollector.TestStarted += TestResultCollector_TestStarted;
+            _testResultCollector.TestFinished += TestResultCollector_TestFinished;
             _testResultCollector.TestTraceMessage += TestResultCollector_TestTraceMessage;
-            
+
         }
 
         private void TestResultCollector_TestSuiteStarted(ITestSuite testSuite)
@@ -46,7 +48,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void TestResultCollector_TestSuiteFinished(ITestSummary summary)
         {
-            TestSuiteFinished?.Invoke(summary);   
+            TestSuiteFinished?.Invoke(summary);
         }
 
         private void TestResultCollector_TestSuiteReset(ResetMode resetmode, ref bool cancel)
@@ -56,27 +58,27 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void TestResultCollector_TestFixtureStarted(ITestFixture fixture)
         {
-            TestFixtureStarted?.Invoke(fixture);    
+            TestFixtureStarted?.Invoke(fixture);
         }
 
         private void TestResultCollector_TestFixtureFinished(ITestResult result)
         {
-            TestFixtureFinished?.Invoke(result);    
+            TestFixtureFinished?.Invoke(result);
         }
 
         private void TestResultCollector_TestStarted(ITest test, ref IgnoreInfo ignoreInfo)
         {
-            TestStarted?.Invoke(test, ref ignoreInfo);  
+            TestStarted?.Invoke(test, ref ignoreInfo);
         }
 
         private void TestResultCollector_TestFinished(ITestResult result)
         {
-            TestFinished?.Invoke(result);   
+            TestFinished?.Invoke(result);
         }
 
         private void TestResultCollector_TestTraceMessage(string message, ICodeCoverageTracker CodeCoverageTracker)
         {
-            TestTraceMessage?.Invoke(message, CodeCoverageTracker); 
+            TestTraceMessage?.Invoke(message, CodeCoverageTracker);
         }
     }
 }

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AccessCodeLib.AccUnit.Configuration;
+﻿using AccessCodeLib.AccUnit.Configuration;
 using AccessCodeLib.AccUnit.VbeAddIn.Resources;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Commandbar;
 using Microsoft.Office.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -86,9 +86,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             try
             {
                 var dataContext = new SelectControlViewModel(
-                                                        UserControls.TestClassSelectionFormCaptionExport, 
-                                                        UserControls.SelectListSelectAllCheckboxCaption, 
-                                                        UserControls.TestClassSelectionFormCommitTestExport, 
+                                                        UserControls.TestClassSelectionFormCaptionExport,
+                                                        UserControls.SelectListSelectAllCheckboxCaption,
+                                                        UserControls.TestClassSelectionFormCommitTestExport,
                                                         true, UserControls.TestClassSelectionFormOptionalCheckBoxTextExport);
                 var list = TestClassManager.GetTestModulesFromVBProject();
 
@@ -96,7 +96,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 {
                     dataContext.Items.Add(new CheckableItem(item.Name));
                 }
-                
+
                 var form = new ImportExportWindow(dataContext);
                 dataContext.RefreshList += (sender, e) =>
                 {
@@ -125,7 +125,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                         {
                             errRaised = true;
                             UITools.ShowException(ex);
-                        } 
+                        }
                     }
 
                     var msg = string.Format(MessageStrings.TestExportedCommitMessage, sb.ToString());
@@ -135,7 +135,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     {
                         form.Close();
                     }
-                };  
+                };
                 dataContext.PropertyChanged += (sender, e) =>
                 {
                     if (e.PropertyName == nameof(dataContext.OptionalCheckboxChecked))
@@ -144,13 +144,13 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                             ? UserControls.TestClassSelectionFormCommitTestExportAndRemove
                             : UserControls.TestClassSelectionFormCommitTestExport;
                     }
-                };  
+                };
 
                 form.ShowDialog();
 
-                dataContext.RefreshList -= (sender, e) => { };  
+                dataContext.RefreshList -= (sender, e) => { };
                 dataContext.ItemsSelected -= (sender, e) => { };
-                dataContext.PropertyChanged -= (sender, e) => { };  
+                dataContext.PropertyChanged -= (sender, e) => { };
             }
             catch (Exception ex)
             {
@@ -168,21 +168,21 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
                 var menu = accUnitCommandBarAdapter.AccUnitSubMenu;
                 var buttonData = new CommandbarButtonData
-                                 {
-                                     Caption = VbeCommandbars.ToolsImportTestsCommandButtonCaption,
-                                     Description = string.Empty,
-                                     FaceId = 524,
-                                     BeginGroup = true
-                                 };
+                {
+                    Caption = VbeCommandbars.ToolsImportTestsCommandButtonCaption,
+                    Description = string.Empty,
+                    FaceId = 524,
+                    BeginGroup = true
+                };
                 commandBarAdapter.AddCommandBarButton(menu, buttonData, AccUnitMenuItemsImportTests);
 
                 buttonData = new CommandbarButtonData
-                             {
-                                 Caption = VbeCommandbars.ToolsExportTestsCommandButtonCaption,
-                                 Description = string.Empty,
-                                 FaceId = 525,
-                                 BeginGroup = false
-                             };
+                {
+                    Caption = VbeCommandbars.ToolsExportTestsCommandButtonCaption,
+                    Description = string.Empty,
+                    FaceId = 525,
+                    BeginGroup = false
+                };
                 commandBarAdapter.AddCommandBarButton(menu, buttonData, AccUnitMenuItemsExportTests);
             }
         }

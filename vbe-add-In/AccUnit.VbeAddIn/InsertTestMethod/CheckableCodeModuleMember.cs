@@ -7,7 +7,7 @@
         public CheckableCodeModuleMember(CodeModuleMemberWithMarker member)
             : base(member.Name, member.Name, member.Marked)
         {
-            _member = member;   
+            _member = member;
         }
 
         internal override void SetChecked(bool value)

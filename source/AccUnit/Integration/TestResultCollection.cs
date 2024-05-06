@@ -140,7 +140,7 @@ namespace AccessCodeLib.AccUnit.Integration
         public double ElapsedTime { get; set; }
 
         public IEnumerable<ITestResult> TestResults { get { return this; } }
-        public ITestResult[] GetTestResults() { return this.ToArray(); } 
+        public ITestResult[] GetTestResults() { return this.ToArray(); }
 
         public int Total { get { return ExecutedCount; } }
 
