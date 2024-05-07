@@ -70,6 +70,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     }
                 };
 
+                SetDialogPosition(form);
                 form.ShowDialog();
 
                 dataContext.RefreshList -= (sender, e) => { };
@@ -146,6 +147,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     }
                 };
 
+                SetDialogPosition(form);
                 form.ShowDialog();
 
                 dataContext.RefreshList -= (sender, e) => { };
@@ -156,6 +158,18 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 UITools.ShowException(ex);
             }
+        }
+
+        private void SetDialogPosition(System.Windows.Window dialog)
+        {
+            var scaleFactor = UITools.GetScalingFactor();
+            var width = dialog.Width;
+            var height = dialog.Height;
+
+            var mainWindow = TestClassManager.ActiveVBProject.VBE.MainWindow;
+
+            dialog.Top = (mainWindow.Top + mainWindow.Height / 2) / scaleFactor - height / 2;
+            dialog.Left = (mainWindow.Left + mainWindow.Width / 2) / scaleFactor - width / 2;
         }
 
         #region ICommandBarsAdapterClient support

@@ -119,5 +119,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         [System.Runtime.InteropServices.DllImport("gdi32.dll")]
         private static extern bool DeleteObject(IntPtr hObject);
+
+        public static float GetScalingFactor()
+        {
+            Graphics g = Graphics.FromHwnd(IntPtr.Zero);
+            float dpiX = g.DpiX;
+            return dpiX / 96;  // 96 DPI = 100%
+        }
     }
 }
