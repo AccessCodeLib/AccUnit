@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
 [assembly: AssemblyTitle("AccUnit")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("AccUnit - VBA Unit Testing Framework")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("access-codelib.net")]
 [assembly: AssemblyProduct("AccUnit")]

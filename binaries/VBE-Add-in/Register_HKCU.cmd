@@ -39,13 +39,12 @@ set "key64=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office\ClickToRun\Configuration
 set "key32=HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Office\ClickToRun\Configuration"
 set "bitness="
 
-rem Prüfen für 64-Bit Office unter 64-Bit und 32-Bit Windows
+rem check bitness from Office:
 reg query "%key64%" /v "Platform" >nul 2>&1
 if !errorlevel! equ 0 (
     for /f "tokens=3" %%a in ('reg query "%key64%" /v "Platform"') do set "bitness=%%a"
 )
 
-rem Prüfen für 32-Bit Office unter 64-Bit Windows
 if not defined bitness (
     reg query "%key32%" /v "Platform" >nul 2>&1
     if !errorlevel! equ 0 (

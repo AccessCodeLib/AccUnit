@@ -18,14 +18,14 @@ Option Compare Text
 Option Explicit
 
 'Version number
-Private Const APPLICATION_VERSION As String = "0.9.800.240415"
+Private Const APPLICATION_VERSION As String = "0.9.800.240509"
 
 Private Const APPLICATION_NAME As String = "ACLib AccUnit Loader"
 Private Const APPLICATION_FULLNAME As String = "Access Code Library - AccUnit Loader"
 Private Const APPLICATION_TITLE As String = APPLICATION_FULLNAME
 Private Const APPLICATION_ICONFILE As String = "ACLib.ico"
-Public Const ACCUNIT_TYPELIB_FILE As String = "AccessCodeLib.AccUnit.tlb"
-Public Const ACCUNIT_DLL_FILE As String = "AccessCodeLib.AccUnit.dll"
+Public Const ACCUNIT_TYPELIB_FILE As String = "AccUnit.tlb"
+Public Const ACCUNIT_DLL_FILE As String = "AccUnit.dll"
 
 Private Const APPLICATION_STARTFORMNAME As String = "AccUnitLoaderForm"
 

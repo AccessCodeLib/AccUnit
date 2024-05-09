@@ -65,10 +65,10 @@ Private Declare PtrSafe Function FindWindowEx Lib "user32.dll" Alias "FindWindow
 Private Declare PtrSafe Function CreateSolidBrush Lib "gdi32.dll" (ByVal CrColor As Long) As Long
 
 Private Declare PtrSafe Function SetClassLong Lib "user32" Alias "SetClassLongA" ( _
-       ByVal Hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+       ByVal hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
 
 Private Declare PtrSafe Function RedrawWindow Lib "user32" ( _
-       ByVal Hwnd As Long, LprcUpdate As Any, _
+       ByVal hwnd As Long, LprcUpdate As Any, _
        ByVal HrgnUpdate As Long, ByVal FuRedraw As Long) As Long
 
 Private Declare PtrSafe Function GetSysColor Lib "user32" (ByVal NumIndex As Long) As Long
@@ -82,10 +82,10 @@ Private Declare Function FindWindowEx Lib "user32.dll" Alias "FindWindowExA" ( _
 Private Declare Function CreateSolidBrush Lib "gdi32.dll" (ByVal CrColor As Long) As Long
 
 Private Declare Function SetClassLong Lib "user32" Alias "SetClassLongA" ( _
-       ByVal Hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
+       ByVal hwnd As Long, ByVal nIndex As Long, ByVal dwNewLong As Long) As Long
 
 Private Declare Function RedrawWindow Lib "user32" ( _
-       ByVal Hwnd As Long, LprcUpdate As Any, _
+       ByVal hwnd As Long, LprcUpdate As Any, _
        ByVal HrgnUpdate As Long, ByVal FuRedraw As Long) As Long
 
 Private Declare Function GetSysColor Lib "user32" (ByVal Index As Long) As Long

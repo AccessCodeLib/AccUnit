@@ -108,7 +108,7 @@ Private Sub PrintSummary(ByVal TestSummary As AccUnit.ITestSummary, ByVal PrintT
 
 End Sub
 
-Private Sub PrintTestDetailSummary(ByRef TestResults() As AccUnit.ITestResult)
+Private Sub PrintTestDetailSummary(ByRef TestResults() As AccUnit.TestResult)
 
    Dim i As Long
    Dim r As Variant 'AccUnit.ITestResult

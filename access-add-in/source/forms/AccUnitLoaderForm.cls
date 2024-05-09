@@ -26,6 +26,8 @@ Private Const APPFILE_PROPNAME_APPICON As String = "AppIcon"
 
 Private Const ShowSuccessInfoTimerInterval As Long = 4000
 
+Private RunLoadAfterAddInInstalledTimer As Boolean
+
 Private Sub ShowErrorHandlerInfo(ByVal ProcName As String)
    Me.labInfo.Caption = "Error " & Err.Number & " (" & Err.Description & ") in procedure " & ProcName
 End Sub
@@ -65,6 +67,170 @@ ExitHere:
 HandleErr:
    ShowErrorHandlerInfo "cmdInsertFactoryModule_Click"
    Resume ExitHere
+
+End Sub
+
+Private Sub cmdInstallVbeAddIn_Click()
+
+On Error GoTo HandleErr
+
+   If Me.cmdInstallVbeAddIn.Tag <> "Installed" Then
+      OpenVbeInstallShortcutMenu
+      Exit Sub
+   End If
+
+   With New VbeAddInInstaller
+      .UnRegisterAccUnitVbeAddIn
+      VBE.Addins.Update
+      SetInstallVbeAddInCaption False
+      Me.cmdLoadVbeAddIn.Enabled = False
+      SetLoadVbeAddInCaption False
+
+   End With
+
+   Me.labInfo.Caption = "AccUnit VBE Add-in has been unregistered"
+   Me.TimerInterval = ShowSuccessInfoTimerInterval
+
+ExitHere:
+   Exit Sub
+
+HandleErr:
+   ShowErrorHandlerInfo "cmdInstallVbeAddIn_Click"
+   Resume ExitHere
+
+End Sub
+
+Private Function OpenVbeInstallShortcutMenu() As Long
+
+   Dim mnu As WinApiShortcutMenu
+   Dim SuccessMessage As String
+   Dim Installed As Boolean
+
+On Error GoTo HandleErr
+
+   Set mnu = New WinApiShortcutMenu
+
+   With mnu
+      Set .MenuControl = Me.cmdInstallVbeAddIn
+      Set .AccessForm = Me
+      .ControlSection = acDetail
+
+      .AddMenuItem 1, "Install Add-In (Load on Startup)"
+      .AddMenuItem 2, "Install Add-In (don't load)"
+
+   End With
+
+   With New VbeAddInInstaller
+      Select Case mnu.OpenMenu
+         Case 1
+            .RegisterAccUnitVbeAddIn CurrentAccUnitConfiguration.AccUnitDllPath, 3
+            Installed = True
+            RunLoadAfterAddInInstalledTimer = True
+         Case 2
+            .RegisterAccUnitVbeAddIn CurrentAccUnitConfiguration.AccUnitDllPath, 0
+            Installed = True
+         Case Else
+            '
+      End Select
+   End With
+
+   SetInstallVbeAddInCaption Installed
+   If Installed Then
+      SuccessMessage = "AccUnit VBE Add-in installed"
+      Me.cmdLoadVbeAddIn.Enabled = True
+   Else
+      SuccessMessage = "Canceled"
+   End If
+
+   Me.labInfo.Caption = SuccessMessage
+   If RunLoadAfterAddInInstalledTimer Then
+      Me.TimerInterval = 250
+   Else
+      Me.TimerInterval = ShowSuccessInfoTimerInterval
+   End If
+   Set mnu = Nothing
+
+ExitHere:
+   Exit Function
+
+HandleErr:
+   ShowErrorHandlerInfo "OpenVbeInstallShortcutMenu"
+   Resume ExitHere
+
+End Function
+
+Private Sub LoadAddInAfterInstall()
+   VBE.Addins.Update
+   With New VbeAddInInstaller
+      .LoadAccUnitAddIn True
+      SetLoadVbeAddInCaption .AddInIsLoaded
+   End With
+   Me.TimerInterval = ShowSuccessInfoTimerInterval
+
+   Me.labInfo.Caption = "AccUnit VBE Add-in has been unregistered"
+   Me.TimerInterval = ShowSuccessInfoTimerInterval
+
+End Sub
+
+Private Sub cmdLoadVbeAddIn_Click()
+
+   Dim IsLoaded As Boolean
+
+On Error GoTo HandleErr
+
+   With New VbeAddInInstaller
+      .LoadAccUnitAddIn Not .AddInIsLoaded
+      IsLoaded = .AddInIsLoaded
+      SetLoadVbeAddInCaption IsLoaded
+   End With
+
+   If IsLoaded Then
+      Me.labInfo.Caption = "AccUnit VBE Add-in loaded"
+   Else
+      Me.labInfo.Caption = "AccUnit VBE Add-in unloaded"
+   End If
+   Me.TimerInterval = ShowSuccessInfoTimerInterval
+
+ExitHere:
+   Exit Sub
+
+HandleErr:
+   ShowErrorHandlerInfo "cmdLoadVbeAddIn_Click"
+   Resume ExitHere
+
+End Sub
+
+Private Sub SetInstallVbeAddInCaption(ByVal IsInstalled As Boolean)
+
+   Dim ButtonCaption As String
+   Dim ButtonTag As String
+
+   If IsInstalled Then
+      ButtonCaption = "Uninstall AccUnit VBE Add-in"
+      ButtonTag = "Installed"
+   Else
+      ButtonCaption = "Install AccUnit VBE Add-in"
+      ButtonTag = vbNullString
+   End If
+
+   With Me.cmdInstallVbeAddIn
+      .Caption = ButtonCaption
+      .Tag = ButtonTag
+   End With
+
+End Sub
+
+Private Sub SetLoadVbeAddInCaption(ByVal IsLoaded As Boolean)
+
+   Dim ButtonCaption As String
+
+   If IsLoaded Then
+      ButtonCaption = "Unload AccUnit VBE Add-in"
+   Else
+      ButtonCaption = "Load AccUnit VBE Add-in"
+   End If
+
+   Me.cmdLoadVbeAddIn.Caption = ButtonCaption
 
 End Sub
 
@@ -182,7 +348,7 @@ Private Sub cmdSetAccUnitTlbReferenz_Click()
 On Error GoTo HandleErr
 
    AddAccUnitTlbReference
-   Me.labInfo.Caption = "AccUnit.tlb reference inserted"
+   Me.labInfo.Caption = ACCUNIT_TYPELIB_FILE & " reference inserted"
    Me.TimerInterval = ShowSuccessInfoTimerInterval
 
 ExitHere:
@@ -199,7 +365,7 @@ Private Sub cmdRemoveAccUnitTlbReferenz_Click()
 On Error GoTo HandleErr
 
    RemoveAccUnitTlbReference
-   Me.labInfo.Caption = "AccUnit.tlb reference removed"
+   Me.labInfo.Caption = ACCUNIT_TYPELIB_FILE & " reference removed"
    Me.TimerInterval = ShowSuccessInfoTimerInterval
 
 ExitHere:
@@ -229,6 +395,14 @@ On Error GoTo ErrMissingPath
       Me.txtAccUnitDllPath.Value = .AccUnitDllPath
    End With
 
+   Dim VbeAddInIsInstalled As Boolean
+   With New VbeAddInInstaller
+      VbeAddInIsInstalled = .AddInIsInstalled
+      SetInstallVbeAddInCaption VbeAddInIsInstalled
+      Me.cmdLoadVbeAddIn.Enabled = VbeAddInIsInstalled
+      SetLoadVbeAddInCaption .AddInIsLoaded
+   End With
+
    SetEnableMode
 
    Exit Sub
@@ -252,6 +426,13 @@ Private Sub Form_Open(Cancel As Integer)
 End Sub
 
 Private Sub Form_Timer()
+
+   If RunLoadAfterAddInInstalledTimer Then
+      RunLoadAfterAddInInstalledTimer = False
+      LoadAddInAfterInstall
+      Exit Sub
+   End If
+
    Me.TimerInterval = 0
    Me.labInfo.Caption = vbNullString
 End Sub

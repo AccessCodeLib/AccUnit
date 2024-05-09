@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessCodeLib.AccUnit", "..
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{21839B1B-5233-411F-8993-9631D5A5BA34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfUserControlsTests", "Tests\WpfUserControlsTests\WpfUserControlsTests.csproj", "{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfUserControlsTests", "Tests\WpfUserControlsTests\WpfUserControlsTests.csproj", "{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

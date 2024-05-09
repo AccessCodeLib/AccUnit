@@ -208,6 +208,7 @@
     <ProjectReference Include="..\..\source\AccUnit\AccessCodeLib.AccUnit.csproj">
       <Project>{1575d69a-c503-4149-b3a9-2ce188b19c15}</Project>
       <Name>AccessCodeLib.AccUnit</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\source\Common\Common.Tools\AccessCodeLib.Common.Tools.csproj">
       <Project>{7af24615-91b3-4775-bc6e-c8986f980b57}</Project>

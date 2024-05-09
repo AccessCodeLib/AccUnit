@@ -291,8 +291,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetDir)$(TargetFileName) $(TargetDir)$(ProjectName).dll
-"$(ProjectDir)..\tools\tlb\tlbExp.exe" $(TargetDir)$(TargetFileName) /out:$(TargetDir)\$(ProjectName).tlb
-copy $(TargetDir)$(TargetFileName).config $(TargetDir)$(ProjectName).dll.config</PostBuildEvent>
+    <PostBuildEvent>"$(ProjectDir)..\tools\tlb\tlbExp.exe" $(TargetDir)$(TargetFileName) /out:$(TargetDir)\$(TargetName).tlb</PostBuildEvent>
   </PropertyGroup>
 </Project>

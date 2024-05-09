@@ -21,7 +21,7 @@ Option Compare Text
 Option Explicit
 Option Private Module
 
-#Const EARLYBINDING = 0
+#Const EARLYBINDING = 1
 
 Private m_CurrentVbProject As Object
 

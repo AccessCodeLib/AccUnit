@@ -67,14 +67,14 @@ Private Const WAIT_TIMEOUT As Long = &H102&
 #If VBA7 Then
 
 Private Declare PtrSafe Function ShellExecuteA Lib "shell32.dll" ( _
-   ByVal Hwnd As Long, _
+   ByVal hwnd As LongPtr, _
    ByVal lOperation As String, _
    ByVal lpFile As String, _
    ByVal lpParameters As String, _
    ByVal lpDirectory As String, _
    ByVal nShowCmd As Long) As Long
 
-Private Declare PtrSafe Function GetDesktopWindow Lib "user32" () As Long
+Private Declare PtrSafe Function GetDesktopWindow Lib "user32" () As LongPtr
 
 Private Declare PtrSafe Function GetSystemDirectory Lib "kernel32" Alias "GetSystemDirectoryA" ( _
    ByVal lpBuffer As String, _
@@ -96,7 +96,7 @@ Private Declare PtrSafe Sub Sleep Lib "kernel32" (ByVal DwMilliseconds As Long)
 #Else
 
 Private Declare Function ShellExecuteA Lib "shell32.dll" ( _
-   ByVal Hwnd As Long, _
+   ByVal hwnd As Long, _
    ByVal lOperation As String, _
    ByVal lpFile As String, _
    ByVal lpParameters As String, _

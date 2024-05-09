@@ -35,12 +35,12 @@ Option Compare Text
 Option Explicit
 
 Private Type POINTAPI
-   X As Long
+   x As Long
    Y As Long
 End Type
 
 Private Declare PtrSafe Function ClientToScreen Lib "user32.dll" ( _
-         ByVal Hwnd As LongPtr, _
+         ByVal hwnd As LongPtr, _
          ByRef lpPoint As POINTAPI _
       ) As Long
 
@@ -81,10 +81,10 @@ End Function
 '     LongPtr
 '
 '---------------------------------------------------------------------------------------
-Public Function GetHeaderSection(ByVal Hwnd As LongPtr) As LongPtr
+Public Function GetHeaderSection(ByVal hwnd As LongPtr) As LongPtr
    Dim h As LongPtr
    'Determine first "OFormsub" child window of the form (fhwnd)
-   h = FindWindowEx(Hwnd, 0&, "OformSub", vbNullString)
+   h = FindWindowEx(hwnd, 0&, "OformSub", vbNullString)
    GetHeaderSection = h
 End Function
 
@@ -101,11 +101,11 @@ End Function
 '     LongPtr
 '
 '---------------------------------------------------------------------------------------
-Public Function GetDetailSection(ByVal Hwnd As LongPtr) As LongPtr
+Public Function GetDetailSection(ByVal hwnd As LongPtr) As LongPtr
    Dim h As LongPtr
    'Determine first "OFormsub" child window of the form (fhwnd), starting after the header area.
-   h = GetHeaderSection(Hwnd)
-   h = FindWindowEx(Hwnd, h, "OformSub", vbNullString)
+   h = GetHeaderSection(hwnd)
+   h = FindWindowEx(hwnd, h, "OformSub", vbNullString)
    GetDetailSection = h
 End Function
 
@@ -122,11 +122,11 @@ End Function
 '     LongPtr
 '
 '---------------------------------------------------------------------------------------
-Public Function GetFooterSection(ByVal Hwnd As Long) As LongPtr
+Public Function GetFooterSection(ByVal hwnd As Long) As LongPtr
    Dim h As LongPtr
    'Determine first "OFormsub" child window of the form (fhwnd), starting after the detail area.
-   h = GetDetailSection(Hwnd)
-   h = FindWindowEx(Hwnd, h, "OformSub", vbNullString)
+   h = GetDetailSection(hwnd)
+   h = FindWindowEx(hwnd, h, "OformSub", vbNullString)
    GetFooterSection = h
 End Function
 
@@ -146,7 +146,7 @@ End Function
 '     LongPtr
 '
 '---------------------------------------------------------------------------------------
-Public Function GetControl(ByRef FormRef As Access.Form, ByVal Hwnd As LongPtr, _
+Public Function GetControl(ByRef FormRef As Access.Form, ByVal hwnd As LongPtr, _
                            ByVal ClassName As String, ByVal ControlName As String) As LongPtr
 
    'Exitieren mehrere Controls der gleichen Klasse auf einem Formular, z.B. TabControls, besteht das Problem, daß
@@ -170,16 +170,16 @@ On Error Resume Next
 
    Do
       'Erstes (h=0)/nächstes (h<>0) Control auf dem Sektionsfenster ermitteln
-      h = FindWindowEx(Hwnd, h, ClassName, vbNullString)
+      h = FindWindowEx(hwnd, h, ClassName, vbNullString)
 
       'Bildschirmkoordinaten dieses Controls ermitteln
       'dafür die Punktkoordinaten aus dem letzten Durchlauf zurücksetzen, sonst wird addiert!
-      pt.X = 0
+      pt.x = 0
       pt.Y = 0
       ClientToScreen h, pt
 
       'Objekt bei den Koordinaten ermitteln
-      Set obj = FormRef.accHitTest(pt.X, pt.Y)
+      Set obj = FormRef.accHitTest(pt.x, pt.Y)
 
       'Wenn Objektname = Tabname Ausstieg aus der Schleife
       If obj.Name = ControlName Then

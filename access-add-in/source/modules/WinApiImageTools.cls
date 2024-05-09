@@ -37,7 +37,7 @@ Private Const LR_LOADFROMFILE As Long = &H10
 #If VBA7 Then
 
 Private Declare PtrSafe Function SendMessage Lib "user32" Alias "SendMessageA" ( _
-   ByVal Hwnd As Long, _
+   ByVal hwnd As Long, _
    ByVal wMsg As Long, _
    ByVal wParam As Long, _
    lParam As Any) As Long
@@ -53,7 +53,7 @@ Private Declare PtrSafe Function LoadImage Lib "user32" Alias "LoadImageA" ( _
 #Else
 
 Private Declare Function SendMessage Lib "user32" Alias "SendMessageA" ( _
-   ByVal Hwnd As Long, _
+   ByVal hwnd As Long, _
    ByVal wMsg As Long, _
    ByVal wParam As Long, _
    lParam As Any) As Long
@@ -90,7 +90,7 @@ On Error Resume Next ' ... Error message would only interfere with this "unimpor
    ImageHandle = LoadImage(0, IconFilePath, IMAGE_ICON, _
                            ICONPIXELSIZE, ICONPIXELSIZE, LR_LOADFROMFILE)
    If ImageHandle <> 0 Then
-      SendMessage FormRef.Hwnd, WM_MSG_SETICON, WM_PARAM_ICON_SMALL, ByVal ImageHandle
+      SendMessage FormRef.hwnd, WM_MSG_SETICON, WM_PARAM_ICON_SMALL, ByVal ImageHandle
    End If
 
 End Sub

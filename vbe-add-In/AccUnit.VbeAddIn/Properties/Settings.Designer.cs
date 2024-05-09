@@ -118,17 +118,5 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Properties {
                 this["TestClassNameFormat"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool VbaProgrammingToolsEnabled {
-            get {
-                return ((bool)(this["VbaProgrammingToolsEnabled"]));
-            }
-            set {
-                this["VbaProgrammingToolsEnabled"] = value;
-            }
-        }
     }
 }
