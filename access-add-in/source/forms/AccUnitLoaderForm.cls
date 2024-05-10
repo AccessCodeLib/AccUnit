@@ -178,6 +178,8 @@ Private Sub cmdLoadVbeAddIn_Click()
 
 On Error GoTo HandleErr
 
+   VBE.Addins.Update
+
    With New VbeAddInInstaller
       .LoadAccUnitAddIn Not .AddInIsLoaded
       IsLoaded = .AddInIsLoaded
