@@ -52,8 +52,11 @@ steps:
       Write-Host "Version: $version"
       $version | Out-File "$(Build.ArtifactStagingDirectory)\version.txt"
       Get-ChildItem -Path "$(Build.SourcesDirectory)\source\AccUnit\bin\$(buildConfiguration)"
-      Compress-Archive -Path "$(Build.SourcesDirectory)\source\AccUnit\bin\$(buildConfiguration)\AccessCodeLib.*.dll" -DestinationPath "$(Build.ArtifactStagingDirectory)\AccUnit.$($version).bin.zip"
-      Compress-Archive -Path "$(Build.SourcesDirectory)\source\AccUnit\bin\$(buildConfiguration)\AccessCodeLib.*.tlb" -DestinationPath "$(Build.ArtifactStagingDirectory)\AccUnit.$($version).bin.zip" -Update
+      Compress-Archive -Path "$(Build.SourcesDirectory)\source\AccUnit\bin\$(buildConfiguration)\AccUnit.dll*" -DestinationPath "$(Build.ArtifactStagingDirectory)\AccUnit.$($version).bin.zip"
+      Compress-Archive -Path "$(Build.SourcesDirectory)\source\AccUnit\bin\$(buildConfiguration)\AccUnit.tlb" -DestinationPath "$(Build.ArtifactStagingDirectory)\AccUnit.$($version).bin.zip" -Update
+      Compress-Archive -Path "$(Build.SourcesDirectory)\source\AccUnit\bin\$(buildConfiguration)\AccessCodeLib.*.dll" -DestinationPath "$(Build.ArtifactStagingDirectory)\AccUnit.$($version).bin.zip" -Update
+      Compress-Archive -Path "$(Build.SourcesDirectory)\vbe-add-In\AccUnit.VbeAddIn\bin\$(buildConfiguration)\AccUnit.VbeAddIn.dll*" -DestinationPath "$(Build.ArtifactStagingDirectory)\AccUnit.$($version).bin.zip" -Update
+      Compress-Archive -Path "$(Build.SourcesDirectory)\vbe-add-In\AccUnit.VbeAddIn\bin\$(buildConfiguration)\AccessCodeLib.Common.VbeUserControlHost.dll" -DestinationPath "$(Build.ArtifactStagingDirectory)\AccUnit.$($version).bin.zip" -Update
   displayName: 'Read Version and create zip file'
 
 - task: PublishBuildArtifacts@1
