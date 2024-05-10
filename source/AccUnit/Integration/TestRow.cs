@@ -67,7 +67,7 @@ namespace AccessCodeLib.AccUnit
             return this;
         }
 
-        private IgnoreInfo _ignoreInfo = new IgnoreInfo();
+        private readonly IgnoreInfo _ignoreInfo = new IgnoreInfo();
         public IgnoreInfo IgnoreInfo { get { return _ignoreInfo; } }
 
         public ITestRow Ignore(string comment = "")

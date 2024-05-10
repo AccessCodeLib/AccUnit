@@ -1,6 +1,5 @@
 ﻿using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.VBIDETools;
-using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -15,14 +14,14 @@ namespace AccessCodeLib.AccUnit.Interop
 
         new string Name { get; }
         new ITestSummary Summary { get; }
-        
+
         new IAccessTestSuite AppendTestResultReporter(ITestResultReporter reporter);
         new IAccessTestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
         new IAccessTestSuite AddByClassName(string className);
         new IAccessTestSuite AddFromVBProject();
         new IAccessTestSuite Run();
         new IAccessTestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
-        
+
         new void Dispose();
 
         #endregion

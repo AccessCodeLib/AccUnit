@@ -54,6 +54,7 @@ namespace AccessCodeLib.AccUnit
         }
 
         public string Name { get; private set; }
+        public string FullName { get { return string.Format("{0}.{1}", Parent.Name, Name); } }
         public TestClassInfo Parent
         {
             get
@@ -64,7 +65,7 @@ namespace AccessCodeLib.AccUnit
             }
         }
 
-        private IgnoreInfo _ignoreInfo;
+        private readonly IgnoreInfo _ignoreInfo = new IgnoreInfo();
         public IgnoreInfo IgnoreInfo { get { return _ignoreInfo; } }
 
         private readonly List<int> _testRowFilter;
@@ -188,11 +189,4 @@ namespace AccessCodeLib.AccUnit
             }
         }
     }
-
-    public struct IgnoreInfo
-    {
-        public bool Ignore;
-        public string Comment;
-    }
-
 }

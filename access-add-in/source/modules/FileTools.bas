@@ -59,7 +59,7 @@ Private Declare PtrSafe Function API_GetTempFilename Lib "kernel32" Alias "GetTe
          ByVal lpTempFileName As String) As Long
 
 Private Declare PtrSafe Function API_ShellExecuteA Lib "shell32.dll" ( _
-         ByVal Hwnd As LongPtr, _
+         ByVal hwnd As LongPtr, _
          ByVal lOperation As String, _
          ByVal lpFile As String, _
          ByVal lpParameters As String, _
@@ -82,7 +82,7 @@ Private Declare Function API_GetTempFilename Lib "kernel32" Alias "GetTempFileNa
          ByVal lpTempFileName As String) As Long
 
 Private Declare Function API_ShellExecuteA Lib "shell32.dll" ( _
-         ByVal Hwnd As Long, _
+         ByVal hwnd As Long, _
          ByVal lOperation As String, _
          ByVal lpFile As String, _
          ByVal lpParameters As String, _

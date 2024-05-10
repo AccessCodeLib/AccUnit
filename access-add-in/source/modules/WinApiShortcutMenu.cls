@@ -39,7 +39,7 @@ Option Compare Text
 Option Explicit
 
 Private Type POINTAPI
-   X As Long
+   x As Long
    Y As Long
 End Type
 
@@ -55,7 +55,7 @@ End Type
 Private m_Helper As LongPtr 'Auxiliary window handle
 
 Private Type APIMSG
-   Hwnd As LongPtr
+   hwnd As LongPtr
    Message As LongPtr
    wParam As Long
    lParam As Long
@@ -71,7 +71,7 @@ Private Declare PtrSafe Function CreateWindowEx _
       ByVal lpClassname As String, _
       ByVal lpWindowName As String, _
       ByVal dwStyle As Long, _
-      ByVal X As Long, _
+      ByVal x As Long, _
       ByVal Y As Long, _
       ByVal nWidth As Long, _
       ByVal nHeight As Long, _
@@ -97,10 +97,10 @@ Private Declare PtrSafe Function TrackPopupMenu _
       Lib "user32.dll" ( _
       ByVal hMenu As LongPtr, _
       ByVal wFlags As Long, _
-      ByVal X As Long, _
+      ByVal x As Long, _
       ByVal Y As Long, _
       ByVal nReserved As Long, _
-      ByVal Hwnd As LongPtr, _
+      ByVal hwnd As LongPtr, _
       lprc As Any _
       ) As LongPtr 'lprc As RECT
 
@@ -114,7 +114,7 @@ Private Declare PtrSafe Function GetMessage _
       Lib "user32.dll" _
       Alias "GetMessageA" ( _
       ByRef lpMsg As APIMSG, _
-      ByVal Hwnd As LongPtr, _
+      ByVal hwnd As LongPtr, _
       ByVal wMsgFilterMin As Long, _
       ByVal wMsgFilterMax As Long _
       ) As Long
@@ -130,7 +130,7 @@ Private Declare PtrSafe Function TranslateMessage _
 
 Private Declare PtrSafe Function GetWindowRect _
       Lib "user32.dll" ( _
-         ByVal Hwnd As LongPtr, _
+         ByVal hwnd As LongPtr, _
          ByRef lpRect As RECT _
       ) As LongPtr
 
@@ -146,7 +146,7 @@ Private Declare PtrSafe Function SetMenuDefaultItem _
 Private m_Helper As Long 'Auxiliary window handle
 
 Private Type APIMSG
-   Hwnd As Long
+   hwnd As Long
    Message As Long
    wParam As Long
    lParam As Long
@@ -162,7 +162,7 @@ Private Declare Function CreateWindowEx _
       ByVal lpClassname As String, _
       ByVal lpWindowName As String, _
       ByVal dwStyle As Long, _
-      ByVal X As Long, _
+      ByVal x As Long, _
       ByVal Y As Long, _
       ByVal nWidth As Long, _
       ByVal nHeight As Long, _
@@ -188,10 +188,10 @@ Private Declare Function TrackPopupMenu _
       Lib "user32.dll" ( _
       ByVal hMenu As Long, _
       ByVal wFlags As Long, _
-      ByVal X As Long, _
+      ByVal x As Long, _
       ByVal Y As Long, _
       ByVal nReserved As Long, _
-      ByVal Hwnd As Long, _
+      ByVal hwnd As Long, _
       lprc As Any _
       ) As Long 'lprc As RECT
 
@@ -205,7 +205,7 @@ Private Declare Function GetMessage _
       Lib "user32.dll" _
       Alias "GetMessageA" ( _
       ByRef lpMsg As APIMSG, _
-      ByVal Hwnd As Long, _
+      ByVal hwnd As Long, _
       ByVal wMsgFilterMin As Long, _
       ByVal wMsgFilterMax As Long _
       ) As Long
@@ -221,7 +221,7 @@ Private Declare Function TranslateMessage _
 
 Private Declare Function GetWindowRect _
       Lib "user32.dll" ( _
-         ByVal Hwnd As Long, _
+         ByVal hwnd As Long, _
          ByRef lpRect As RECT _
       ) As Long
 
@@ -337,13 +337,13 @@ Public Property Set MenuControl(ByRef MnuCtl As Access.Control)
 
    Select Case m_Section
       Case 0 'Detailbereich
-         lngSectionHwnd = WindowTools.GetDetailSection(ParentObj.Hwnd)
+         lngSectionHwnd = WindowTools.GetDetailSection(ParentObj.hwnd)
       Case 1 'Kopf
-         lngSectionHwnd = WindowTools.GetHeaderSection(ParentObj.Hwnd)
+         lngSectionHwnd = WindowTools.GetHeaderSection(ParentObj.hwnd)
       Case 2 ' Fuß
-         lngSectionHwnd = WindowTools.GetFooterSection(ParentObj.Hwnd)
+         lngSectionHwnd = WindowTools.GetFooterSection(ParentObj.hwnd)
       Case Else
-         lngSectionHwnd = WindowTools.GetDetailSection(ParentObj.Hwnd)
+         lngSectionHwnd = WindowTools.GetDetailSection(ParentObj.hwnd)
    End Select
    Set ParentObj = Nothing
 
@@ -419,16 +419,16 @@ End Sub
 '     Long - Number of the selected menu item
 '
 '---------------------------------------------------------------------------------------
-Public Function OpenMenu(Optional ByVal X As Single = 0, Optional ByVal Y As Single = 0) As Long
+Public Function OpenMenu(Optional ByVal x As Single = 0, Optional ByVal Y As Single = 0) As Long
 
 #If VBA7 Then
    Dim MenuHwnd As LongPtr
    Dim TmpHwnd As LongPtr
-   Dim Hwnd As LongPtr
+   Dim hwnd As LongPtr
 #Else
    Dim MenuHwnd As Long
    Dim TmpHwnd As Long
-   Dim Hwnd As Long
+   Dim hwnd As Long
 #End If
 
    Dim Message As APIMSG
@@ -477,12 +477,12 @@ Public Function OpenMenu(Optional ByVal X As Single = 0, Optional ByVal Y As Sin
    GetWindowRect m_Helper, RcHelper
 
    If m_MenuControl Is Nothing Then
-      GetWindowRect m_AccessForm.Hwnd, AccFormRect
-      ButtonLeft = LayoutTools.GetPixelFromTwips(X) + AccFormRect.Left
+      GetWindowRect m_AccessForm.hwnd, AccFormRect
+      ButtonLeft = LayoutTools.GetPixelFromTwips(x) + AccFormRect.Left
       ButtonTop = LayoutTools.GetPixelFromTwips(Y) + AccFormRect.Top
    Else
    '- Buttom relative to the section window
-      ButtonLeft = LayoutTools.GetPixelFromTwips(m_MenuControl.Left) + LayoutTools.GetPixelFromTwips(X)
+      ButtonLeft = LayoutTools.GetPixelFromTwips(m_MenuControl.Left) + LayoutTools.GetPixelFromTwips(x)
       ButtonTop = LayoutTools.GetPixelFromTwips(m_MenuControl.Top) + LayoutTools.GetPixelFromTwips(Y)
    End If
    '- calc with each other
@@ -501,20 +501,20 @@ Public Function OpenMenu(Optional ByVal X As Single = 0, Optional ByVal Y As Sin
    End If
 
    TrackPopupMenu MenuHwnd, TPM_BOTTOMALIGN, XPos, YPos, _
-               ByVal 0&, ParentObj.Hwnd, ByVal 0&
+               ByVal 0&, ParentObj.hwnd, ByVal 0&
 
    'Message-Loop (Attention: for normal forms Application.hWndAccessApp, for POPUPS Form.Hwnd)
 
    If m_AccessForm.PopUp = True Then
-      Hwnd = m_AccessForm.Hwnd
+      hwnd = m_AccessForm.hwnd
    Else
-      Hwnd = Application.hWndAccessApp
+      hwnd = Application.hWndAccessApp
    End If
 
    Dim RepeatGetMessage As Boolean
    Do ' Security sleep in case there are problems with windows message. (WM_MOUSELEAVE]
       RepeatGetMessage = False
-      GetMessage Message, Hwnd, ByVal 0&, ByVal 0&
+      GetMessage Message, hwnd, ByVal 0&, ByVal 0&
       TranslateMessage Message
       DispatchMessage Message
 

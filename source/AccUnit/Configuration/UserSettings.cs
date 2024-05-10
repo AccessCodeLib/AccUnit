@@ -116,7 +116,7 @@ namespace AccessCodeLib.AccUnit.Configuration
         // ReSharper restore MemberCanBePrivate.Global
 
         #region Tools
-       
+
         [Category("Import/Export")]
         [DefaultValue(@"%APPFOLDER%\Tests\%APPNAME%")]
         [Description("Import and export folder for test classes\n%APPFOLDER% ... Path to current mdb/accdb\n%APPNAME% ... Filename of mdb/accdb")]

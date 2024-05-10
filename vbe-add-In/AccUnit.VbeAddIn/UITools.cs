@@ -1,13 +1,15 @@
-/*
+using AccessCodeLib.AccUnit.VbeAddIn.Resources;
 using AccessCodeLib.Common.Tools.Logging;
 using System;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Interop;
+using System.Windows.Media.Imaging;
 
-namespace AccessCodeLib.AccUnit.Common
+namespace AccessCodeLib.AccUnit.VbeAddIn
 {
-    public static class UITools
+    internal static class UITools
     {
         public static void ShowException(Exception exception)
         {
@@ -70,7 +72,7 @@ namespace AccessCodeLib.AccUnit.Common
             buttonCancel.SetBounds(309, 72, 75, 23);
 
             label.AutoSize = true;
-            textBox.Anchor |= AnchorStyles.Right;
+            textBox.Anchor = textBox.Anchor | AnchorStyles.Right;
             buttonOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
 
@@ -93,6 +95,36 @@ namespace AccessCodeLib.AccUnit.Common
         {
             return Icon.FromHandle(bmp.GetHicon());
         }
+
+        public static BitmapSource ConvertBitmapToBitmapSource(Bitmap bitmap)
+        {
+            var hBitmap = bitmap.GetHbitmap();
+            BitmapSource bitmapSource;
+
+            try
+            {
+                bitmapSource = Imaging.CreateBitmapSourceFromHBitmap(
+                    hBitmap,
+                    IntPtr.Zero,
+                    System.Windows.Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions());
+            }
+            finally
+            {
+                DeleteObject(hBitmap);
+            }
+
+            return bitmapSource;
+        }
+
+        [System.Runtime.InteropServices.DllImport("gdi32.dll")]
+        private static extern bool DeleteObject(IntPtr hObject);
+
+        public static float GetScalingFactor()
+        {
+            Graphics g = Graphics.FromHwnd(IntPtr.Zero);
+            float dpiX = g.DpiX;
+            return dpiX / 96;  // 96 DPI = 100%
+        }
     }
 }
-*/

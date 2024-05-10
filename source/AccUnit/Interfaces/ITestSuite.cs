@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using AccessCodeLib.AccUnit.CodeCoverage;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using AccessCodeLib.AccUnit.CodeCoverage;
 
 namespace AccessCodeLib.AccUnit.Interfaces
 {
@@ -61,7 +61,7 @@ namespace AccessCodeLib.AccUnit.Interfaces
     public delegate void FinishedEventHandler(ITestResult result);
     public delegate void TestSuiteStartedEventHandler(ITestSuite testSuite);
     public delegate void TestFixtureStartedEventHandler(ITestFixture fixture);
-    public delegate void TestStartedEventHandler(ITest test, IgnoreInfo ignoreInfo, ITagList tags);
+    public delegate void TestStartedEventHandler(ITest test, ref IgnoreInfo ignoreInfo);
     public delegate void MessageEventHandler(string message);
     public delegate void TestSuiteFinishedEventHandler(ITestSummary summary);
     public delegate void TestSuiteResetEventHandler(ResetMode resetmode, ref bool cancel);

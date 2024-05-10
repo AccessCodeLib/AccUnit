@@ -1,5 +1,4 @@
-﻿using AccessCodeLib.AccUnit.Integration;
-using AccessCodeLib.AccUnit.Interfaces;
+﻿using AccessCodeLib.AccUnit.Interfaces;
 using System;
 using System.Runtime.InteropServices;
 
@@ -19,50 +18,22 @@ namespace AccessCodeLib.AccUnit.Interop
     [ComSourceInterfaces(typeof(ITestResultCollectorComEvents))]
     [ProgId("AccUnit.TestResultCollector")]
     public class TestResultCollector : Integration.TestResultCollector, ITestCollector
-                                            , ITestResultCollectorEvents
+                                            , INotifyingTestResultCollector, ITestResultCollectorEvents
+                                            , ITestResultSummaryPrinter
     {
         public TestResultCollector(ITestSuite test) : base(test)
         {
         }
 
-        public new void Add(ITestResult testResult)
-        {
-            base.Add(testResult);
-        }
-
-        protected override void RaiseTestSuiteStarted(ITestSuite testSuite)
-        {
-            TestSuiteStarted?.Invoke(testSuite);
-        }
-
         protected override void RaiseTestTraceMessage(string message, CodeCoverage.ICodeCoverageTracker CodeCoverageTracker)
         {
             TestTraceMessage?.Invoke(message, CodeCoverageTracker as ICodeCoverageTracker);
+            base.RaiseTestTraceMessage(message, CodeCoverageTracker);
         }
 
-        protected override void RaiseNewTestResult(ITestResult testResult)
-        {
-            NewTestResult?.Invoke(testResult);
-        }
-
-        protected override void RaiseTestSuiteFinished(ITestSummary summary)
-        {
-            TestSuiteFinished?.Invoke(summary);
-        }
-
-        protected override void RaisePrintSummary(ITestSummary TestSummary, bool PrintTestResults)
-        {
-            PrintSummary?.Invoke(TestSummary, PrintTestResults);
-        }
-
-        public new event TestSuiteStartedEventHandler TestSuiteStarted;
         public new event TestTraceMessageEventHandler TestTraceMessage;
-        public new event TestResultEventHandler NewTestResult;
-        public new event TestSuiteFinishedEventHandler TestSuiteFinished;
-        public new event PrintSummaryEventHandler PrintSummary;
 
     }
 
     public delegate void TestTraceMessageEventHandler(string Message, ICodeCoverageTracker CodeCoverageTracker);
-
 }

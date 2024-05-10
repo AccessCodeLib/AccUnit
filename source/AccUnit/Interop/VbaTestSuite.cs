@@ -1,6 +1,5 @@
 ﻿using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.VBIDETools;
-using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -15,14 +14,14 @@ namespace AccessCodeLib.AccUnit.Interop
 
         new string Name { get; }
         new ITestSummary Summary { get; }
-        
+
         new IVBATestSuite AppendTestResultReporter(ITestResultReporter reporter);
         new IVBATestSuite Add([MarshalAs(UnmanagedType.IDispatch)] object testToAdd);
         new IVBATestSuite AddByClassName(string className);
         new IVBATestSuite AddFromVBProject();
         new IVBATestSuite Run();
         new IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData);
-        
+
         new void Dispose();
 
         #endregion
@@ -30,7 +29,7 @@ namespace AccessCodeLib.AccUnit.Interop
         IVBATestSuite SelectTests(object TestNameFilter);
         IVBATestSuite Filter(object FilterTags);
         ITestClassGenerator TestClassGenerator { get; }
-        
+
 
     }
 
@@ -41,7 +40,7 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId("AccUnit.VBATestSuite")]
     public class VBATestSuite : AccUnit.VBATestSuite, IVBATestSuite, IDisposable
     {
-        public VBATestSuite(OfficeApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
+        public VBATestSuite(IOfficeApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
                : base(applicationHelper, testBuilder, testRunner, testSummaryFormatter)
         {
         }

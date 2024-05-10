@@ -12,9 +12,9 @@ namespace AccessCodeLib.AccUnit
 {
     public class VBATestSuite : IVBATestSuite, IDisposable, ITestData
     {
-        public VBATestSuite(IOfficeApplicationHelper applicationHelper, 
-                            IVBATestBuilder testBuilder, 
-                            ITestRunner testRunner, 
+        public VBATestSuite(IOfficeApplicationHelper applicationHelper,
+                            IVBATestBuilder testBuilder,
+                            ITestRunner testRunner,
                             ITestSummaryFormatter testSummaryFormatter)
         {
             using (new BlockLogger())
@@ -25,6 +25,8 @@ namespace AccessCodeLib.AccUnit
                 SetNewTestRunner(testRunner);
             }
         }
+
+        public object Parent { get { return null; } }
 
         private readonly List<ITestManagerBridge> _accUnitTests = new List<ITestManagerBridge>();
         private readonly List<ITestFixture> _testFixtures = new List<ITestFixture>();
@@ -50,11 +52,11 @@ namespace AccessCodeLib.AccUnit
                 {
                     _testResultCollector = NewTestResultCollector();
                 }
-                return _testResultCollector;    
+                return _testResultCollector;
             }
             set
             {
-                _testResultCollector = value;   
+                _testResultCollector = value;
             }
         }
 
@@ -110,14 +112,14 @@ namespace AccessCodeLib.AccUnit
             }
             using (new BlockLogger(fixture.FullName))
             {
-                RaiseTraceMessage(_summaryFormatter.GetTestFixtureStartedText(fixture));
                 RaiseTestFixtureStarted(fixture);
+                RaiseTraceMessage(_summaryFormatter.GetTestFixtureStartedText(fixture));
             }
         }
 
         public bool Cancel { get; set; }
 
-        void OnTestSuiteTestStarted(ITest test, IgnoreInfo ignoreInfo, ITagList tags)
+        void OnTestSuiteTestStarted(ITest test, ref IgnoreInfo ignoreInfo)
         {
             if (Cancel)
             {
@@ -131,11 +133,13 @@ namespace AccessCodeLib.AccUnit
                 var ignoreMember = false;
                 if (memberinfo != null)
                 {
-                    ignoreInfo = memberinfo.IgnoreInfo;
-                    ignoreMember = ignoreInfo.Ignore;
+                    var memberIgnoreInfo = memberinfo.IgnoreInfo;
+                    ignoreMember = memberIgnoreInfo.Ignore;
                     if (ignoreMember)
                     {
                         SetRunstateToIgnored(test);
+                        ignoreInfo.Ignore = true;
+                        ignoreInfo.Comment = memberIgnoreInfo.Comment;
                     }
                 }
 
@@ -166,7 +170,7 @@ namespace AccessCodeLib.AccUnit
                     //testcase.DisplayName = memberinfo.DisplayName;
                 }
 
-                RaiseTestStarted(test, ignoreInfo, memberinfo?.Tags);
+                RaiseTestStarted(test, ref ignoreInfo);
             }
         }
 
@@ -249,8 +253,12 @@ namespace AccessCodeLib.AccUnit
             if (Cancel) return;
             using (new BlockLogger(result.Message))
             {
-                RaiseTraceMessage(_summaryFormatter.GetTestCaseFinishedText(result));
-                // TODO: Here, a TestConverter comes along, which does not implement ITestCase, so the following condition always evaluates to false!
+                if (!(result.Test is IRowTest))
+                {
+                    RaiseTraceMessage(_summaryFormatter.GetTestCaseFinishedText(result));
+                }
+
+                // TODO: Here, a TestConverter comes along, which does not implement ITest, so the following condition always evaluates to false!
                 if (result.Test is ITest test)
                 {
                     var memberinfo = GetMemberInfo(test);
@@ -285,7 +293,7 @@ namespace AccessCodeLib.AccUnit
 
         #region Event-Invocators
 
-        private void RaiseTestSuiteStarted(ITestSuite testSuite)
+        protected virtual void RaiseTestSuiteStarted(ITestSuite testSuite/*, IEnumerable<ITestItemTag> tags*/)
         {
             TestSuiteStarted?.Invoke(testSuite);
         }
@@ -305,9 +313,9 @@ namespace AccessCodeLib.AccUnit
             TestFixtureStarted?.Invoke(fixture);
         }
 
-        private void RaiseTestStarted(ITest testcase, IgnoreInfo ignoreInfo, ITagList tags)
+        protected virtual void RaiseTestStarted(ITest test, ref IgnoreInfo ignoreInfo)
         {
-            TestStarted?.Invoke(testcase, ignoreInfo, tags);
+            TestStarted?.Invoke(test, ref ignoreInfo);
         }
 
         private void RaiseTestFinished(ITestResult result)
@@ -317,7 +325,7 @@ namespace AccessCodeLib.AccUnit
 
         protected virtual void RaiseTraceMessage(string text)
         {
-            TestTraceMessage?.Invoke(text, CodeCoverageTracker);    
+            TestTraceMessage?.Invoke(text, CodeCoverageTracker);
         }
 
         #endregion
@@ -405,8 +413,11 @@ namespace AccessCodeLib.AccUnit
 
         public virtual IVBATestSuite AddFromVBProject()
         {
+            RaiseTraceMessage("AddFromVBProject:reset");
             Reset(ResetMode.RemoveTests);
+            RaiseTraceMessage("AddFromVBProject:AddToTestSuite");
             AddToTestSuite(_testBuilder.CreateTestsFromVBProject());
+            RaiseTraceMessage("AddFromVBProject:Completed");
             return this;
         }
 
@@ -426,6 +437,15 @@ namespace AccessCodeLib.AccUnit
 
         public virtual IVBATestSuite Reset(ResetMode mode = ResetMode.ResetTestData)
         {
+            /*
+                None = 0,
+                ResetTestData = 1,
+                RemoveTests = 2,
+                ResetTestSuite = 4,
+                RefreshFactoryModule = 8,
+                DeleteFactoryModule = 16
+            */
+
             if (TestSuiteReset != null)
             {
                 var cancel = false;
@@ -434,16 +454,26 @@ namespace AccessCodeLib.AccUnit
                     return this;
             }
 
+            //RaiseTraceMessage("Reset: _testSummary");
             _testSummary?.Reset();
 
+            //RaiseTraceMessage("Reset: testSummaryCollector");
             if (TestResultCollector is ITestSummaryTestResultCollector testSummaryCollector)
                 testSummaryCollector.Summary.Reset();
 
             //ConstantsReader.Clear();
+            //RaiseTraceMessage("Reset: _accUnitTests");
             _accUnitTests.Clear();
 
             // clear Memberinfo (maybe source code changed)
+            //RaiseTraceMessage("Reset: _testCaseInfos");
             _testCaseInfos.Clear();
+
+            if ((mode & ResetMode.RemoveTests) == ResetMode.RemoveTests)
+            {
+                //RaiseTraceMessage("Reset: _testFixtures");
+                _testFixtures.Clear();
+            }
 
             if ((mode & ResetMode.DeleteFactoryModule) == ResetMode.DeleteFactoryModule)
             {
@@ -466,6 +496,7 @@ namespace AccessCodeLib.AccUnit
             {
                 TestResultCollector = NewTestResultCollector();
             }
+            //RaiseTestSuiteStarted(this, _filterTags);
             RaiseTestSuiteStarted(this);
             var testResult = TestRunner.Run(this, TestResultCollector, _methodFilter, _filterTags);
             _testSummary = testResult as ITestSummary;

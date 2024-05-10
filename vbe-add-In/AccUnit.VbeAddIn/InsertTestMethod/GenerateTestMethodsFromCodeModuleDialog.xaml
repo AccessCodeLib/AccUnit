@@ -1,0 +1,72 @@
+﻿<Window x:Class="AccessCodeLib.AccUnit.VbeAddIn.GenerateTestMethodsFromCodeModuleDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AccessCodeLib.AccUnit.VbeAddIn"
+             d:DataContext="{d:DesignInstance Type=local:GenerateTestMethodsFromCodeModuleViewModel}"
+             Title="{Binding Title, FallbackValue='Insert Tests'}"
+             mc:Ignorable="d" 
+             d:DesignHeight="420" d:DesignWidth="360" SizeToContent="WidthAndHeight" HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="360" MinHeight="420" MaxHeight="620" MaxWidth="620">
+    <Grid Background="#EEEEEE">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Margin="5 0">
+            <Label Content="{Binding SelectedModuleInstruction, FallbackValue='abcadad'}" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="{Binding CodeModuleToTestInfo.Caption, FallbackValue='Module to test'}" Margin="0 5"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CodeModuleToTestInfo.Value, FallbackValue='CurrentCodeModule Name'}" Margin="5" VerticalAlignment="Center" />
+
+                <Label Grid.Row="1" Grid.Column="0" Content="{Binding TestClassName.Caption, FallbackValue='Test class'}" Margin="0 5"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding TestClassName.Value, FallbackValue='TestClassName'}" Margin="5" Padding="1 3" />
+            </Grid>
+            <Label Content="{Binding SelectMemberCaption, FallbackValue='Select members to test:'}" />
+        </StackPanel>
+        <local:CheckableTreeView Grid.Row="1" Margin="10 0"/>
+        <StackPanel Grid.Row="2" Margin="5 0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="{Binding StateTestNamePart.Caption, FallbackValue='State under test'}" Margin="5"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding StateTestNamePart.Value, FallbackValue='StateUnderTest'}" Margin="5" Padding="1 3"/>
+
+                <Label Grid.Row="1" Grid.Column="0" Content="{Binding ExpectedTestNamePart.Caption, FallbackValue='Expected behaviour'}" Margin="5"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ExpectedTestNamePart.Value, FallbackValue='ExpectedBehaviour'}" Margin="5" Padding="1 3"/>
+
+                <Label Grid.Row="2" Grid.Column="0" Content="{Binding MethodNameSyntax.Caption, FallbackValue='MethodNameSyntax'}" Margin="5"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MethodNameSyntax.Value, FallbackValue='&lt;Member&gt;_State_Expected'}" Margin="5" VerticalAlignment="Center" />
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="{Binding CommitCommand.Caption, FallbackValue='[Commit]'}" Command="{Binding CommitCommand}" Margin="10 5 5 10" Padding="5 3" />
+                <Button Grid.Column="2" Content="{Binding CancelCommand.Caption, FallbackValue='[Cancel]'}" Command="{Binding CancelCommand}" Margin="5 5 10 10" Padding="5 3" />
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>

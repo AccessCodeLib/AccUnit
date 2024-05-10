@@ -9,9 +9,14 @@ namespace AccessCodeLib.AccUnit.Interop
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface ITestResultCollectorComEvents : ITestResultCollectorEvents
     {
+        new void TestSuiteReset(ITestSummary Summary);
         new void TestSuiteStarted(ITestSuite TestSuite);
+        new void TestFixtureStarted(ITestFixture TestFixtureName);
+        new void TestStarted(ITest Test, IgnoreInfo ignoreInfo);
         new void TestTraceMessage(string Message, ICodeCoverageTracker CodeCoverageTracker);
+        new void TestFinished(ITestResult Result);
         new void NewTestResult(ITestResult Result);
+        new void TestFixtureFinished(ITestResult Result);
         new void TestSuiteFinished(ITestSummary Summary);
         new void PrintSummary(ITestSummary TestSummary, bool PrintTestResults);
     }

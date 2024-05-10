@@ -145,6 +145,7 @@
     <Compile Include="CodeCoverage\ICodeCoverageTracker.cs" />
     <Compile Include="CodeCoverage\ProcedureTracker.cs" />
     <Compile Include="Configuration\ErrorTrappingObserver.cs" />
+    <Compile Include="Integration\IgnoreInfo.cs" />
     <Compile Include="Interfaces\IVBATestBuilder.cs" />
     <Compile Include="Interfaces\VbaErrorTrapping.cs" />
     <Compile Include="Integration\TestResultCollector.cs" />
@@ -156,10 +157,8 @@
     <Compile Include="Interop\InteropConverter.cs" />
     <Compile Include="Interop\ITestResultCollectorComEvents.cs" />
     <Compile Include="Interop\TestResultCollector.cs" />
-    <Compile Include="~trash\CodeModuleMemberWithMarker.cs" />
-    <Compile Include="~trash\CompareTypeHelper.cs" />
+    <Compile Include="Integration\CodeModuleMemberWithMarker.cs" />
     <Compile Include="Integration\MessageBoxData.cs" />
-    <Compile Include="~trash\UITools.cs" />
     <Compile Include="Configuration\AccUnitLoaderAddInCodeTemplates.cs" />
     <Compile Include="Interop\TestClassGenerator.cs" />
     <Compile Include="Configuration\TestClassTemplate.cs" />
@@ -169,7 +168,6 @@
     <Compile Include="Interop\CodeCoverageTracker.cs" />
     <Compile Include="Interop\ITestSummaryPrinter.cs" />
     <Compile Include="TestSuite\AccessTestSuite.cs" />
-    <Compile Include="~trash\StringTools.cs" />
     <Compile Include="Configuration\AccUnitVBAReference.cs" />
     <Compile Include="Configuration\AccUnitVBAReferences.cs" />
     <Compile Include="Configuration\Configurator.cs" />
@@ -293,8 +291,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetDir)$(TargetFileName) $(TargetDir)$(ProjectName).dll
-"$(ProjectDir)..\tools\tlb\tlbExp.exe" $(TargetDir)$(TargetFileName) /out:$(TargetDir)\$(ProjectName).tlb
-copy $(TargetDir)$(TargetFileName).config $(TargetDir)$(ProjectName).dll.config</PostBuildEvent>
+    <PostBuildEvent>"$(ProjectDir)..\tools\tlb\tlbExp.exe" $(TargetDir)$(TargetFileName) /out:$(TargetDir)\$(TargetName).tlb</PostBuildEvent>
   </PropertyGroup>
 </Project>

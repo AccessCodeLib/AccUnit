@@ -446,6 +446,15 @@ namespace AccessCodeLib.AccUnit.Configuration
             return list.FirstOrDefault(testClassInfo => !completeList.Exists(x => x.Name == testClassInfo.Name));
         }
 
+        public TestClassInfo GetTestClassInfo(string className, bool initMembers)
+        {
+            using (new BlockLogger())
+            {
+                var reader = new TestClassReader(ActiveVBProject);
+                return reader.GetTestClassInfo(className, initMembers);
+            }
+        }
+
         public CodeModule InsertTestTemplate(CodeTemplate template, string templateName)
         {
             return template.AddToVBProject(ActiveVBProject, templateName);

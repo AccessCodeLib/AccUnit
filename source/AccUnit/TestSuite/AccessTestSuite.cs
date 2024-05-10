@@ -18,7 +18,7 @@ namespace AccessCodeLib.AccUnit
         }
 
         protected new IAccessApplicationHelper ApplicationHelper => (IAccessApplicationHelper)base.ApplicationHelper;
-       
+
         protected override void OnTestStarted(TestClassMemberInfo testClassMemberInfo)
         {
             TransactionManager = null;

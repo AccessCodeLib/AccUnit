@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AccessCodeLib.AccUnit.Integration
 {
-    internal class RowTest : IRowTest
+    public class RowTest : IRowTest
     {
         public RowTest(ITestFixture fixture, TestClassMemberInfo testClassMemberInfo)
         {
@@ -30,7 +30,7 @@ namespace AccessCodeLib.AccUnit.Integration
                     row.Name = i.ToString();
                 }
                 var paramTestClassMemberInfo = new TestClassMemberInfo(TestClassMemberInfo, row.IgnoreInfo, row.Tags);
-                var paramTest = new ParamTest(Fixture, paramTestClassMemberInfo, row.Name, row.Args);
+                var paramTest = new ParamTest(Fixture, this, paramTestClassMemberInfo, row.Name, row.Args);
                 paramTests.Add(paramTest);
             }
 
@@ -44,7 +44,8 @@ namespace AccessCodeLib.AccUnit.Integration
 
         public string FullName { get; private set; }
 
-        public string DisplayName { get; set; }
+        protected string _displayName;
+        public string DisplayName { get { return _displayName ?? Name; } set { _displayName = value; } }
         public RunState RunState { get; set; }
 
         public string Name { get; private set; }
@@ -54,5 +55,7 @@ namespace AccessCodeLib.AccUnit.Integration
         public IEnumerable<ITestRow> Rows { get; private set; }
 
         public IEnumerable<IParamTest> ParamTests { get; private set; }
+
+        public object Parent => Fixture;
     }
 }

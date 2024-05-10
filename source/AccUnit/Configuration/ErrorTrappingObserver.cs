@@ -12,7 +12,7 @@ namespace AccessCodeLib.AccUnit.Configuration
     {
         [ComVisible(true)]
         void SetErrorTrapping(VbaErrorTrapping ErrorTrapping);
-        new void Dispose(); 
+        new void Dispose();
     }
 
     [ComVisible(true)]

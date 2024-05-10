@@ -18,7 +18,7 @@ namespace AccessCodeLib.AccUnit.Configuration
 
         private void AddAccUnitLoaderFactory(bool useAccUnitTypeLib, string hostAppName)
         {
-            var code = hostAppName.Equals("Microsoft Access",System.StringComparison.OrdinalIgnoreCase) ? AccessAccUnitLoaderFactoryCode : ExcelAccUnitLoaderFactoryCode;
+            var code = hostAppName.Equals("Microsoft Access", System.StringComparison.OrdinalIgnoreCase) ? AccessAccUnitLoaderFactoryCode : ExcelAccUnitLoaderFactoryCode;
 
             code = code.Replace("{UseAccUnitTypeLib}", useAccUnitTypeLib ? "1" : "0");
             Add(new CodeTemplate(@"AccUnit_Factory", vbext_ComponentType.vbext_ct_StdModule, code));
@@ -42,6 +42,10 @@ Public Enum StringCompareMode
     StringCompareMode_TextCompare = 1
     StringCompareMode_vbNullStringEqualEmptyString = 4
 End Enum
+Public Enum ResetMode
+    ResetMode_RemoveTests = 2
+    ResetMode_ResetTestSuite = 4
+End Enum
 #End If
 
 Private Const DefaultTestReportOutput As Long = TestReportOutput.DebugPrint
@@ -50,9 +54,36 @@ Private m_CodeCoverageTracker As Object
 
 Private Function AccUnitLoaderFactory() As Object
    If m_AccUnitLoaderFactory Is Nothing Then
-      Set m_AccUnitLoaderFactory = Application.Run(GetAddInPath & ""AccUnitLoader.GetAccUnitFactory"")
+      Set m_AccUnitLoaderFactory = GetAccUnitLoaderFactory
    End If
    Set AccUnitLoaderFactory = m_AccUnitLoaderFactory
+End Function
+
+Private Function GetAccUnitLoaderFactory() As Object
+
+   Dim AccUnitVbeAddIn As Object
+   
+   If TryGetAccUnitVbeAddIn(AccUnitVbeAddIn) Then
+      Set GetAccUnitLoaderFactory = AccUnitVbeAddIn.Object
+   Else
+      Set GetAccUnitLoaderFactory = Application.Run(GetAddInPath & ""AccUnitLoader.GetAccUnitFactory"")
+   End If
+
+End Function
+
+Private Function TryGetAccUnitVbeAddIn(ByRef AccUnitVbeAddIn As Object) As Boolean
+   
+   Dim AddIn2check As Object
+   
+   For Each AddIn2check In Application.VBE.Addins
+      If AddIn2check.ProgId = ""AccUnit.VbeAddIn.Connect"" Then
+         If AddIn2check.Connect Then
+            Set AccUnitVbeAddIn = Application.VBE.Addins.Item(""AccUnit.VbeAddIn.Connect"")
+            TryGetAccUnitVbeAddIn = True
+         End If
+      End If
+   Next
+
 End Function
 
 #If USE_ACCUNIT_TYPELIB Then
@@ -89,6 +120,7 @@ Public Property Get TestSuite(Optional ByVal OutputTo As TestReportOutput = Defa
 Public Property Get TestSuite(Optional ByVal OutputTo As TestReportOutput = DefaultTestReportOutput) As Object
 #End If
    Set TestSuite = AccUnitLoaderFactory.TestSuite(OutputTo)
+   TestSuite.Reset ResetMode_ResetTestSuite + ResetMode_RemoveTests
 End Property
 
 Public Sub RunAllTests()
@@ -168,9 +200,36 @@ Private m_CodeCoverageTracker As Object
 
 Private Function AccUnitLoaderFactory() As Object
    If m_AccUnitLoaderFactory Is Nothing Then
-      Set m_AccUnitLoaderFactory = GetLoaderAddIn.Application.Run(""GetAccUnitFactory"")
+      Set m_AccUnitLoaderFactory = GetAccUnitLoaderFactory
    End If
    Set AccUnitLoaderFactory = m_AccUnitLoaderFactory
+End Function
+
+Private Function GetAccUnitLoaderFactory() As Object
+
+   Dim AccUnitVbeAddIn As Object
+   
+   If TryGetAccUnitVbeAddIn(AccUnitVbeAddIn) Then
+      Set GetAccUnitLoaderFactory = AccUnitVbeAddIn.Object
+   Else
+      Set GetAccUnitLoaderFactory = GetLoaderAddIn.Application.Run(""GetAccUnitFactory"")
+   End If
+
+End Function
+
+Private Function TryGetAccUnitVbeAddIn(ByRef AccUnitVbeAddIn As Object) As Boolean
+   
+   Dim AddIn2check As Object
+   
+   For Each AddIn2check In Application.VBE.Addins
+      If AddIn2check.ProgId = ""AccUnit.VbeAddIn.Connect"" Then
+         If AddIn2check.Connect Then
+            Set AccUnitVbeAddIn = Application.VBE.Addins.Item(""AccUnit.VbeAddIn.Connect"")
+            TryGetAccUnitVbeAddIn = True
+         End If
+      End If
+   Next
+
 End Function
 
 Private Function GetLoaderAddIn() As Excel.AddIn

@@ -31,9 +31,9 @@ namespace AccessCodeLib.AccUnit.TestRunner
             RaiseTestSuiteStarted(testSuite);
             var results = new TestResultCollection(testSuite);
 
-            foreach (var tests in testSuite.TestFixtures)
+            foreach (var fixture in testSuite.TestFixtures)
             {
-                var result = Run(tests, testResultCollector, methodFilter, filterTags);
+                var result = Run(fixture, testResultCollector, methodFilter, filterTags);
                 results.Add(result);
             }
 
@@ -42,7 +42,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
             return results;
         }
 
-        void RaiseTestSuiteStarted(ITestSuite testSuite)
+        void RaiseTestSuiteStarted(ITestSuite testSuite/*, IEnumerable<ITestItemTag> tags*/)
         {
             TestSuiteStarted?.Invoke(testSuite);
         }
@@ -144,6 +144,20 @@ namespace AccessCodeLib.AccUnit.TestRunner
         public ITestResult Run(IRowTest test, IEnumerable<ITestItemTag> filterTags = null)
         {
             var results = new TestResultCollection(test);
+            var ignoreInfo = new IgnoreInfo();
+            RaiseTestStarted(test, ref ignoreInfo);
+
+            if (ignoreInfo.Ignore)
+            {
+                var ignoreTestResult = new TestResult(test)
+                {
+                    IsIgnored = true,
+                    Message = ignoreInfo.Comment
+                };
+                RaiseTestFinished(ignoreTestResult);
+                return ignoreTestResult;
+            }
+
             foreach (var paramTest in test.ParamTests)
             {
                 if (filterTags != null)
@@ -157,6 +171,8 @@ namespace AccessCodeLib.AccUnit.TestRunner
                 var result = Run(paramTest);
                 results.Add(result);
             }
+
+            RaiseTestFinished(results);
             return results;
         }
 
@@ -203,8 +219,7 @@ namespace AccessCodeLib.AccUnit.TestRunner
             using (var invocationHelper = new InvocationHelper(testFixture.Instance))
             {
                 var ignoreInfo = new IgnoreInfo();
-
-                RaiseTestStarted(test, ignoreInfo, test.TestClassMemberInfo.Tags);
+                RaiseTestStarted(test, ref ignoreInfo);
                 if (ignoreInfo.Ignore)
                 {
                     testResult.IsIgnored = true;
@@ -298,9 +313,9 @@ namespace AccessCodeLib.AccUnit.TestRunner
             }
         }
 
-        void RaiseTestStarted(ITest test, IgnoreInfo ignoreInfo, ITagList tags)
+        void RaiseTestStarted(ITest test, ref IgnoreInfo ignoreInfo)
         {
-            TestStarted?.Invoke(test, ignoreInfo, tags);
+            TestStarted?.Invoke(test, ref ignoreInfo);
         }
 
         void RaiseTestFinished(ITestResult result)

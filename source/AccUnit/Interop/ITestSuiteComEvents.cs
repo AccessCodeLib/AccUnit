@@ -1,6 +1,5 @@
 ﻿using AccessCodeLib.AccUnit.Interfaces;
 using System;
-using System.Collections;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Interop
@@ -12,18 +11,5 @@ namespace AccessCodeLib.AccUnit.Interop
     {
         new void TestTraceMessage(string Message, ICodeCoverageTracker CodeCoverageTracker);
         new void TestSuiteStarted(ITestSuite TestSuite);
-        /*
-        
-        void TestFixtureStarted(ITestFixture Fixture);
-        void TestStarted(ITest TestCase);
-        
-        void TestFinished(ITestResult Result);
-        void TestFixtureFinished(ITestResult Result);
-        */
-        new void TestSuiteFinished(ITestSummary Summary);
-        
-
-        //void TestSuiteReset(ResetMode Mode, bool Cancel);
-        // void Disposed([MarshalAs(UnmanagedType.IDispatch)] object sender);
     }
 }

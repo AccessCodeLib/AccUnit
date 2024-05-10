@@ -30,7 +30,7 @@ namespace AccessCodeLib.Common.VBIDETools.VbaProjectManagement
             // TODO: Make this more generic/configurable
             var codeModule = vbComponent.CodeModule;
             codeModule.DeleteLines(1, codeModule.CountOfLines);
-            codeModule.AddFromString("Option Compare Database");
+            codeModule.AddFromString("Option Compare Text");
             codeModule.AddFromString("Option Explicit");
             codeModule.AddFromString("");
             codeModule.AddFromString(module.GetNewContent());

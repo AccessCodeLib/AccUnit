@@ -14,7 +14,7 @@ End Property
 
 Public Sub AddAccUnitTlbReference()
    RemoveAccUnitTlbReference
-   modVbProject.CurrentVbProject.References.AddFromFile CurrentAccUnitConfiguration.AccUnitDllPath & "\AccessCodeLib.AccUnit.tlb"
+   modVbProject.CurrentVbProject.References.AddFromFile CurrentAccUnitConfiguration.AccUnitDllPath & "\" & ACCUNIT_TYPELIB_FILE
 End Sub
 
 Public Sub RemoveAccUnitTlbReference()
@@ -145,7 +145,9 @@ Public Property Get AccUnitFileNames() As Variant()
                         ACCUNIT_TYPELIB_FILE, _
                         ACCUNIT_DLL_FILE, _
                         "AccessCodeLib.Common.Tools.dll", _
-                        "AccessCodeLib.Common.VBIDETools.dll")
+                        "AccessCodeLib.Common.VBIDETools.dll", _
+                        "AccessCodeLib.AccUnit.VbeAddIn.dll", _
+                        "AccessCodeLib.Common.VbeUserControlHost.dll")
 
 End Property
 
@@ -168,7 +170,7 @@ ExitHere:
    Exit Sub
 
 HandleErr:
-   If AccUnitFileName = "AccessCodeLib.AccUnit.tlb" Then
+   If AccUnitFileName = ACCUNIT_TYPELIB_FILE Then
       Resume Next
    End If
    Err.Raise Err.Number, Err.Source, Err.Description, Err.HelpFile, Err.HelpContext

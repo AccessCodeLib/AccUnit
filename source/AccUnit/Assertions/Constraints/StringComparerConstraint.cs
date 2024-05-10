@@ -23,7 +23,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
 
         protected override IMatchResult Compare(object actual)
         {
-            if (actual is null || (_nullIsEqualEmptyString && actual is string  s && s == string.Empty))
+            if (actual is null || (_nullIsEqualEmptyString && actual is string s && s == string.Empty))
             {
                 if (Expected == null || _nullIsEqualEmptyString && Expected == string.Empty)
                 {
@@ -41,7 +41,7 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
             {
                 return new MatchResult(CompareText, false, "actual is Null and expected is not Null", actual, Expected);
             }
-           
+
             // Check type
             var actualType = ConstraintBuilder.Type2Compare(actual, Strict);
             var expectedType = typeof(string);
