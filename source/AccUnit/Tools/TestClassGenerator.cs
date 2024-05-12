@@ -1,6 +1,7 @@
 ﻿using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AccessCodeLib.AccUnit.Tools
 {
@@ -28,7 +29,9 @@ namespace AccessCodeLib.AccUnit.Tools
             return InsertTestMethods(testClassName, methods);
         }
 
-        private IEnumerable<CodeModuleMember> GetTestCodeModuleMemberFromCodeModule(string codeModuleToTest, string stateUnderTest = null, string expectedBehaviour = null)
+        private IEnumerable<CodeModuleMember> GetTestCodeModuleMemberFromCodeModule(
+                string codeModuleToTest, string stateUnderTest = null, string expectedBehaviour = null,
+                IEnumerable<string> methodsUnderTestFilter = null)
         {
             var codeModule = new CodeModuleContainer(_vbProject).TryGetCodeModule(codeModuleToTest);
             if (codeModule is null)
@@ -39,6 +42,11 @@ namespace AccessCodeLib.AccUnit.Tools
             var codeModulueReader = new CodeModuleReader(codeModule);
             var members = codeModulueReader.Members;
             var publicMembers = members.FindAll(true);
+
+            if (methodsUnderTestFilter != null)
+            {
+                publicMembers = publicMembers.Where(m => methodsUnderTestFilter.Contains(m.Name)).ToList();
+            }
 
             var testCodeModuleMembers = new List<CodeModuleMember>();
             foreach (var member in publicMembers)
@@ -92,6 +100,15 @@ namespace AccessCodeLib.AccUnit.Tools
                 return testModule;
             }
             return modules.Generator.Add(vbext_ComponentType.vbext_ct_ClassModule, testClass, sourcecode, true);
+        }
+
+        public CodeModule InsertTestMethods(string codeModuleToTest, string testClass, IEnumerable<string> methodsUnderTest, string stateUnderTest, string expectedBehaviour)
+        {
+            if (codeModuleToTest == null        )
+                return InsertTestMethods(testClass, methodsUnderTest, stateUnderTest, expectedBehaviour);
+
+            var methods = GetTestCodeModuleMemberFromCodeModule(codeModuleToTest, stateUnderTest, expectedBehaviour, methodsUnderTest);
+            return InsertTestMethods(testClass, methods);
         }
 
         public CodeModule InsertTestMethods(string testClass, IEnumerable<string> methodsUnderTest, string stateUnderTest, string expectedBehaviour)

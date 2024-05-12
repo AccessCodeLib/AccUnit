@@ -4,7 +4,7 @@ Option Compare Text
 
 Public Sub AddAccUnitTlbReference()
    RemoveAccUnitTlbReference
-   CurrentVbProject.References.AddFromFile CurrentAccUnitConfiguration.AccUnitDllPath & "\AccessCodeLib.AccUnit.tlb"
+   CurrentVbProject.References.AddFromFile CurrentAccUnitConfiguration.AccUnitDllPath & "\" & ACCUNIT_TYPELIB_FILE
 End Sub
 
 Public Sub RemoveAccUnitTlbReference()

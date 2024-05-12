@@ -261,7 +261,7 @@ Private Sub cmdSetAccUnitTlbReferenz_Click()
 On Error GoTo HandleErr
 
    AddAccUnitTlbReference
-   ShowSuccessInfo "AccUnit.tlb reference inserted"
+   ShowSuccessInfo ACCUNIT_TYPELIB_FILE & " reference inserted"
    
 ExitHere:
    Exit Sub
@@ -277,7 +277,7 @@ Private Sub cmdRemoveAccUnitTlbReferenz_Click()
 On Error GoTo HandleErr
 
    RemoveAccUnitTlbReference
-   ShowSuccessInfo "AccUnit.tlb reference removed"
+   ShowSuccessInfo ACCUNIT_TYPELIB_FILE & " reference removed"
    
 ExitHere:
    Exit Sub
