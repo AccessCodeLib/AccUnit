@@ -146,7 +146,7 @@ Public Property Get AccUnitFileNames() As Variant()
                         ACCUNIT_DLL_FILE, _
                         "AccessCodeLib.Common.Tools.dll", _
                         "AccessCodeLib.Common.VBIDETools.dll", _
-                        "AccessCodeLib.AccUnit.VbeAddIn.dll", _
+                        "AccUnit.VbeAddIn.dll", _
                         "AccessCodeLib.Common.VbeUserControlHost.dll")
 
 End Property

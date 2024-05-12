@@ -19,8 +19,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
     public class CommitInsertTestMethodsEventArgs : EventArgs
     {
-        public CommitInsertTestMethodsEventArgs(string testClass, IEnumerable<string> methodsUnderTest, string stateUnderTest, string expectedBehaviour)
+        public CommitInsertTestMethodsEventArgs(string codeModuleToTest, string testClass, IEnumerable<string> methodsUnderTest, string stateUnderTest, string expectedBehaviour)
         {
+            CodeModuleToTest = codeModuleToTest;
             TestClass = testClass;
             MethodsUnderTest = methodsUnderTest;
             StateUnderTest = stateUnderTest;
@@ -28,6 +29,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             Cancel = false;
         }
 
+        public string CodeModuleToTest { get; private set; }    
         public string TestClass { get; private set; }
         public IEnumerable<string> MethodsUnderTest { get; private set; }
         public string StateUnderTest { get; private set; }

@@ -208,7 +208,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         protected virtual void Commit()
         {
             InsertTestMethods?.Invoke(this,
-                new CommitInsertTestMethodsEventArgs(TestClassName.Value, MethodNamesToTest, StateTestNamePart.Value, ExpectedTestNamePart.Value));
+                new CommitInsertTestMethodsEventArgs(CurrentCodeModule.Name, TestClassName.Value, MethodNamesToTest, StateTestNamePart.Value, ExpectedTestNamePart.Value));
         }
     }
 }

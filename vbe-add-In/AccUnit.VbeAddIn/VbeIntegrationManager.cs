@@ -370,7 +370,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 using (new BlockLogger($"{e.TestClass}.{e.MethodsUnderTest}_{e.StateUnderTest}_{e.ExpectedBehaviour}"))
                 {
-                    return testClassGenerator.InsertTestMethods(e.TestClass, e.MethodsUnderTest, e.StateUnderTest, e.ExpectedBehaviour);
+                    return testClassGenerator.InsertTestMethods(e.CodeModuleToTest, e.TestClass, e.MethodsUnderTest, e.StateUnderTest, e.ExpectedBehaviour);
                 }
             }
             catch (Exception ex)
