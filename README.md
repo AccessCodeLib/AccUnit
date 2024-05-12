@@ -24,6 +24,11 @@ For more informations see [Wiki](https://github.com/AccessCodeLib/AccUnit/wiki) 
   * Output test results to log/text file
 * Other features
   * Code coverage tests ([Video](https://accunit.access-codelib.net/videos/examples/CodeCoverageTest.mp4))
+* VBE add-in
+  * Start tests via UI  
+  * Select tests to run
+  * show test result in tree view
+  * generate test procedures
 
 ### Remarks
 Examples see [./examples/msaccess/](https://github.com/AccessCodeLib/AccUnit/blob/main/examples/msaccess/)
