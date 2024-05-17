@@ -2,6 +2,8 @@
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
+using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Configuration
@@ -153,6 +155,15 @@ namespace AccessCodeLib.AccUnit.Configuration
             get
             {
                 return Configuration.UserSettings.Current;
+            }
+        }
+
+        public static string FileVersion
+        {
+            get
+            {
+                var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+                return version.FileVersion;
             }
         }
 

@@ -107,6 +107,10 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="About\AboutDialog.xaml.cs">
+      <DependentUpon>AboutDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="About\AboutViewModel.cs" />
     <Compile Include="AccUnitCommandBarAdapter.cs" />
     <Compile Include="AddInManager.cs" />
     <Compile Include="AddInManagerBridge.cs" />
@@ -136,8 +140,10 @@
     <Compile Include="InsertTestMethod\TestNamePartsEventArgs.cs" />
     <Compile Include="RunTestsEventArgs.cs" />
     <Compile Include="SelectLists\CheckableTestItemsEventArgs.cs" />
-    <Compile Include="UserSettingWindow\DialogManager.cs" />
-    <Compile Include="UserSettingWindow\SettingsPropertyWrapper.cs" />
+    <Compile Include="DialogManager.cs" />
+    <Compile Include="SimpleLinkLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="TestClassListEventArgs.cs" />
     <Compile Include="SelectLists\CheckableTreeView.xaml.cs">
       <DependentUpon>CheckableTreeView.xaml</DependentUpon>
@@ -226,15 +232,11 @@
     <Compile Include="TestStarter.cs" />
     <Compile Include="TestSuiteManager.cs" />
     <Compile Include="UITools.cs" />
-    <Compile Include="UserSettingWindow\SettingsViewModel.cs" />
-    <Compile Include="UserSettingWindow\SettingsWindow.xaml.cs">
-      <DependentUpon>SettingsWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UserSettings.cs" />
-    <Compile Include="UserSettingWindow\UserSettingDialog.cs">
+    <Compile Include="UserSettingDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UserSettingWindow\UserSettingDialog.Designer.cs">
+    <Compile Include="UserSettingDialog.Designer.cs">
       <DependentUpon>UserSettingDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="VbeCodePaneTools.cs" />
@@ -294,10 +296,10 @@
       <LastGenOutput>VbeCommandbars.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserSettingWindow\UserSettingDialog.de.resx">
+    <EmbeddedResource Include="UserSettingDialog.de.resx">
       <DependentUpon>UserSettingDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserSettingWindow\UserSettingDialog.resx">
+    <EmbeddedResource Include="UserSettingDialog.resx">
       <DependentUpon>UserSettingDialog.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
@@ -305,6 +307,10 @@
     <None Include="Resources\refresh_green_16x16.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="About\AboutDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -338,10 +344,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TestExplorer\TestExplorerTreeView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserSettingWindow\SettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

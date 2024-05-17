@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using AccessCodeLib.AccUnit.VbeAddIn.UserSettingWindow;
+using AccessCodeLib.AccUnit.VbeAddIn.About;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools.Commandbar;
 using Microsoft.Office.Core;
@@ -11,13 +11,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     {
 
         public event EventHandler RefreshTestTemplates;
-        /*
+
         private static void ShowAboutDialog()
         {
-            var aboutForm = new AboutForm(AddInManager.FileVersion, AddInManager.SimplyVbUnitVersion);
+            var aboutForm = new AboutDialog();
             aboutForm.ShowDialog();
         }
-        */
 
         #region ICommandBarsAdapterClient support
 
@@ -42,7 +41,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 BeginGroup = true
             };
             commandBarAdapter.AddCommandBarButton(popUp, buttonData, AccUnitMenuItemsShowUserSettingForm);
-            /*
+
             buttonData = new CommandbarButtonData
             {
                 Caption = Resources.VbeCommandbars.ToolsAboutCommandbarButtonCaption,
@@ -51,15 +50,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 BeginGroup = true
             };
             commandBarAdapter.AddCommandBarButton(popUp, buttonData, AccUnitMenuItemsShowAboutForm);
-            */
         }
 
-        /*
         static void AccUnitMenuItemsShowAboutForm(CommandBarButton ctrl, ref bool cancelDefault)
         {
             ShowAboutDialog();
         }
-        */
 
         void AccUnitMenuItemsShowUserSettingForm(CommandBarButton ctrl, ref bool cancelDefault)
         {
