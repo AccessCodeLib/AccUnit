@@ -146,6 +146,7 @@
     <Compile Include="CodeCoverage\ProcedureTracker.cs" />
     <Compile Include="Configuration\ErrorTrappingObserver.cs" />
     <Compile Include="Integration\IgnoreInfo.cs" />
+    <Compile Include="Integration\UserSettings.cs" />
     <Compile Include="Interfaces\IVBATestBuilder.cs" />
     <Compile Include="Interfaces\VbaErrorTrapping.cs" />
     <Compile Include="Integration\TestResultCollector.cs" />
@@ -250,6 +251,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="TestRunner\VbaTestRunner.cs" />
+    <Compile Include="Tools\UserSettings.cs" />
     <Compile Include="Tools\VBA\AssemblyInfo.cs" />
     <Compile Include="Tools\ITestClassGenerator.cs" />
     <Compile Include="Tools\Templates\BuiltInTemplateSources.cs" />

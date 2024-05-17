@@ -27,11 +27,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         private readonly TestStarter _testStarter = new TestStarter();
 
         private readonly TestExplorerManager _testExplorerManager;
+        private readonly DialogManager _dialogManager = new DialogManager();
 
         /*
         private readonly TagListManager _tagListManager = new TagListManager();
         
-        private readonly DialogManager _dialogManager = new DialogManager();
+        
         private readonly TestTemplateGenerator _testTemplateGenerator = new TestTemplateGenerator();
         private AccSpecCommandBarAdapterClient _accSpecCommandBarAdapterClient;
         private AccSpecManager _accSpecManager;
@@ -130,12 +131,13 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 _commandBarsAdapter.AddClient(_testStarter);
                 _commandBarsAdapter.AddClient(_vbeIntegrationManager);
                 _commandBarsAdapter.AddClient(_testExplorerManager);
+                _commandBarsAdapter.AddClient(_dialogManager);
 
                 /*
                 _commandBarsAdapter.AddClient(_tagListManager);
                 _commandBarsAdapter.AddClient(_testTemplateGenerator);
                 
-                _commandBarsAdapter.AddClient(_dialogManager);
+                
                 */
 
                 /*
