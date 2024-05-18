@@ -3,6 +3,7 @@ using AccessCodeLib.Common.Tools.Logging;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.Common.VBIDETools
 {
@@ -137,8 +138,12 @@ namespace AccessCodeLib.Common.VBIDETools
                     }
                 }
 
-                _application = null;
-
+                if (_application != null)
+                {
+                    Marshal.ReleaseComObject(_application); 
+                    _application = null;
+                }   
+                
             }
             catch (Exception ex)
             {
@@ -146,10 +151,12 @@ namespace AccessCodeLib.Common.VBIDETools
             }
 
             // GC-Bereinigung wegen unmanaged res:
+            /*
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
-
+            GC.WaitForPendingFinalizers();
+            */
             _disposed = true;
         }
 

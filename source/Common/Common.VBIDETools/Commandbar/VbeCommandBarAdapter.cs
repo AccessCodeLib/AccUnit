@@ -3,6 +3,7 @@ using Microsoft.Office.Core;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.Common.VBIDETools.Commandbar
 {
@@ -112,19 +113,16 @@ namespace AccessCodeLib.Common.VBIDETools.Commandbar
 
             using (new BlockLogger())
             {
-                DisposeUnManagedResources();
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-
+                DisposeUnmanagedResources();
                 _disposed = true;
             }
         }
 
-        private void DisposeUnManagedResources()
+        private void DisposeUnmanagedResources()
         {
             using (new BlockLogger())
             {
+                Marshal.ReleaseComObject(VBE);  
                 VBE = null;
                 
                 // issue #77: (http://accunit.access-codelib.net/bugs/view.php?id=77)

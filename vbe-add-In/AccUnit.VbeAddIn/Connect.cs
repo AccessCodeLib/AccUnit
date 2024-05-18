@@ -199,11 +199,19 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     }
                 }
 
-                _addInInstance = null;
-
+                if (_addInInstance != null)
+                {
+                    Logger.Log("Start Marshal.ReleaseComObject(_addInInstance) ...");
+                    Marshal.ReleaseComObject(_addInInstance);
+                    _addInInstance = null;
+                }
+                
+                /*
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
+                GC.WaitForPendingFinalizers();
+                */
 
                 _disposed = true;
 

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Timer = System.Windows.Forms.Timer;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
@@ -37,7 +38,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         private AccSpecCommandBarAdapterClient _accSpecCommandBarAdapterClient;
         private AccSpecManager _accSpecManager;
 
-        
         */
 
         public AddInManager(AddIn addIn)
@@ -416,24 +416,24 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
                 try
                 {
-                    DisposeUnManagedResources();
+                    DisposeUnmanagedResources();
                 }
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
                 }
 
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-
                 _disposed = true;
             }
         }
 
-        private void DisposeUnManagedResources()
+        private void DisposeUnmanagedResources()
         {
-            _addIn = null;
+            if (_addIn != null)
+            {
+                Marshal.ReleaseComObject(_addIn);
+                _addIn = null;
+            }
         }
 
         private void DisposeManagedResources()
