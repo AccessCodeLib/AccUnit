@@ -158,15 +158,6 @@ namespace AccessCodeLib.AccUnit.Configuration
             }
         }
 
-        public static string FileVersion
-        {
-            get
-            {
-                var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
-                return version.FileVersion;
-            }
-        }
-
         /*
         public static void CheckAccUnitVBAReferences(VBProject vbProject)
         {

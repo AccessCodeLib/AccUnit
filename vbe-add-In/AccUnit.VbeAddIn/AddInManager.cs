@@ -415,6 +415,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
+        public static string Copyright
+        {
+            get
+            {
+                var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+                return version.LegalCopyright;
+            }
+        }
+
         private VBE VBE => AddIn.VBE;
 
         private AddIn AddIn => _addIn;

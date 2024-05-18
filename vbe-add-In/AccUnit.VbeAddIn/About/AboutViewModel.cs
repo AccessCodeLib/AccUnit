@@ -11,7 +11,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.About
         public ICommand NavigateCommand { get; }
 
         public string AddInVersion => AddInManager.FileVersion;
-        public string FrameworkVersion => Configurator.FileVersion;
+        public string FrameworkVersion => AccUnitInfo.FileVersion;
+        public string AddInCopyright => AddInManager.Copyright;
+        public string FrameworkCopyright => AccUnitInfo.Copyright;
+        public string Copyright => AddInCopyright.CompareTo(FrameworkCopyright) >= 0 
+                                    ? AddInManager.Copyright : FrameworkCopyright;
+
 
         public AboutViewModel()
         {
@@ -21,7 +26,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.About
                 new Contributor("Josef Pötzl"),
                 new Contributor("Paul Rohorzka"),
                 new Contributor("Sten Schmidt")
-            };      
+            };
         }
 
         private void Navigate(string url)
