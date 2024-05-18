@@ -1,4 +1,5 @@
-﻿using AccessCodeLib.AccUnit.Interfaces;
+﻿using AccessCodeLib.AccUnit.Configuration;
+using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Commandbar;
@@ -7,7 +8,7 @@ using System;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 {
-    internal class TestExplorerManager : ITestResultReporter, ICommandBarsAdapterClient
+    internal class TestExplorerManager : ITestResultReporter, ICommandBarsAdapterClient, IDisposable
     {
         private readonly VbeUserControl<TestExplorerView> _vbeUserControl;
         private readonly TestExplorerViewModel _viewModel;
@@ -143,5 +144,49 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         }
 
         #endregion
+
+        #region IDisposable Support
+
+        bool _disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+
+            if (disposing)
+            {
+                DisposeManagedResources();
+            }
+
+            DisposeUnmanagedResources();
+            _disposed = true;
+        }
+
+        private void DisposeUnmanagedResources()
+        {
+            _testResultCollector = null;
+        }
+
+        private void DisposeManagedResources()
+        {
+            _vbeUserControl.Dispose();
+        }
+
+        public void Dispose()
+        {
+            using (new BlockLogger())
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        ~TestExplorerManager()
+        {
+            Dispose(false);
+        }
+
+        #endregion
+
     }
 }

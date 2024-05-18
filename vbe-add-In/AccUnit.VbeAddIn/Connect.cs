@@ -131,7 +131,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 {
                     try
                     {
-                        _addInInstance.Object = null;
+                        if (!_disposed)
+                        {
+                            Dispose();
+                        }   
                     }
                     catch (Exception ex)
                     {
@@ -174,6 +177,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 {
                     Logger.Log("_disposed == true => Exit Dispose()");
                     return;
+                }
+
+                try
+                {
+                    _addInInstance.Object = null;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
                 }
 
                 if (disposing)
