@@ -7,11 +7,16 @@
              d:DataContext="{d:DesignInstance Type=local:TestItem}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
     <Grid>
         <TreeView d:DataContext="{d:DesignInstance Type=local:TestExplorerViewModel}" ItemsSource="{Binding TestItems}">
             <TreeView.ItemContainerStyle>
                 <Style TargetType="TreeViewItem">
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded}" />
+                    <EventSetter Event="GotFocus" Handler="TreeViewItem_GotFocus"/>
+                    <EventSetter Event="LostFocus" Handler="TreeViewItem_LostFocus"/>
                 </Style>
             </TreeView.ItemContainerStyle>
             <TreeView.ItemTemplate>
@@ -22,11 +27,13 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <CheckBox  Grid.Column="0" IsChecked="{Binding IsChecked}" Margin="0,0,10,0" />
                         <Image Grid.Column="1" Source="{Binding ImageSource}" Margin="0,0,10,0" />
                         <TextBlock Grid.Column="2" Text="{Binding Name}" Margin="0,0,10,0" />
                         <TextBlock Grid.Column="3" Text="{Binding Result}" />
+                        <Button Grid.Column="4" Content="Details" Visibility="{Binding ShowTestDetailButton, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" />
                     </Grid>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
