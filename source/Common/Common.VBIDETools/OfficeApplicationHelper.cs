@@ -22,6 +22,7 @@ namespace AccessCodeLib.Common.VBIDETools
     {
         private object _application;
         private InvocationHelper _invocationHelper;
+        private bool _releaseApplicationComObjectOnDispose;
 
         public object Application { get { return _application; } }
         protected InvocationHelper InvocationHelper { get { return _invocationHelper; } }
@@ -38,10 +39,11 @@ namespace AccessCodeLib.Common.VBIDETools
             }
         }
 
-        public OfficeApplicationHelper(object application)
+        public OfficeApplicationHelper(object application, bool releaseApplicationComObjectOnDispose = false)
         {
             _application = application ?? throw new ArgumentNullException();
             _invocationHelper = new InvocationHelper(application);
+            _releaseApplicationComObjectOnDispose = releaseApplicationComObjectOnDispose;   
         }
 
         public virtual VBE VBE
@@ -140,7 +142,10 @@ namespace AccessCodeLib.Common.VBIDETools
 
                 if (_application != null)
                 {
-                    Marshal.ReleaseComObject(_application); 
+                    if (_releaseApplicationComObjectOnDispose)
+                    {
+                        Marshal.ReleaseComObject(_application);
+                    }
                     _application = null;
                 }   
                 
@@ -150,13 +155,11 @@ namespace AccessCodeLib.Common.VBIDETools
                 Logger.Log(ex.Message);
             }
 
-            // GC-Bereinigung wegen unmanaged res:
-            /*
+            // GC clean up
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            */
             _disposed = true;
         }
 

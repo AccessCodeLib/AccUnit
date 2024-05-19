@@ -25,8 +25,8 @@ namespace AccessCodeLib.Common.VBIDETools
 
         public enum AcObjectType { AcDefault = -1, AcTable = 0, AcQuery = 1, AcForm = 2, AcReport = 3, AcMacro = 4, AcModule = 5 };
 
-        public AccessApplicationHelper(object application)
-            : base(application)
+        public AccessApplicationHelper(object application, bool releaseApplicationComObjectOnDispose = false)
+            : base(application, releaseApplicationComObjectOnDispose)
         {
         }
 

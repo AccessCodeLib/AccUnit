@@ -87,7 +87,7 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
             }
         }
 
-        public static OfficeApplicationHelper GetOfficeApplicationHelper(VBE vbe, ref object hostApplication)
+        public static OfficeApplicationHelper GetOfficeApplicationHelper(VBE vbe, ref object hostApplication, bool releaseApplicationComObjectOnDispose = false)
         {
             using (new BlockLogger())
             {
@@ -101,11 +101,11 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
                     isAccessApplication = GetAccessApplicationTypeForComObject(hostApplication) != null;
                 }
 
-                return hostApplication is null ? new VbeOnlyApplicatonHelper(vbe) : GetOfficeApplicationHelper(hostApplication, isAccessApplication);
+                return hostApplication is null ? new VbeOnlyApplicatonHelper(vbe) : GetOfficeApplicationHelper(hostApplication, isAccessApplication, releaseApplicationComObjectOnDispose);
             }
         }
 
-        private static OfficeApplicationHelper GetOfficeApplicationHelper(object hostApplication, bool isAccessApplication)
+        private static OfficeApplicationHelper GetOfficeApplicationHelper(object hostApplication, bool isAccessApplication, bool releaseApplicationComObjectOnDispose)
         {
             using (new BlockLogger())
             {
@@ -113,7 +113,7 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
                 if (isAccessApplication)
                 {
                     Logger.Log("Access application");
-                    applicationHelper = new AccessApplicationHelper(hostApplication);
+                    applicationHelper = new AccessApplicationHelper(hostApplication, releaseApplicationComObjectOnDispose);
                 }
                 else
                 {

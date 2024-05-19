@@ -48,7 +48,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
                 /*
                 _tagListManager.AddIn = addIn;
-                _testListAndResultManager.AddIn = addIn;
                 */
 
                 InitOfficeApplicationHelper();
@@ -266,8 +265,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             using (new BlockLogger())
             {
-                // Note: if load RubberDuck, an instance of Access stay in memory after close
-                _officeApplicationHelper = HostApplicationTools.GetOfficeApplicationHelper(VBE, ref hostApplication);
+                // Note: if load RubberDuck, an instance of Access stay in memory after close => HostApplicationTools.GetOfficeApplicationHelper(..., ..., true);
+                _officeApplicationHelper = HostApplicationTools.GetOfficeApplicationHelper(VBE, ref hostApplication, true);
                 _vbeIntegrationManager.OfficeApplicationHelper = _officeApplicationHelper;
                 _testSuiteManager.OfficeApplicationHelper = _officeApplicationHelper;
             }
