@@ -3,6 +3,7 @@ using Microsoft.Office.Core;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.Common.VBIDETools.Commandbar
 {
@@ -15,7 +16,7 @@ namespace AccessCodeLib.Common.VBIDETools.Commandbar
             VBE = vbe;
         }
 
-        public VBE VBE { get; }
+        public VBE VBE { get; private set; }
 
         public CommandBar MenuBar
         {
@@ -61,12 +62,10 @@ namespace AccessCodeLib.Common.VBIDETools.Commandbar
                     return foundControl.Index;
                 }
             }
-            // ReSharper disable EmptyGeneralCatchClause
             catch
             {
                 // Don't mind if the control could not be found.
             }
-            // ReSharper restore EmptyGeneralCatchClause
 
             return null;
         }
@@ -114,17 +113,18 @@ namespace AccessCodeLib.Common.VBIDETools.Commandbar
 
             using (new BlockLogger())
             {
-                DisposeUnManagedResources();
-
+                DisposeUnmanagedResources();
                 _disposed = true;
             }
         }
 
-        private void DisposeUnManagedResources()
+        private void DisposeUnmanagedResources()
         {
             using (new BlockLogger())
             {
-
+                Marshal.ReleaseComObject(VBE);  
+                VBE = null;
+                
                 // issue #77: (http://accunit.access-codelib.net/bugs/view.php?id=77)
                 return;
                 /*

@@ -2,6 +2,8 @@
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
+using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.Configuration

@@ -1,0 +1,62 @@
+﻿<Window x:Class="AccessCodeLib.AccUnit.VbeAddIn.About.AboutDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AccessCodeLib.AccUnit.VbeAddIn.About"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=local:AboutViewModel}"
+             d:DesignHeight="350" d:DesignWidth="300"
+             Title="About"   
+             SizeToContent="WidthAndHeight" MinWidth="300"
+             WindowStartupLocation="CenterScreen" >
+    <Window.DataContext>
+        <local:AboutViewModel />
+    </Window.DataContext>
+    <Grid>
+        <StackPanel HorizontalAlignment="Stretch" Margin="20" >
+            <Label Content="AccUnit" FontSize="28" FontWeight="Bold" Padding="0"
+                   HorizontalAlignment="Center" VerticalAlignment="Top"/>
+
+            <Grid HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="Framework Version" Margin="0, 10, 0, 0"
+                       HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                <Label Grid.Row="1" Grid.Column="0" Content="{Binding FrameworkVersion, FallbackValue='0.0.0.0'}" 
+                       FontSize="14" HorizontalAlignment="Center" Padding="0" />
+                
+                <Label Grid.Row="0" Grid.Column="1" Content="Add-in Version" 
+                       HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                <Label Grid.Row="1" Grid.Column="1" Content="{Binding AddInVersion, FallbackValue='0.0.0.0'}" 
+                       FontSize="14" HorizontalAlignment="Center" Padding="0"/>
+                
+            </Grid>
+            <Label Grid.Row="2" Grid.Column="0"  Content="{Binding Copyright, FallbackValue='© 2010-2024'}" 
+                   Margin="0,20,0,0" HorizontalAlignment="Center" />
+            <TextBlock HorizontalAlignment="Center" FontSize="14" >
+                <Hyperlink NavigateUri="https://accunit.access-codelib.net" 
+                       Command="{Binding NavigateCommand}" 
+                       CommandParameter="https://accunit.access-codelib.net">
+                    access-codelib.net
+                </Hyperlink>
+            </TextBlock>
+            <Label Content="Contributors" Margin="0,10,0,0" HorizontalAlignment="Center" FontStyle="Italic" FontWeight="DemiBold" />
+            <ItemsControl ItemsSource="{Binding Contributors}" HorizontalAlignment="Center">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Label Content="{Binding Name}" HorizontalAlignment="Center" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Grid>
+</Window>

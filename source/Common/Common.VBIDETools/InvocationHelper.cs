@@ -45,17 +45,22 @@ namespace AccessCodeLib.Common.VBIDETools
 
             try
             {
-                _target = null;
+                if (_target != null)
+                {
+                    //Marshal.ReleaseComObject(_target); // --> RCW error ... Why?
+                    _target = null;
+                }
             }
             catch (Exception ex)
             {
                 Logger.Log(ex.Message);
             }
 
-            // GC-Bereinigung wegen unmanaged res:
+            // GC clean up (instead of Marshal.ReleaseComObject)  
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
+            GC.WaitForPendingFinalizers();
 
             _disposed = true;
         }

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Timer = System.Windows.Forms.Timer;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
@@ -17,7 +18,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     internal class AddInManager : IDisposable
     {
         private AddIn _addIn;
-        private Timer _startupTimer;
+        //private Timer _startupTimer;
         private OfficeApplicationHelper _officeApplicationHelper;
 
         private readonly VbeIntegrationManager _vbeIntegrationManager = new VbeIntegrationManager();
@@ -27,19 +28,17 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         private readonly TestStarter _testStarter = new TestStarter();
 
         private readonly TestExplorerManager _testExplorerManager;
+        private readonly DialogManager _dialogManager = new DialogManager();
 
         /*
         private readonly TagListManager _tagListManager = new TagListManager();
         
-        private readonly DialogManager _dialogManager = new DialogManager();
+        
         private readonly TestTemplateGenerator _testTemplateGenerator = new TestTemplateGenerator();
         private AccSpecCommandBarAdapterClient _accSpecCommandBarAdapterClient;
         private AccSpecManager _accSpecManager;
 
-        
         */
-
-        //private VbaProgrammingTools _vbaProgrammingTools;
 
         public AddInManager(AddIn addIn)
         {
@@ -50,12 +49,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 /*
                 _tagListManager.AddIn = addIn;
                 _testListAndResultManager.AddIn = addIn;
-
-
-                if (Settings.Default.VbaProgrammingToolsEnabled)
-                {
-                    _vbaProgrammingTools = new VbaProgrammingTools();
-                }
                 */
 
                 InitOfficeApplicationHelper();
@@ -130,12 +123,11 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 _commandBarsAdapter.AddClient(_testStarter);
                 _commandBarsAdapter.AddClient(_vbeIntegrationManager);
                 _commandBarsAdapter.AddClient(_testExplorerManager);
+                _commandBarsAdapter.AddClient(_dialogManager);
 
                 /*
                 _commandBarsAdapter.AddClient(_tagListManager);
                 _commandBarsAdapter.AddClient(_testTemplateGenerator);
-                
-                _commandBarsAdapter.AddClient(_dialogManager);
                 */
 
                 /*
@@ -143,24 +135,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 {
                     _commandBarsAdapter.AddClient(_accSpecCommandBarAdapterClient);
                 }
-
-                if (_vbaProgrammingTools != null)
-                {
-                    AddVbaProgrammingToolsToCommandBar();
-                }
                 */
             }
         }
-
-        /*
-        private void AddVbaProgrammingToolsToCommandBar()
-        {
-            using (new BlockLogger())
-            {
-                _commandBarsAdapter.AddClient(_vbaProgrammingTools);
-            }
-        }
-        */
 
         private void InitTestSuiteManager()
         {
@@ -289,29 +266,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             using (new BlockLogger())
             {
+                // Note: if load RubberDuck, an instance of Access stay in memory after close
                 _officeApplicationHelper = HostApplicationTools.GetOfficeApplicationHelper(VBE, ref hostApplication);
                 _vbeIntegrationManager.OfficeApplicationHelper = _officeApplicationHelper;
                 _testSuiteManager.OfficeApplicationHelper = _officeApplicationHelper;
-
-                /*
-                if (_vbaProgrammingTools != null)
-                {
-                    InitVbaProgrammingTools(_officeApplicationHelper);
-                }
-                */
             }
         }
 
         #endregion
-        /*
-        private void InitVbaProgrammingTools(OfficeApplicationHelper officeApplicationHelper)
-        {
-            using (new BlockLogger())
-            {
-                _vbaProgrammingTools.OfficeApplicationHelper = officeApplicationHelper;
-            }
-        }
-        */
+       
         #region ad VbeWindow
 
         private void InitVbeWindows()
@@ -355,6 +318,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         }
         */
 
+        /*
         private void DisposeStartUpTimer()
         {
             if (_startupTimer == null)
@@ -399,6 +363,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             //_testListAndResultManager.AddTestClassListToTestListAndResultWindow();
             DisposeStartUpTimer();
         }
+        */
 
         #endregion
 
@@ -410,6 +375,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
                 return version.FileVersion;
+            }
+        }
+
+        public static string Copyright
+        {
+            get
+            {
+                var version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+                return version.LegalCopyright;
             }
         }
 
@@ -442,76 +416,56 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
                 try
                 {
-                    DisposeUnManagedResources();
+                    DisposeUnmanagedResources();
                 }
                 catch (Exception ex)
                 {
                     Logger.Log(ex);
                 }
 
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-
                 _disposed = true;
             }
         }
 
-        private void DisposeUnManagedResources()
+        private void DisposeUnmanagedResources()
         {
-            _addIn = null;
+            if (_addIn != null)
+            {
+                Marshal.ReleaseComObject(_addIn);
+                _addIn = null;
+            }
         }
 
         private void DisposeManagedResources()
         {
             using (new BlockLogger())
             {
-                try
-                {
-                    DisposeStartUpTimer();
-                    DisposeVbaProgrammingTools();
+                //DisposeStartUpTimer();
+                //_testTemplateGenerator.Dispose();
 
-                    _testStarter.Dispose();
+                DisposeManagedResource(_testStarter);
+                DisposeManagedResource(_testExplorerManager);   
+                DisposeManagedResource(_vbeIntegrationManager);
+                DisposeManagedResource(_commandBarsAdapter);
+                DisposeManagedResource(_testSuiteManager);
 
-                    //_testTemplateGenerator.Dispose();
+                DisposeAddInManagerBridge();
 
-                    _vbeIntegrationManager.Dispose();
-
-                    try
-                    {
-                        _commandBarsAdapter.Dispose();
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log(ex);
-                    }
-
-                    _testSuiteManager.Dispose();
-
-                    DisposeAddInManagerBridge();
-
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-
-                try
-                {
-                    _officeApplicationHelper.Dispose();
-                    _officeApplicationHelper = null;
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
+                DisposeManagedResource(_officeApplicationHelper);
+                _officeApplicationHelper = null;
             }
         }
 
-        private void DisposeVbaProgrammingTools()
+        private void DisposeManagedResource(IDisposable disposable)
         {
-            //_vbaProgrammingTools?.Dispose();
-            //_vbaProgrammingTools = null;
+            try
+            {
+                disposable.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
         }
 
         private void DisposeAddInManagerBridge()
@@ -537,6 +491,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             addInManagerBridge.TestSuiteRequest -= AddInBridgeTestSuiteRequest;
             addInManagerBridge.HostApplicationInitialized -= AddInBridgeHostApplicationInitialized;
+            addInManagerBridge.ConstraintBuilderRequest -= AddInBridgeConstraintBuilderRequest;
+            addInManagerBridge.AssertRequest -= AddInBridgeAssertRequest;
         }
 
         public void Dispose()

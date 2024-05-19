@@ -131,7 +131,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 {
                     try
                     {
-                        _addInInstance.Object = null;
+                        if (!_disposed)
+                        {
+                            Dispose();
+                        }   
                     }
                     catch (Exception ex)
                     {
@@ -176,6 +179,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     return;
                 }
 
+                try
+                {
+                    _addInInstance.Object = null;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+
                 if (disposing)
                 {
                     Logger.Log("disposing == true");
@@ -187,11 +199,19 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     }
                 }
 
-                _addInInstance = null;
-
+                if (_addInInstance != null)
+                {
+                    Logger.Log("Start Marshal.ReleaseComObject(_addInInstance) ...");
+                    Marshal.ReleaseComObject(_addInInstance);
+                    _addInInstance = null;
+                }
+                
+                /*
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
+                GC.WaitForPendingFinalizers();
+                */
 
                 _disposed = true;
 
