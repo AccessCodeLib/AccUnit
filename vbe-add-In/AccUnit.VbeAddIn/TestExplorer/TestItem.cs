@@ -101,7 +101,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         public bool ShowTestDetailButton {
             get
             {
-                return IsFocused && TestResult != null && Children.Count == 0;
+                return IsFocused && TestResult != null && !TestResult.Success && Children.Count == 0;
             }
         }
 

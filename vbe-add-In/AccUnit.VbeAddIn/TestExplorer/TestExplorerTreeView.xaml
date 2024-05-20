@@ -33,7 +33,11 @@
                         <Image Grid.Column="1" Source="{Binding ImageSource}" Margin="0,0,10,0" />
                         <TextBlock Grid.Column="2" Text="{Binding Name}" Margin="0,0,10,0" />
                         <TextBlock Grid.Column="3" Text="{Binding Result}" />
-                        <Button Grid.Column="4" Content="Details" Visibility="{Binding ShowTestDetailButton, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" />
+                        <Button Grid.Column="4" Content="Details" 
+                                Command="{Binding Path=DataContext.ShowTestResultDetailCommand, RelativeSource={RelativeSource AncestorType={x:Type local:TestExplorerTreeView}}}" 
+                                CommandParameter="{Binding}" 
+                                Visibility="{Binding ShowTestDetailButton, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                                VerticalAlignment="Center" Margin="10 0 2 0" Padding="5 0" />
                     </Grid>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
