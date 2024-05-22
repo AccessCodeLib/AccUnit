@@ -4,6 +4,7 @@ using System.Windows.Data;
 using System.Windows;
 using System;
 using System.Windows.Media;
+using System.Linq;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 {
@@ -95,13 +96,32 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         public bool IsFocused
         {
             get => isFocused;
-            set { isFocused = value; OnPropertyChanged(nameof(IsFocused)); OnPropertyChanged(nameof(ShowTestDetailButton)); }
+            set { isFocused = value; OnPropertyChanged(nameof(IsFocused)); OnPropertyChanged(nameof(ShowTestDetailButton)); OnPropertyChanged(nameof(ShowGoToSourceButton)); }
         }
 
-        public bool ShowTestDetailButton {
+        private bool ChildrenAreFocused
+        {
+            get
+            {
+                return Children.Count > 0 && Children.Any(c => c.IsFocused); 
+            }
+
+
+        }
+
+        public bool ShowTestDetailButton 
+        {
             get
             {
                 return IsFocused && TestResult != null && !TestResult.Success && Children.Count == 0;
+            }
+        }
+
+        public bool ShowGoToSourceButton
+        {
+            get
+            {
+                return IsFocused && !ChildrenAreFocused; // IsFocused && Children.Count == 0;
             }
         }
 

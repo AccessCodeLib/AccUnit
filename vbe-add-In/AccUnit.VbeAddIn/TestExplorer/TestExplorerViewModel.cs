@@ -5,6 +5,8 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Windows.Data;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -31,6 +33,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             RefreshCommand = new RelayCommand(Refresh);
             CommitCommand = new RelayCommand(Commit);
             ShowTestResultDetailCommand = new RelayCommand<TestItem>(ShowTestResultDetail);
+            GoToSourceCommand = new RelayCommand<TestItem>(GoToSource);
         }
 
         private CheckableItems<TestItem> _testItems;
@@ -373,6 +376,20 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             }
             
         }
+
+        public ICommand GoToSourceCommand { get; }
+        protected virtual void GoToSource(TestItem testItem)
+        {
+            try
+            {
+                System.Windows.Forms.MessageBox.Show(testItem.FullName);
+            }
+            catch (Exception ex)
+            {
+                UITools.ShowException(ex);
+            }
+
+        }
     }
 
     public static class TestExplorerInfo
@@ -380,5 +397,4 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         public const string ProgID = @"AccUnit.VbeAddIn.TestExplorer";
         public const string PositionGuid = @"DB052D8D-8418-4322-ADD9-5DCB8157C8D4";
     }
-
 }
