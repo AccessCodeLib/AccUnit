@@ -160,6 +160,10 @@
     <Compile Include="CommitMethodNameEventArgs.cs" />
     <Compile Include="ComRegistration.cs" />
     <Compile Include="Connect.cs" />
+    <Compile Include="TestExplorer\TestResultDetailView.xaml.cs">
+      <DependentUpon>TestResultDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TestExplorer\TestResultViewModel.cs" />
     <Compile Include="TestImportExport\ImportExportWindow.xaml.cs">
       <DependentUpon>ImportExportWindow.xaml</DependentUpon>
     </Compile>
@@ -328,6 +332,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="TestExplorer\TestExplorerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TestExplorer\TestResultDetailView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

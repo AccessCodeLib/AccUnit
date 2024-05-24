@@ -1,8 +1,10 @@
-﻿using AccessCodeLib.AccUnit.Interfaces;
+﻿using AccessCodeLib.AccUnit.Configuration;
+using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Commandbar;
 using Microsoft.Office.Core;
+using Microsoft.Vbe.Interop;
 using System;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
@@ -46,6 +48,52 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             {
                 e.TestClassInfo = VbeIntegrationManager.TestClassManager.GetTestClassInfo(e.ClassName, true);
             };
+            _viewModel.GotoSource += (sender, e) =>
+            {
+                try
+                {
+                    ShowSourceCode(e.FullName);
+                }
+                catch { }
+            };
+        }
+
+        private void ShowSourceCode(string fullName)
+        {
+            var nameParts = fullName.Split('.');
+            var classname = nameParts[0];
+            var membername = nameParts.Length > 1 ? nameParts[1] : null;
+            ShowSourceCode(classname, membername);  
+        }
+
+        private void ShowSourceCode(string classname, string membername)
+        {
+            var codePane = ActivateCodePane(classname, membername);
+            EnsureTextCursorIsVisible(codePane);
+        }
+
+        private CodePane ActivateCodePane(string classname, string membername = null)
+        {
+            var modul = VbeIntegrationManager.TestClassManager.ActiveVBProject.VBComponents.Item(classname).CodeModule;
+            var pane = modul.CodePane;
+            pane.Show();
+            pane.Window.SetFocus();
+            var procLine = 1;
+            if (!string.IsNullOrEmpty(membername))
+            {
+                // TODO: Determine upfront if the member does not exist and throw appropriate exception (including name of the missing member)
+                procLine = modul.ProcBodyLine[membername, vbext_ProcKind.vbext_pk_Proc];
+            }
+            pane.SetSelection(procLine, 1, procLine, 1);
+            return pane;
+        }
+
+        private static void EnsureTextCursorIsVisible(_CodePane codePane)
+        {
+            var window = codePane.Window;
+            window.Visible = false;
+            window.Visible = true;
+            window.SetFocus();
         }
 
         public VbeIntegrationManager VbeIntegrationManager { get; set; }

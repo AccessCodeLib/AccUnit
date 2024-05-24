@@ -3,7 +3,10 @@ using AccessCodeLib.AccUnit.Interfaces;
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
+using System.Windows.Data;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -20,6 +23,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         public event EventHandler<RunTestsEventArgs> RunTests;
         //public event EventHandler CancelTestRun;
         public event EventHandler<GetTestClassInfoEventArgs> GetTestClassInfo;
+        public event EventHandler<TestItem> GotoSource;
 
         public TestExplorerViewModel()
         {
@@ -29,6 +33,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
             TestItems = new TestClassInfoTestItems();
             RefreshCommand = new RelayCommand(Refresh);
             CommitCommand = new RelayCommand(Commit);
+            ShowTestResultDetailCommand = new RelayCommand<TestItem>(ShowTestResultDetail);
+            GoToSourceCommand = new RelayCommand<TestItem>(GoToSource);
         }
 
         private CheckableItems<TestItem> _testItems;
@@ -332,16 +338,51 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
         protected void Refresh()
         {
-            RefreshList?.Invoke(this, new CheckableTestItemsEventArgs(TestItems));
+            try
+            {
+                RefreshList?.Invoke(this, new CheckableTestItemsEventArgs(TestItems));
+            }
+            catch (Exception ex)
+            {
+                UITools.ShowException(ex);
+            }   
         }
 
         protected virtual void Commit()
         {
-            TestClassList list = new TestClassList();
-            list.AddRange(TestItems.Where(ti => ti.IsChecked).Select(ti => ((TestClassInfoTestItem)ti).TestClassInfo));
-            RunTests?.Invoke(this, new RunTestsEventArgs(list));
+            try
+            {
+                TestClassList list = new TestClassList();
+                list.AddRange(TestItems.Where(ti => ti.IsChecked).Select(ti => ((TestClassInfoTestItem)ti).TestClassInfo));
+                RunTests?.Invoke(this, new RunTestsEventArgs(list));
+            }
+            catch (Exception ex)
+            {
+                UITools.ShowException(ex);
+            }
         }
 
+        public ICommand ShowTestResultDetailCommand { get; }
+        protected virtual void ShowTestResultDetail(TestItem testItem)
+        {
+            try
+            {
+                var testResultViewModel = new TestResultViewModel(testItem.TestResult);
+                var testResultView = new TestResultDetailView(testResultViewModel);
+                testResultView.ShowDialog();
+            }
+            catch(Exception ex  )
+            {
+                UITools.ShowException(ex);
+            }
+            
+        }
+
+        public ICommand GoToSourceCommand { get; }
+        protected virtual void GoToSource(TestItem testItem)
+        {
+            GotoSource?.Invoke(this, testItem); 
+        }
     }
 
     public static class TestExplorerInfo

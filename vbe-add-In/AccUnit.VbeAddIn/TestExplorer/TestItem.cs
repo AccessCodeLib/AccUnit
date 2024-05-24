@@ -1,5 +1,10 @@
 ﻿using AccessCodeLib.AccUnit.Interfaces;
+using System.Globalization;
+using System.Windows.Data;
+using System.Windows;
+using System;
 using System.Windows.Media;
+using System.Linq;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 {
@@ -85,6 +90,61 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
 
                 return null;
             }
+        }
+
+        private bool isFocused;
+        public bool IsFocused
+        {
+            get => isFocused;
+            set { isFocused = value; OnPropertyChanged(nameof(IsFocused)); OnPropertyChanged(nameof(ShowTestDetailButton)); OnPropertyChanged(nameof(ShowGoToSourceButton)); }
+        }
+
+        private bool ChildrenAreFocused
+        {
+            get
+            {
+                return Children.Count > 0 && Children.Any(c => c.IsFocused); 
+            }
+
+
+        }
+
+        public bool ShowTestDetailButton 
+        {
+            get
+            {
+                return IsFocused && TestResult != null && !TestResult.Success && Children.Count == 0;
+            }
+        }
+
+        public bool ShowGoToSourceButton
+        {
+            get
+            {
+                return IsFocused && !ChildrenAreFocused;
+            }
+        }
+
+    }
+
+    public class BooleanToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool booleanValue)
+            {
+                return booleanValue ? Visibility.Visible : Visibility.Hidden;
+            }
+            return Visibility.Hidden;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is Visibility visibility)
+            {
+                return visibility == Visibility.Visible;
+            }
+            return false;
         }
     }
 }
