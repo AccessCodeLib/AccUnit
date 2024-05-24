@@ -23,6 +23,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         public event EventHandler<RunTestsEventArgs> RunTests;
         //public event EventHandler CancelTestRun;
         public event EventHandler<GetTestClassInfoEventArgs> GetTestClassInfo;
+        public event EventHandler<TestItem> GotoSource;
 
         public TestExplorerViewModel()
         {
@@ -380,15 +381,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         public ICommand GoToSourceCommand { get; }
         protected virtual void GoToSource(TestItem testItem)
         {
-            try
-            {
-                System.Windows.Forms.MessageBox.Show(testItem.FullName);
-            }
-            catch (Exception ex)
-            {
-                UITools.ShowException(ex);
-            }
-
+            GotoSource?.Invoke(this, testItem); 
         }
     }
 

@@ -121,7 +121,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.TestExplorer
         {
             get
             {
-                return IsFocused && !ChildrenAreFocused; // IsFocused && Children.Count == 0;
+                return IsFocused && !ChildrenAreFocused;
             }
         }
 
