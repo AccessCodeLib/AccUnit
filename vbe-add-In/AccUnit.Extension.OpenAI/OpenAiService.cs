@@ -1,9 +1,15 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
+using OpenAI.Chat;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI
 {
-    public class OpenAiService
+    public interface IOpenAiService
+    {
+        ChatClient NewChatClient(string model = null);
+    }
+
+    public class OpenAiService : IOpenAiService
     {
         public const string CredentialKey = "AccessCodeLib.OpenAI.ApiKey";
         public const string EnvironmentKey = "OPENAI_API_KEY";
@@ -11,9 +17,18 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         private string _apiKey;
         private readonly ICredentialManager _credentialManager;
 
-        public OpenAiService(ICredentialManager credentialManager)
+        private string _gptModel;
+
+        public OpenAiService(ICredentialManager credentialManager, string gptModel = "gpt-4o")
         {
             _credentialManager = credentialManager;
+            _gptModel = gptModel;
+        }
+
+        public string Model
+        {
+            get => _gptModel;
+            set => _gptModel = value;
         }
 
         public string ApiKey
@@ -28,7 +43,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             }
         }
 
-        #region ReadApiKey
+        #region OpenAI API Key
         private string GetApiKey()
         {
             string apiKey;
@@ -72,13 +87,24 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         {
             return Environment.GetEnvironmentVariable(EnvironmentKey);
         }
-        #endregion
+        
 
         public void StoreApiKey(string apiKey)
         {
             _apiKey = apiKey;
             string username = Environment.UserName;
             _credentialManager.Save(CredentialKey, username, apiKey);
+        }
+        #endregion
+
+        public ChatClient NewChatClient(string model = null)
+        {
+            if (string.IsNullOrEmpty(model))
+            {
+                model = _gptModel;
+            }
+            var apiKeyCredential = new System.ClientModel.ApiKeyCredential(ApiKey);
+            return new ChatClient(model: model, credential: apiKeyCredential);
         }
     }
 }
