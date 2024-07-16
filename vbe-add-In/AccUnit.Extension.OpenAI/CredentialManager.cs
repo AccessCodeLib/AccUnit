@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
-using System.Text;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI
 {
-    public class CredentialManager : ICredentialManager
+    public class CredentialManager
     {
-        [DllImport("Advapi32.dll", EntryPoint = "CredWriteW", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern bool CredWrite([In] ref Credential userCredential, [In] UInt32 flags);
+        [DllImport("advapi32.dll", SetLastError = true)]
+        private static extern bool CredWrite(ref Credential credential, uint reserved);
 
-        [DllImport("Advapi32.dll", EntryPoint = "CredReadW", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern bool CredRead(string target, CredentialType type, int reservedFlag, out IntPtr credentialPtr);
+        [DllImport("advapi32.dll", SetLastError = true)]
+        private static extern bool CredRead(string target, CredentialType type, uint reserved, out IntPtr credentialPtr);
 
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern void CredFree(IntPtr credential);
@@ -20,82 +19,53 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         private struct Credential
         {
             public uint Flags;
-            public CredentialType Type;
-            public IntPtr TargetName;
-            public IntPtr Comment;
-            public System.Runtime.InteropServices.ComTypes.FILETIME LastWritten;
+            public string TargetName;
+            public string UserName;
+            public SecureString CredentialBlob;
             public uint CredentialBlobSize;
-            public IntPtr CredentialBlob;
+            public CredentialType Type;
+            public DateTime LastWritten;
             public uint Persist;
             public uint AttributeCount;
             public IntPtr Attributes;
-            public IntPtr TargetAlias;
-            public IntPtr UserName;
         }
 
-        private enum CredentialPersistence : uint
+        private enum CredentialType
         {
-            Session = 1,
-            LocalMachine,
-            Enterprise
+            CRED_TYPE_GENERIC = 1
         }
 
-        public enum CredentialType
+        public void Save(string target, string username, string password)
         {
-            Generic = 1
-        }
-
-        public void Save(string target, string username, string secret)
-        {
-            byte[] byteArray = secret == null ? null : Encoding.Unicode.GetBytes(secret);
-
-            if (byteArray != null && byteArray.Length > 512 * 5)
-                throw new ArgumentOutOfRangeException("secret", "The secret message has exceeded 2560 bytes.");
-
-            Credential credential = new Credential
+            var securePassword = new SecureString();
+            foreach (char c in password)
             {
-                AttributeCount = 0,
-                Attributes = IntPtr.Zero,
-                Comment = IntPtr.Zero,
-                TargetAlias = IntPtr.Zero,
-                Type = CredentialType.Generic,
-                Persist = (uint)CredentialPersistence.LocalMachine,
-                CredentialBlobSize = (uint)(byteArray?.Length ?? 0),
-                TargetName = Marshal.StringToCoTaskMemUni(target),
-                CredentialBlob = Marshal.StringToCoTaskMemUni(secret),
-                UserName = Marshal.StringToCoTaskMemUni(username ?? Environment.UserName)
-            };
-            
-            bool success = CredWrite(ref credential, 0);
-            Marshal.FreeCoTaskMem(credential.TargetName);
-            Marshal.FreeCoTaskMem(credential.CredentialBlob);
-            Marshal.FreeCoTaskMem(credential.UserName);
-
-            if (!success)
-            {
-                int lastError = Marshal.GetLastWin32Error();
-                throw new Exception(string.Format("CredWrite failed with the error code {0}.", lastError));
+                securePassword.AppendChar(c);
             }
+            securePassword.MakeReadOnly();
+
+            var credential = new Credential
+            {
+                TargetName = target,
+                UserName = username,
+                CredentialBlob = securePassword,
+                CredentialBlobSize = (uint)securePassword.Length,
+                Type = CredentialType.CRED_TYPE_GENERIC
+            };
+
+            CredWrite(ref credential, 0);
         }
 
         public string Retrieve(string target)
         {
-            IntPtr credentialPtr;
-            if (!CredRead(target, CredentialType.Generic, 0, out credentialPtr))
+            if (CredRead(target, CredentialType.CRED_TYPE_GENERIC, 0, out IntPtr credentialPtr))
             {
-                return null;
+                var credential = Marshal.PtrToStructure<Credential>(credentialPtr);
+                string password = ConvertToInsecureString(credential.CredentialBlob);
+                CredFree(credentialPtr);
+                return password;
             }
-
-            var credential = Marshal.PtrToStructure<Credential>(credentialPtr);
-            CredFree(credentialPtr);
-
-            string secret = null;
-            if (credential.CredentialBlob != IntPtr.Zero)
-            {
-                secret = Marshal.PtrToStringUni(credential.CredentialBlob, (int)credential.CredentialBlobSize / 2);
-            }
-
-            return secret;
+            return null;
         }
 
         private string ConvertToInsecureString(SecureString secureString)

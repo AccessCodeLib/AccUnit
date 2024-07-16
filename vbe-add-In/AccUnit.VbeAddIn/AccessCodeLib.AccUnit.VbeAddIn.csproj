@@ -68,62 +68,33 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'AzureCI|x64'">
-    <OutputPath>bin\x64\AzureCI\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AccessCodeLib.Common.VbeUserControlHost, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\VbeUserControlHost\AccessCodeLib.Common.VbeUserControlHost.dll</HintPath>
     </Reference>
-    <Reference Include="Extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\..\source\lib\vbide\Extensibility.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Vbe.Interop, Version=15.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Vbe.Interop, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\packages\ThammimTech.Microsoft.Vbe.Interop.15.0.0\lib\net20\Microsoft.Vbe.Interop.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Interop, Version=17.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Interop.17.10.40170\lib\net472\Microsoft.VisualStudio.Interop.dll</HintPath>
     </Reference>
     <Reference Include="netstandard" />
     <Reference Include="Office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>..\..\source\lib\office\Office.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="stdole, Version=17.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\stdole.17.9.37000\lib\net472\stdole.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -147,11 +118,6 @@
     <Compile Include="AxHostConverter.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Info\InfoDialog.xaml.cs">
-      <DependentUpon>InfoDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Info\InfoDialogViewModel.cs" />
-    <Compile Include="InsertTestMethod\ChatGptMethodBuilder.cs" />
     <Compile Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialog.xaml.cs">
       <DependentUpon>GenerateTestMethodsFromCodeModuleDialog.xaml</DependentUpon>
     </Compile>
@@ -296,10 +262,6 @@
       <Project>{9fa679c2-82c0-42dc-a34f-f78a9012eeeb}</Project>
       <Name>AccessCodeLib.Common.VBIDETools</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AccUnit.Extension.OpenAI\AccUnit.Extension.OpenAI.csproj">
-      <Project>{67b2d98f-672c-4949-af8a-94e3cf3e246e}</Project>
-      <Name>AccUnit.Extension.OpenAI</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -351,10 +313,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="About\AboutDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Info\InfoDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -418,5 +376,6 @@
     <Content Include="Resources\result_failed_16x16.png" />
     <Content Include="Resources\result_success_16x16.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
