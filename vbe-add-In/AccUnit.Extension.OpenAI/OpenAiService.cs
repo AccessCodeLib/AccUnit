@@ -5,13 +5,15 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
 {
     public class OpenAiService
     {
-        private const string CredentialKey = "AccessCodeLib:OpenAI.ApiKey";
-        private const string EnvironmentKey = "OPENAI_API_KEY";
+        public const string CredentialKey = "AccessCodeLib.OpenAI.ApiKey";
+        public const string EnvironmentKey = "OPENAI_API_KEY";
 
         private string _apiKey;
+        private readonly ICredentialManager _credentialManager;
 
-        public OpenAiService()
+        public OpenAiService(ICredentialManager credentialManager)
         {
+            _credentialManager = credentialManager;
         }
 
         public string ApiKey
@@ -30,7 +32,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         private string GetApiKey()
         {
             string apiKey;
-
+       
             // only for debug or test?
             apiKey = GetApiKeyFromEnvironment();
             if (!string.IsNullOrEmpty(apiKey))
@@ -44,7 +46,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
                 return apiKey;
             }
 
-            apiKey = GetApiKeyFromWindowsCredential();
+            apiKey = GetApiKeyFromCredentialManager();
             if (!string.IsNullOrEmpty(apiKey))
             {
                return apiKey;
@@ -53,10 +55,9 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             return null;
         }
 
-        private string GetApiKeyFromWindowsCredential()
+        private string GetApiKeyFromCredentialManager()
         {
-            var cm = new CredentialManager();
-            return cm.Retrieve(CredentialKey);
+            return _credentialManager.Retrieve(CredentialKey);
         }
 
         private string GetApiKeyFromUserSecrets()
@@ -73,13 +74,11 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         }
         #endregion
 
-        public void SetApiKey(string apiKey)
+        public void StoreApiKey(string apiKey)
         {
             _apiKey = apiKey;
-            var cm = new CredentialManager();
             string username = Environment.UserName;
-
-            cm.Save("CredentialKey", username, apiKey);
+            _credentialManager.Save(CredentialKey, username, apiKey);
         }
     }
 }
