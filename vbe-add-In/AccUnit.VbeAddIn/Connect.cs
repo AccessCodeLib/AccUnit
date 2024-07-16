@@ -22,7 +22,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     [ComVisible(true)]
     [Guid("F15F18C3-CA43-421E-9585-6A04F51C5786")]
     [ProgId(ComRegistration.ComProgId)]
-    public class Connect : Object, Extensibility.IDTExtensibility2, IDisposable
+    public class Connect : Extensibility.IDTExtensibility2, IDisposable
     {
         #region IDTExtensibility2 implementation
 
