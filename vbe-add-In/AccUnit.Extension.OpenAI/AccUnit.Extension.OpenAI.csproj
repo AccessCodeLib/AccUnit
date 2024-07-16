@@ -110,6 +110,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ICredentialManager.cs" />
     <Compile Include="TestClassBuilder.cs" />
     <Compile Include="CredentialManager.cs" />
     <Compile Include="OpenAiService.cs" />
