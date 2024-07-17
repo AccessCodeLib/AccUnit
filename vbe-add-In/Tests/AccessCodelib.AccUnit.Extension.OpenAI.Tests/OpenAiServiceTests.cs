@@ -20,6 +20,8 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
             var service = new OpenAiService(new CredentialManager());
             var apiKey = service.ApiKey;
 
+            Environment.SetEnvironmentVariable("OPENAI_API_KEY", string.Empty);
+
             Assert.That(apiKey, Is.EqualTo(secretKey));
         }
 
@@ -28,6 +30,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
         {
             var service = new OpenAiService(new TestSupport.CredentialManagerMock());
             var apiKey = service.ApiKey;
+            Console.WriteLine(apiKey);  
             Assert.That(apiKey, Is.Not.Null, "please check UserSecrets config");
             Assert.That(apiKey, Is.GreaterThan(""), "please check UserSecrets config");
         }
