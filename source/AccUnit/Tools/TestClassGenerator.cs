@@ -8,10 +8,12 @@ namespace AccessCodeLib.AccUnit.Tools
     public class TestClassGenerator
     {
         private readonly VBProject _vbProject;
+        private readonly ITestMethodBuilder _testMethodBuilder;
 
-        public TestClassGenerator(VBProject vbproject)
+        public TestClassGenerator(VBProject vbproject, ITestMethodBuilder testMethodBuilder)
         {
             _vbProject = vbproject;
+            _testMethodBuilder = testMethodBuilder;
         }
 
         public CodeModule NewTestClass(string CodeModuleToTest = null,
@@ -86,7 +88,7 @@ namespace AccessCodeLib.AccUnit.Tools
 
         public CodeModule InsertTestMethods(string testClass, IEnumerable<CodeModuleMember> testMethods)
         {
-            var testCodeGenerator = new TestCodeGenerator();
+            var testCodeGenerator = new TestCodeGenerator(_testMethodBuilder);
             testCodeGenerator.Add(testMethods);
 
             var modules = new CodeModuleContainer(_vbProject);
@@ -113,7 +115,7 @@ namespace AccessCodeLib.AccUnit.Tools
 
         public CodeModule InsertTestMethods(string testClass, IEnumerable<string> methodsUnderTest, string stateUnderTest, string expectedBehaviour)
         {
-            var testCodeGenerator = new TestCodeGenerator();
+            var testCodeGenerator = new TestCodeGenerator(_testMethodBuilder);
             testCodeGenerator.Add(methodsUnderTest, stateUnderTest, expectedBehaviour);
 
             var modules = new CodeModuleContainer(_vbProject);
