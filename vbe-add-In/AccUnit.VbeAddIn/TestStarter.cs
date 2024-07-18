@@ -326,7 +326,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         private void AddRunButtonsToAccUnitCommandBar(AccUnitCommandBarAdapter commandBarAdapter)
         {
             var commandBar = commandBarAdapter.AccUnitCommandbar;
-            CreateCommandBarItems(commandBarAdapter, commandBar, null, true);
+            CreateCommandBarItems(commandBarAdapter, commandBar, null, false);
+            // @todo: check usePicture = true ... current: error in ApplyMaskedPicture
         }
 
         void OnAccUnitSubMenuEventsClick(object commandBarControl, ref bool handled, ref bool cancelDefault)
