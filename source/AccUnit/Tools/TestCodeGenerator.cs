@@ -236,7 +236,14 @@ namespace AccessCodeLib.AccUnit.Tools
             }
         }
 
-        
+        internal static string GenerateTemplateProcedureCode(TestCodeModuleMember member)
+        {
+            using (new BlockLogger(string.Format(TestMethodNameFormat, member.Name, member.StateUnderTest, member.ExpectedBehaviour)))
+            {
+                return new TemplateBasedTestMethodBuilder().GenerateProcedureCode(member);
+            }
+        }
+
         internal static string TestClassHeader { get { return TestTemplateSources.TestClassHeader; } }
     }
 }
