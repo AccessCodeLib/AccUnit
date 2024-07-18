@@ -1,4 +1,5 @@
 ﻿using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.AccUnit.Tools;
 using AccessCodeLib.Common.VBIDETools;
 using System;
 using System.Collections.Generic;
@@ -40,9 +41,23 @@ namespace AccessCodeLib.AccUnit.Interop
     [ProgId("AccUnit.VBATestSuite")]
     public class VBATestSuite : AccUnit.VBATestSuite, IVBATestSuite, IDisposable
     {
+        private readonly ITestMethodBuilder _testMethodBuilder;
+
         public VBATestSuite(IOfficeApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
                : base(applicationHelper, testBuilder, testRunner, testSummaryFormatter)
         {
+            _testMethodBuilder = new TemplateBasedTestMethodBuilder();
+        }
+
+        public VBATestSuite(
+                    IOfficeApplicationHelper applicationHelper, 
+                    IVBATestBuilder testBuilder, 
+                    ITestRunner testRunner, 
+                    ITestSummaryFormatter testSummaryFormatter,
+                    ITestMethodBuilder testMethodBuilder)
+               : base(applicationHelper, testBuilder, testRunner, testSummaryFormatter)
+        {
+            _testMethodBuilder = testMethodBuilder;
         }
 
         new public IVBATestSuite Add(object testToAdd)
@@ -93,7 +108,7 @@ namespace AccessCodeLib.AccUnit.Interop
         {
             get
             {
-                return new TestClassGenerator(ActiveVBProject);
+                return new TestClassGenerator(ActiveVBProject, _testMethodBuilder);
             }
         }
 
