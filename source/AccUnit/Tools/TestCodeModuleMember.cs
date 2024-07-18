@@ -4,7 +4,7 @@ using Microsoft.Vbe.Interop;
 
 namespace AccessCodeLib.AccUnit.Tools
 {
-    internal class TestCodeModuleMember : CodeModuleMember
+    public class TestCodeModuleMember : CodeModuleMember
     {
         private const string DefaultStateUnderTestText = @"StateUnderTest";
         private const string DefaultExpectedBehaviourText = @"ExpectedBehaviour";

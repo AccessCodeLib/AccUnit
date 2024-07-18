@@ -155,6 +155,17 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
+        private TestCodeGenerator TestCodeGenerator
+        {
+            get
+            {
+                if (UserSettings.Current.BuildTestMethodsWithChatGPT)
+                    return new TestCodeGenerator(new TemplateBasedTestMethodBuilder());
+
+                return new TestCodeGenerator(new TemplateBasedTestMethodBuilder());
+            }
+        }
+
         public TestClassInfo GetTestClassInfoFromSelectedComponent()
         {
             var selectedComponent = _vbeAdapter.VBE.SelectedVBComponent;
@@ -365,7 +376,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private CodeModule InsertTestMethodsDialogCommitMethodName(object sender, CommitInsertTestMethodsEventArgs e)
         {
-            var testClassGenerator = new TestClassGenerator(ActiveVBProject);
+            var testClassGenerator = new TestClassGenerator(ActiveVBProject, TestMethodBuilder);
             try
             {
                 using (new BlockLogger($"{e.TestClass}.{e.MethodsUnderTest}_{e.StateUnderTest}_{e.ExpectedBehaviour}"))
@@ -378,6 +389,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 Logger.Log(ex);
                 e.Cancel = true;
                 return null;
+            }
+        }
+
+        private ITestMethodBuilder TestMethodBuilder
+        {
+            get
+            {
+                return new TemplateBasedTestMethodBuilder();
             }
         }
 

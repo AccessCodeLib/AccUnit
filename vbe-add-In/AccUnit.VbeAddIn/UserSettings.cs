@@ -77,6 +77,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 //_accSpecUserSettings = AccSpec.Integration.UserSettings.Current.Clone();
                 RestoreVbeWindowsStateOnLoad = Properties.Settings.Default.RestoreVbeWindowsStateOnLoad;
                 TestClassNameFormat = Properties.Settings.Default.TestClassNameFormat;
+                BuildTestMethodsWithChatGPT = Properties.Settings.Default.BuildTestMethodsWithChatGPT;
             }
         }
 
@@ -174,8 +175,15 @@ End Sub")]
             set { _toolsUserSettings.TestMethodTemplate = value; }
         }
 
-        #endregion
 
-        #endregion
-    }
+        [Category("Templates")]
+        [Description("Collection of test class templates")]
+        public bool BuildTestMethodsWithChatGPT { get; set; }
+
+    //
+
+    #endregion
+
+    #endregion
+}
 }

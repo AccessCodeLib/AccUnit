@@ -4,22 +4,26 @@ namespace AccessCodeLib.AccUnit.Tools.Templates
 {
     static class BuiltInTemplateSources
     {
+        private static readonly TestCodeGenerator _testCodeGenerator;
+
         static BuiltInTemplateSources()
         {
             using (new BlockLogger())
             {
                 // Just for debugging purposes (timing!)
+                _testCodeGenerator = new TestCodeGenerator(new TemplateBasedTestMethodBuilder());
             }
         }
 
         // Simple test class
         internal const string SimpleTestClassName = @"zzzSimpleTest_RENAMEME";
         internal const string SimpleTestClassCaption = @"Simple Test Class";
+        
         internal static readonly string SimpleTestClassSource = TestTemplateSources.TestClassHeader +
                                                                 "\r\n" +
-                                                                TestCodeGenerator.GenerateProcedureCode(
+                                                                _testCodeGenerator.GenerateProcedureCode(
                                                                     new TestCodeModuleMember("MethodUnderTest"));
-
+        
         // Test class with RowTest
         internal const string RowTestClassName = "zzzRowTest_RENAMEME";
         internal const string RowTestClassCaption = @"Test Class with RowTest";

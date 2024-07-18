@@ -26,5 +26,8 @@
     <Setting Name="TestClassNameFormat" Type="System.String" Scope="User">
       <Value Profile="(Default)">%ModuleUnderTest%Tests</Value>
     </Setting>
+    <Setting Name="BuildTestMethodsWithChatGPT" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

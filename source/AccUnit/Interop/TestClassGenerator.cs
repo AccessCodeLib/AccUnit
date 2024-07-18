@@ -1,4 +1,5 @@
-﻿using Microsoft.Vbe.Interop;
+﻿using AccessCodeLib.AccUnit.Tools;
+using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace AccessCodeLib.AccUnit.Interop
 
         private string _testClassName;
 
-        public TestClassGenerator(VBProject vbproject) : base(vbproject)
+        public TestClassGenerator(VBProject vbproject, ITestMethodBuilder testMethodBuilder) : base(vbproject, testMethodBuilder)
         {
         }
 
