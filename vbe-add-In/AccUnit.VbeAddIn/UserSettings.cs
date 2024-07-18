@@ -177,7 +177,7 @@ End Sub")]
 
 
         [Category("Templates")]
-        [Description("Collection of test class templates")]
+        [Description("Use ChatGPT to build test methods")]
         public bool BuildTestMethodsWithChatGPT { get; set; }
 
     //
