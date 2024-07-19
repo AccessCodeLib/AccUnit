@@ -12,21 +12,24 @@ namespace AccessCodeLib.AccUnit.Tools
         public TestCodeModuleMember(CodeModuleMember memberUnderTest,
                                     string stateUnderTest = DefaultStateUnderTestText,
                                     string expectedBehaviour = DefaultExpectedBehaviourText)
-            : this(memberUnderTest.Name, memberUnderTest.ProcKind, memberUnderTest.IsPublic, memberUnderTest.DeclarationString, stateUnderTest, expectedBehaviour)
+            : this(memberUnderTest.CodeModuleName, memberUnderTest.Name, memberUnderTest.ProcKind, memberUnderTest.IsPublic, memberUnderTest.DeclarationString, stateUnderTest, expectedBehaviour)
         {
         }
 
         public TestCodeModuleMember(string methodUnderTest,
                                     string stateUnderTest = DefaultStateUnderTestText,
                                     string expectedBehaviour = DefaultExpectedBehaviourText,
-                                    string declarationString = "")
-            : this(methodUnderTest, vbext_ProcKind.vbext_pk_Proc, true, declarationString, stateUnderTest, expectedBehaviour)
+                                    string declarationString = "",
+                                    string codeModuleUnderTest = null)
+            : this(codeModuleUnderTest, methodUnderTest, vbext_ProcKind.vbext_pk_Proc, true, declarationString, stateUnderTest, expectedBehaviour)
         {
         }
 
-        private TestCodeModuleMember(string methodUnderTest, vbext_ProcKind procKind, bool isPublic, string declarationString,
-                                     string stateUnderTest, string expectedBehaviour)
-            : base(methodUnderTest, procKind, isPublic, declarationString)
+        private TestCodeModuleMember(string codeModuleUnderTest, 
+                                     string methodUnderTest, vbext_ProcKind procKind, bool isPublic, string declarationString,
+                                     string stateUnderTest, string expectedBehaviour
+                                     )
+            : base(methodUnderTest, procKind, isPublic, declarationString, codeModuleUnderTest)
         {
             using (new BlockLogger())
             {

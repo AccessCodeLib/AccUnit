@@ -252,6 +252,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="TestRunner\VbaTestRunner.cs" />
+    <Compile Include="Tools\ITestMethodBuilder.cs" />
+    <Compile Include="Tools\TemplateBasedTestMethodBuilder.cs" />
+    <Compile Include="Tools\TestMethodBuilderBase.cs" />
     <Compile Include="Tools\UserSettings.cs" />
     <Compile Include="Tools\VBA\AssemblyInfo.cs" />
     <Compile Include="Tools\ITestClassGenerator.cs" />

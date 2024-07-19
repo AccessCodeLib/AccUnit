@@ -1,5 +1,7 @@
 ﻿using AccessCodeLib.AccUnit.Configuration;
+using AccessCodeLib.AccUnit.Extension.OpenAI;
 using AccessCodeLib.AccUnit.Tools;
+using AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Commandbar;
@@ -159,10 +161,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             get
             {
-                if (UserSettings.Current.BuildTestMethodsWithChatGPT)
-                    return new TestCodeGenerator(new TemplateBasedTestMethodBuilder());
-
-                return new TestCodeGenerator(new TemplateBasedTestMethodBuilder());
+                return new TestCodeGenerator(TestMethodBuilder);
             }
         }
 
@@ -396,7 +395,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             get
             {
-                return new TemplateBasedTestMethodBuilder();
+                //if (UserSettings.Current.BuildTestMethodsWithChatGPT)
+                {
+                    return new ChatGptMethodBuilder(new TestCodeBuilderFactory(new OpenAiService(new CredentialManager())));
+                }
+                
+                //return new TemplateBasedTestMethodBuilder();
             }
         }
 

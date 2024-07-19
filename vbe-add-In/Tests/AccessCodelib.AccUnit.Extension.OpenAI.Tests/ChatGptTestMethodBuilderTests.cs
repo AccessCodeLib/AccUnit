@@ -1,0 +1,46 @@
+﻿using AccessCodeLib.AccUnit.Tools;
+using AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod;
+using AccessCodeLib.Common.VBIDETools;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
+{
+    public class ChatGptTestMethodBuilderTests
+    {
+        [Test]
+        public void BuildTestCode_RowTest_DefineTestProcName()
+        {
+            var codebuilderFactory = new TestCodeBuilderFactory(new OpenAiService(new CredentialManager()));
+            var methodBuilder = new ChatGptMethodBuilder(codebuilderFactory);
+
+            var procedureCode = @"Public Function Add(ByVal A As Integer, ByVal B As Integer) As Integer
+    Add = A + B
+End Function";
+
+            var codeModuleMember = new CodeModuleMember(
+                            name: "Add", 
+                            procKind: Microsoft.Vbe.Interop.vbext_ProcKind.vbext_pk_Proc, 
+                            isPublic: true, 
+                            declarationString: "Public Function Add(ByVal A As Integer, ByVal B As Integer) As Integer", 
+                            codeModuleName: "TestClass", 
+                            procedureCode: procedureCode);
+
+            var testCodeModulMember = new TestCodeModuleMember(codeModuleMember, "stateUnderTest", "expectedBehaviour");
+
+            var testCode = methodBuilder.GenerateProcedureCode(testCodeModulMember);   
+            Console.WriteLine(testCode);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(testCode, Is.Not.Null);
+                Assert.That(testCode.Contains("'AccUnit:Row"), Is.True);
+                Assert.That(testCode.Contains("Public Sub Add_2Params_CheckResult"), Is.True);
+            });
+        }
+
+    }
+}
