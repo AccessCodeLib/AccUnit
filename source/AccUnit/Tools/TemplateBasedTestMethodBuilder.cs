@@ -6,6 +6,10 @@ namespace AccessCodeLib.AccUnit.Tools
 {
     public class TemplateBasedTestMethodBuilder : TestMethodBuilderBase
     {
+
+        //private static string TestMethodTemplate { get { return TemplatesUserSettings.Current.TestMethodTemplate; } }
+        private readonly string _testMethodTemplate;
+
         public const string TestMethodNameFormat = @"{0}_{1}_{2}"; // methodsUnderTest_stateUnderTest_expectedBehaviour
         // The placeholder constants are public for testing purposes. InternalsVisibleTo seems to be not working here.
         public const string MethodUnderTestPlaceholder = "{MethodUnderTest}";
@@ -13,11 +17,16 @@ namespace AccessCodeLib.AccUnit.Tools
         public const string ExpectedBehaviourPlaceholder = "{ExpectedBehaviour}";
         public const string ParamsPlaceholder = "({Params})";
 
+        public TemplateBasedTestMethodBuilder(string testMethodTemplate)
+        {
+            _testMethodTemplate = testMethodTemplate;
+        }
+
         public override string GenerateProcedureCode(TestCodeModuleMember member)
         {
             using (new BlockLogger(string.Format(TestMethodNameFormat, member.Name, member.StateUnderTest, member.ExpectedBehaviour)))
             {
-                var code = TestMethodTemplate;
+                var code = _testMethodTemplate;
 
                 if (string.IsNullOrEmpty(member.StateUnderTest))
                     code = code.Replace("_" + StateUnderTestPlaceholder, StateUnderTestPlaceholder);
@@ -67,7 +76,5 @@ namespace AccessCodeLib.AccUnit.Tools
             }
             return @"'AccUnit:Row(" + string.Join(", ", Params).Replace("[]", "()") + ").Name = \"Example row - please replace the parameter names with values)\"";
         }
-
-        private static string TestMethodTemplate { get { return TemplatesUserSettings.Current.TestMethodTemplate; } }
     }
 }

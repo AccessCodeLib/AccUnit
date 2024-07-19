@@ -1,5 +1,6 @@
 ﻿using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.AccUnit.Tools;
+using AccessCodeLib.AccUnit.Tools.Templates;
 using AccessCodeLib.Common.VBIDETools;
 using System;
 using System.Collections.Generic;
@@ -46,7 +47,7 @@ namespace AccessCodeLib.AccUnit.Interop
         public VBATestSuite(IOfficeApplicationHelper applicationHelper, IVBATestBuilder testBuilder, ITestRunner testRunner, ITestSummaryFormatter testSummaryFormatter)
                : base(applicationHelper, testBuilder, testRunner, testSummaryFormatter)
         {
-            _testMethodBuilder = new TemplateBasedTestMethodBuilder();
+            _testMethodBuilder = new TemplateBasedTestMethodBuilder(TemplatesUserSettings.Current.TestMethodTemplate);
         }
 
         public VBATestSuite(
