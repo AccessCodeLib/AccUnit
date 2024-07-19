@@ -7,6 +7,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\source\Common\Common.VBIDETools\AccessCodeLib.Common.VBIDETools.csproj" />
     <ProjectReference Include="..\..\AccUnit.Extension.OpenAI\AccUnit.Extension.OpenAI.csproj" />
     <ProjectReference Include="..\..\AccUnit.VbeAddIn\AccessCodeLib.AccUnit.VbeAddIn.csproj" />
   </ItemGroup>
