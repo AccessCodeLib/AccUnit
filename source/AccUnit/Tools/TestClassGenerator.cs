@@ -41,8 +41,8 @@ namespace AccessCodeLib.AccUnit.Tools
                 return new TestCodeModuleMember[] { };
             }
 
-            var codeModulueReader = new CodeModuleReader(codeModule);
-            var members = codeModulueReader.Members;
+            var codeModuleReader = new CodeModuleReader(codeModule);
+            var members = codeModuleReader.Members;
             var publicMembers = members.FindAll(true);
 
             if (methodsUnderTestFilter != null)
@@ -106,7 +106,7 @@ namespace AccessCodeLib.AccUnit.Tools
 
         public CodeModule InsertTestMethods(string codeModuleToTest, string testClass, IEnumerable<string> methodsUnderTest, string stateUnderTest, string expectedBehaviour)
         {
-            if (codeModuleToTest == null        )
+            if (codeModuleToTest == null)
                 return InsertTestMethods(testClass, methodsUnderTest, stateUnderTest, expectedBehaviour);
 
             var methods = GetTestCodeModuleMemberFromCodeModule(codeModuleToTest, stateUnderTest, expectedBehaviour, methodsUnderTest);

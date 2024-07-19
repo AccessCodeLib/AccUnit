@@ -1,6 +1,7 @@
 ﻿using AccessCodeLib.Common.Tools.Logging;
 using Microsoft.Vbe.Interop;
 using System.Text;
+using System.Xml.Schema;
 
 namespace AccessCodeLib.Common.VBIDETools
 {
@@ -56,17 +57,17 @@ namespace AccessCodeLib.Common.VBIDETools
             get
             {
                 if (_members is null)
-                    FillMembers();
+                    FillMembers(false);
                 return _members;
             }
         }
 
-        public void RefreshMemberList()
+        public void RefreshMemberList(bool readProcedureCode = false)
         {
-            FillMembers();
+            FillMembers(readProcedureCode);
         }
 
-        private void FillMembers()
+        private void FillMembers(bool readProcedureCode = false)
         {
             _members = new CodeModuleMemberList();
             var currentLine = _codeModule.CountOfDeclarationLines + 1;
@@ -91,7 +92,14 @@ namespace AccessCodeLib.Common.VBIDETools
                     }
 
                     var tempProcDeclaration = GetProcedureDeclaration(tempProcName, tempProcKind);
-                    _members.Add(new CodeModuleMember(tempProcName, tempProcKind, isPublic, tempProcDeclaration));
+
+                    string tempProcCode = null;
+                    if (readProcedureCode)
+                    {
+                        tempProcCode = GetProcedureCode(tempProcName, tempProcKind);
+                    }
+                    
+                    _members.Add(new CodeModuleMember(tempProcName, tempProcKind, isPublic, tempProcDeclaration, _codeModule.Name, tempProcCode));
                     currentLine = _codeModule.ProcStartLine[tempProcName, tempProcKind] + _codeModule.ProcCountLines[tempProcName, tempProcKind];
                 }
                 currentLine++;

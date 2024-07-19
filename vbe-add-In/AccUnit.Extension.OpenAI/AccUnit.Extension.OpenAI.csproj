@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ICredentialManager.cs" />
+    <Compile Include="ITestCodeBuilder.cs" />
     <Compile Include="TestCodeBuilder.cs" />
     <Compile Include="CredentialManager.cs" />
     <Compile Include="OpenAiService.cs" />
