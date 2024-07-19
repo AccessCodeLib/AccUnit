@@ -1,23 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenAI;
+﻿using System.Collections.Generic;
 using OpenAI.Chat;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI
 {
-    public class TestCodeBuilder
+    public interface ITestCodeBuilderFactory
+    {
+        ITestCodeBuilder NewTestCodeBuilder();
+    }
+
+    public class TestCodeBuilderFactory : ITestCodeBuilderFactory
+    {
+        private readonly IOpenAiService _openAiService;
+
+        public TestCodeBuilderFactory(IOpenAiService openAiService)
+        {
+            _openAiService = openAiService;
+        }
+
+        public ITestCodeBuilder NewTestCodeBuilder()
+        {
+           return new TestCodeBuilder(_openAiService);
+        }
+    }
+
+
+    public class TestCodeBuilder : ITestCodeBuilder
     {
         private readonly IOpenAiService _openAiService;
         private readonly ChatClient _chatClient;
 
         private bool _disableRowTest = false;
-        private string _testProcedureName;
+        private string _testMethodTemplate = null;
+        private string _testMethodName;
+        private string _testMethodParameters;
+
         private string _baseProcedureClassName;
         private string _baseProcedureCode;
-        private string _testProcedureParameters;
 
         public TestCodeBuilder(IOpenAiService openAiService)
         {
@@ -25,38 +43,45 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             _chatClient = _openAiService.NewChatClient();
         }
 
-        public TestCodeBuilder DisableRowTest()
+        public ITestCodeBuilder DisableRowTest()
         {
             _disableRowTest = true;
             return this;
         }
 
-        public TestCodeBuilder ProcedureToTest(string procedureCode, string className = null)
+        public ITestCodeBuilder ProcedureToTest(string procedureCode, string className = null)
         {
             _baseProcedureClassName = className;
             _baseProcedureCode = procedureCode;
             return this;
         }
 
-        public TestCodeBuilder TestProcedureName(string testProcedureName)
+        public ITestCodeBuilder TestMethodTemplate(string testMethodTemplate)
         {
-            _testProcedureName = testProcedureName;
+            _testMethodTemplate = testMethodTemplate;
             return this;
         }
 
-        public TestCodeBuilder TestProcedureParameters(string testProcedureParameters)
+        public ITestCodeBuilder TestMethodName(string testMethodName)
         {
-            _testProcedureParameters = testProcedureParameters;
+            _testMethodName = testMethodName;
             return this;
         }
 
-        public string BuildTestProcedureCode()
+        public ITestCodeBuilder TestMethodParameters(string parameterDefinition)
+        {
+            _testMethodParameters = parameterDefinition;
+            return this;
+        }
+
+        public string BuildTestMethodCode()
         {
             var procMessage = string.IsNullOrEmpty(_baseProcedureClassName)
                 ? ProcedureTemplate.Replace("{METHODCODE}", _baseProcedureCode)
                 : ProcedureTemplateWithClassName.Replace("{METHODCODE}", _baseProcedureCode).Replace("{CLASSNAME}", _baseProcedureClassName);
 
             var prePrompt = _disableRowTest ? SimpleTestPrePrompt : RowTestPrePrompt;
+            prePrompt.Replace("{TESTMETHODTEMPLATE}", _testMethodTemplate ?? DefaultTestMethodTemplate);
 
             var messages = new List<UserChatMessage>
             {
@@ -64,20 +89,21 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
                 new UserChatMessage(procMessage)
             };
 
-            if (_testProcedureName != null)
+            if (!string.IsNullOrEmpty(_testMethodName))
             {
-                messages.Add(new UserChatMessage(TestProcedureNameTemplate.Replace("{TESTMETHODNAME}", _testProcedureName)));
+                messages.Add(new UserChatMessage(TestProcedureNameTemplate.Replace("{TESTMETHODNAME}", _testMethodName)));
             }
 
-            if (_testProcedureParameters != null)
+            if (!string.IsNullOrEmpty(_testMethodParameters))
             {
-                messages.Add(new UserChatMessage(TestProcedureParametersTemplate.Replace("{PARAMETERS}", _testProcedureParameters)));
+                messages.Add(new UserChatMessage(TestProcedureParametersTemplate.Replace("{PARAMETERS}", _testMethodParameters)));
             }
 
             ChatCompletion chatCompletion = _chatClient.CompleteChat(messages);
             var testCode = chatCompletion.Content[0].Text;
-
-            return CleanCode(testCode);
+            testCode = testCode + @"
+'???!!!!";
+            return CleanCode(testCode );
         }
 
         private string CleanCode(string code)
@@ -102,14 +128,7 @@ I work with VBA in Access and utilize the AccUnit testing framework.
 Please use the following format for the test: 
 
 ```vba
-Public Sub TestMethod()
-    ' Arrange
-    ...
-    ' Act
-    ...
-    ' Assert
-    Assert.That ...
-End Sub
+{TESTMETHODTEMPLATE}
 ```
 
 Return only the code without explanation.
@@ -126,6 +145,20 @@ Please use the following format for the test:
 ```vba
 'AccUnit:Row(<param1>, <param2>, ... , ExpectedValue).Name(...)
 'AccUnit:Row(...)
+{TESTMETHODTEMPLATE}
+```
+
+Parameters should be directly included in the signature of the test procedure. Also use an Expected parameter and define the value in the test row definition. Set optional parameters to required.
+Test methods must be declared as Public.
+The AccUnit:Row annotations should be defined outside the procedure. 
+No AccUnit:Row if method has no parameters.
+No blank line between row lines and procedure declaration.
+Return only the code without explanation.
+Note for assert: since Is is not allowed as a variable in VBA, the framework uses Iz (e.g. for Iz.EqualTo) as a substitute. 
+Please create a test procedure for the following method.
+";
+
+        public const string DefaultTestMethodTemplate = @"
 Public Sub TestMethod(...)
     ' Arrange
     ...
@@ -134,15 +167,6 @@ Public Sub TestMethod(...)
     ' Assert
     Assert.That ...
 End Sub
-```
-
-Parameters should be directly included in the signature of the test procedure. Also use an Expected parameter and define the value in the test row definition. Set optional parameters to required.
-The AccUnit:Row annotations should be defined outside the procedure. 
-No AccUnit:Row if method has no parameters.
-No blank line between row lines and procedure declaration.
-Return only the code without explanation.
-Note for assert: since Is is not allowed as a variable in VBA, the framework uses Iz (e.g. for Iz.EqualTo) as a substitute. 
-Please create a test procedure for the following method.
 ";
 
         const string ProcedureTemplate = @"
