@@ -399,7 +399,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 //if (UserSettings.Current.BuildTestMethodsWithChatGPT)
                 {
                     return new ChatGptMethodBuilder(
-                                new TestCodeBuilderFactory(new OpenAiService(new SimpleCredentialManager()))
+                                new TestCodeBuilderFactory(new OpenAiService(new CredentialManager()))
                                 , TemplatesUserSettings.Current.TestMethodTemplate);
                 }
                 
