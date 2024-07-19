@@ -396,14 +396,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             get
             {
-                //if (UserSettings.Current.BuildTestMethodsWithChatGPT)
+                if (UserSettings.Current.BuildTestMethodsWithChatGPT)
                 {
                     return new ChatGptMethodBuilder(
                                 new TestCodeBuilderFactory(new OpenAiService(new CredentialManager()))
                                 , TemplatesUserSettings.Current.TestMethodTemplate);
                 }
                 
-                //return new TemplateBasedTestMethodBuilder();
+                return new TemplateBasedTestMethodBuilder(TemplatesUserSettings.Current.TestMethodTemplate);
             }
         }
 

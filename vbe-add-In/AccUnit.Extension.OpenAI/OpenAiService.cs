@@ -54,12 +54,13 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             {
                 return apiKey;
             }
-
+            
             apiKey = GetApiKeyFromUserSecrets();
             if (!string.IsNullOrEmpty(apiKey))
             {
                 return apiKey;
             }
+            
 
             apiKey = GetApiKeyFromCredentialManager();
             if (!string.IsNullOrEmpty(apiKey))
@@ -77,10 +78,18 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
 
         private string GetApiKeyFromUserSecrets()
         {
-            var configuration = new ConfigurationBuilder()
+            try
+            {
+                var configuration = new ConfigurationBuilder()
                 .AddUserSecrets("AccessCodeLib.OpenAI.UserSecrets")
                 .Build();
-            return configuration[CredentialKey];
+                return configuration[CredentialKey];
+            }
+            catch
+            {
+                return null;
+            }
+            
         }
 
         private string GetApiKeyFromEnvironment()
