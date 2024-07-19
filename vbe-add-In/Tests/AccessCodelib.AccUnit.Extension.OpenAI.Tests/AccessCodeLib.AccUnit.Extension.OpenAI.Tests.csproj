@@ -23,6 +23,7 @@
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Include="OpenAI" Version="2.0.0-beta.7" />
+    <PackageReference Include="System.Text.Json" Version="8.0.4" />
     <PackageReference Include="ThammimTech.Microsoft.Vbe.Interop" Version="15.0.0" />
   </ItemGroup>
 

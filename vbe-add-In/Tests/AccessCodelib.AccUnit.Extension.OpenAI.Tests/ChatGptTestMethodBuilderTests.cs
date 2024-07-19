@@ -24,7 +24,7 @@ End Sub
         [Test]
         public void BuildTestCode_RowTest_DefineTestProcName()
         {
-            var codebuilderFactory = new TestCodeBuilderFactory(new OpenAiService(new SimpleCredentialManager()));
+            var codebuilderFactory = new TestCodeBuilderFactory(new OpenAiService(new CredentialManager()));
             var methodBuilder = new ChatGptMethodBuilder(codebuilderFactory, TestMethodTemplate);
             var procedureCode = @"Public Function Add(ByVal A As Integer, ByVal B As Integer) As Integer
     Add = A + B
