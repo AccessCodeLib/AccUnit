@@ -7,19 +7,6 @@ using System.Text;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI
 {
-    public class SimpleCredentialManager : ICredentialManager
-    {
-        public string Retrieve(string target)
-        {
-            return null;
-        }
-
-        public void Save(string target, string username, string secret)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     public class CredentialManager : ICredentialManager
     {
         [DllImport("Advapi32.dll", EntryPoint = "CredWriteW", CharSet = CharSet.Unicode, SetLastError = true)]

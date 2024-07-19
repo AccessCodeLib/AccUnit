@@ -103,6 +103,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             {
                 model = _gptModel;
             }
+            Console.WriteLine(ApiKey);
             var apiKeyCredential = new System.ClientModel.ApiKeyCredential(ApiKey);
             return new ChatClient(model: model, credential: apiKeyCredential);
         }
