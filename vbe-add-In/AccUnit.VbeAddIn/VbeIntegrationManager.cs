@@ -1,6 +1,7 @@
 ﻿using AccessCodeLib.AccUnit.Configuration;
 using AccessCodeLib.AccUnit.Extension.OpenAI;
 using AccessCodeLib.AccUnit.Tools;
+using AccessCodeLib.AccUnit.Tools.Templates;
 using AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
@@ -9,7 +10,6 @@ using AccessCodeLib.Common.VBIDETools.Templates;
 using Microsoft.Office.Core;
 using Microsoft.Vbe.Interop;
 using System;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -386,6 +386,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             catch (Exception ex)
             {
                 Logger.Log(ex);
+                System.Windows.MessageBox.Show(ex.Message);
                 e.Cancel = true;
                 return null;
             }
@@ -397,7 +398,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 //if (UserSettings.Current.BuildTestMethodsWithChatGPT)
                 {
-                    return new ChatGptMethodBuilder(new TestCodeBuilderFactory(new OpenAiService(new CredentialManager())));
+                    return new ChatGptMethodBuilder(
+                                new TestCodeBuilderFactory(new OpenAiService(new SimpleCredentialManager()))
+                                , TemplatesUserSettings.Current.TestMethodTemplate);
                 }
                 
                 //return new TemplateBasedTestMethodBuilder();

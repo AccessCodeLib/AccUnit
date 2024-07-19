@@ -1,5 +1,6 @@
 ﻿using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.AccUnit.Tools;
+using AccessCodeLib.AccUnit.Tools.Templates;
 using AccessCodeLib.Common.VBIDETools;
 using System;
 using System.Collections.Generic;
@@ -93,7 +94,7 @@ namespace AccessCodeLib.AccUnit.Interop
         {
             get
             {
-                return new TestClassGenerator(ActiveVBProject, new TemplateBasedTestMethodBuilder());
+                return new TestClassGenerator(ActiveVBProject, new TemplateBasedTestMethodBuilder(TemplatesUserSettings.Current.TestMethodTemplate));
             }
         }
 

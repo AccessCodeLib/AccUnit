@@ -100,7 +100,7 @@ namespace AccessCodeLib.AccUnit.Tools
         {
             using (new BlockLogger(string.Format(TestMethodNameFormat, member.Name, member.StateUnderTest, member.ExpectedBehaviour)))
             {
-                return new TemplateBasedTestMethodBuilder().GenerateProcedureCode(member);
+                return new TemplateBasedTestMethodBuilder(TemplatesUserSettings.Current.TestMethodTemplate).GenerateProcedureCode(member);
             }
         }
 
