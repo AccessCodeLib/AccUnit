@@ -101,8 +101,6 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
 
             ChatCompletion chatCompletion = _chatClient.CompleteChat(messages);
             var testCode = chatCompletion.Content[0].Text;
-            testCode = testCode + @"
-'???!!!!";
             return CleanCode(testCode );
         }
 
@@ -130,11 +128,8 @@ Please use the following format for the test:
 ```vba
 {TESTMETHODTEMPLATE}
 ```
-
-Return only the code without explanation.
-Note for assert: since Is is not allowed as a variable in VBA, the framework uses Iz (e.g. for Iz.EqualTo) as a substitute. 
-Please create a test procedure for the following method.
-";
+"
++ PrePromptEndStatement;
 
         const string RowTestPrePrompt = @"
 I aim to create a test procedure that uses row-test definitions similar to NUnit.
@@ -152,9 +147,12 @@ Parameters should be directly included in the signature of the test procedure. A
 Test methods must be declared as Public.
 The AccUnit:Row annotations should be defined outside the procedure. 
 No AccUnit:Row if method has no parameters.
-No blank line between row lines and procedure declaration.
+No blank line between row lines and procedure declaration." 
++ PrePromptEndStatement;
+
+        private const string PrePromptEndStatement = @"
 Return only the code without explanation.
-Note for assert: since Is is not allowed as a variable in VBA, the framework uses Iz (e.g. for Iz.EqualTo) as a substitute. 
+Note for assert: since Is is not allowed as a variable in VBA, the framework uses Iz (e.g. for Iz.EqualTo) as a substitute. Don't use Call Assert.That(...). Use only Assert.That ...
 Please create a test procedure for the following method.
 ";
 
