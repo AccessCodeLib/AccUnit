@@ -398,10 +398,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             };
             var button = commandBarAdapter.AddCommandBarButton(commandBar, buttonData, RunCurrentTestsEventHandler);
             button.ShortcutText = "Ctrl+Shift+T";
+            /*
             if (usePicture)
             {
                 ApplyMaskedPicture(button, Resources.Icons.runtest, Resources.Icons.runtest_mask);
             }
+            */
             return button;
         }
 
@@ -419,13 +421,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             };
             var button = commandBarAdapter.AddCommandBarButton(commandBar, buttonData, RunAllTestsEventHandler);
             button.ShortcutText = "Ctrl+Shift+A";
+            /*
             if (usePicture)
             {
                 ApplyMaskedPicture(button, Resources.Icons.runtests, Resources.Icons.runtests_mask);
             }
+            */
             return button;
         }
-
+        /*
         private void ApplyMaskedPicture(CommandBarButton button, Bitmap image, Bitmap mask)
         {
             try
@@ -445,7 +449,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 Logger.Log(e);
             }
-        }
+        }*/
 
         private void RegisterHotKeys()
         {

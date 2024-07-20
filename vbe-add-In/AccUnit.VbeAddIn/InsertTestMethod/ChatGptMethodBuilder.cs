@@ -7,6 +7,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
 {
     public class ChatGptMethodBuilder : TemplateBasedTestMethodBuilder
     {
+
         private readonly ITestCodeBuilderFactory _testCodeBuilderFactory;
 
         public ChatGptMethodBuilder(ITestCodeBuilderFactory testCodeBuilderFactory, string testMethodTemplate)
@@ -19,9 +20,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
         {
             var templateSource = base.GenerateProcedureCode(member);
             var testMethodName = GetTestMethodNameFromSource(templateSource);
-           
+
             var testCodeBuilder = _testCodeBuilderFactory.NewTestCodeBuilder();
-        
+
             var codeToTest = member.ProcedureCode;
             if (string.IsNullOrEmpty(codeToTest))
                 codeToTest = member.DeclarationString;
@@ -29,7 +30,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
             testCodeBuilder.ProcedureToTest(codeToTest, member.CodeModuleName)
                            .TestMethodTemplate(templateSource)
                            .TestMethodName(testMethodName);
-                           
+
             var testCode = testCodeBuilder.BuildTestMethodCode();
 
             return testCode;
@@ -42,11 +43,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
 
             // declaration = first line which begins with "Public Sub"
             var declaration = lines.FirstOrDefault(l => l.Trim().StartsWith("Public Sub"));
-            
+
             // method name = word after "Public Sub" and before "("
             var methodName = declaration.PadLeft(declaration.Length - "Public Sub".Length).Split('(')[0].Trim();
-        
+
             return methodName;
         }
+
     }
 }

@@ -1,6 +1,6 @@
 ﻿using AccessCodeLib.AccUnit.VbeAddIn.Resources;
 using AccessCodeLib.Common.Tools.Logging;
-using stdole;
+//using stdole;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -10,7 +10,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     public class AxHostConverter : AxHost
     {
         private AxHostConverter() : base("") { }
-
+        /*
         public static IPictureDisp ImageToPictureDisp(Image image)
         {
             using (new BlockLogger())
@@ -29,6 +29,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             get { return _runTestPictureDisp ?? (_runTestPictureDisp = ImageToPictureDisp(Icons.runtest)); }
         }
+        */
 
     }
 }
