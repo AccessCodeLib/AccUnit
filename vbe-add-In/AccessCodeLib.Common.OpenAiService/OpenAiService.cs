@@ -1,15 +1,16 @@
 ﻿using System;
-using Microsoft.Extensions.Configuration;
+//using Microsoft.Extensions.Configuration;
 using OpenAI_API;
 using OpenAI_API.Chat;
 using OpenAI_API.Models;
 
-namespace AccessCodeLib.AccUnit.Extension.OpenAI
+
+namespace AccessCodeLib.Common.OpenAI
 {
     public interface IOpenAiService
     {
         OpenAI_API.Chat.IChatEndpoint NewChatClient(string model = null);
-        Model Model { get; set; }
+        Model Model { get; set; }  
     }
 
     public class OpenAiService : IOpenAiService
@@ -19,6 +20,9 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
 
         private string _apiKey;
         private readonly ICredentialManager _credentialManager;
+
+        public Model Model { get; set; }
+
         private readonly OpenAIAPI _api;
 
         public OpenAiService(ICredentialManager credentialManager, string gptModel = "gpt-4o")
@@ -28,8 +32,6 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             _api = new OpenAIAPI(ApiKey);
         }
 
-        public Model Model { get; set; }
-
         public string ApiKey
         {
             get
@@ -37,7 +39,6 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
                 if (string.IsNullOrEmpty(_apiKey))
                 {
                     _apiKey = GetApiKey();
-                    Console.WriteLine("api key: " + _apiKey);
                 }
                 return _apiKey;
             }
@@ -77,6 +78,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             return _credentialManager.Retrieve(CredentialKey);
         }
 
+        /*
         private string GetApiKeyFromUserSecrets()
         {
             try
@@ -92,6 +94,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             }
             
         }
+        */
 
         private string GetApiKeyFromEnvironment()
         {

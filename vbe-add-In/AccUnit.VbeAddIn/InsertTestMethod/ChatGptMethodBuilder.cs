@@ -21,20 +21,29 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
             var templateSource = base.GenerateProcedureCode(member);
             var testMethodName = GetTestMethodNameFromSource(templateSource);
 
-            var testCodeBuilder = _testCodeBuilderFactory.NewTestCodeBuilder();
-
             var codeToTest = member.ProcedureCode;
             if (string.IsNullOrEmpty(codeToTest))
                 codeToTest = member.DeclarationString;
 
-            testCodeBuilder.ProcedureToTest(codeToTest, member.CodeModuleName)
+            string testCode; 
+
+            try
+            {
+                var testCodeBuilder = _testCodeBuilderFactory.NewTestCodeBuilder();
+                testCodeBuilder.ProcedureToTest(codeToTest, member.CodeModuleName)
                            .TestMethodTemplate(templateSource)
                            .TestMethodName(testMethodName);
 
-            var testCode = testCodeBuilder.BuildTestMethodCode();
+            
+                 testCode = testCodeBuilder.BuildTestMethodCode();
+            }
+            catch(Exception ex)
+            {
+                UITools.ShowException(ex);
+                testCode = templateSource;
+            }
 
             return testCode;
-
         }
 
         private string GetTestMethodNameFromSource(string templateSource)

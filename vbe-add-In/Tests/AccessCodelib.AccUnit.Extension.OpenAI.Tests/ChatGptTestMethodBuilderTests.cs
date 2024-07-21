@@ -1,8 +1,6 @@
 ﻿using AccessCodeLib.AccUnit.Tools;
 using AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod;
 using AccessCodeLib.Common.VBIDETools;
-using System;
-using NUnit.Framework;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
 {
