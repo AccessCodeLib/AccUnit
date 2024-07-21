@@ -25,7 +25,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
             if (string.IsNullOrEmpty(codeToTest))
                 codeToTest = member.DeclarationString;
 
-            string testCode; 
+            string testCode;
+
+            UITools.ShowMessage(templateSource);
 
             try
             {
@@ -34,7 +36,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
                            .TestMethodTemplate(templateSource)
                            .TestMethodName(testMethodName);
 
-            
+                UITools.ShowMessage("now build code ..");
                  testCode = testCodeBuilder.BuildTestMethodCode();
             }
             catch(Exception ex)
