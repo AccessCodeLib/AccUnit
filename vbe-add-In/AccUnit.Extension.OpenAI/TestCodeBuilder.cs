@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using OpenAI_API.Chat;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI
@@ -73,7 +74,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             _testMethodParameters = parameterDefinition;
             return this;
         }
-
+        
         public string BuildTestMethodCode()
         {
             var procMessage = string.IsNullOrEmpty(_baseProcedureClassName)
@@ -123,8 +124,8 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             var request = new ChatRequest()
             {
                 Model = _openAiService.Model, // Model.ChatGPTTurbo,
-                Temperature = 0.4,
-                MaxTokens = 100,
+                Temperature = 0.2,
+                MaxTokens = 5,
                 Messages = messages
             };
 
@@ -133,7 +134,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
 
             return CleanCode(testCode );
         }
-
+        
         private string CleanCode(string code)
         {
             code = code.Replace("\r\n", "\n");

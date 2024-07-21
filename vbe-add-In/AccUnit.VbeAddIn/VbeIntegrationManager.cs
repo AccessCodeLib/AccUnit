@@ -398,9 +398,25 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 if (UserSettings.Current.BuildTestMethodsWithChatGPT)
                 {
-                    return new ChatGptMethodBuilder(
-                                new TestCodeBuilderFactory(new OpenAiService(new CredentialManager()))
+                    try
+                    {
+                        var service = new OpenAiService(new CredentialManager());
+                        UITools.ShowMessage(service.ApiKey);
+
+                        var builderFactory = new TestCodeBuilderFactory(service);
+                        var test = builderFactory.NewTestCodeBuilder();
+                        UITools.ShowMessage("...");
+                        
+                        return new ChatGptMethodBuilder(
+                                builderFactory
                                 , TemplatesUserSettings.Current.TestMethodTemplate);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                        UITools.ShowException(ex);
+                    }
+                    
                 }
                 
                 return new TemplateBasedTestMethodBuilder(TemplatesUserSettings.Current.TestMethodTemplate);
