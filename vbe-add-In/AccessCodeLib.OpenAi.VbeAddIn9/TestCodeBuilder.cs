@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using OpenAI_API.Chat;
+using OpenAI.Chat;
 
-namespace AccessCodeLib.AccUnit.Extension.OpenAI
+namespace AccessCodeLib.OpenAI.VbeAddIn
 {
     public interface ITestCodeBuilderFactory
     {
@@ -27,7 +27,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
     public class TestCodeBuilder : ITestCodeBuilder
     {
         private readonly IOpenAiService _openAiService;
-        private readonly IChatEndpoint _chatClient;
+        private readonly ChatClient _chatClient;
 
         private bool _disableRowTest = false;
         private string _testMethodTemplate = null;
@@ -83,7 +83,6 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             var prePrompt = _disableRowTest ? SimpleTestPrePrompt : RowTestPrePrompt;
             prePrompt.Replace("{TESTMETHODTEMPLATE}", _testMethodTemplate ?? DefaultTestMethodTemplate);
 
-            /*
             var messages = new List<UserChatMessage>
             {
                 new UserChatMessage(prePrompt),
@@ -102,35 +101,6 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
 
             ChatCompletion chatCompletion = _chatClient.CompleteChat(messages);
             var testCode = chatCompletion.Content[0].Text;
-            */
-
-            var messages = new List<ChatMessage>
-            {
-                new ChatMessage(ChatMessageRole.User, prePrompt),
-                new ChatMessage(ChatMessageRole.User, procMessage)
-            };
-
-            if (!string.IsNullOrEmpty(_testMethodName))
-            {
-                messages.Add(new ChatMessage(ChatMessageRole.User, TestProcedureNameTemplate.Replace("{TESTMETHODNAME}", _testMethodName)));
-            }
-
-            if (!string.IsNullOrEmpty(_testMethodParameters))
-            {
-                messages.Add(new ChatMessage(ChatMessageRole.User, TestProcedureParametersTemplate.Replace("{PARAMETERS}", _testMethodParameters)));
-            }
-
-            var request = new ChatRequest()
-            {
-                Model = _openAiService.Model, // Model.ChatGPTTurbo,
-                Temperature = 0.4,
-                MaxTokens = 100,
-                Messages = messages
-            };
-
-            var result = _chatClient.CreateChatCompletionAsync(request).Result;
-            var testCode = result.ToString();
-
             return CleanCode(testCode );
         }
 
@@ -152,7 +122,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
 
         const string SimpleTestPrePrompt = @"
 I aim to create a test procedure similar to NUnit.
-I work with VBA in Access and utilize the AccUnit testing framework.
+I work with VBA in Access and utilize the OpenAI testing framework.
 Please use the following format for the test: 
 
 ```vba
@@ -163,20 +133,20 @@ Please use the following format for the test:
 
         const string RowTestPrePrompt = @"
 I aim to create a test procedure that uses row-test definitions similar to NUnit.
-I work with VBA in Access and utilize the AccUnit testing framework.
-I expect each AccUnit:Row entry to be treated as a separate test case, and for the test results to be checked directly within the test method itself.
+I work with VBA in Access and utilize the OpenAI testing framework.
+I expect each OpenAI:Row entry to be treated as a separate test case, and for the test results to be checked directly within the test method itself.
 Please use the following format for the test: 
 
 ```vba
-'AccUnit:Row(<param1>, <param2>, ... , ExpectedValue).Name(...)
-'AccUnit:Row(...)
+'OpenAI:Row(<param1>, <param2>, ... , ExpectedValue).Name(...)
+'OpenAI:Row(...)
 {TESTMETHODTEMPLATE}
 ```
 
 Parameters should be directly included in the signature of the test procedure. Also use an Expected parameter and define the value in the test row definition. Set optional parameters to required.
 Test methods must be declared as Public.
-The AccUnit:Row annotations should be defined outside the procedure. 
-No AccUnit:Row if method has no parameters.
+The OpenAI:Row annotations should be defined outside the procedure. 
+No OpenAI:Row if method has no parameters.
 No blank line between row lines and procedure declaration." 
 + PrePromptEndStatement;
 

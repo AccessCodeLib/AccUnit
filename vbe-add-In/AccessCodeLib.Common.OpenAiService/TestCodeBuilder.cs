@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using AccessCodeLib.Common.OpenAI;
 using OpenAI_API.Chat;
+using OpenAI_API.Models;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI
 {
@@ -100,6 +102,8 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
                 messages.Add(new UserChatMessage(TestProcedureParametersTemplate.Replace("{PARAMETERS}", _testMethodParameters)));
             }
 
+
+
             ChatCompletion chatCompletion = _chatClient.CompleteChat(messages);
             var testCode = chatCompletion.Content[0].Text;
             */
@@ -123,8 +127,8 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             var request = new ChatRequest()
             {
                 Model = _openAiService.Model, // Model.ChatGPTTurbo,
-                Temperature = 0.4,
-                MaxTokens = 100,
+                Temperature = 0.1,
+                MaxTokens = 500,
                 Messages = messages
             };
 
