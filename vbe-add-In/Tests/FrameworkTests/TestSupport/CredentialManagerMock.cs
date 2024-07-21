@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using AccessCodeLib.Common.OpenAI;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests.TestSupport

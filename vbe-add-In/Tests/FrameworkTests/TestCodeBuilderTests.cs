@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AccessCodeLib.AccUnit.Extension.OpenAI;
+using AccessCodeLib.Common.OpenAI;
+using NUnit.Framework;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
 {

@@ -1,15 +1,12 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
-using OpenAI_API;
-using OpenAI_API.Chat;
-using OpenAI_API.Models;
+using OpenAI.Chat;
 
-namespace AccessCodeLib.AccUnit.Extension.OpenAI
+namespace AccessCodeLib.OpenAI.VbeAddIn
 {
     public interface IOpenAiService
     {
-        OpenAI_API.Chat.IChatEndpoint NewChatClient(string model = null);
-        Model Model { get; set; }
+        ChatClient NewChatClient(string model = null);
     }
 
     public class OpenAiService : IOpenAiService
@@ -19,16 +16,20 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
 
         private string _apiKey;
         private readonly ICredentialManager _credentialManager;
-        private readonly OpenAIAPI _api;
+
+        private string _gptModel;
 
         public OpenAiService(ICredentialManager credentialManager, string gptModel = "gpt-4o")
         {
             _credentialManager = credentialManager;
-            Model = new Model(gptModel);
-            _api = new OpenAIAPI(ApiKey);
+            _gptModel = gptModel;
         }
 
-        public Model Model { get; set; }
+        public string Model
+        {
+            get => _gptModel;
+            set => _gptModel = value;
+        }
 
         public string ApiKey
         {
@@ -37,7 +38,6 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
                 if (string.IsNullOrEmpty(_apiKey))
                 {
                     _apiKey = GetApiKey();
-                    Console.WriteLine("api key: " + _apiKey);
                 }
                 return _apiKey;
             }
@@ -55,13 +55,12 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
                 return apiKey;
             }
             
-            /*
             apiKey = GetApiKeyFromUserSecrets();
             if (!string.IsNullOrEmpty(apiKey))
             {
                 return apiKey;
             }
-            */
+            
 
             apiKey = GetApiKeyFromCredentialManager();
             if (!string.IsNullOrEmpty(apiKey))
@@ -107,18 +106,15 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         }
         #endregion
 
-        public IChatEndpoint NewChatClient(string model = null)
+        public ChatClient NewChatClient(string model = null)
         {
-            if (!string.IsNullOrEmpty(model))
+            if (string.IsNullOrEmpty(model))
             {
-                Model = new Model(model);
+                model = _gptModel;
             }
             Console.WriteLine(ApiKey);
-
-            return _api.Chat;
-
-            //var apiKeyCredential = new System.ClientModel.ApiKeyCredential(ApiKey);
-            //return new ChatClient(model: model, credential: apiKeyCredential);
+            var apiKeyCredential = new System.ClientModel.ApiKeyCredential(ApiKey);
+            return new ChatClient(model: model, credential: apiKeyCredential);
         }
     }
 }

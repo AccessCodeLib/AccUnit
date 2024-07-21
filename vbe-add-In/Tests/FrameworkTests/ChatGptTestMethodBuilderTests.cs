@@ -1,10 +1,12 @@
 ﻿using AccessCodeLib.AccUnit.Tools;
-using AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod;
 using AccessCodeLib.Common.VBIDETools;
 using System;
 using NUnit.Framework;
+using AccessCodeLib.AccUnit.Extension.OpenAI;
+using AccessCodeLib.AccUnit.Extension.OpenAI.Tests.TestSupport;
+using AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod;
 
-namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
+namespace AccessCodeLib.Common.OpenAI.Tests
 {
     public class ChatGptTestMethodBuilderTests
     {
