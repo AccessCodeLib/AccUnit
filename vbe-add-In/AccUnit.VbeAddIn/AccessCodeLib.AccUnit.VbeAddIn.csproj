@@ -147,6 +147,10 @@
     <Compile Include="AxHostConverter.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Info\InfoDialog.xaml.cs">
+      <DependentUpon>InfoDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Info\InfoDialogViewModel.cs" />
     <Compile Include="InsertTestMethod\ChatGptMethodBuilder.cs" />
     <Compile Include="InsertTestMethod\GenerateTestMethodsFromCodeModuleDialog.xaml.cs">
       <DependentUpon>GenerateTestMethodsFromCodeModuleDialog.xaml</DependentUpon>
@@ -347,6 +351,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="About\AboutDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Info\InfoDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
