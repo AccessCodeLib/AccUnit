@@ -17,10 +17,10 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
         [Test]
         public void CheckRestApiResponse()
         {
-            var aiService = new OpenAiService(new CredentialManager());
-            var apiKey = aiService.ApiKey;
-            var restService = new OpenAiRestApiService(apiKey);
-
+            var restService = new OpenAiRestApiService();   
+            var aiService = new OpenAiService(new CredentialManager(), restService);
+            var apiKey = restService.ApiKey;
+            
             var requestBody = new
             {
                 model = "gpt-4o-mini",
