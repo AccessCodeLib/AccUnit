@@ -5,42 +5,26 @@ using Newtonsoft.Json;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI
 {
-    public interface IOpenAiService
-    {
-        string SendRequest(object[] messages, int maxToken = 500, string model = null); 
-        string Model { get; set; }
-    }
-
     public class OpenAiService : IOpenAiService
     {
         public const string CredentialKey = "AccessCodeLib.OpenAI.ApiKey";
         public const string EnvironmentKey = "OPENAI_API_KEY";
 
-        private string _apiKey;
         private readonly ICredentialManager _credentialManager;
-        private readonly OpenAiRestApiService _restService;
+        private readonly IOpenAiRestApiService _restService;
 
-        public OpenAiService(ICredentialManager credentialManager, string gptModel = "gpt-4o-mini")
+        public OpenAiService(ICredentialManager credentialManager, IOpenAiRestApiService openAiRestApiService,  int maxToken = 250, string gptModel = "gpt-4o-mini")
         {
-            _credentialManager = credentialManager;
             Model = gptModel;
-            _restService = new OpenAiRestApiService(ApiKey);
+            MaxToken = maxToken;
+
+            _credentialManager = credentialManager;
+            _restService = openAiRestApiService;
+            _restService.ApiKey = GetApiKey();
         }
 
         public string Model { get; set; }
-
-        public string ApiKey
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_apiKey))
-                {
-                    _apiKey = GetApiKey();
-                    Console.WriteLine("api key: " + _apiKey);
-                }
-                return _apiKey;
-            }
-        }
+        public int MaxToken { get; set; }   
 
         #region OpenAI API Key
         private string GetApiKey()
@@ -87,43 +71,42 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             {
                 return null;
             }
-            
         }
 
         private string GetApiKeyFromEnvironment()
         {
             return Environment.GetEnvironmentVariable(EnvironmentKey);
         }
-        
 
         public void StoreApiKey(string apiKey)
         {
-            _apiKey = apiKey;
+            _restService.ApiKey = apiKey;   
             string username = Environment.UserName;
             _credentialManager.Save(CredentialKey, username, apiKey);
         }
         #endregion
 
-        public string SendRequest(object[] messages, int maxToken = 500, string model = null)
+        public string SendRequest(object[] messages, int maxToken = 0, string model = null)
         {
-            if (!string.IsNullOrEmpty(model))
+            if (string.IsNullOrEmpty(model))
             {
-                Model = model;
+                model = Model;
             }
-            Console.WriteLine(ApiKey);
+            
+            if (maxToken == 0)
+            {
+                maxToken = MaxToken;
+            }
 
             var requestBody = new
             {
-                model = Model,
+                model,
                 messages,
                 max_tokens = maxToken,
                 temperature = 0.2  
             };
 
             var jsonRequestBody = JsonConvert.SerializeObject(requestBody);
-
-            //Console.WriteLine(jsonRequestBody.Replace(@"\r\n", "\r\n"));
-
             return _restService.SendRequest(jsonRequestBody);
         }
     }
