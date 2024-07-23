@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using OpenAI_API.Chat;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI
 {
@@ -28,8 +28,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
     public class TestCodeBuilder : ITestCodeBuilder
     {
         private readonly IOpenAiService _openAiService;
-        private readonly IChatEndpoint _chatClient;
-
+  
         private bool _disableRowTest = false;
         private string _testMethodTemplate = null;
         private string _testMethodName;
@@ -41,7 +40,6 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         public TestCodeBuilder(IOpenAiService openAiService)
         {
             _openAiService = openAiService;
-            _chatClient = _openAiService.NewChatClient();
         }
 
         public ITestCodeBuilder DisableRowTest()
@@ -74,53 +72,48 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             _testMethodParameters = parameterDefinition;
             return this;
         }
-        
+
         public string BuildTestMethodCode()
         {
-            var testCode = BuildTestMethodCodeAsync().Result;
-            return testCode;
+            var result = BuildTestMethodCodeAsync(); 
+            return result;  
         }
 
-        public async Task<string> BuildTestMethodCodeAsync()
+        public string BuildTestMethodCodeAsync()
         {
+
+
             var procMessage = string.IsNullOrEmpty(_baseProcedureClassName)
                 ? ProcedureTemplate.Replace("{METHODCODE}", _baseProcedureCode)
                 : ProcedureTemplateWithClassName.Replace("{METHODCODE}", _baseProcedureCode).Replace("{CLASSNAME}", _baseProcedureClassName);
 
             var prePrompt = _disableRowTest ? SimpleTestPrePrompt : RowTestPrePrompt;
-            prePrompt.Replace("{TESTMETHODTEMPLATE}", _testMethodTemplate ?? DefaultTestMethodTemplate);
+            prePrompt = prePrompt.Replace("{TESTMETHODTEMPLATE}", _testMethodTemplate ?? DefaultTestMethodTemplate);
 
-            var messages = new List<ChatMessage>
-            {
-                new ChatMessage(ChatMessageRole.User, prePrompt),
-                new ChatMessage(ChatMessageRole.User, procMessage)
-            };
-
+            var sb = new StringBuilder();
+            sb.Append(procMessage);
             if (!string.IsNullOrEmpty(_testMethodName))
             {
-                messages.Add(new ChatMessage(ChatMessageRole.User, TestProcedureNameTemplate.Replace("{TESTMETHODNAME}", _testMethodName)));
+                sb.Append(TestProcedureNameTemplate.Replace("{TESTMETHODNAME}", _testMethodName));
             }
-
             if (!string.IsNullOrEmpty(_testMethodParameters))
             {
-                messages.Add(new ChatMessage(ChatMessageRole.User, TestProcedureParametersTemplate.Replace("{PARAMETERS}", _testMethodParameters)));
+                sb.Append(TestProcedureParametersTemplate.Replace("{PARAMETERS}", _testMethodParameters));
             }
+            var prompt = sb.ToString();
 
-            var request = new ChatRequest()
+            var messages = new[]
             {
-                Model = _openAiService.Model, // Model.ChatGPTTurbo,
-                Temperature = 0.2,
-                MaxTokens = 500,
-                Messages = messages
+                new { role = "assistant", content = prePrompt },
+                new { role = "user", content = prompt }
             };
 
-            var result = await _chatClient.CreateChatCompletionAsync(request);
+            var result = _openAiService.SendRequest(messages);
+            var testCode = result;
 
-            var testCode = result.ToString();
-            testCode = CleanCode(testCode); 
-            return testCode;
+            return CleanCode(testCode);
         }
-
+        
         private string CleanCode(string code)
         {
             code = code.Replace("\r\n", "\n");
@@ -138,8 +131,8 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         }
 
         const string SimpleTestPrePrompt = @"
-I aim to create a test procedure similar to NUnit.
-I work with VBA in Access and utilize the AccUnit testing framework.
+Create a test procedure similar to NUnit.
+Work with VBA in Access and utilize the AccUnit testing framework.
 Please use the following format for the test: 
 
 ```vba
@@ -149,14 +142,14 @@ Please use the following format for the test:
 + PrePromptEndStatement;
 
         const string RowTestPrePrompt = @"
-I aim to create a test procedure that uses row-test definitions similar to NUnit.
-I work with VBA in Access and utilize the AccUnit testing framework.
+Create a test procedure that uses row-test definitions similar to NUnit.
+Work with VBA in Access and utilize the AccUnit testing framework.
 I expect each AccUnit:Row entry to be treated as a separate test case, and for the test results to be checked directly within the test method itself.
 Please use the following format for the test: 
 
 ```vba
 'AccUnit:Row(<param1>, <param2>, ... , ExpectedValue).Name(...)
-'AccUnit:Row(...)
+'AccUnit:Row(<param1>, <param2>, ... , ExpectedValue).Name(...)
 {TESTMETHODTEMPLATE}
 ```
 
@@ -164,13 +157,12 @@ Parameters should be directly included in the signature of the test procedure. A
 Test methods must be declared as Public.
 The AccUnit:Row annotations should be defined outside the procedure. 
 No AccUnit:Row if method has no parameters.
-No blank line between row lines and procedure declaration." 
+No blank line between row lines and procedure declaration."
 + PrePromptEndStatement;
 
         private const string PrePromptEndStatement = @"
 Return only the code without explanation.
 Note for assert: since Is is not allowed as a variable in VBA, the framework uses Iz (e.g. for Iz.EqualTo) as a substitute. Don't use Call Assert.That(...). Use only Assert.That ...
-Please create a test procedure for the following method.
 ";
 
         public const string DefaultTestMethodTemplate = @"
@@ -190,7 +182,7 @@ Please create a test procedure for the following method:
 ";
 
         const string ProcedureTemplateWithClassName = @"
-Please create a test procedure for the following method from the {CLASSNAME} class: 
+Please create a test procedure for the following method from the class {CLASSNAME}: 
 {METHODCODE}
 ";
 

@@ -401,11 +401,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     try
                     {
                         var service = new OpenAiService(new CredentialManager());
-                        UITools.ShowMessage(service.ApiKey);
-
+                        
                         var builderFactory = new TestCodeBuilderFactory(service);
                         var test = builderFactory.NewTestCodeBuilder();
-                        UITools.ShowMessage("...");
                         
                         return new ChatGptMethodBuilder(
                                 builderFactory
