@@ -1,9 +1,3 @@
-using NUnit.Framework.Constraints;
-using AccessCodeLib.AccUnit.Extension.OpenAI;
-using OpenAI_API.Chat;
-using OpenAI_API.Models;
-using Newtonsoft.Json;
-
 namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
 {
     public class OpenAiServiceTests

@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using OpenAI_API.Models;
 using System;
 using System.Net.Http;
 using System.Text;

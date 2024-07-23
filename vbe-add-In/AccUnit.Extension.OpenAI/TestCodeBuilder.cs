@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using OpenAI_API.Chat;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI
 {
@@ -30,8 +28,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
     public class TestCodeBuilder : ITestCodeBuilder
     {
         private readonly IOpenAiService _openAiService;
-        private readonly IChatEndpoint _chatClient;
-
+  
         private bool _disableRowTest = false;
         private string _testMethodTemplate = null;
         private string _testMethodName;
@@ -75,52 +72,42 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             _testMethodParameters = parameterDefinition;
             return this;
         }
-        
-        public async Task<string> BuildTestMethodCode()
+
+        public string BuildTestMethodCode()
         {
+            var result = BuildTestMethodCodeAsync().Result; 
+            return result;  
+        }
+
+        public async Task<string> BuildTestMethodCodeAsync()
+        {
+
+
             var procMessage = string.IsNullOrEmpty(_baseProcedureClassName)
                 ? ProcedureTemplate.Replace("{METHODCODE}", _baseProcedureCode)
                 : ProcedureTemplateWithClassName.Replace("{METHODCODE}", _baseProcedureCode).Replace("{CLASSNAME}", _baseProcedureClassName);
 
             var prePrompt = _disableRowTest ? SimpleTestPrePrompt : RowTestPrePrompt;
-            prePrompt.Replace("{TESTMETHODTEMPLATE}", _testMethodTemplate ?? DefaultTestMethodTemplate);
+            prePrompt = prePrompt.Replace("{TESTMETHODTEMPLATE}", _testMethodTemplate ?? DefaultTestMethodTemplate);
 
-            /*
-            var messages = new List<UserChatMessage>
-            {
-                new UserChatMessage(prePrompt),
-                new UserChatMessage(procMessage)
-            };
 
+            var sb = new StringBuilder();
             if (!string.IsNullOrEmpty(_testMethodName))
             {
-                messages.Add(new UserChatMessage(TestProcedureNameTemplate.Replace("{TESTMETHODNAME}", _testMethodName)));
+                sb.Append(TestProcedureNameTemplate.Replace("{TESTMETHODNAME}", _testMethodName));
             }
-
             if (!string.IsNullOrEmpty(_testMethodParameters))
             {
-                messages.Add(new UserChatMessage(TestProcedureParametersTemplate.Replace("{PARAMETERS}", _testMethodParameters)));
+                sb.Append(TestProcedureParametersTemplate.Replace("{PARAMETERS}", _testMethodParameters));
             }
-
-            ChatCompletion chatCompletion = _chatClient.CompleteChat(messages);
-            var testCode = chatCompletion.Content[0].Text;
-            */
+            sb.Append(procMessage);
+            var prompt = sb.ToString();
 
             var messages = new[]
             {
-                new { role = "user", content = prePrompt },
-                new { role = "user", content = procMessage }
+                new { role = "assistant", content = prePrompt },
+                new { role = "user", content = prompt }
             };
-
-            if (!string.IsNullOrEmpty(_testMethodName))
-            {
-                messages.Append(new { role = "user", content = TestProcedureNameTemplate.Replace("{TESTMETHODNAME}", _testMethodName) });
-            }
-
-            if (!string.IsNullOrEmpty(_testMethodParameters))
-            {
-                messages.Append(new { role = "user", content = TestProcedureParametersTemplate.Replace("{PARAMETERS}", _testMethodParameters) });
-            }
 
             var result = await _openAiService.SendRequest(messages);
             var testCode = result;
@@ -197,7 +184,7 @@ Please create a test procedure for the following method:
 ";
 
         const string ProcedureTemplateWithClassName = @"
-Please create a test procedure for the following method from the {CLASSNAME} class: 
+Please create a test procedure for the following method from the class {CLASSNAME}: 
 {METHODCODE}
 ";
 

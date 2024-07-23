@@ -23,7 +23,7 @@ End Function";
             var testCode = await builder.ProcedureToTest(procedureCode, "TestClass")
                                   .TestMethodName("GetDate_CheckIfValueReturnedNot0")
                                   .DisableRowTest()
-                                  .BuildTestMethodCode();
+                                  .BuildTestMethodCodeAsync();
             Console.WriteLine(testCode);
 
             Assert.Multiple(() =>
@@ -35,7 +35,7 @@ End Function";
         }
 
         [Test]
-        public async Task BuildTestCode_RowTest_DefineTestProcName()
+        public void BuildTestCode_RowTest_DefineTestProcName()
         {
             var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager()));
 
@@ -43,9 +43,10 @@ End Function";
     Add = A + B
 End Function";
 
-            var testCode = await builder.ProcedureToTest(procedureCode, "TestClass")
+            var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
-                                  .BuildTestMethodCode();
+                                  .BuildTestMethodCodeAsync().Result;
+            
             Console.WriteLine(testCode);
 
             Assert.Multiple(() =>
@@ -69,7 +70,7 @@ End Function";
             var testCode = await builder.ProcedureToTest(procedureCode, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
                                   .TestMethodParameters("ByVal intA As Integer, ByVal intB As Integer")
-                                  .BuildTestMethodCode();
+                                  .BuildTestMethodCodeAsync();
             Console.WriteLine(testCode);
 
             Assert.Multiple(() =>

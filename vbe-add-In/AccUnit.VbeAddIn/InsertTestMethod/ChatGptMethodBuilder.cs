@@ -8,7 +8,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
 {
     public class ChatGptMethodBuilder : TemplateBasedTestMethodBuilder
     {
-
         private readonly ITestCodeBuilderFactory _testCodeBuilderFactory;
 
         public ChatGptMethodBuilder(ITestCodeBuilderFactory testCodeBuilderFactory, string testMethodTemplate)
@@ -34,7 +33,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
 
             string testCode;
 
-            UITools.ShowMessage(templateSource);
+            //UITools.ShowMessage(templateSource);
 
             try
             {
@@ -43,8 +42,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
                            .TestMethodTemplate(templateSource)
                            .TestMethodName(testMethodName);
 
-                UITools.ShowMessage("now build code ..");
-                testCode = await testCodeBuilder.BuildTestMethodCode();
+                //UITools.ShowMessage("now build code ..");
+                testCode = await testCodeBuilder.BuildTestMethodCodeAsync();
             }
             catch (Exception ex)
             {

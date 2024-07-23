@@ -1,8 +1,5 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
-using OpenAI_API;
-using OpenAI_API.Chat;
-using OpenAI_API.Models;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -111,7 +108,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         {
             if (!string.IsNullOrEmpty(model))
             {
-                Model = new Model(model);
+                Model = model;
             }
             Console.WriteLine(ApiKey);
 
@@ -119,10 +116,13 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             {
                 model = Model,
                 messages,
-                max_tokens = maxToken
+                max_tokens = maxToken,
+                temperature = 0.2  
             };
 
             var jsonRequestBody = JsonConvert.SerializeObject(requestBody);
+
+            //Console.WriteLine(jsonRequestBody.Replace(@"\r\n", "\r\n"));
 
             return await _restService.SendRequest(jsonRequestBody);
         }
