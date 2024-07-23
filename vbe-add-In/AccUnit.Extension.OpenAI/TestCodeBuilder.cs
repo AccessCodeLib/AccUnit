@@ -77,33 +77,18 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         
         public string BuildTestMethodCode()
         {
+            var testCode = BuildTestMethodCodeAsync().Result;
+            return testCode;
+        }
+
+        public async Task<string> BuildTestMethodCodeAsync()
+        {
             var procMessage = string.IsNullOrEmpty(_baseProcedureClassName)
                 ? ProcedureTemplate.Replace("{METHODCODE}", _baseProcedureCode)
                 : ProcedureTemplateWithClassName.Replace("{METHODCODE}", _baseProcedureCode).Replace("{CLASSNAME}", _baseProcedureClassName);
 
             var prePrompt = _disableRowTest ? SimpleTestPrePrompt : RowTestPrePrompt;
             prePrompt.Replace("{TESTMETHODTEMPLATE}", _testMethodTemplate ?? DefaultTestMethodTemplate);
-
-            /*
-            var messages = new List<UserChatMessage>
-            {
-                new UserChatMessage(prePrompt),
-                new UserChatMessage(procMessage)
-            };
-
-            if (!string.IsNullOrEmpty(_testMethodName))
-            {
-                messages.Add(new UserChatMessage(TestProcedureNameTemplate.Replace("{TESTMETHODNAME}", _testMethodName)));
-            }
-
-            if (!string.IsNullOrEmpty(_testMethodParameters))
-            {
-                messages.Add(new UserChatMessage(TestProcedureParametersTemplate.Replace("{PARAMETERS}", _testMethodParameters)));
-            }
-
-            ChatCompletion chatCompletion = _chatClient.CompleteChat(messages);
-            var testCode = chatCompletion.Content[0].Text;
-            */
 
             var messages = new List<ChatMessage>
             {
@@ -125,16 +110,17 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             {
                 Model = _openAiService.Model, // Model.ChatGPTTurbo,
                 Temperature = 0.2,
-                MaxTokens = 5,
+                MaxTokens = 500,
                 Messages = messages
             };
 
-            var result = _chatClient.CreateChatCompletionAsync(request).Result;
-            var testCode = result.ToString();
+            var result = await _chatClient.CreateChatCompletionAsync(request);
 
-            return CleanCode(testCode );
+            var testCode = result.ToString();
+            testCode = CleanCode(testCode); 
+            return testCode;
         }
-        
+
         private string CleanCode(string code)
         {
             code = code.Replace("\r\n", "\n");
