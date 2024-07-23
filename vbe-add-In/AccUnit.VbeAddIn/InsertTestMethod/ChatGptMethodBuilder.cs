@@ -2,12 +2,12 @@
 using AccessCodeLib.AccUnit.Tools;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
 {
     public class ChatGptMethodBuilder : TemplateBasedTestMethodBuilder
     {
-
         private readonly ITestCodeBuilderFactory _testCodeBuilderFactory;
 
         public ChatGptMethodBuilder(ITestCodeBuilderFactory testCodeBuilderFactory, string testMethodTemplate)
@@ -18,6 +18,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
 
         public override string GenerateProcedureCode(TestCodeModuleMember member)
         {
+            var testCode = GenerateProcedureCodeAsync(member);   
+            return testCode;
+        }
+
+        private string GenerateProcedureCodeAsync(TestCodeModuleMember member)
+        {
             var templateSource = base.GenerateProcedureCode(member);
             var testMethodName = GetTestMethodNameFromSource(templateSource);
 
@@ -27,7 +33,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
 
             string testCode;
 
-            UITools.ShowMessage(templateSource);
+            //UITools.ShowMessage(templateSource);
 
             try
             {
@@ -36,10 +42,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
                            .TestMethodTemplate(templateSource)
                            .TestMethodName(testMethodName);
 
-                UITools.ShowMessage("now build code ..");
-                 testCode = testCodeBuilder.BuildTestMethodCode();
+                //UITools.ShowMessage("now build code ..");
+                testCode = testCodeBuilder.BuildTestMethodCodeAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 UITools.ShowException(ex);
                 testCode = templateSource;
