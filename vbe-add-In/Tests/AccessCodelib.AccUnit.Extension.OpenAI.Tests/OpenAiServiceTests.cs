@@ -13,8 +13,10 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
             var secretKey = Random.Shared.GetHashCode().ToString();
             Environment.SetEnvironmentVariable("OPENAI_API_KEY", secretKey);
 
-            var service = new OpenAiService(new CredentialManager());
-            var apiKey = service.ApiKey;
+            var restService = new OpenAiRestApiService();   
+
+            var service = new OpenAiService(new CredentialManager(), restService);
+            var apiKey = restService.ApiKey;
 
             Environment.SetEnvironmentVariable("OPENAI_API_KEY", string.Empty);
 
@@ -24,8 +26,9 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
         [Test]
         public void ReadApiKeyFromUserSecrets()
         {
-            var service = new OpenAiService(new TestSupport.CredentialManagerMock());
-            var apiKey = service.ApiKey;
+            var restService = new OpenAiRestApiService();
+            var service = new OpenAiService(new TestSupport.CredentialManagerMock(), restService);
+            var apiKey = restService.ApiKey;
             Console.WriteLine(apiKey);  
             Assert.That(apiKey, Is.Not.Null, "please check UserSecrets config");
             Assert.That(apiKey, Is.GreaterThan(""), "please check UserSecrets config");
@@ -37,7 +40,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
             var secretKey = Random.Shared.GetHashCode().ToString();
             var credentialManager = new TestSupport.CredentialManagerMock();
 
-            var service = new OpenAiService(credentialManager);
+            var service = new OpenAiService(credentialManager, new OpenAiRestApiService());
             service.StoreApiKey(secretKey);
 
             var actual = credentialManager.Retrieve(OpenAiService.CredentialKey);
@@ -47,7 +50,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
         [Test]
         public void GetChatClient()
         {
-            var service = new OpenAiService(new CredentialManager());
+            var service = new OpenAiService(new CredentialManager(), new OpenAiRestApiService() );
 
             var messages = new []
             {

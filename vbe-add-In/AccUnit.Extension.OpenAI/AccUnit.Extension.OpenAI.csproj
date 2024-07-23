@@ -163,6 +163,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ICredentialManager.cs" />
+    <Compile Include="IOpenAiRestApiService.cs" />
+    <Compile Include="IOpenAiService.cs" />
     <Compile Include="ITestCodeBuilder.cs" />
     <Compile Include="OpenAiRestApiService.cs" />
     <Compile Include="TestCodeBuilder.cs" />
