@@ -1,5 +1,5 @@
 ﻿using System;
-using AccessCodeLib.Common.OpenAI;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
@@ -23,7 +23,7 @@ End Function";
             var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
                                   .TestMethodName("GetDate_CheckIfValueReturnedNot0")
                                   .DisableRowTest()
-                                  .BuildTestMethodCode();
+                                  .BuildTestMethodCodeAsync();
             Console.WriteLine(testCode);
 
             Assert.Multiple(() =>
@@ -45,7 +45,8 @@ End Function";
 
             var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
-                                  .BuildTestMethodCode();
+                                  .BuildTestMethodCodeAsync();
+            
             Console.WriteLine(testCode);
 
             Assert.Multiple(() =>
@@ -69,7 +70,7 @@ End Function";
             var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
                                   .TestMethodParameters("ByVal intA As Integer, ByVal intB As Integer")
-                                  .BuildTestMethodCode();
+                                  .BuildTestMethodCodeAsync();
             Console.WriteLine(testCode);
 
             Assert.Multiple(() =>

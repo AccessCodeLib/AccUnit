@@ -1,15 +1,14 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
-using OpenAI_API;
-using OpenAI_API.Chat;
-using OpenAI_API.Models;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI
 {
     public interface IOpenAiService
     {
-        OpenAI_API.Chat.IChatEndpoint NewChatClient(string model = null);
-        Model Model { get; set; }
+        string SendRequest(object[] messages, int maxToken = 500, string model = null); 
+        string Model { get; set; }
     }
 
     public class OpenAiService : IOpenAiService
@@ -19,16 +18,16 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
 
         private string _apiKey;
         private readonly ICredentialManager _credentialManager;
-        private readonly OpenAIAPI _api;
+        private readonly OpenAiRestApiService _restService;
 
-        public OpenAiService(ICredentialManager credentialManager, string gptModel = "gpt-4o")
+        public OpenAiService(ICredentialManager credentialManager, string gptModel = "gpt-4o-mini")
         {
             _credentialManager = credentialManager;
-            Model = new Model(gptModel);
-            _api = new OpenAIAPI(ApiKey);
+            Model = gptModel;
+            _restService = new OpenAiRestApiService(ApiKey);
         }
 
-        public Model Model { get; set; }
+        public string Model { get; set; }
 
         public string ApiKey
         {
@@ -55,14 +54,12 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
                 return apiKey;
             }
             
-            /*
             apiKey = GetApiKeyFromUserSecrets();
             if (!string.IsNullOrEmpty(apiKey))
             {
                 return apiKey;
             }
-            */
-
+           
             apiKey = GetApiKeyFromCredentialManager();
             if (!string.IsNullOrEmpty(apiKey))
             {
@@ -107,18 +104,27 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         }
         #endregion
 
-        public IChatEndpoint NewChatClient(string model = null)
+        public string SendRequest(object[] messages, int maxToken = 500, string model = null)
         {
             if (!string.IsNullOrEmpty(model))
             {
-                Model = new Model(model);
+                Model = model;
             }
             Console.WriteLine(ApiKey);
 
-            return _api.Chat;
+            var requestBody = new
+            {
+                model = Model,
+                messages,
+                max_tokens = maxToken,
+                temperature = 0.2  
+            };
 
-            //var apiKeyCredential = new System.ClientModel.ApiKeyCredential(ApiKey);
-            //return new ChatClient(model: model, credential: apiKeyCredential);
+            var jsonRequestBody = JsonConvert.SerializeObject(requestBody);
+
+            //Console.WriteLine(jsonRequestBody.Replace(@"\r\n", "\r\n"));
+
+            return _restService.SendRequest(jsonRequestBody);
         }
     }
 }
