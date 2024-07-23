@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace AccessCodeLib.AccUnit.Extension.OpenAI
+﻿namespace AccessCodeLib.AccUnit.Extension.OpenAI
 {
     public interface ITestCodeBuilder
     {
