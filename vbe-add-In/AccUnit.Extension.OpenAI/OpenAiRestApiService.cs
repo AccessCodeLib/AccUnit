@@ -17,10 +17,8 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         {
             _apiKey = apiKey;
 
-            // Fügen Sie diesen Code hinzu, bevor Sie eine HttpClient-Instanz erstellen
             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12 |
                                                              System.Net.SecurityProtocolType.Tls13;
-
 
             var handler = new HttpClientHandler
             {
