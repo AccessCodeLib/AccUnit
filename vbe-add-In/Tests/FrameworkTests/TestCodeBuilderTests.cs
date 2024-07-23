@@ -1,5 +1,5 @@
 ﻿using System;
-using AccessCodeLib.Common.OpenAI;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
@@ -12,7 +12,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
         }
 
         [Test]
-        public void BuildTestCode_SimpleTest_DefineTestProcName()
+        public async Task BuildTestCode_SimpleTest_DefineTestProcName()
         {
             var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager()));
 
@@ -20,7 +20,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
     GetDate = Date()
 End Function";
 
-            var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
+            var testCode = await builder.ProcedureToTest(procedureCode, "TestClass")
                                   .TestMethodName("GetDate_CheckIfValueReturnedNot0")
                                   .DisableRowTest()
                                   .BuildTestMethodCode();
@@ -35,7 +35,7 @@ End Function";
         }
 
         [Test]
-        public void BuildTestCode_RowTest_DefineTestProcName()
+        public async Task BuildTestCode_RowTest_DefineTestProcName()
         {
             var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager()));
 
@@ -43,7 +43,7 @@ End Function";
     Add = A + B
 End Function";
 
-            var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
+            var testCode = await builder.ProcedureToTest(procedureCode, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
                                   .BuildTestMethodCode();
             Console.WriteLine(testCode);
@@ -58,7 +58,7 @@ End Function";
 
 
         [Test]
-        public void BuildTestCode_RowTest_DefineTestProcNameAndParams()
+        public async Task BuildTestCode_RowTest_DefineTestProcNameAndParams()
         {
             var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager()));
 
@@ -66,7 +66,7 @@ End Function";
     Add = A + B
 End Function";
 
-            var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
+            var testCode = await builder.ProcedureToTest(procedureCode, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
                                   .TestMethodParameters("ByVal intA As Integer, ByVal intB As Integer")
                                   .BuildTestMethodCode();

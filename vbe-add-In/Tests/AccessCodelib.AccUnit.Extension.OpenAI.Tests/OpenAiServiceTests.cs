@@ -2,6 +2,7 @@ using NUnit.Framework.Constraints;
 using AccessCodeLib.AccUnit.Extension.OpenAI;
 using OpenAI_API.Chat;
 using OpenAI_API.Models;
+using Newtonsoft.Json;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
 {
@@ -50,23 +51,16 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
         }
 
         [Test]
-        public void GetChatClient()
+        public async Task GetChatClient()
         {
             var service = new OpenAiService(new CredentialManager());
-            var client = service.NewChatClient();
 
-            var messages = new List<ChatMessage>();
-            messages.Add(new ChatMessage(ChatMessageRole.User, "Say 'This is a test.'"));
-
-            var request = new ChatRequest()
+            var messages = new []
             {
-                Model = new Model("gpt-4o"), // Model.ChatGPTTurbo,
-                Temperature = 0.1,
-                MaxTokens = 5,
-                Messages = messages
+                new { role = "system", content = "Say 'This is a test.'" }
             };
-           
-            var result = client.CreateChatCompletionAsync(request).Result;
+
+            var result = await service.SendRequest(messages);
             var actual = result.ToString();
 
             Assert.That(actual, Is.EqualTo("This is a test."));

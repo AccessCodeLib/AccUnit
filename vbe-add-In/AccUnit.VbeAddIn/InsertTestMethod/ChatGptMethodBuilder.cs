@@ -2,6 +2,7 @@
 using AccessCodeLib.AccUnit.Tools;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
 {
@@ -17,6 +18,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
         }
 
         public override string GenerateProcedureCode(TestCodeModuleMember member)
+        {
+            var testCode = GenerateProcedureCodeAsync(member).Result;   
+            return testCode;
+        }
+
+        private async Task<string> GenerateProcedureCodeAsync(TestCodeModuleMember member)
         {
             var templateSource = base.GenerateProcedureCode(member);
             var testMethodName = GetTestMethodNameFromSource(templateSource);
@@ -37,9 +44,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
                            .TestMethodName(testMethodName);
 
                 UITools.ShowMessage("now build code ..");
-                 testCode = testCodeBuilder.BuildTestMethodCode();
+                testCode = await testCodeBuilder.BuildTestMethodCode();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 UITools.ShowException(ex);
                 testCode = templateSource;

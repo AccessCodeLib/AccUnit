@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using OpenAI_API.Chat;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI
@@ -41,7 +43,6 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         public TestCodeBuilder(IOpenAiService openAiService)
         {
             _openAiService = openAiService;
-            _chatClient = _openAiService.NewChatClient();
         }
 
         public ITestCodeBuilder DisableRowTest()
@@ -75,7 +76,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             return this;
         }
         
-        public string BuildTestMethodCode()
+        public async Task<string> BuildTestMethodCode()
         {
             var procMessage = string.IsNullOrEmpty(_baseProcedureClassName)
                 ? ProcedureTemplate.Replace("{METHODCODE}", _baseProcedureCode)
@@ -105,34 +106,26 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             var testCode = chatCompletion.Content[0].Text;
             */
 
-            var messages = new List<ChatMessage>
+            var messages = new[]
             {
-                new ChatMessage(ChatMessageRole.User, prePrompt),
-                new ChatMessage(ChatMessageRole.User, procMessage)
+                new { role = "user", content = prePrompt },
+                new { role = "user", content = procMessage }
             };
 
             if (!string.IsNullOrEmpty(_testMethodName))
             {
-                messages.Add(new ChatMessage(ChatMessageRole.User, TestProcedureNameTemplate.Replace("{TESTMETHODNAME}", _testMethodName)));
+                messages.Append(new { role = "user", content = TestProcedureNameTemplate.Replace("{TESTMETHODNAME}", _testMethodName) });
             }
 
             if (!string.IsNullOrEmpty(_testMethodParameters))
             {
-                messages.Add(new ChatMessage(ChatMessageRole.User, TestProcedureParametersTemplate.Replace("{PARAMETERS}", _testMethodParameters)));
+                messages.Append(new { role = "user", content = TestProcedureParametersTemplate.Replace("{PARAMETERS}", _testMethodParameters) });
             }
 
-            var request = new ChatRequest()
-            {
-                Model = _openAiService.Model, // Model.ChatGPTTurbo,
-                Temperature = 0.2,
-                MaxTokens = 5,
-                Messages = messages
-            };
+            var result = await _openAiService.SendRequest(messages);
+            var testCode = result;
 
-            var result = _chatClient.CreateChatCompletionAsync(request).Result;
-            var testCode = result.ToString();
-
-            return CleanCode(testCode );
+            return CleanCode(testCode);
         }
         
         private string CleanCode(string code)
