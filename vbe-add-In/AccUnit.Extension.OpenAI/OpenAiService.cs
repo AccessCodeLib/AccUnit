@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI
