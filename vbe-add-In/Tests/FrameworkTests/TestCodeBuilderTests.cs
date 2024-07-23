@@ -14,7 +14,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
         [Test]
         public void BuildTestCode_SimpleTest_DefineTestProcName()
         {
-            var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager()));
+            var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager(), new OpenAiRestApiService()));
 
             var procedureCode = @"Public Function GetDate() As Date
     GetDate = Date()
@@ -23,7 +23,7 @@ End Function";
             var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
                                   .TestMethodName("GetDate_CheckIfValueReturnedNot0")
                                   .DisableRowTest()
-                                  .BuildTestMethodCodeAsync();
+                                  .BuildTestMethodCode();
             Console.WriteLine(testCode);
 
             Assert.Multiple(() =>
@@ -37,7 +37,7 @@ End Function";
         [Test]
         public void BuildTestCode_RowTest_DefineTestProcName()
         {
-            var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager()));
+            var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager(), new OpenAiRestApiService()));
 
             var procedureCode = @"Public Function Add(ByVal A As Integer, ByVal B As Integer) As Integer
     Add = A + B
@@ -45,7 +45,7 @@ End Function";
 
             var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
-                                  .BuildTestMethodCodeAsync();
+                                  .BuildTestMethodCode();
             
             Console.WriteLine(testCode);
 
@@ -61,7 +61,7 @@ End Function";
         [Test]
         public void BuildTestCode_RowTest_DefineTestProcNameAndParams()
         {
-            var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager()));
+            var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager(), new OpenAiRestApiService()));
 
             var procedureCode = @"Public Function Add(ByVal A As Integer, ByVal B As Integer) As Integer
     Add = A + B
@@ -70,7 +70,7 @@ End Function";
             var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
                                   .TestMethodParameters("ByVal intA As Integer, ByVal intB As Integer")
-                                  .BuildTestMethodCodeAsync();
+                                  .BuildTestMethodCode();
             Console.WriteLine(testCode);
 
             Assert.Multiple(() =>

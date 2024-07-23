@@ -400,7 +400,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 {
                     try
                     {
-                        var service = new OpenAiService(new CredentialManager());
+                        var service = new OpenAiService(new CredentialManager(), new OpenAiRestApiService());
                         
                         var builderFactory = new TestCodeBuilderFactory(service);
                         var test = builderFactory.NewTestCodeBuilder();
