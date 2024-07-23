@@ -11,7 +11,10 @@ using Microsoft.Office.Core;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
 {
@@ -349,13 +352,27 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
             generateTestMethodsFromCodeModuleDataContext.InsertTestMethods += (sender, e) =>
             {
-                var newCodeModule = InsertTestMethodsDialogCommitMethodName(sender, e);
+                var infoViewModel = new InfoDialogViewModel("Test code generation in progress ...");
+                var infoDialog = new InfoDialog(infoViewModel);
+                SetDialogPosition(infoDialog);
+
                 dialog.Close();
-                if (newCodeModule != null)
+
+                infoDialog.Loaded += async (dialogSender, dialogE) =>
                 {
-                    newCodeModule.CodePane.Show();
-                    newCodeModule.CodePane.Window.SetFocus();
-                }
+                    var newCodeModule = await Task.Run(() => InsertTestMethodsDialogCommitMethodName(sender, e));
+                    infoViewModel.InfoText = "Test code generation completed.";
+
+                    if (newCodeModule != null)
+                    {
+                        newCodeModule.CodePane.Show();
+                        newCodeModule.CodePane.Window.SetFocus();
+                    }
+
+                    await Task.Delay(1000);
+                    infoDialog.Dispatcher.Invoke(() => infoDialog.Close());
+                };
+                infoDialog.ShowDialog();
             };
             generateTestMethodsFromCodeModuleDataContext.Canceled += (sender, e) => dialog.Close();
 

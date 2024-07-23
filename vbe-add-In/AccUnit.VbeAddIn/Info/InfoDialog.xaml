@@ -1,0 +1,25 @@
+﻿<Window x:Class="AccessCodeLib.AccUnit.VbeAddIn.InfoDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AccessCodeLib.AccUnit.VbeAddIn"
+             mc:Ignorable="d" 
+             d:DesignHeight="120" d:DesignWidth="280" 
+             SizeToContent="WidthAndHeight" ResizeMode="NoResize"
+             HorizontalAlignment="Center" VerticalAlignment="Center" 
+             MinWidth="420" MinHeight="120" MaxHeight="620" MaxWidth="620"
+             Height="auto" Cursor="Wait"
+             WindowStyle="None"
+             Topmost="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+             ScrollViewer.VerticalScrollBarVisibility="Disabled" FontSize="14">
+    <Window.Background>
+        <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.InfoColorKey}}" Opacity="1"/>
+    </Window.Background>
+    <StackPanel VerticalAlignment="Center">
+        <TextBlock Text="{Binding InfoText, FallbackValue='...'}" 
+                   TextAlignment="Center" VerticalAlignment="Center"
+                   Margin="20"
+                   />
+    </StackPanel>
+</Window>
