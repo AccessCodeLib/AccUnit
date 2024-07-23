@@ -20,7 +20,7 @@ End Function";
             var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
                                   .TestMethodName("GetDate_CheckIfValueReturnedNot0")
                                   .DisableRowTest()
-                                  .BuildTestMethodCode();
+                                  .BuildTestMethodCodeAsync();
             Console.WriteLine(testCode);
 
             Assert.Multiple(() =>
@@ -40,7 +40,7 @@ End Function";
 
             var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
-                                  .BuildTestMethodCode();
+                                  .BuildTestMethodCodeAsync();
             Console.WriteLine(testCode);
 
             Assert.Multiple(() =>
@@ -55,6 +55,29 @@ End Function";
         [Test]
         public void BuildTestCode_RowTest_DefineTestProcNameAndParams()
         {
+            var procedureCode = @"Public Function Add(ByVal A As Integer, ByVal B As Integer) As Integer
+    Add = A + B
+End Function";
+
+            var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
+                                  .TestMethodName("Add_2Params_CheckResult")
+                                  .TestMethodParameters("ByVal intA As Integer, ByVal intB As Integer")
+                                  .BuildTestMethodCodeAsync();
+            Console.WriteLine(testCode);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(testCode, Is.Not.Null);
+                Assert.That(testCode.Contains("'AccUnit:Row"), Is.True);
+                Assert.That(testCode.Contains("Public Sub Add_2Params_CheckResult(ByVal intA As Integer, ByVal intB As Integer, ByVal Expected"), Is.True);
+            });
+        }
+
+        [Test]
+        public void BuildTestCode_SyncRowTest_DefineTestProcNameAndParams()
+        {
+            var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager()));
+
             var procedureCode = @"Public Function Add(ByVal A As Integer, ByVal B As Integer) As Integer
     Add = A + B
 End Function";
