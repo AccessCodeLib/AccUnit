@@ -7,7 +7,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
 {
     public interface IOpenAiService
     {
-        Task<string> SendRequest(object[] messages, int maxToken = 500, string model = null); 
+        string SendRequest(object[] messages, int maxToken = 500, string model = null); 
         string Model { get; set; }
     }
 
@@ -104,7 +104,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         }
         #endregion
 
-        public async Task<string> SendRequest(object[] messages, int maxToken = 500, string model = null)
+        public string SendRequest(object[] messages, int maxToken = 500, string model = null)
         {
             if (!string.IsNullOrEmpty(model))
             {
@@ -124,7 +124,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
 
             //Console.WriteLine(jsonRequestBody.Replace(@"\r\n", "\r\n"));
 
-            return await _restService.SendRequest(jsonRequestBody);
+            return _restService.SendRequest(jsonRequestBody);
         }
     }
 }

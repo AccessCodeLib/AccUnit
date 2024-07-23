@@ -10,15 +10,26 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
     public class OpenAiRestApiService
     {
         const string _apiUrl = "https://api.openai.com/v1/chat/completions";
-        private static readonly HttpClient _client = new HttpClient();
+        private readonly HttpClient _client;
         private readonly string _apiKey;
 
         public OpenAiRestApiService(string apiKey)
         {
             _apiKey = apiKey;
+
+            // Fügen Sie diesen Code hinzu, bevor Sie eine HttpClient-Instanz erstellen
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12 |
+                                                             System.Net.SecurityProtocolType.Tls13;
+
+
+            var handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; }
+            };
+            _client = new HttpClient(handler);
         }
 
-        public async Task<string> SendRequest(string jsonRequestBody)
+        public string SendRequest(string jsonRequestBody)
         {
             
             var request = new HttpRequestMessage
@@ -32,10 +43,10 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
                 Content = new StringContent(jsonRequestBody, Encoding.UTF8, "application/json")
             };
 
-            HttpResponseMessage response = await _client.SendAsync(request);
+            HttpResponseMessage response = _client.SendAsync(request).Result;
             response.EnsureSuccessStatusCode();
 
-            string responseBody = await response.Content.ReadAsStringAsync();
+            string responseBody = response.Content.ReadAsStringAsync().Result;
 
             var jsonResponse = JObject.Parse(responseBody);
             var choicesContent = jsonResponse["choices"][0]["message"]["content"].ToString();

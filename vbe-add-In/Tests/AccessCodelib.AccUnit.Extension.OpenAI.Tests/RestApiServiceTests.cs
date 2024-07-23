@@ -15,7 +15,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
         }
 
         [Test]
-        public async Task CheckRestApiResponse()
+        public void CheckRestApiResponse()
         {
             var aiService = new OpenAiService(new CredentialManager());
             var apiKey = aiService.ApiKey;
@@ -35,7 +35,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
             var jsonRequestBody = JsonConvert.SerializeObject(requestBody);
 
 
-            string result = await restService.SendRequest(jsonRequestBody);
+            string result = restService.SendRequest(jsonRequestBody);
 
             Console.WriteLine(result);
 

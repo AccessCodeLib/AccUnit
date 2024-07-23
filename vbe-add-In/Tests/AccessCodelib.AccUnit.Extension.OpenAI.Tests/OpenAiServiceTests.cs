@@ -45,7 +45,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
         }
 
         [Test]
-        public async Task GetChatClient()
+        public void GetChatClient()
         {
             var service = new OpenAiService(new CredentialManager());
 
@@ -54,7 +54,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
                 new { role = "system", content = "Say 'This is a test.'" }
             };
 
-            var result = await service.SendRequest(messages);
+            var result = service.SendRequest(messages);
             var actual = result.ToString();
 
             Assert.That(actual, Is.EqualTo("This is a test."));
