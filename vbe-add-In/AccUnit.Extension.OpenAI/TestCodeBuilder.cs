@@ -115,52 +115,6 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             return code.Replace("\n", "\r\n");
         }
 
-        const string SimpleTestPrePrompt = @"Create a test procedure similar to NUnit.
-Work with VBA in Access and utilize the AccUnit testing framework.
-Please use the following format for the test: 
-
-```vba
-{TESTMETHODTEMPLATE}
-```
-" + PrePromptEndStatement;
-
-        const string RowTestPrePrompt = @"Create a test procedure that uses row-test definitions similar to NUnit.
-Work with VBA in Access and utilize the AccUnit testing framework.
-I expect each AccUnit:Row entry to be treated as a separate test case, and for the test results to be checked directly within the test method itself.
-Please use the following format for the test: 
-
-```vba
-'AccUnit:Row([param1], [param2], ... , [ExpectedValue]).Name(...)
-'AccUnit:Row([param1], [param2], ... , [ExpectedValue]).Name(...)
-{TESTMETHODTEMPLATE}
-```
-
-Parameters should be directly included in the signature of the test procedure. Also use an Expected parameter and define the value in the test row definition. Set optional parameters to required.
-Test methods must be declared as Public.
-The AccUnit:Row annotations should be defined outside the procedure. 
-No AccUnit:Row if method has no parameters.
-No blank line between row lines and procedure declaration.
-" + PrePromptEndStatement;
-
-        private const string PrePromptEndStatement = @"Return only the code without explanation.
-Note for assert: since Is is not allowed as a variable in VBA, the framework uses Iz (e.g. for Iz.EqualTo) as a substitute. Don't use Call Assert.That(...). Use only Assert.That ...";
-
-        public const string DefaultTestMethodTemplate = @"Public Sub TestMethod(...)
-    ' Arrange
-    ...
-    ' Act
-    ...
-    ' Assert
-    Assert.That ...
-End Sub";
-
-        const string ProcedureTemplate = @"Please create a test procedure for the following method: 
-{METHODCODE}";
-
-        const string ProcedureTemplateWithClassName = @"Please create a test procedure for the following method from the class {CLASSNAME}: 
-{METHODCODE}";
-
-        const string TestProcedureNameTemplate = @"Use {TESTMETHODNAME} as name for test method.";
-        const string TestProcedureParametersTemplate = @"Use {PARAMETERS} as parameters for test method.";
+        
     }
 }
