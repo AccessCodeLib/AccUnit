@@ -14,7 +14,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
         [Test]
         public void BuildTestCode_SimpleTest_DefineTestProcName()
         {
-            var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager(), new OpenAiRestApiService()));
+            var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager(), new OpenAiRestApiService()), new TestCodePromptBuilder());
 
             var procedureCode = @"Public Function GetDate() As Date
     GetDate = Date()
@@ -37,7 +37,7 @@ End Function";
         [Test]
         public void BuildTestCode_RowTest_DefineTestProcName()
         {
-            var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager(), new OpenAiRestApiService()));
+            var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager(), new OpenAiRestApiService()), new TestCodePromptBuilder());
 
             var procedureCode = @"Public Function Add(ByVal A As Integer, ByVal B As Integer) As Integer
     Add = A + B
@@ -61,7 +61,7 @@ End Function";
         [Test]
         public void BuildTestCode_RowTest_DefineTestProcNameAndParams()
         {
-            var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager(), new OpenAiRestApiService()));
+            var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager(), new OpenAiRestApiService()), new TestCodePromptBuilder());
 
             var procedureCode = @"Public Function Add(ByVal A As Integer, ByVal B As Integer) As Integer
     Add = A + B

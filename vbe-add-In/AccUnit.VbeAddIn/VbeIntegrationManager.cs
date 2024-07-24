@@ -419,7 +419,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     {
                         var service = new OpenAiService(new CredentialManager(), new OpenAiRestApiService());
                         
-                        var builderFactory = new TestCodeBuilderFactory(service);
+                        var builderFactory = new TestCodeBuilderFactory(service, new TestCodePromptBuilder());
                         var test = builderFactory.NewTestCodeBuilder();
                         
                         return new ChatGptMethodBuilder(
