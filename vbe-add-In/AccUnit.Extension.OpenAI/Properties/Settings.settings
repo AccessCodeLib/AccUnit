@@ -1,0 +1,62 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AccessCodeLib.AccUnit.Extension.OpenAI.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SimpleTestPrePrompt" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Create a test procedure similar to NUnit.
+Work with VBA in Access and utilize the AccUnit testing framework.
+Please use the following format for the test: 
+
+```vba
+{TESTMETHODTEMPLATE}
+```</Value>
+    </Setting>
+    <Setting Name="RowTestPrePrompt" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Create a test procedure that uses row-test definitions similar to NUnit.
+Work with VBA in Access and utilize the AccUnit testing framework.
+I expect each AccUnit:Row entry to be treated as a separate test case, and for the test results to be checked directly within the test method itself.
+Please use the following format for the test: 
+
+```vba
+'AccUnit:Row([param1], [param2], ... , [ExpectedValue]).Name(...)
+'AccUnit:Row([param1], [param2], ... , [ExpectedValue]).Name(...)
+{TESTMETHODTEMPLATE}
+```
+
+Parameters should be directly included in the signature of the test procedure. Also use an Expected parameter and define the value in the test row definition. Set optional parameters to required.
+Test methods must be declared as Public.
+The AccUnit:Row annotations should be defined outside the procedure. 
+No AccUnit:Row if method has no parameters.
+No blank line between row lines and procedure declaration.</Value>
+    </Setting>
+    <Setting Name="PrePromptEndStatement" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Return only the code without explanation.
+Note for assert: since Is is not allowed as a variable in VBA, the framework uses Iz (e.g. for Iz.EqualTo) as a substitute. Don't use Call Assert.That(...). Use only Assert.That ...
+</Value>
+    </Setting>
+    <Setting Name="ProcedureTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Please create a test procedure for the following method: 
+{METHODCODE}</Value>
+    </Setting>
+    <Setting Name="DefaultTestMethodTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Public Sub TestMethod(...)
+    ' Arrange
+    ...
+    ' Act
+    ...
+    ' Assert
+    Assert.That ...
+End Sub</Value>
+    </Setting>
+    <Setting Name="ProcedureTemplateWithClassName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Please create a test procedure for the following method from the class {CLASSNAME}: 
+{METHODCODE}</Value>
+    </Setting>
+    <Setting Name="TestProcedureNameTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Use {TESTMETHODNAME} as name for test method.</Value>
+    </Setting>
+    <Setting Name="TestProcedureParametersTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Use {PARAMETERS} as parameters for test method.</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
