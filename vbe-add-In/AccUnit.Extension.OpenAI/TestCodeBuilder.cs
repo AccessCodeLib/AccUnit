@@ -78,11 +78,11 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
 
         public string BuildTestMethodCode()
         {
-            var result = BuildTestMethodCodeAsync(); 
-            return result;  
+            var result = BuildTestMethodCodeAsync().Result; 
+            return result;
         }
 
-        public string BuildTestMethodCodeAsync()
+        public async Task<string> BuildTestMethodCodeAsync()
         {
             var prePrompt = _promptBuilder.BuildPrePrompt(!_disableRowTest, _testMethodTemplate);
             var prompt = _promptBuilder.BuildPrompt(_baseProcedureCode, _baseProcedureClassName, _testMethodName, _testMethodParameters);  
@@ -93,7 +93,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
                 new { role = "user", content = prompt }
             };
 
-            var result = _openAiService.SendRequest(messages);
+            var result = await _openAiService.SendRequest(messages);
             var testCode = result;
 
             return CleanCode(testCode);

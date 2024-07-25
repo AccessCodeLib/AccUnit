@@ -17,9 +17,8 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
         [Test]
         public void CheckRestApiResponse()
         {
-            var restService = new OpenAiRestApiService();   
-            var aiService = new OpenAiService(new CredentialManager(), restService);
-            var apiKey = restService.ApiKey;
+            var restService = new OpenAiRestApiService();
+            _ = new OpenAiService(new CredentialManager(), restService);
             
             var requestBody = new
             {
@@ -34,14 +33,10 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
 
             var jsonRequestBody = JsonConvert.SerializeObject(requestBody);
 
-
-            string result = restService.SendRequest(jsonRequestBody);
+            string result = restService.SendRequest(jsonRequestBody).Result;
 
             Console.WriteLine(result);
-
             Assert.That(result, Is.Not.Null);
-
         }
-
     }
 }

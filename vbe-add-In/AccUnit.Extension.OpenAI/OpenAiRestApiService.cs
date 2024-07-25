@@ -2,6 +2,7 @@
 using System;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AccessCodeLib.AccUnit.Extension.OpenAI
 {
@@ -25,7 +26,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
 
         public string ApiKey { get => _apiKey; set => _apiKey = value; }
 
-        public string SendRequest(string jsonRequestBody)
+        public async Task<string> SendRequest(string jsonRequestBody)
         {
             var request = new HttpRequestMessage
             {
@@ -38,10 +39,10 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
                 Content = new StringContent(jsonRequestBody, Encoding.UTF8, "application/json")
             };
 
-            HttpResponseMessage response = _client.SendAsync(request).Result;
+            HttpResponseMessage response = await _client.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
-            string responseBody = response.Content.ReadAsStringAsync().Result;
+            string responseBody = await response.Content.ReadAsStringAsync();
             var jsonResponse = JObject.Parse(responseBody);
             var choicesContent = jsonResponse["choices"][0]["message"]["content"].ToString();
 

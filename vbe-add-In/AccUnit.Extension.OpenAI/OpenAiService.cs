@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
@@ -85,7 +86,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         }
         #endregion
 
-        public string SendRequest(object[] messages, int maxToken = 0, string model = null)
+        public async Task<string> SendRequest(object[] messages, int maxToken = 0, string model = null)
         {
             if (string.IsNullOrEmpty(model))
             {
@@ -106,7 +107,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             };
 
             var jsonRequestBody = JsonConvert.SerializeObject(requestBody);
-            return _restService.SendRequest(jsonRequestBody);
+            return await _restService.SendRequest(jsonRequestBody);
         }
     }
 }
