@@ -14,7 +14,6 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
             Environment.SetEnvironmentVariable("OPENAI_API_KEY", secretKey);
 
             var restService = new OpenAiRestApiService();   
-
             var service = new OpenAiService(new CredentialManager(), restService);
             var apiKey = restService.ApiKey;
 
