@@ -98,7 +98,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
 
             return CleanCode(testCode);
         }
-
+        
         private string CleanCode(string code)
         {
             code = code.Replace("\r\n", "\n");
