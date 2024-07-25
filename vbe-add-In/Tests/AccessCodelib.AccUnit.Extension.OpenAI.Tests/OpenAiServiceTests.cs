@@ -14,7 +14,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
             Environment.SetEnvironmentVariable("OPENAI_API_KEY", secretKey);
 
             var restService = new OpenAiRestApiService();   
-            var service = new OpenAiService(new CredentialManager(), restService);
+            _ = new OpenAiService(new CredentialManager(), restService);
             var apiKey = restService.ApiKey;
 
             Environment.SetEnvironmentVariable("OPENAI_API_KEY", string.Empty);
@@ -26,7 +26,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
         public void ReadApiKeyFromUserSecrets()
         {
             var restService = new OpenAiRestApiService();
-            var service = new OpenAiService(new TestSupport.CredentialManagerMock(), restService);
+            _ = new OpenAiService(new TestSupport.CredentialManagerMock(), restService);
             var apiKey = restService.ApiKey;
             Console.WriteLine(apiKey);  
             Assert.That(apiKey, Is.Not.Null, "please check UserSecrets config");
