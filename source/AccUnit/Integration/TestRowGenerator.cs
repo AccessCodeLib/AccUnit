@@ -170,9 +170,26 @@ namespace AccessCodeLib.AccUnit
                                                                m =>
                                                                string.Format("{0}{1}{2}", m.Groups[1].Value,
                                                                              "DBNull.Value", m.Groups[3].Value));
+            tempString = ConvertVbArrayStringsToVB(tempString);
             tempString = ConvertConstantStringsToVB(tempString);
             tempString = tempString.Replace(".Tags(", ".AddTags(");
             return "TestManager.AddRow" + tempString;
+        }
+
+        private static readonly Regex VbArrayStringRegex = new Regex(@"([\(\,]?)\s*(Array\((.*)\))\s*([\)\,])", RegexOptions.CultureInvariant | RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase);
+        private string ConvertVbArrayStringsToVB(string paramstring)
+        {
+            Logger.Log(string.Format("Fill params, replace constants"));
+
+            var test = VbArrayStringRegex.Match(paramstring);
+
+            var tempString = VbArrayStringRegex.Replace(paramstring,
+                                                            m =>
+                                                            string.Format("{0}{1}{2}", m.Groups[1].Value,
+                                                                          "New Object() {New Object() {" + m.Groups[3].Value + "}}", m.Groups[4].Value));
+                                // Note: workaround: New Object() {1, 2, 3} creates 3 params and not an array
+            Logger.Log("completed");
+            return tempString;
         }
 
         private static readonly Regex ConstantStringRegex = new Regex(@"([\(\,]?)\s*([A-z\.]+)\s*([\)\,])", RegexOptions.CultureInvariant | RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase);
@@ -224,7 +241,6 @@ namespace AccessCodeLib.AccUnit
         private static object CreateTestRowGenerator(string testparamstring)
         {
             var sourcecode = GetTestRowGeneratorSource(testparamstring);
-
             using (var bcp = new Microsoft.VisualBasic.VBCodeProvider())
             {
                 var cp = new CompilerParameters();
