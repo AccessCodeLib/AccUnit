@@ -41,8 +41,8 @@ End Function";
             Assert.Multiple(() =>
             {
                 Assert.That(testCode, Is.Not.Null);
-                Assert.That(testCode.Contains("'AccUnit:Row"), Is.True);
-                Assert.That(testCode.Contains("Public Sub Add_2Params_CheckResult"), Is.True);
+                Assert.That(testCode, Does.Contain("'AccUnit:Row"));
+                Assert.That(testCode, Does.Contain("Public Sub Add_2Params_CheckResult"));
             });
         }
     }
