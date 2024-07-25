@@ -1,9 +1,10 @@
-﻿namespace AccessCodeLib.AccUnit.Extension.OpenAI
+﻿using System.Threading.Tasks;
+
+namespace AccessCodeLib.AccUnit.Extension.OpenAI
 {
     public interface IOpenAiRestApiService
     {
         string ApiKey { get; set; }
-
-        string SendRequest(string jsonRequestBody);
+        Task<string> SendRequest(string jsonRequestBody);
     }
 }

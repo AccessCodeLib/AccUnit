@@ -56,8 +56,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
                 new { role = "system", content = "Say 'This is a test.'" }
             };
 
-            var result = service.SendRequest(messages);
-            var actual = result.ToString();
+            var actual = service.SendRequest(messages).Result;
 
             Assert.That(actual, Is.EqualTo("This is a test."));
         }
