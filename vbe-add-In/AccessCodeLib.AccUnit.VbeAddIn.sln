@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccUnit.Extension.OpenAI", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AccessCodeLib.AccUnit.Extension.OpenAI.Tests", "Tests\AccessCodelib.AccUnit.Extension.OpenAI.Tests\AccessCodeLib.AccUnit.Extension.OpenAI.Tests.csproj", "{AFBA1FA1-E880-44E8-8600-3B41B82D1C48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameworkTests", "Tests\FrameworkTests\FrameworkTests.csproj", "{22901032-65D5-42B5-8DD0-FE38C7912843}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccessCodeLib.AccUnit.Extension.OpenAI.FrameworkTests", "Tests\FrameworkTests\AccessCodeLib.AccUnit.Extension.OpenAI.FrameworkTests.csproj", "{22901032-65D5-42B5-8DD0-FE38C7912843}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

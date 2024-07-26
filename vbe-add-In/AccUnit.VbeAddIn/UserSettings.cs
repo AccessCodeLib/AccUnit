@@ -60,7 +60,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     _toolsUserSettings = Tools.UserSettings.Current.Clone(),
                     //_accSpecUserSettings = AccSpec.Integration.UserSettings.Current.Clone(),
                     RestoreVbeWindowsStateOnLoad = RestoreVbeWindowsStateOnLoad,
-                    TestClassNameFormat = Properties.Settings.Default.TestClassNameFormat
+                    TestClassNameFormat = Properties.Settings.Default.TestClassNameFormat,
+                    BuildTestMethodsWithChatGPT = Properties.Settings.Default.BuildTestMethodsWithChatGPT
                 };
                 return clone;
             }
@@ -93,6 +94,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             */
             Properties.Settings.Default.RestoreVbeWindowsStateOnLoad = RestoreVbeWindowsStateOnLoad;
             Properties.Settings.Default.TestClassNameFormat = TestClassNameFormat;
+            Properties.Settings.Default.BuildTestMethodsWithChatGPT = BuildTestMethodsWithChatGPT;
+            Properties.Settings.Default.Save();
         }
 
         #endregion
@@ -177,6 +180,7 @@ End Sub")]
 
 
         [Category("Templates")]
+        [DefaultValue(false)]
         [Description("Use ChatGPT to build test methods")]
         public bool BuildTestMethodsWithChatGPT { get; set; }
 

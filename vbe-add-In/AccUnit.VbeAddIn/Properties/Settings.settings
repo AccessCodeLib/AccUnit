@@ -27,7 +27,7 @@
       <Value Profile="(Default)">%ModuleUnderTest%Tests</Value>
     </Setting>
     <Setting Name="BuildTestMethodsWithChatGPT" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>
