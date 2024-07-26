@@ -184,8 +184,8 @@ namespace AccessCodeLib.AccUnit
             var tempString = VbArrayStringRegex.Replace(paramstring,
                                                             m =>
                                                             string.Format("{0}{1}{2}", m.Groups[1].Value,
-                                                                          "New Object() {New Object() {" + m.Groups[3].Value + "}}", m.Groups[4].Value));
-            // Note: workaround: New Object() {1, 2, 3} creates 3 params and not an array
+                                                                          "New Object() {" + m.Groups[3].Value + "}", m.Groups[4].Value));
+            // Note: if only 1 param => New Object() {1, 2, 3} creates 3 params and not an array .. why?
             
             Logger.Log("completed");
             return tempString;
