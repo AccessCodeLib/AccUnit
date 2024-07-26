@@ -3,7 +3,6 @@ using AccessCodeLib.Common.VBIDETools;
 using System;
 using NUnit.Framework;
 using AccessCodeLib.AccUnit.Extension.OpenAI;
-using AccessCodeLib.AccUnit.Extension.OpenAI.Tests.TestSupport;
 using AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod;
 
 namespace AccessCodeLib.Common.OpenAI.Tests

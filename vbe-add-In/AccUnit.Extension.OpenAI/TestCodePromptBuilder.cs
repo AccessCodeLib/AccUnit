@@ -58,7 +58,7 @@ Please use the following format for the test:
 Parameters should be directly included in the signature of the test procedure. Also use an Expected parameter and define the value in the test row definition. Set optional parameters to required.
 Test methods must be declared as Public.
 The AccUnit:Row annotations should be defined outside the procedure. 
-No AccUnit:Row if method has no parameters.
+Insert no AccUnit:Row lines if procedure is without parameters.
 No blank line between row lines and procedure declaration.
 " + PrePromptEndStatement;
 
@@ -77,11 +77,10 @@ End Sub";
         private const string ProcedureTemplate = @"Please create a test procedure for the following method: 
 {METHODCODE}";
 
-        private const string ProcedureTemplateWithClassName = @"Please create a test procedure for the following method from the class {CLASSNAME}: 
+        private const string ProcedureTemplateWithClassName = @"Please create a test procedure with a new class instance for the following method from the class {CLASSNAME}: 
 {METHODCODE}";
 
         private const string TestProcedureNameTemplate = @"Use {TESTMETHODNAME} as name for test method.";
         private const string TestProcedureParametersTemplate = @"Use {PARAMETERS} as parameters for test method.";
-
     }
 }

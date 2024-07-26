@@ -111,9 +111,7 @@ namespace AccessCodeLib.AccUnit
             }
         }
 
-        // ReSharper disable ReturnTypeCanBeEnumerable.Local
         internal string[] GetRowTestParamStrings(string procHeader, string procname)
-        // ReSharper restore ReturnTypeCanBeEnumerable.Local
         {
             procHeader = procHeader.Replace("\r", "");
             const string commentExtenstion = @"(\s*|\s*\'.*)";
@@ -187,7 +185,8 @@ namespace AccessCodeLib.AccUnit
                                                             m =>
                                                             string.Format("{0}{1}{2}", m.Groups[1].Value,
                                                                           "New Object() {New Object() {" + m.Groups[3].Value + "}}", m.Groups[4].Value));
-                                // Note: workaround: New Object() {1, 2, 3} creates 3 params and not an array
+            // Note: workaround: New Object() {1, 2, 3} creates 3 params and not an array
+            
             Logger.Log("completed");
             return tempString;
         }
@@ -233,9 +232,7 @@ namespace AccessCodeLib.AccUnit
                     }
                     break;
             }
-
             return value != null ? value.ToString() : paramstring;
-
         }
 
         private static object CreateTestRowGenerator(string testparamstring)
@@ -248,7 +245,6 @@ namespace AccessCodeLib.AccUnit
                 EnsureCouldCompile(results);
                 return results.CompiledAssembly.CreateInstance("DynamicTestRowGenerator");
             }
-
         }
 
         private static void EnsureCouldCompile(CompilerResults results)
@@ -299,6 +295,5 @@ End Class";
         {
             return testparams.Aggregate<string, string>(null, (current, paramString) => current + string.Format("{0}\r\n", paramString));
         }
-
     }
 }

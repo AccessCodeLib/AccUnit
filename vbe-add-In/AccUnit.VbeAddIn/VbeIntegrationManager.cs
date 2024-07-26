@@ -1,5 +1,6 @@
 ﻿using AccessCodeLib.AccUnit.Configuration;
 using AccessCodeLib.AccUnit.Extension.OpenAI;
+using AccessCodeLib.AccUnit.Properties;
 using AccessCodeLib.AccUnit.Tools;
 using AccessCodeLib.AccUnit.Tools.Templates;
 using AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod;
@@ -413,7 +414,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             get
             {
-                if (UserSettings.Current.BuildTestMethodsWithChatGPT)
+                if (Properties.Settings.Default.BuildTestMethodsWithChatGPT)
                 {
                     try
                     {

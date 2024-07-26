@@ -26,9 +26,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
                 codeToTest = member.DeclarationString;
 
             string testCode;
-
-            //UITools.ShowMessage(templateSource);
-
             try
             {
                 var testCodeBuilder = _testCodeBuilderFactory.NewTestCodeBuilder();
@@ -36,8 +33,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
                            .TestMethodTemplate(templateSource)
                            .TestMethodName(testMethodName);
 
-                //UITools.ShowMessage("now build code ..");
-                 testCode = testCodeBuilder.BuildTestMethodCode();
+                if (codeToTest.Contains(member.CodeModuleName + "()"))
+                    testCodeBuilder.DisableRowTest();
+
+                testCode = testCodeBuilder.BuildTestMethodCode();
             }
             catch (Exception ex)
             {
