@@ -84,6 +84,12 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             string username = Environment.UserName;
             _credentialManager.Save(CredentialKey, username, apiKey);
         }
+
+        public bool ApiKeyExists()
+        {
+            return !string.IsNullOrEmpty(_restService.ApiKey);
+        }
+
         #endregion
 
         public async Task<string> SendRequest(object[] messages, int maxToken = 0, string model = null)

@@ -1,4 +1,5 @@
-﻿using AccessCodeLib.AccUnit.Tools.Templates;
+﻿using AccessCodeLib.AccUnit.Extension.OpenAI;
+using AccessCodeLib.AccUnit.Tools.Templates;
 using AccessCodeLib.Common.Tools.Logging;
 using System;
 using System.ComponentModel;
@@ -184,10 +185,29 @@ End Sub")]
         [Description("Use ChatGPT to build test methods")]
         public bool BuildTestMethodsWithChatGPT { get; set; }
 
-    //
+        [Category("Templates")]
+        [DefaultValue("")]
+        [Description("OpenAI API Key")]
+        public string OpenAiApiKey {
+            get {
+                var openAiService = new OpenAiService(new CredentialManager(),new OpenAiRestApiService());
+                if (openAiService.ApiKeyExists())
+                {
+                    return "(OpenAI API key stored)";
+                }
+                return string.Empty;
+            }
+            set
+            {
+                var openAiService = new OpenAiService(new CredentialManager(), new OpenAiRestApiService());
+                openAiService.StoreApiKey(value);   
+            }
+        }
 
-    #endregion
+        //
 
-    #endregion
-}
+        #endregion
+
+        #endregion
+    }
 }
