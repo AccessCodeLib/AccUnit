@@ -7,7 +7,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         string BuildTestMethodCode();
         Task<string> BuildTestMethodCodeAsync();
         ITestCodeBuilder DisableRowTest();
-        ITestCodeBuilder ProcedureToTest(string procedureCode, string className = null);
+        ITestCodeBuilder ProcedureToTest(string procedureCode, bool isClassMember, string codeModuleName = null);
         ITestCodeBuilder TestMethodTemplate(string templateCode);
         ITestCodeBuilder TestMethodName(string testMethodName);
         ITestCodeBuilder TestMethodParameters(string parameterDefinition);

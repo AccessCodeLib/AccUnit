@@ -12,13 +12,12 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             return prePrompt;
         }
 
-        public string BuildPrompt(string baseProcedureCode, string baseProcedureClassName,
+        public string BuildPrompt(string baseProcedureCode, bool isClassMember, string baseProcedureVbComponentName,
                                   string testMethodName, string testMethodParameters)
         {
-            var procMessage = string.IsNullOrEmpty(baseProcedureClassName)
-                ? ProcedureTemplate.Replace("{METHODCODE}", baseProcedureCode)
-                : ProcedureTemplateWithClassName.Replace("{METHODCODE}", baseProcedureCode).Replace("{CLASSNAME}", baseProcedureClassName);
-
+            var procMessage = isClassMember
+                ? ProcedureTemplateWithClassName.Replace("{METHODCODE}", baseProcedureCode).Replace("{CLASSNAME}", baseProcedureVbComponentName)
+                : ProcedureTemplate.Replace("{METHODCODE}", (string.IsNullOrEmpty(baseProcedureVbComponentName) ? "" : baseProcedureVbComponentName + ".") + baseProcedureCode);
 
             var sb = new StringBuilder();
             sb.Append(procMessage);

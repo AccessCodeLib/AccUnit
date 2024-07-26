@@ -11,13 +11,13 @@
         }
 
         [Test]
-        public void BuildTestCode_SimpleTest_DefineTestProcName()
+        public void BuildTestCode_SimpleTest_DefineTestProcNameAsClassMember()
         {
             var procedureCode = @"Public Function GetDate() As Date
     GetDate = Date()
 End Function";
 
-            var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
+            var testCode = builder.ProcedureToTest(procedureCode, true, "TestClass")
                                   .TestMethodName("GetDate_CheckIfValueReturnedNot0")
                                   .DisableRowTest()
                                   .BuildTestMethodCodeAsync();
@@ -28,6 +28,29 @@ End Function";
                 Assert.That(testCode, Is.Not.Null);
                 Assert.That(testCode, Does.Not.Contain("'AccUnit:Row"));
                 Assert.That(testCode, Does.Contain("Public Sub GetDate_CheckIfValueReturnedNot0"));
+                Assert.That(testCode, Does.Contain("New TestClass"));
+            });
+        }
+
+        [Test]
+        public void BuildTestCode_SimpleTest_DefineTestProcName()
+        {
+            var procedureCode = @"Public Function GetDate() As Date
+    GetDate = Date()
+End Function";
+
+            var testCode = builder.ProcedureToTest(procedureCode, false, "TestModule")
+                                  .TestMethodName("GetDate_CheckIfValueReturnedNot0")
+                                  .DisableRowTest()
+                                  .BuildTestMethodCode();
+            Console.WriteLine(testCode);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(testCode, Is.Not.Null);
+                Assert.That(testCode, Does.Not.Contain("'AccUnit:Row"));
+                Assert.That(testCode, Does.Contain("Public Sub GetDate_CheckIfValueReturnedNot0"));
+                Assert.That(testCode, Does.Not.Contain("New TestModule"));
             });
         }
 
@@ -38,7 +61,7 @@ End Function";
     Add = A + B
 End Function";
 
-            var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
+            var testCode = builder.ProcedureToTest(procedureCode, true, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
                                   .BuildTestMethodCodeAsync();
             Console.WriteLine(testCode);
@@ -59,7 +82,7 @@ End Function";
     Add = A + B
 End Function";
 
-            var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
+            var testCode = builder.ProcedureToTest(procedureCode, true, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
                                   .TestMethodParameters("ByVal intA As Integer, ByVal intB As Integer")
                                   .BuildTestMethodCodeAsync();
@@ -103,7 +126,7 @@ End Function";
     Add = A + B
 End Function";
 
-            var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
+            var testCode = builder.ProcedureToTest(procedureCode, true, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
                                   .TestMethodParameters("ByVal intA As Integer, ByVal intB As Integer")
                                   .BuildTestMethodCode();
