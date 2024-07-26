@@ -52,7 +52,7 @@ namespace AccessCodeLib.AccUnit.Tools
             }
         }
 
-        public static string GetProcedureRowTestString(string parameters)
+        public string GetProcedureRowTestString(string parameters)
         {
             var paramString = parameters.Replace("ByRef ", "").Replace("ByVal ", "").Replace("_" + Environment.NewLine, "")
                     .Replace("()", "[]");

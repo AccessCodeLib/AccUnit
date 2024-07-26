@@ -7,7 +7,7 @@ namespace AccessCodeLib.AccUnit.Tools
     {
         public abstract string GenerateProcedureCode(TestCodeModuleMember member);
 
-        protected virtual string GetProcedureNameForTest(TestCodeModuleMember member)
+        public virtual string GetProcedureNameForTest(TestCodeModuleMember member)
         {
             // use Get, Let or Set prefix related to the member type
             var suffix = member.ProcKind == Microsoft.Vbe.Interop.vbext_ProcKind.vbext_pk_Get ? "_Get"
@@ -17,7 +17,7 @@ namespace AccessCodeLib.AccUnit.Tools
             return member.Name + suffix;
         }
 
-        protected virtual string GetProcedureParameterString(string procedureName, string procDeclaration)
+        public virtual string GetProcedureParameterString(string procedureName, string procDeclaration)
         {
             if (string.IsNullOrEmpty(procDeclaration))
                 return "()";
@@ -58,7 +58,7 @@ namespace AccessCodeLib.AccUnit.Tools
         }
 
         private static readonly Regex ConvertReturnValueToExpectedWithParamRegex = new Regex(@"\) As ([^\s]*)", RegexOptions.CultureInvariant | RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase);
-        protected virtual string ConvertReturnValueToExpectedWithParam(string parameters)
+        public virtual string ConvertReturnValueToExpectedWithParam(string parameters)
         {
             parameters = parameters.Replace("()", "[]");
             parameters = ConvertReturnValueToExpectedWithParamRegex.Replace(parameters,
