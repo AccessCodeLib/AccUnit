@@ -13,7 +13,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         private readonly ICredentialManager _credentialManager;
         private readonly IOpenAiRestApiService _restService;
 
-        public OpenAiService(ICredentialManager credentialManager, IOpenAiRestApiService openAiRestApiService,  int maxToken = 250, string gptModel = "gpt-4o-mini")
+        public OpenAiService(ICredentialManager credentialManager, IOpenAiRestApiService openAiRestApiService,  int maxToken = 500, string gptModel = "gpt-4o-mini")
         {
             Model = gptModel;
             MaxToken = maxToken;
