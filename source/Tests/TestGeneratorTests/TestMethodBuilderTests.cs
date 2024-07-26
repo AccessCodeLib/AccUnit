@@ -1,14 +1,24 @@
 using AccessCodeLib.AccUnit.Tools;
+using AccessCodeLib.AccUnit.Tools.Templates;
 using AccessCodeLib.Common.VBIDETools;
 using NUnit.Framework;
 
 namespace TestGeneratorTests
 {
-    public class TestCodeGeneratorTests
+    public class TestMethodBuilderTests
     {
+        TemplateBasedTestMethodBuilder _testMethodBuilder;
+
         [SetUp]
         public void Setup()
         {
+            _testMethodBuilder = new TemplateBasedTestMethodBuilder(TemplatesUserSettings.Current.TestMethodTemplate);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _testMethodBuilder = null;
         }
 
         [Test]
@@ -17,7 +27,7 @@ namespace TestGeneratorTests
             var baseString = "Public Function Xyz(ByVal x As Long) As String";
             var expected = "Public Function Xyz(ByVal x As Long, ByVal Expected As String)";
 
-            var actual = TestCodeGenerator.ConvertReturnValueToExpectedWithParam(baseString);
+            var actual = _testMethodBuilder.ConvertReturnValueToExpectedWithParam(baseString);
 
             Assert.AreEqual(expected, actual);
         }
@@ -28,7 +38,7 @@ namespace TestGeneratorTests
             var baseString = "Public Function StringFormat2(ByVal s As String, ByRef x() As Variant) As String";
             var expected = "Public Function StringFormat2(ByVal s As String, ByRef x() As Variant, ByVal Expected As String)";
 
-            var actual = TestCodeGenerator.ConvertReturnValueToExpectedWithParam(baseString);
+            var actual = _testMethodBuilder.ConvertReturnValueToExpectedWithParam(baseString);
 
             Assert.AreEqual(expected, actual);
         }
@@ -40,7 +50,7 @@ namespace TestGeneratorTests
             const string baseString = "Public Function " + procName + "(ByVal s As String, ByRef x() As Variant) As String";
             var expected = "(ByVal s As String, ByRef x() As Variant, ByVal Expected As String)";
 
-            var actual = TestCodeGenerator.GetProcedureParameterString(procName, baseString);
+            var actual = _testMethodBuilder.GetProcedureParameterString(procName, baseString);
 
             Assert.AreEqual(expected, actual);
         }
@@ -52,7 +62,7 @@ namespace TestGeneratorTests
             const string baseString = "Public Function " + procName + "(ByVal s As String, ParamArray x() As Variant) As String";
             var expected = "(ByVal s As String, ByRef x() As Variant, ByVal Expected As String)";
 
-            var actual = TestCodeGenerator.GetProcedureParameterString(procName, baseString);
+            var actual = _testMethodBuilder.GetProcedureParameterString(procName, baseString);
 
             Assert.AreEqual(expected, actual);
         }
@@ -63,7 +73,7 @@ namespace TestGeneratorTests
             const string parameters = "(ByVal s As String, ByRef x() As Variant, ByVal Expected As String)";
             var expected = "'AccUnit:Row(s, x(), Expected).Name = \"Example row - please replace the parameter names with values)\"";
 
-            var actual = TestCodeGenerator.GetProcedureRowTestString(parameters);
+            var actual = _testMethodBuilder.GetProcedureRowTestString(parameters);
 
             Assert.AreEqual(expected, actual);
         }
@@ -74,7 +84,7 @@ namespace TestGeneratorTests
             const string parameters = "(ByVal s As String, ByRef x() As Variant, ByVal Expected As String) ' this is a commend";
             var expected = "'AccUnit:Row(s, x(), Expected).Name = \"Example row - please replace the parameter names with values)\"";
 
-            var actual = TestCodeGenerator.GetProcedureRowTestString(parameters);
+            var actual = _testMethodBuilder.GetProcedureRowTestString(parameters);
 
             Assert.AreEqual(expected, actual);
         }
@@ -95,7 +105,7 @@ namespace TestGeneratorTests
 End Sub
 ";
 
-            var actual = TestCodeGenerator.GenerateProcedureCode(codeModuleMember, "", "");
+            var actual = _testMethodBuilder.GenerateProcedureCode(new TestCodeModuleMember(codeModuleMember, "", ""));
 
             Assert.AreEqual(expected, actual);
         }
@@ -116,7 +126,7 @@ Public Sub Method1(ByVal x As Long, ByVal Expected As String)
 End Sub
 ";
 
-            var actual = TestCodeGenerator.GenerateProcedureCode(codeModuleMember, "", "");
+            var actual = _testMethodBuilder.GenerateProcedureCode(new TestCodeModuleMember(codeModuleMember, "", ""));
 
             Assert.AreEqual(expected, actual);
         }
