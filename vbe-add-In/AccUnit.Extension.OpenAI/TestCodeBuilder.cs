@@ -36,8 +36,9 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         private string _testMethodName;
         private string _testMethodParameters;
 
-        private string _baseProcedureClassName;
+        private string _baseProcedureVbComponentName;
         private string _baseProcedureCode;
+        private bool _baseProcedureVbComponentIsClass;
 
         public TestCodeBuilder(IOpenAiService openAiService, ITestCodePromptBuilder promptBuilder)
         {
@@ -51,10 +52,11 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
             return this;
         }
 
-        public ITestCodeBuilder ProcedureToTest(string procedureCode, string className = null)
+        public ITestCodeBuilder ProcedureToTest(string procedureCode, bool isClassMember, string codeModuleName = null)
         {
-            _baseProcedureClassName = className;
+            _baseProcedureVbComponentName = codeModuleName;
             _baseProcedureCode = procedureCode;
+            _baseProcedureVbComponentIsClass = isClassMember;
             return this;
         }
 
@@ -85,7 +87,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI
         public async Task<string> BuildTestMethodCodeAsync()
         {
             var prePrompt = _promptBuilder.BuildPrePrompt(!_disableRowTest, _testMethodTemplate);
-            var prompt = _promptBuilder.BuildPrompt(_baseProcedureCode, _baseProcedureClassName, _testMethodName, _testMethodParameters);  
+            var prompt = _promptBuilder.BuildPrompt(_baseProcedureCode, _baseProcedureVbComponentIsClass, _baseProcedureVbComponentName, _testMethodName, _testMethodParameters);  
 
             var messages = new[]
             {

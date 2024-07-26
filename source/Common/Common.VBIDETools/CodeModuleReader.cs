@@ -99,7 +99,7 @@ namespace AccessCodeLib.Common.VBIDETools
                         tempProcCode = GetProcedureCode(tempProcName, tempProcKind);
                     }
                     
-                    _members.Add(new CodeModuleMember(tempProcName, tempProcKind, isPublic, tempProcDeclaration, _codeModule.Name, tempProcCode));
+                    _members.Add(new CodeModuleMember(tempProcName, tempProcKind, isPublic, tempProcDeclaration, _codeModule.Name, _codeModule.Parent.Type, tempProcCode));
                     currentLine = _codeModule.ProcStartLine[tempProcName, tempProcKind] + _codeModule.ProcCountLines[tempProcName, tempProcKind];
                 }
                 currentLine++;

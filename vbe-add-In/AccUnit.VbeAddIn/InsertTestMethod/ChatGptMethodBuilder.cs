@@ -28,8 +28,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.InsertTestMethod
             string testCode;
             try
             {
+                var isClass = member.ComponentType == Microsoft.Vbe.Interop.vbext_ComponentType.vbext_ct_ClassModule;   
+
                 var testCodeBuilder = _testCodeBuilderFactory.NewTestCodeBuilder();
-                testCodeBuilder.ProcedureToTest(codeToTest, member.CodeModuleName)
+                testCodeBuilder.ProcedureToTest(codeToTest, isClass, member.CodeModuleName)
                            .TestMethodTemplate(templateSource)
                            .TestMethodName(testMethodName);
 

@@ -7,7 +7,7 @@ namespace AccessCodeLib.Common.VBIDETools
     {
         public CodeModuleMember(string name, vbext_ProcKind procKind, bool isPublic, 
                                 string declarationString = "", 
-                                string codeModuleName = null,
+                                string codeModuleName = null, vbext_ComponentType componentType = 0,
                                 string procedureCode = null)
         {
             using (new BlockLogger())
@@ -17,6 +17,7 @@ namespace AccessCodeLib.Common.VBIDETools
                 IsPublic = isPublic;
                 DeclarationString = declarationString;
                 CodeModuleName = codeModuleName;
+                ComponentType = componentType;
                 ProcedureCode = procedureCode;
             }
         }
@@ -27,5 +28,6 @@ namespace AccessCodeLib.Common.VBIDETools
         public string DeclarationString { get; }
         public string ProcedureCode { get; }
         public string CodeModuleName { get; set; }
+        public vbext_ComponentType ComponentType { get; set; }
     }
 }

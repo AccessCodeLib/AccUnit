@@ -20,7 +20,7 @@ namespace AccessCodeLib.AccUnit.Extension.OpenAI.Tests
     GetDate = Date()
 End Function";
 
-            var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
+            var testCode = builder.ProcedureToTest(procedureCode, true, "TestClass")
                                   .TestMethodName("GetDate_CheckIfValueReturnedNot0")
                                   .DisableRowTest()
                                   .BuildTestMethodCode();
@@ -41,7 +41,7 @@ End Function";
     Add = A + B
 End Function";
 
-            var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
+            var testCode = builder.ProcedureToTest(procedureCode, true, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
                                   .BuildTestMethodCode();
             Console.WriteLine(testCode);
@@ -62,7 +62,7 @@ End Function";
     Add = A + B
 End Function";
 
-            var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
+            var testCode = builder.ProcedureToTest(procedureCode, true, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
                                   .TestMethodParameters("ByVal intA As Integer, ByVal intB As Integer")
                                   .BuildTestMethodCode();
@@ -83,7 +83,7 @@ End Function";
     Add = A + B
 End Function";
 
-            var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
+            var testCode = builder.ProcedureToTest(procedureCode, true, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
                                   .TestMethodParameters("ByVal intA As Integer, ByVal intB As Integer")
                                   .BuildTestMethodCode();
