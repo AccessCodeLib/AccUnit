@@ -64,18 +64,23 @@ End Sub
 '####################################
 ' IAccessTestSuite
 '
-Private Function AccessTestSuite_Reset(Optional ByVal mode As AccUnit.ResetMode = 1&) As AccUnit.IAccessTestSuite
-   m_TestSuite.Reset mode
+Public Function Reset(Optional ByVal Mode As AccUnit.ResetMode = 1&) As TestSuite
+   m_TestSuite.Reset Mode
+   Set Reset = Me
+End Function
+
+Private Function AccessTestSuite_Reset(Optional ByVal Mode As AccUnit.ResetMode = 1&) As AccUnit.IAccessTestSuite
+   m_TestSuite.Reset Mode
    Set AccessTestSuite_Reset = Me
 End Function
 
-Public Function Add(ByVal testToAdd As Object) As TestSuite
-   m_TestSuite.Add testToAdd
+Public Function Add(ByVal TestToAdd As Object) As TestSuite
+   m_TestSuite.Add TestToAdd
    Set Add = Me
 End Function
 
-Private Function AccessTestSuite_Add(ByVal testToAdd As Object) As AccUnit.IAccessTestSuite
-   Set AccessTestSuite_Add = Add(testToAdd)
+Private Function AccessTestSuite_Add(ByVal TestToAdd As Object) As AccUnit.IAccessTestSuite
+   Set AccessTestSuite_Add = Add(TestToAdd)
 End Function
 
 Public Function AddByClassName(ByVal ClassName As String) As TestSuite

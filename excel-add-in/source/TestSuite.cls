@@ -64,18 +64,23 @@ End Sub
 '####################################
 ' IVBATestSuite
 '
-Private Function IVBATestSuite_Reset(Optional ByVal mode As AccUnit.ResetMode = 1&) As AccUnit.IVBATestSuite
-   m_TestSuite.Reset mode
+Public Function Reset(Optional ByVal Mode As AccUnit.ResetMode = 1&) As TestSuite
+   m_TestSuite.Reset Mode
+   Set Reset = Me
+End Function
+
+Private Function IVBATestSuite_Reset(Optional ByVal Mode As AccUnit.ResetMode = 1&) As AccUnit.IVBATestSuite
+   m_TestSuite.Reset Mode
    Set IVBATestSuite_Reset = Me
 End Function
 
-Public Function Add(ByVal testToAdd As Object) As TestSuite
-   m_TestSuite.Add testToAdd
+Public Function Add(ByVal TestToAdd As Object) As TestSuite
+   m_TestSuite.Add TestToAdd
    Set Add = Me
 End Function
 
-Private Function IVBATestSuite_Add(ByVal testToAdd As Object) As AccUnit.IVBATestSuite
-   Set IVBATestSuite_Add = Add(testToAdd)
+Private Function IVBATestSuite_Add(ByVal TestToAdd As Object) As AccUnit.IVBATestSuite
+   Set IVBATestSuite_Add = Add(TestToAdd)
 End Function
 
 Public Function AddByClassName(ByVal ClassName As String) As TestSuite
