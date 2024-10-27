@@ -20,7 +20,7 @@ End Function";
             var testCode = builder.ProcedureToTest(procedureCode, true, "TestClass")
                                   .TestMethodName("GetDate_CheckIfValueReturnedNot0")
                                   .DisableRowTest()
-                                  .BuildTestMethodCodeAsync();
+                                  .BuildTestMethodCodeAsync().Result;
             Console.WriteLine(testCode);
 
             Assert.Multiple(() =>
@@ -63,7 +63,7 @@ End Function";
 
             var testCode = builder.ProcedureToTest(procedureCode, true, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
-                                  .BuildTestMethodCodeAsync();
+                                  .BuildTestMethodCodeAsync().Result;
             Console.WriteLine(testCode);
 
             Assert.Multiple(() =>
@@ -85,7 +85,7 @@ End Function";
             var testCode = builder.ProcedureToTest(procedureCode, true, "TestClass")
                                   .TestMethodName("Add_2Params_CheckResult")
                                   .TestMethodParameters("ByVal intA As Integer, ByVal intB As Integer")
-                                  .BuildTestMethodCodeAsync();
+                                  .BuildTestMethodCodeAsync().Result;
             Console.WriteLine(testCode);
 
             Assert.Multiple(() =>
@@ -99,29 +99,8 @@ End Function";
         [Test]
         public void BuildTestCode_SyncRowTest_DefineTestProcNameAndParams()
         {
-            var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager()));
+            var builder = new TestCodeBuilder(new OpenAiService(new CredentialManager(), new OpenAiRestApiService()), new TestCodePromptBuilder());
 
-            var procedureCode = @"Public Function Add(ByVal A As Integer, ByVal B As Integer) As Integer
-    Add = A + B
-End Function";
-
-            var testCode = builder.ProcedureToTest(procedureCode, "TestClass")
-                                  .TestMethodName("Add_2Params_CheckResult")
-                                  .TestMethodParameters("ByVal intA As Integer, ByVal intB As Integer")
-                                  .BuildTestMethodCode();
-            Console.WriteLine(testCode);
-
-            Assert.Multiple(() =>
-            {
-                Assert.That(testCode, Is.Not.Null);
-                Assert.That(testCode, Does.Contain("'AccUnit:Row"));
-                Assert.That(testCode, Does.Contain("Public Sub Add_2Params_CheckResult(ByVal intA As Integer, ByVal intB As Integer, ByVal Expected"));
-            });
-        }
-
-        [Test]
-        public void BuildTestCode_SyncRowTest_DefineTestProcNameAndParams()
-        {
             var procedureCode = @"Public Function Add(ByVal A As Integer, ByVal B As Integer) As Integer
     Add = A + B
 End Function";
