@@ -149,7 +149,7 @@ Public Function Execute(ByVal FilePath As String, _
 
    Dim Ret As Long
    Dim Directory As String
-   Dim DeskWin As Long
+   Dim DeskWin As LongPtr
 
    If Len(FilePath) = 0 Then
       Execute = False
