@@ -10,7 +10,7 @@ namespace AccessCodeLib.Common.VBIDETools
     {
         private OfficeApplicationHelper _officeApplicationHelper;
 
-        public event EventHandler MainWindowRButtonDown;
+        //public event EventHandler MainWindowRButtonDown;
 
         public OfficeApplicationHelper OfficeApplicationHelper
         {
@@ -20,8 +20,8 @@ namespace AccessCodeLib.Common.VBIDETools
                 using (new BlockLogger())
                 {
                     _officeApplicationHelper = value;
-                    HotKeys = new HotKeys((IntPtr)VBE.MainWindow.HWnd);
-                    SubclassVbeMainWindow();
+                    //HotKeys = new HotKeys((IntPtr)VBE.MainWindow.HWnd);
+                    //SubclassVbeMainWindow();
                 }
             }
         }
@@ -38,7 +38,7 @@ namespace AccessCodeLib.Common.VBIDETools
         }
 
         #region subclassing
-
+        /*
         private void SubclassVbeMainWindow()
         {
             using (new BlockLogger())
@@ -122,7 +122,7 @@ namespace AccessCodeLib.Common.VBIDETools
                 return;
             }
         }
-
+        */
         #endregion
 
         #region IDisposable Support

@@ -291,7 +291,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     AddRunButtonsToAccUnitCommandBar(accUnitCommandbarAdapter);
                 }
 
-                VbeIntegrationManager.VbeAdapter.MainWindowRButtonDown += OnVbeMainWindowRButtonDown;
+                //VbeIntegrationManager.VbeAdapter.MainWindowRButtonDown += OnVbeMainWindowRButtonDown;
 
                 RegisterHotKeys();
             }
@@ -448,12 +448,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void RegisterHotKeys()
         {
+            //bug: 64 bit subclass => https://github.com/AccessCodeLib/AccUnit/issues/78 
+            /*
             var hotkeys = VbeIntegrationManager.VbeAdapter.HotKeys;
             var hotKey = hotkeys.RegisterHotKey(HotKey.ModKeys.Control | HotKey.ModKeys.Shift, (uint)Keys.T);
             hotKey.Pressed += RunCurrentTestsHotKeyPressed;
 
             hotKey = hotkeys.RegisterHotKey(HotKey.ModKeys.Control | HotKey.ModKeys.Shift, (uint)Keys.A);
             hotKey.Pressed += RunAllTestsHotKeyPressed;
+            */
         }
 
         private void RunCurrentTestsHotKeyPressed(object sender, HotKeyEventArgs e)
@@ -507,6 +510,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
                 if (VbeIntegrationManager != null)
                 {
+                    /* issue #78 (sublass vbe main windows)
                     try
                     {
                         VbeIntegrationManager.VbeAdapter.MainWindowRButtonDown -= OnVbeMainWindowRButtonDown;
@@ -519,6 +523,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     {
                         VbeIntegrationManager = null;
                     }
+                    */
+                    VbeIntegrationManager = null;
                 }
 
                 TestSuiteManager = null;
