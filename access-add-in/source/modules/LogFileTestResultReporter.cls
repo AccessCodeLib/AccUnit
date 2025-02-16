@@ -93,6 +93,7 @@ Private Sub PrintSummary(ByVal TestSummary As AccUnit.ITestSummary, ByVal PrintT
    PrintToFile "Tests: " & TestSummary.Total
    PrintToFile " ", "Passed:  " & TestSummary.Passed
    PrintToFile " ", "Failed:  " & TestSummary.Failed
+   PrintToFile " ", "Error:   " & TestSummary.Error
    PrintToFile " ", "Ignored: " & TestSummary.Ignored
    PrintToFile String(LineSeperatorLen, "-")
 

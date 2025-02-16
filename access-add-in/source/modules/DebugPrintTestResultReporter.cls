@@ -107,6 +107,7 @@ Private Sub PrintSummary(ByVal TestSummary As AccUnit.ITestSummary, Optional ByV
    Debug.Print "Tests: "; TestSummary.Total
    Debug.Print , "Passed:  "; TestSummary.Passed
    Debug.Print , "Failed:  "; TestSummary.Failed
+   Debug.Print , "Error:   "; TestSummary.Error
    Debug.Print , "Ignored: "; TestSummary.Ignored
    Debug.Print String(40, "-")
 End Sub

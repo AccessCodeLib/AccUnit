@@ -232,7 +232,7 @@ Public Function AutomatedTestRun(Optional ByRef ResultMessage As String, _
    RemoveTestEnvironment True
 
    If Not Success Then
-      ResultMessage = TestSummary.Failed & " of " & TestSummary.Total & " tests failed"
+      ResultMessage = (TestSummary.Failed + TestSummary.Error) & " of " & TestSummary.Total & " tests failed"
    ElseIf TestSummary.Ignored > 0 Then
       ResultMessage = TestSummary.Ignored & " of " & TestSummary.Total & " tests ignored"
    Else
