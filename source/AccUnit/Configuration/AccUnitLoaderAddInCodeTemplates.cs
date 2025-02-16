@@ -170,7 +170,7 @@ Public Property Get ErrorTrappingObserver() As AccUnit.AccessErrorTrappingObserv
 #Else
 Public Property Get ErrorTrappingObserver() As Object
 #End If
-   Set ErrorTrappingObserver = AccUnitLoaderFactory.AccessErrorTrappingObserver()
+   Set ErrorTrappingObserver = AccUnitLoaderFactory.ErrorTrappingObserver()
 End Property
 ";
 

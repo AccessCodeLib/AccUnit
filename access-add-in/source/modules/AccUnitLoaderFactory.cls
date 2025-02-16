@@ -113,3 +113,7 @@ End Property
 Public Property Get ErrorTrappingObserver() As AccUnit.AccessErrorTrappingObserver
     Set ErrorTrappingObserver = AccUnitFactory.AccessErrorTrappingObserver(Application)
 End Property
+
+Public Property Get AccessErrorTrappingObserver() As AccUnit.AccessErrorTrappingObserver
+    Set AccessErrorTrappingObserver = AccUnitFactory.AccessErrorTrappingObserver(Application)
+End Property
