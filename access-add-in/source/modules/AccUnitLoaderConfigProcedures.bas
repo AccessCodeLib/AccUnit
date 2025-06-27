@@ -218,6 +218,8 @@ Public Function AutomatedTestRun(Optional ByRef ResultMessage As String, _
    Dim TestSummary As Object
 #End If
 
+   Set VBE.ActiveVBProject = CurrentVbProject
+
    AddAccUnitTlbReference
    InsertFactoryModule
    ImportTestClasses
