@@ -126,6 +126,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         private void RunTests(IEnumerable<TestClassInfo> list, ResetMode resetmode)
         {
             var testSuite = TestSuite.Reset(resetmode) as IVBATestSuite;
+			VBE.ActiveVBProject = testSuite.ActiveVBProject; // ensure that the active VBProject is set to the one of the test suite
             CheckReferences();
 
             if (testSuite is AccessTestSuite accessSuite)
