@@ -6,15 +6,30 @@
   "Items": {
     "Databases": {
       "SummaryInfo": {
-        "Author": "Josef Pötzl",
-        "Comments": "Activate AccUnit for Access/VBA",
-        "Company": "access-codelib.net",
-        "Title": "AccUnit Loader"
+        "Author": {
+          "Type": 10,
+          "Value": "Josef Pötzl"
+        },
+        "Comments": {
+          "Type": 10,
+          "Value": "Activate AccUnit for Access/VBA"
+        },
+        "Company": {
+          "Type": 10,
+          "Value": "access-codelib.net"
+        },
+        "Title": {
+          "Type": 10,
+          "Value": "AccUnit Loader"
+        }
       }
     },
     "Tables": {
       "tab1DS": {
-        "Description": "Tabelle mit einem DS (ist in Abfragen hilfeich)"
+        "Description": {
+          "Type": 10,
+          "Value": "Tabelle mit einem DS (ist in Abfragen hilfeich)"
+        }
       }
     }
   }
