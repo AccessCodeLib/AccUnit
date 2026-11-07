@@ -23,14 +23,6 @@
           "Value": "AccUnit Loader"
         }
       }
-    },
-    "Tables": {
-      "tab1DS": {
-        "Description": {
-          "Type": 10,
-          "Value": "Tabelle mit einem DS (ist in Abfragen hilfeich)"
-        }
-      }
     }
   }
 }

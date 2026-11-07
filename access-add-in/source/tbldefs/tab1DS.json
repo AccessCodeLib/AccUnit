@@ -1,0 +1,15 @@
+﻿{
+  "Info": {
+    "Class": "clsDbTableDef",
+    "Description": "tab1DS Metadata"
+  },
+  "Items": {
+    "Properties": {
+      "Description": {
+        "Type": 10,
+        "Value": "Tabelle mit einem DS (ist in Abfragen hilfeich)"
+      }
+    },
+    "Hidden": true
+  }
+}
