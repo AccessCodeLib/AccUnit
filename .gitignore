@@ -1,8 +1,4 @@
-﻿################################################################################
-# Diese .gitignore-Datei wurde von Microsoft(R) Visual Studio automatisch erstellt.
-################################################################################
-
-/examples/msaccess/lib
+﻿/examples/msaccess/lib
 /examples/msaccess/LocalTest.accdb
 /source/Tests/msaccess-files/lib
 /access-add-in/lib
@@ -11,12 +7,7 @@
 *.laccdb
 /excel-add-in/lib
 *.zip
-/AGENTS.md
-/CLAUDE.md
-/access-add-in/AGENTS.md
-/access-add-in/CLAUDE.md
-/source/AGENTS.md
-/source/CLAUDE.md
-/vbe-add-In/AGENTS.md
-/vbe-add-In/CLAUDE.md
-/access-add-in/source/AGENTS.md
+.env
+.mcp.json
+AGENTS.md
+CLAUDE.md
