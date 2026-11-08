@@ -11,3 +11,12 @@
 *.laccdb
 /excel-add-in/lib
 *.zip
+/AGENTS.md
+/CLAUDE.md
+/access-add-in/AGENTS.md
+/access-add-in/CLAUDE.md
+/source/AGENTS.md
+/source/CLAUDE.md
+/vbe-add-In/AGENTS.md
+/vbe-add-In/CLAUDE.md
+/access-add-in/source/AGENTS.md
