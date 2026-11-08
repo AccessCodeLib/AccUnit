@@ -251,6 +251,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="TestRunner\TestNameFilterMatcher.cs" />
     <Compile Include="TestRunner\VbaTestRunner.cs" />
     <Compile Include="Tools\UserSettings.cs" />
     <Compile Include="Tools\VBA\AssemblyInfo.cs" />

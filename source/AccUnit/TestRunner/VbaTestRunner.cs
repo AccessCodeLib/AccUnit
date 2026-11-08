@@ -58,18 +58,24 @@ namespace AccessCodeLib.AccUnit.TestRunner
 
             var results = new TestResultCollection(testFixture);
 
+            TestNameFilterMatcher placeholderMatcher = null;
+            if (methodFilter != null && methodFilter.Any(TestNameFilterMatcher.ContainsWildcard))
+            {
+                placeholderMatcher = new TestNameFilterMatcher(methodFilter);
+            }
+
             foreach (var test in testFixture.Tests)
             {
                 if (methodFilter != null)
                 {
-                    if (methodFilter.Any(m => m.Contains("*") || m.Contains("?") || m.Contains("[")))
+                    if (placeholderMatcher != null)
                     {
-                        if (!PlaceholderFilterContainsTestName(methodFilter, test.Name))
+                        if (!placeholderMatcher.IsMatch(test.Name))
                         {
                             continue;
                         }
                     }
-                    else if (!methodFilter.Contains(test.Name))
+                    else if (!methodFilter.Contains(test.Name, StringComparer.OrdinalIgnoreCase))
                     {
                         continue;
                     }
@@ -83,13 +89,6 @@ namespace AccessCodeLib.AccUnit.TestRunner
             RaiseTestFixtureFinished(results);
 
             return results;
-        }
-
-        private static bool PlaceholderFilterContainsTestName(IEnumerable<string> methodFilter, string testName)
-        {
-            var regExPattern = methodFilter.Aggregate("^", (current, filter) => current + filter.Replace("*", ".*").Replace("?", ".") + "|");
-            regExPattern = regExPattern.Substring(0, regExPattern.Length - 1) + "$";
-            return System.Text.RegularExpressions.Regex.IsMatch(testName, regExPattern);
         }
 
         void RaiseTestFixtureStarted(ITestFixture testFixture)
