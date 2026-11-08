@@ -15,7 +15,8 @@
             }
             else
             {
-                return new MatchResult(CompareText, false, "Is not null", actual, null);
+                var info = actual is string s && s.Length == 0 ? "Is not null, actual is an empty string" + VbNullStringHint : "Is not null";
+                return new MatchResult(CompareText, false, info, actual, null);
             }
         }
     }

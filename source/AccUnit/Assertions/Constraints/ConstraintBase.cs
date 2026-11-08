@@ -2,6 +2,8 @@
 {
     abstract class ConstraintBase : IConstraint
     {
+        protected const string VbNullStringHint = " (to treat vbNullString and an empty string as equal, use Iz.StringCompare(StringCompareMode_vbNullStringEqualEmptyString))";
+
         protected IConstraint FirstChild { get; set; }
         protected string CompareText { get; set; }
 
