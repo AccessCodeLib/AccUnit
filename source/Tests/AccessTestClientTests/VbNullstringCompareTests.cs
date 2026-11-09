@@ -1,13 +1,16 @@
-﻿using AccessCodeLib.Common.TestHelpers.AccessRelated;
+﻿using AccessCodeLib.AccUnit.Assertions;
+using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.Common.TestHelpers.AccessRelated;
 using Microsoft.Vbe.Interop;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
-using System;
 
 namespace AccessCodeLib.AccUnit.AccessTestClientTests
 {
+    // vbNullString is passed from VBA to C# as a BSTR null pointer, which becomes null (not "").
+    // These tests document that behavior and show how Iz.StringCompare(vbNullStringEqualEmptyString) handles it.
+    // The option matrix itself is tested in AccUnit.Assertions.Tests (InteropConstraintTests).
     [TestFixture]
-    [Ignore("Only for checking the behavior of the vbNullString passing in C#.")]
     internal class VbNullstringCompareTests
     {
         private AccessTestHelper _accessTestHelper;
@@ -25,6 +28,27 @@ namespace AccessCodeLib.AccUnit.AccessTestClientTests
             _accessTestHelper = null;
         }
 
+        private static bool Matches(object actual, StringCompareMode compareMode, string expected, out string text)
+        {
+            var testCollector = new TestCollector();
+            var assert = new Assertions.Assertions
+            {
+                MatchResultCollector = testCollector
+            };
+            var Iz = new Interop.ConstraintBuilder();
+            assert.That(actual, Iz.StringCompare(compareMode).EqualTo(expected));
+            text = testCollector.Result.Text;
+            return testCollector.Result.Match;
+        }
+
+        private static void AssertVbNullStringEqualsEmptyStringOnlyWithOption(object actual)
+        {
+            Assert.That(actual, Is.Null);
+
+            Assert.That(Matches(actual, StringCompareMode.BinaryCompare, "", out var text), Is.False, text);
+            Assert.That(Matches(actual, StringCompareMode.BinaryCompare | StringCompareMode.vbNullStringEqualEmptyString, "", out text), Is.True, text);
+        }
+
         [Test]
         public void CompareVbNullStringWithNull()
         {
@@ -38,8 +62,7 @@ End Function
         }
 
         [Test]
-        [Ignore("Does not work, because vbNullstring becomes null")]
-        public void CompareVbNullstringWithEmptyString()
+        public void CompareVbNullstringWithEmptyString_RequiresStringCompareOption()
         {
             AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "modAccUnitFactory", vbext_ComponentType.vbext_ct_StdModule, @"
 public Function Test() as String
@@ -47,14 +70,11 @@ public Function Test() as String
 End Function
 ");
             object ret = _accessTestHelper.Application.Run("Test");
-            Type retType = ret.GetType();
-            Assert.That(retType.FullName, Is.EqualTo("System.String"));
-            Assert.That(ret, Is.EqualTo(""));
+            AssertVbNullStringEqualsEmptyStringOnlyWithOption(ret);
         }
 
         [Test]
-        [Ignore("Does not work, because vbNullstring becomes null")]
-        public void CompareVbNullstringWithEmptyString_WithRefParam()
+        public void CompareVbNullstringWithEmptyString_WithRefParam_RequiresStringCompareOption()
         {
             AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "modAccUnitFactory", vbext_ComponentType.vbext_ct_StdModule, @"
 public Function Test(ByRef ReturnValue as String)
@@ -63,11 +83,7 @@ End Function
 ");
             string ret = "abc";
             _accessTestHelper.Application.Run("Test", ref ret);
-            Assert.That(ret, Is.Not.EqualTo(null));
-
-            Type retType = ret.GetType();
-            Assert.That(retType.FullName, Is.EqualTo("System.String"));
-            Assert.That(ret, Is.EqualTo(""));
+            AssertVbNullStringEqualsEmptyStringOnlyWithOption(ret);
         }
 
     }
