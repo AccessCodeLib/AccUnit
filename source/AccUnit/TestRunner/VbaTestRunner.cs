@@ -118,6 +118,9 @@ namespace AccessCodeLib.AccUnit.TestRunner
                 return Run(testFixture, testResultCollector, null, filterTags);
             }
 
+            // single test run needs the fixture members as well (Setup/Teardown)
+            testFixture.FillInstanceMembers(_vbProject);
+
             var test = CreateTest(testFixture, testMethodName);
             testFixture.Add(test);
 
@@ -227,21 +230,46 @@ namespace AccessCodeLib.AccUnit.TestRunner
                     return testResult;
                 }
 
-                RunTestSetup(testFixture, invocationHelper);
-                RunTest(test, testResult, invocationHelper);
-                AssertThrowsStore.CompaireTestRunnerException(null, testResult);
-                RunTeardown(testFixture, invocationHelper);
+                if (TryRunTestSetup(testFixture, testResult, invocationHelper))
+                {
+                    RunTest(test, testResult, invocationHelper);
+                    AssertThrowsStore.CompaireTestRunnerException(null, testResult);
+                }
+                TryRunTeardown(testFixture, testResult, invocationHelper);
             }
 
             RaiseTestFinished(testResult);
             return testResult;
         }
 
-        private static void RunTestSetup(ITestFixture testFixture, InvocationHelper invocationHelper)
+        private static Exception GetMessageException(Exception ex)
         {
-            if (testFixture.HasSetup)
+            return ex is System.Reflection.TargetInvocationException ? ex.InnerException ?? ex : ex;
+        }
+
+        // Setup error = test error (like NUnit); the test itself is not executed.
+        private static bool TryRunTestSetup(ITestFixture testFixture, TestResult testResult, InvocationHelper invocationHelper)
+        {
+            if (!testFixture.HasSetup)
+            {
+                return true;
+            }
+
+            try
             {
                 invocationHelper.InvokeMethod(testFixture.Members.Setup.Name);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // do not let an expected error number leak into the next test
+                AssertThrowsStore.Clear();
+
+                testResult.IsPassed = false;
+                testResult.IsError = true;
+                testResult.Executed = true;
+                testResult.Message = "SetUp: " + GetMessageException(ex).Message;
+                return false;
             }
         }
 
@@ -304,11 +332,34 @@ namespace AccessCodeLib.AccUnit.TestRunner
             }
         }
 
-        private static void RunTeardown(ITestFixture testFixture, InvocationHelper invocationHelper)
+        // Teardown error is reported additionally; an already determined failure/error is kept.
+        private static void TryRunTeardown(ITestFixture testFixture, TestResult testResult, InvocationHelper invocationHelper)
         {
-            if (testFixture.HasTeardown)
+            if (!testFixture.HasTeardown)
+            {
+                return;
+            }
+
+            try
             {
                 invocationHelper.InvokeMethod(testFixture.Members.Teardown.Name);
+            }
+            catch (Exception ex)
+            {
+                var message = "TearDown: " + GetMessageException(ex).Message;
+                if (testResult.IsFailure || testResult.IsError)
+                {
+                    testResult.Message = string.IsNullOrEmpty(testResult.Message)
+                        ? message
+                        : testResult.Message + Environment.NewLine + message;
+                }
+                else
+                {
+                    testResult.IsPassed = false;
+                    testResult.IsError = true;
+                    testResult.Message = message;
+                }
+                testResult.Executed = true;
             }
         }
 
