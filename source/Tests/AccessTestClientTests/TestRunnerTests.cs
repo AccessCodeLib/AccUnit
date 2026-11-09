@@ -273,6 +273,41 @@ End Function
         }
 
         [Test]
+        public void RunSingleTestMethod_CallsSetupAndTeardown()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+private m_Value as Long
+private m_TeardownCount as Long
+
+public sub Setup()
+   m_Value = 123
+End sub
+
+public sub Teardown()
+   m_TeardownCount = m_TeardownCount + 1
+End sub
+
+public Function TestMethod1() as Long
+   TestMethod1 = m_Value
+End Function
+
+public Function GetTeardownCount() as Long
+   GetTeardownCount = m_TeardownCount
+End Function
+");
+            var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
+            var testResult = testRunner.Run(fixture, "TestMethod1");
+
+            Assert.That(testResult.IsPassed, Is.True, testResult.Message);
+
+            var invocHelper = new InvocationHelper(fixture);
+            Assert.That(invocHelper.InvokeMethod("GetTeardownCount"), Is.EqualTo(1));
+            // Setup has set m_Value, so a direct call after teardown still shows it
+            Assert.That(invocHelper.InvokeMethod("TestMethod1"), Is.EqualTo(123));
+        }
+
+        [Test]
         public void RunTest_TeardownRaisesError_PassedTestBecomesError()
         {
             AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"

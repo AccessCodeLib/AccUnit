@@ -119,6 +119,9 @@ namespace AccessCodeLib.AccUnit.TestRunner
                 return Run(testFixture, testResultCollector, null, filterTags);
             }
 
+            // single test run needs the fixture members as well (Setup/Teardown)
+            testFixture.FillInstanceMembers(_vbProject);
+
             var test = CreateTest(testFixture, testMethodName);
             testFixture.Add(test);
 
