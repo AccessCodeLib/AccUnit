@@ -120,6 +120,7 @@
     <Reference Include="System" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assertions\Assertions.cs" />
@@ -205,6 +206,8 @@
     <Compile Include="Integration\TestMessageBox.cs" />
     <Compile Include="Integration\TestRow.cs" />
     <Compile Include="Integration\TestRowGenerator.cs" />
+    <Compile Include="Integration\JUnitXmlTestResultReporter.cs" />
+    <Compile Include="Integration\JUnitXmlWriter.cs" />
     <Compile Include="Integration\TestSummaryFormatter.cs" />
     <Compile Include="Integration\TestSuiteUserSettings.cs" />
     <Compile Include="Integration\VBATestBuilder.cs" />

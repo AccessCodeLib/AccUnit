@@ -208,7 +208,8 @@ End Function
 
 Public Function AutomatedTestRun(Optional ByRef ResultMessage As String, _
                                  Optional ByVal TestReportOutputTo As TestReportOutput = TestReportOutput.LogFile + TestReportOutput.DebugPrint, _
-                                 Optional ByVal SetFocusToImmediateWindowBeforeTestStart As Boolean = True) As Boolean
+                                 Optional ByVal SetFocusToImmediateWindowBeforeTestStart As Boolean = True, _
+                                 Optional ByVal JUnitXmlFilePath As String = vbNullString) As Boolean
 
    Dim Success As Boolean
 
@@ -228,7 +229,7 @@ Public Function AutomatedTestRun(Optional ByRef ResultMessage As String, _
       SetFocusToImmediateWindow
    End If
 
-   Set TestSummary = AccUnitLoaderFactoryCall.GetAccUnitFactory.TestSuite(TestReportOutputTo).AddFromVBProject.Run.Summary
+   Set TestSummary = AccUnitLoaderFactoryCall.GetAccUnitFactory.TestSuite(TestReportOutputTo, JUnitXmlFilePath).AddFromVBProject.Run.Summary
    Success = TestSummary.Success
 
    RemoveTestEnvironment True
