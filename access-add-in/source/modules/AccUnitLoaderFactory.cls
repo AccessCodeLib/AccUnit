@@ -79,7 +79,8 @@ Public Property Get AccessTestSuite() As Object 'AccUnit.AccessTestSuite
    Set AccessTestSuite = AccUnitFactory.AccessTestSuite(Application)
 End Property
 
-Public Property Get TestSuite(Optional ByVal TestReportOutputTo As TestReportOutput = TestReportOutput.DebugPrint) As Object 'TestSuite
+Public Property Get TestSuite(Optional ByVal TestReportOutputTo As TestReportOutput = TestReportOutput.DebugPrint, _
+                              Optional ByVal JUnitXmlFilePath As String = vbNullString) As Object 'TestSuite
    Set TestSuite = New TestSuite
 
    With TestSuite
@@ -87,8 +88,19 @@ Public Property Get TestSuite(Optional ByVal TestReportOutputTo As TestReportOut
    End With
 
    AppendTestResultReporter TestSuite, TestReportOutputTo
+   AppendJUnitXmlTestResultReporter TestSuite, JUnitXmlFilePath
 
 End Property
+
+Private Sub AppendJUnitXmlTestResultReporter(ByVal TestSuite As TestSuite, ByVal JUnitXmlFilePath As String)
+
+   If Len(JUnitXmlFilePath) = 0 Then
+      Exit Sub
+   End If
+
+   TestSuite.AppendTestResultReporter AccUnitFactory.JUnitXmlTestResultReporter(JUnitXmlFilePath)
+
+End Sub
 
 Private Sub AppendTestResultReporter(ByVal TestSuite As TestSuite, ByVal TestReportOutputTo As TestReportOutput)
 

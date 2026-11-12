@@ -6,6 +6,7 @@ using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace AccessCodeLib.AccUnit.TestRunner
@@ -230,12 +231,14 @@ namespace AccessCodeLib.AccUnit.TestRunner
                     return testResult;
                 }
 
+                var stopwatch = Stopwatch.StartNew();
                 if (TryRunTestSetup(testFixture, testResult, invocationHelper))
                 {
                     RunTest(test, testResult, invocationHelper);
                     AssertThrowsStore.CompaireTestRunnerException(null, testResult);
                 }
                 TryRunTeardown(testFixture, testResult, invocationHelper);
+                testResult.ElapsedTime = stopwatch.Elapsed.TotalMilliseconds;
             }
 
             RaiseTestFinished(testResult);
