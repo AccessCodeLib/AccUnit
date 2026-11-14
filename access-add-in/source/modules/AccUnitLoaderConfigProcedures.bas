@@ -4,6 +4,9 @@ Option Compare Text
 
 #Const AccUnitEarlyBinding = 0
 
+Private Const APPFILE_ID_APPICON As String = "AppIcon"
+Private Const ERR_ACCUNIT_FILE_MISSING As Long = vbObjectError + 5001
+
 #If AccUnitEarlyBinding Then
 Public Property Get CurrentAccUnitConfiguration() As AccUnitConfiguration
 #Else
@@ -178,19 +181,76 @@ HandleErr:
 End Sub
 
 Public Sub ImportAccUnitFiles()
+   ImportAccUnitFilesFromFolder CurrentAccUnitConfiguration.AccUnitDllPath
+End Sub
 
+' Loads all AccUnit library files from SourceFolder into usys_AppFiles.
+' Used by the release build (msaccess-vcs-build app-config), so the folder is checked
+' completely before the table is changed.
+Public Sub ImportAccUnitFilesFromFolder(ByVal SourceFolder As String)
+
+   Dim FolderPath As String
    Dim AccFileName As Variant
-   Dim DllPath As String
 
-   DllPath = CurrentAccUnitConfiguration.AccUnitDllPath
+   FolderPath = FolderPathWithBackslash(SourceFolder)
+   CheckAccUnitFilesExist FolderPath
 
-   With modApplication.CurrentApplication.Extensions("AppFile")
-      For Each AccFileName In AccUnitFileNames
-         .SaveAppFile AccFileName, DllPath & AccFileName, True
-      Next
-   End With
+   For Each AccFileName In AccUnitFileNames
+      SaveAppFileOrRaise AccFileName, FolderPath & AccFileName, True
+   Next
 
 End Sub
+
+' Loads the application icon shown in the add-in form into usys_AppFiles.
+Public Sub ImportAppIconFile(ByVal IconFilePath As String)
+
+   If Not FileTools.FileExists(IconFilePath) Then
+      Err.Raise ERR_ACCUNIT_FILE_MISSING, "ImportAppIconFile", "Icon file not found: " & IconFilePath
+   End If
+
+   SaveAppFileOrRaise APPFILE_ID_APPICON, IconFilePath, False
+
+End Sub
+
+Private Sub CheckAccUnitFilesExist(ByVal FolderPath As String)
+
+   Dim AccFileName As Variant
+   Dim MissingFiles As String
+
+   If Not FileTools.DirExists(FolderPath) Then
+      Err.Raise ERR_ACCUNIT_FILE_MISSING, "CheckAccUnitFilesExist", "Folder not found: " & FolderPath
+   End If
+
+   For Each AccFileName In AccUnitFileNames
+      If Not FileTools.FileExists(FolderPath & AccFileName) Then
+         MissingFiles = MissingFiles & ", " & AccFileName
+      End If
+   Next
+
+   If Len(MissingFiles) > 0 Then
+      Err.Raise ERR_ACCUNIT_FILE_MISSING, "CheckAccUnitFilesExist", _
+                "Missing files in " & FolderPath & ": " & Mid$(MissingFiles, 3)
+   End If
+
+End Sub
+
+Private Sub SaveAppFileOrRaise(ByVal FileID As String, ByVal FilePath As String, ByVal SaveVersion As Boolean)
+
+   ' SaveAppFile returns False (without error) for an empty file
+   If Not modApplication.CurrentApplication.Extensions("AppFile").SaveAppFile(FileID, FilePath, SaveVersion) Then
+      Err.Raise ERR_ACCUNIT_FILE_MISSING, "SaveAppFileOrRaise", "File could not be saved in usys_AppFiles: " & FilePath
+   End If
+
+End Sub
+
+Private Function FolderPathWithBackslash(ByVal FolderPath As String) As String
+
+   If Len(FolderPath) > 0 And VBA.Right$(FolderPath, 1) <> "\" Then
+      FolderPath = FolderPath & "\"
+   End If
+   FolderPathWithBackslash = FolderPath
+
+End Function
 
 Public Function AutomatedTestRunVCS() As Variant
 

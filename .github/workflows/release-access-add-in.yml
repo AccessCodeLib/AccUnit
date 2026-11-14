@@ -1,0 +1,136 @@
+# Builds the Access add-in (AccUnitLoader.accda) from access-add-in/source when a release is
+# published. The AccUnit library files are taken from the release asset AccUnit.*.bin.zip
+# (created by the Azure pipeline) and loaded into the table usys_AppFiles.
+#
+# Runner requirements: Windows, Microsoft Access (64 bit), PowerShell 7, GitHub CLI (gh).
+
+name: Release Access add-in
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      release-tag:
+        description: "Release tag that provides AccUnit.*.bin.zip"
+        required: true
+      upload:
+        description: "Upload the add-in zip to the release"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  build-access-add-in:
+    runs-on: [self-hosted, Windows, Office]
+    env:
+      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.release-tag }}
+      UPLOAD_TO_RELEASE: ${{ github.event_name == 'release' || inputs.upload }}
+      GH_TOKEN: ${{ github.token }}
+      LIB_DIR: ${{ github.workspace }}\build\lib
+      OUT_DIR: ${{ github.workspace }}\build\out
+      APP_CONFIG_FILE: ${{ github.workspace }}\build\app-config.json
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Download AccUnit library files from release"
+        shell: pwsh
+        run: |
+          $downloadDir = Join-Path $env:GITHUB_WORKSPACE 'build\download'
+          New-Item -ItemType Directory -Force -Path $downloadDir, $env:LIB_DIR | Out-Null
+          gh release download $env:RELEASE_TAG --repo $env:GITHUB_REPOSITORY --pattern 'AccUnit.*.bin.zip' --dir $downloadDir --clobber
+          if ($LASTEXITCODE -ne 0) { throw "Download of AccUnit.*.bin.zip from release '$env:RELEASE_TAG' failed" }
+          $zipFiles = @(Get-ChildItem -Path $downloadDir -Filter 'AccUnit.*.bin.zip')
+          if ($zipFiles.Count -ne 1) { throw "Expected exactly one AccUnit.*.bin.zip in release '$env:RELEASE_TAG', found $($zipFiles.Count)" }
+          Expand-Archive -Path $zipFiles[0].FullName -DestinationPath $env:LIB_DIR -Force
+          Get-ChildItem -Path $env:LIB_DIR | Format-Table Name, Length
+
+      - name: "Disable DEVMODE for release build"
+        shell: pwsh
+        run: |
+          $vbeProjectFile = 'access-add-in/source/vbe-project.json'
+          $content = [System.IO.File]::ReadAllText($vbeProjectFile)
+          if ($content -notmatch 'DEVMODE\s*=\s*1') { throw "DEVMODE = 1 not found in $vbeProjectFile" }
+          $content = $content -replace 'DEVMODE\s*=\s*1', 'DEVMODE = 0'
+          [System.IO.File]::WriteAllText($vbeProjectFile, $content, [System.Text.UTF8Encoding]::new($true))
+
+      - name: "Create app config (load files into usys_AppFiles)"
+        shell: pwsh
+        run: |
+          $iconFile = Join-Path $env:GITHUB_WORKSPACE 'access-add-in\resources\ACLib.ico'
+          $config = @{
+            Procedures = @(
+              @{ Name = 'ImportAccUnitFilesFromFolder'; Parameters = @($env:LIB_DIR) },
+              @{ Name = 'ImportAppIconFile'; Parameters = @($iconFile) }
+            )
+          }
+          $config | ConvertTo-Json -Depth 5 | Set-Content -Path $env:APP_CONFIG_FILE -Encoding utf8
+          Get-Content -Path $env:APP_CONFIG_FILE
+
+      - name: "Build AccUnitLoader.accda"
+        uses: AccessCodeLib/msaccess-vcs-build@v2.0.0
+        with:
+          source-dir: "access-add-in/source"
+          target-dir: "build/out"
+          app-config: ${{ env.APP_CONFIG_FILE }}
+        timeout-minutes: 10
+
+      # Build.ps1 does not stop when a procedure of the app config fails, so check the result here.
+      - name: "Verify usys_AppFiles"
+        shell: pwsh
+        run: |
+          $expectedIds = @(
+            'AccUnit.tlb', 'AccUnit.dll', 'AccessCodeLib.Common.Tools.dll',
+            'AccessCodeLib.Common.VBIDETools.dll', 'AccUnit.VbeAddIn.dll',
+            'AccessCodeLib.Common.VbeUserControlHost.dll', 'AppIcon'
+          )
+          $addInFile = Join-Path $env:OUT_DIR 'AccUnitLoader.accda'
+          if (-not (Test-Path $addInFile)) { throw "Built add-in not found: $addInFile" }
+          # DAO through Access: DAO.DBEngine.120 is often not registered outside Click-to-Run Office
+          $access = New-Object -ComObject Access.Application
+          try {
+            $db = $access.DBEngine.OpenDatabase($addInFile, $false, $true)
+            $rs = $db.OpenRecordset('SELECT id, version FROM USys_AppFiles')
+            $foundIds = @()
+            while (-not $rs.EOF) {
+              $foundIds += $rs.Fields.Item('id').Value
+              Write-Host "$($rs.Fields.Item('id').Value)  $($rs.Fields.Item('version').Value)"
+              $rs.MoveNext()
+            }
+            $rs.Close()
+            $db.Close()
+          }
+          finally {
+            $access.Quit()
+            [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($access)
+          }
+          $missingIds = @($expectedIds | Where-Object { $foundIds -notcontains $_ })
+          if ($missingIds.Count -gt 0) { throw "Missing in usys_AppFiles: $($missingIds -join ', ')" }
+
+      - name: "Create add-in zip"
+        id: zip
+        shell: pwsh
+        run: |
+          $version = $env:RELEASE_TAG -replace '^v', ''
+          $zipFile = Join-Path $env:GITHUB_WORKSPACE "build\AccUnitLoader.$version.Access.zip"
+          Compress-Archive -Path (Join-Path $env:OUT_DIR 'AccUnitLoader.accda'), 'access-add-in/AccUnitLoader_Install.vbs' -DestinationPath $zipFile -Force
+          "zip-file=$zipFile" >> $env:GITHUB_OUTPUT
+
+      - name: "Upload build artifact"
+        uses: actions/upload-artifact@v4
+        with:
+          name: "AccUnitLoader"
+          path: |
+            ${{ steps.zip.outputs.zip-file }}
+            build/out/*.log
+          if-no-files-found: error
+
+      - name: "Upload add-in zip to release"
+        if: env.UPLOAD_TO_RELEASE == 'true'
+        shell: pwsh
+        run: |
+          gh release upload $env:RELEASE_TAG "${{ steps.zip.outputs.zip-file }}" --repo $env:GITHUB_REPOSITORY --clobber
+          if ($LASTEXITCODE -ne 0) { throw "Upload to release '$env:RELEASE_TAG' failed" }
