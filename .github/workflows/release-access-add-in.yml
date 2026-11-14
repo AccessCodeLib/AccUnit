@@ -3,6 +3,8 @@
 # (created by the Azure pipeline) and loaded into the table usys_AppFiles.
 #
 # Runner requirements: Windows, Microsoft Access (64 bit), PowerShell 7, GitHub CLI (gh).
+# The runner workspace must not be below %TEMP%: Access does not run VBA there, even with
+# the trusted location that msaccess-vcs-build sets for the build.
 
 name: Release Access add-in
 
@@ -51,7 +53,8 @@ jobs:
       - name: "Disable DEVMODE for release build"
         shell: pwsh
         run: |
-          $vbeProjectFile = 'access-add-in/source/vbe-project.json'
+          # absolute path: .NET file methods do not follow the PowerShell location
+          $vbeProjectFile = Join-Path $env:GITHUB_WORKSPACE 'access-add-in\source\vbe-project.json'
           $content = [System.IO.File]::ReadAllText($vbeProjectFile)
           if ($content -notmatch 'DEVMODE\s*=\s*1') { throw "DEVMODE = 1 not found in $vbeProjectFile" }
           $content = $content -replace 'DEVMODE\s*=\s*1', 'DEVMODE = 0'
@@ -78,7 +81,6 @@ jobs:
           app-config: ${{ env.APP_CONFIG_FILE }}
         timeout-minutes: 10
 
-      # Build.ps1 does not stop when a procedure of the app config fails, so check the result here.
       - name: "Verify usys_AppFiles"
         shell: pwsh
         run: |
