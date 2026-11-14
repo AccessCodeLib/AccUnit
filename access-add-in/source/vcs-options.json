@@ -59,9 +59,6 @@
       "tab1DS": {
         "Format": "Tab Delimited"
       },
-      "USys_AppFiles": {
-        "Format": "XML Format"
-      },
       "USysRegInfo": {
         "Format": "Tab Delimited"
       },
