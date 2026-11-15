@@ -69,11 +69,11 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
             string compareInfo;
             if (result < 0)
             {
-                compareInfo = "actual is less then expected";
+                compareInfo = "actual is less than expected";
             }
             else if (result > 0)
             {
-                compareInfo = "actual is greather then expected";
+                compareInfo = "actual is greater than expected";
             }
             else
             {
