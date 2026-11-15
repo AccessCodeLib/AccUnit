@@ -79,6 +79,9 @@ namespace AccessCodeLib.AccUnit.McpServer
         private static TestRunResult RunTestsOnStaThread(Access.Application application, IList<string> classNames,
                                                          IList<string> testNameFilter, IList<string> tags, bool includePassed)
         {
+            // Check first, so the database is not changed when no test can run.
+            EnsureLoaderIsInstalled();
+
             var vbProject = GetVBProject(application);
             var environment = new TestEnvironment(application, vbProject);
 
@@ -146,17 +149,27 @@ namespace AccessCodeLib.AccUnit.McpServer
             return JUnitResultReader.Read(File.ReadAllText(junitXmlFilePath));
         }
 
+        private static string LoaderPath
+        {
+            get
+            {
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                    "Microsoft", "AddIns", LoaderFileName);
+            }
+        }
+
+        private static void EnsureLoaderIsInstalled()
+        {
+            if (!File.Exists(LoaderPath + LoaderFileExtension))
+                throw new DatabaseSessionException(LoaderNotAvailableMessage);
+        }
+
         private static object GetLoaderFactory(Access.Application application)
         {
-            var loaderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                                          "Microsoft", "AddIns", LoaderFileName);
-            if (!File.Exists(loaderPath + LoaderFileExtension))
-                throw new DatabaseSessionException(LoaderNotAvailableMessage);
-
             try
             {
                 // Application.Run has 30 ByRef parameters in the interop assembly; call it late bound.
-                return LateBinding.CallMethod(application, "Run", loaderPath + "." + LoaderFactoryProcedureName);
+                return LateBinding.CallMethod(application, "Run", LoaderPath + "." + LoaderFactoryProcedureName);
             }
             catch (COMException ex)
             {
