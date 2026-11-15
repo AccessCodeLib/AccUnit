@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>AccessCodeLib.AccUnit.McpServer.Tests</AssemblyName>
+    <RootNamespace>AccessCodeLib.AccUnit.McpServer.Tests</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\AccUnit.McpServer\AccessCodeLib.AccUnit.McpServer.csproj" />
+  </ItemGroup>
+
+</Project>
