@@ -1,4 +1,5 @@
-﻿using AccessCodeLib.AccUnit.Interop;
+﻿using AccessCodeLib.AccUnit.Configuration;
+using AccessCodeLib.AccUnit.Interop;
 using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.AccUnit.VbeAddIn
@@ -18,6 +19,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         public delegate void AssertRequestEventHandler(out IAssert assert);
         public event AssertRequestEventHandler AssertRequest;
 
+        public delegate void AccUnitFactoryRequestEventHandler(out IAccUnitFactory accUnitFactory);
+        public event AccUnitFactoryRequestEventHandler AccUnitFactoryRequest;
+
+        public delegate void CodeCoverageTrackerRequestEventHandler(out ICodeCoverageTracker codeCoverageTracker);
+        public event CodeCoverageTrackerRequestEventHandler CodeCoverageTrackerRequest;
+
+        public delegate void ErrorTrappingObserverRequestEventHandler(out IErrorTrappingObserver errorTrappingObserver);
+        public event ErrorTrappingObserverRequestEventHandler ErrorTrappingObserverRequest;
+
         public delegate void HostApplicationInitializedEventHandler(object hostapplication);
 
         public event HostApplicationInitializedEventHandler HostApplicationInitialized;
@@ -30,7 +40,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        public Interfaces.IVBATestSuite TestSuite(TestReportOutput OutputTo = TestReportOutput.DebugPrint)
+        [return: MarshalAs(UnmanagedType.IDispatch)]
+        public object TestSuite(TestReportOutput OutputTo = TestReportOutput.DebugPrint)
         {
             Interfaces.IVBATestSuite suite = null;
             TestSuiteRequest?.Invoke(out suite);
@@ -56,6 +67,36 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 return assert;
             }
         }
+
+        public IAccUnitFactory AccUnitFactory
+        {
+            get
+            {
+                IAccUnitFactory accUnitFactory = null;
+                AccUnitFactoryRequest?.Invoke(out accUnitFactory);
+                return accUnitFactory;
+            }
+        }
+
+        public ICodeCoverageTracker CodeCoverageTracker
+        {
+            get
+            {
+                ICodeCoverageTracker codeCoverageTracker = null;
+                CodeCoverageTrackerRequest?.Invoke(out codeCoverageTracker);
+                return codeCoverageTracker;
+            }
+        }
+
+        public IErrorTrappingObserver ErrorTrappingObserver
+        {
+            get
+            {
+                IErrorTrappingObserver errorTrappingObserver = null;
+                ErrorTrappingObserverRequest?.Invoke(out errorTrappingObserver);
+                return errorTrappingObserver;
+            }
+        }
     }
 
     [ComVisible(true)]
@@ -63,9 +104,13 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     public interface IAddInManagerBridge
     {
         object Application { set; }
-        Interfaces.IVBATestSuite TestSuite(TestReportOutput OutputTo = TestReportOutput.DebugPrint);
+        [return: MarshalAs(UnmanagedType.IDispatch)]
+        object TestSuite(TestReportOutput OutputTo = TestReportOutput.DebugPrint);
         IConstraintBuilder ConstraintBuilder { get; }
         IAssert Assert { get; }
+        IAccUnitFactory AccUnitFactory { get; }
+        ICodeCoverageTracker CodeCoverageTracker { get; }
+        IErrorTrappingObserver ErrorTrappingObserver { get; }
     }
 
     public enum TestReportOutput
