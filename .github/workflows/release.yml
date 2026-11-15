@@ -1,12 +1,15 @@
-# Builds the Access add-in (AccUnitLoader.accda) from access-add-in/source when a release is
-# published. The AccUnit library files are taken from the release asset AccUnit.*.bin.zip
-# (created by the Azure pipeline) and loaded into the table usys_AppFiles.
+# Creates the release assets when a release is published:
+# 1. build: builds the AccUnit library from the release tag (build.yml) -> artifact AccUnit-bin
+# 2. upload-library: attaches AccUnit.<version>.bin.zip to the release
+# 3. build-access-add-in: builds the Access add-in (AccUnitLoader.accda) from access-add-in/source,
+#    loads the library files into the table usys_AppFiles and attaches
+#    AccUnitLoader.<add-in version>.Access.zip to the release
 #
-# Runner requirements: Windows, Microsoft Access (64 bit), PowerShell 7, GitHub CLI (gh).
-# The runner workspace must not be below %TEMP%: Access does not run VBA there, even with
-# the trusted location that msaccess-vcs-build sets for the build.
+# Runner requirements for build-access-add-in: Windows, Microsoft Access (64 bit), PowerShell 7,
+# GitHub CLI (gh). The runner workspace must not be below %TEMP%: Access does not run VBA there,
+# even with the trusted location that msaccess-vcs-build sets for the build.
 
-name: Release Access add-in
+name: Release
 
 on:
   release:
@@ -14,39 +17,67 @@ on:
   workflow_dispatch:
     inputs:
       release-tag:
-        description: "Release tag that provides AccUnit.*.bin.zip"
+        description: "Release tag to build"
         required: true
       upload:
-        description: "Upload the add-in zip to the release"
+        description: "Upload the zip files to the release"
         type: boolean
         default: false
 
 permissions:
   contents: write
 
+env:
+  RELEASE_TAG: ${{ github.event.release.tag_name || inputs.release-tag }}
+  UPLOAD_TO_RELEASE: ${{ github.event_name == 'release' || inputs.upload }}
+  GH_TOKEN: ${{ github.token }}
+
 jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      ref: ${{ github.event.release.tag_name || inputs.release-tag }}
+
+  upload-library:
+    needs: build
+    if: github.event_name == 'release' || inputs.upload
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Download library zip"
+        uses: actions/download-artifact@v8
+        with:
+          name: "AccUnit-bin"
+          path: build
+
+      - name: "Upload library zip to release"
+        run: gh release upload "$RELEASE_TAG" build/AccUnit.*.bin.zip --repo "$GITHUB_REPOSITORY" --clobber
+
   build-access-add-in:
+    needs: build
     runs-on: [self-hosted, Windows, Office]
     env:
-      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.release-tag }}
-      UPLOAD_TO_RELEASE: ${{ github.event_name == 'release' || inputs.upload }}
-      GH_TOKEN: ${{ github.token }}
       LIB_DIR: ${{ github.workspace }}\build\lib
       OUT_DIR: ${{ github.workspace }}\build\out
       APP_CONFIG_FILE: ${{ github.workspace }}\build\app-config.json
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ env.RELEASE_TAG }}
 
-      - name: "Download AccUnit library files from release"
+      - name: "Download library zip"
+        uses: actions/download-artifact@v8
+        with:
+          name: "AccUnit-bin"
+          path: build/download
+
+      - name: "Extract AccUnit library files"
         shell: pwsh
         run: |
           $downloadDir = Join-Path $env:GITHUB_WORKSPACE 'build\download'
-          New-Item -ItemType Directory -Force -Path $downloadDir, $env:LIB_DIR | Out-Null
-          gh release download $env:RELEASE_TAG --repo $env:GITHUB_REPOSITORY --pattern 'AccUnit.*.bin.zip' --dir $downloadDir --clobber
-          if ($LASTEXITCODE -ne 0) { throw "Download of AccUnit.*.bin.zip from release '$env:RELEASE_TAG' failed" }
+          New-Item -ItemType Directory -Force -Path $env:LIB_DIR | Out-Null
           $zipFiles = @(Get-ChildItem -Path $downloadDir -Filter 'AccUnit.*.bin.zip')
-          if ($zipFiles.Count -ne 1) { throw "Expected exactly one AccUnit.*.bin.zip in release '$env:RELEASE_TAG', found $($zipFiles.Count)" }
+          if ($zipFiles.Count -ne 1) { throw "Expected exactly one AccUnit.*.bin.zip in artifact AccUnit-bin, found $($zipFiles.Count)" }
           Expand-Archive -Path $zipFiles[0].FullName -DestinationPath $env:LIB_DIR -Force
           Get-ChildItem -Path $env:LIB_DIR | Format-Table Name, Length
 
@@ -127,7 +158,7 @@ jobs:
           "zip-file=$zipFile" >> $env:GITHUB_OUTPUT
 
       - name: "Upload build artifact"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: "AccUnitLoader"
           path: |

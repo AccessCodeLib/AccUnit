@@ -1,0 +1,116 @@
+# Builds the AccUnit library and the VBE add-in, runs the unit tests and creates the
+# library zip AccUnit.<major.minor.patch>.bin.zip as workflow artifact.
+# Runs for pushes and pull requests to dev/main and is called by the release workflow.
+
+name: Build
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        description: "Git ref to build (default: the triggering commit)"
+        type: string
+        default: ""
+    outputs:
+      version:
+        description: "AccUnit version (major.minor.patch)"
+        value: ${{ jobs.build.outputs.version }}
+
+permissions:
+  contents: read
+
+env:
+  BUILD_CONFIGURATION: AzureCI
+  BUILD_PLATFORM: Any CPU
+
+jobs:
+  build:
+    runs-on: windows-latest
+    outputs:
+      version: ${{ steps.zip.outputs.version }}
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: "Setup MSBuild"
+        uses: microsoft/setup-msbuild@v3
+
+      - name: "Setup NuGet"
+        uses: NuGet/setup-nuget@v4
+
+      - name: "Restore NuGet packages"
+        shell: pwsh
+        run: |
+          foreach ($solution in 'source\AccessCodeLib.AccUnit.sln', 'vbe-add-In\AccessCodeLib.AccUnit.VbeAddIn.sln') {
+            nuget restore $solution -NonInteractive
+            if ($LASTEXITCODE -ne 0) { throw "NuGet restore failed for $solution" }
+          }
+
+      - name: "Build solutions"
+        shell: pwsh
+        run: |
+          foreach ($solution in 'source\AccessCodeLib.AccUnit.sln', 'vbe-add-In\AccessCodeLib.AccUnit.VbeAddIn.sln') {
+            msbuild $solution /p:Configuration=$env:BUILD_CONFIGURATION "/p:Platform=$env:BUILD_PLATFORM" /m /v:minimal /nologo
+            if ($LASTEXITCODE -ne 0) { throw "Build failed for $solution" }
+          }
+
+      - name: "Run unit tests"
+        shell: pwsh
+        run: |
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+          $vstest = & $vswhere -latest -products * -requires Microsoft.VisualStudio.PackageGroup.TestTools.Core -find '**\TestPlatform\vstest.console.exe' | Select-Object -First 1
+          if (-not $vstest) { throw "vstest.console.exe not found" }
+          # Tests that need Microsoft Access or the VBA editor cannot run on a hosted runner
+          $excludedTestAssemblies = @('AccessTestClientTests.dll', 'AccessCodeLib.Common.VBIDETools.Tests.dll')
+          $testAssemblies = @(Get-ChildItem -Recurse -Filter '*Tests.dll' -Path source, vbe-add-In |
+            Where-Object { $_.FullName -match "\\bin\\$env:BUILD_CONFIGURATION\\" -and $_.Name -notin $excludedTestAssemblies })
+          if ($testAssemblies.Count -eq 0) { throw "No test assemblies found" }
+          $testAssemblies.FullName
+          & $vstest $testAssemblies.FullName '/TestCaseFilter:TestCategory!=AccessClientTests' '/logger:trx' '/ResultsDirectory:TestResults'
+          if ($LASTEXITCODE -ne 0) { throw "Unit tests failed" }
+
+      - name: "Upload test results"
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: "TestResults"
+          path: TestResults/*.trx
+          if-no-files-found: ignore
+
+      - name: "Create library zip"
+        id: zip
+        shell: pwsh
+        run: |
+          $libraryDir = "source\AccUnit\bin\$env:BUILD_CONFIGURATION"
+          $vbeAddInDir = "vbe-add-In\AccUnit.VbeAddIn\bin\$env:BUILD_CONFIGURATION"
+          $fileVersion = [System.Diagnostics.FileVersionInfo]::GetVersionInfo((Resolve-Path "$libraryDir\AccUnit.dll")).FileVersion
+          $parts = $fileVersion.Split('.')
+          $version = "$($parts[0]).$($parts[1]).$($parts[2])"
+          Write-Host "Version: $version"
+          $files = @(
+            Get-ChildItem -Path "$libraryDir\AccUnit.dll*"
+            Get-ChildItem -Path "$libraryDir\AccUnit.tlb"
+            Get-ChildItem -Path "$libraryDir\AccessCodeLib.*.dll"
+            Get-ChildItem -Path "$vbeAddInDir\AccUnit.VbeAddIn.dll*"
+            Get-ChildItem -Path "$vbeAddInDir\AccessCodeLib.Common.VbeUserControlHost.dll"
+          )
+          $files | Format-Table Name, Length, LastWriteTime
+          New-Item -ItemType Directory -Force -Path build | Out-Null
+          $zipFile = "build\AccUnit.$version.bin.zip"
+          Compress-Archive -Path $files.FullName -DestinationPath $zipFile -Force
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      # The artifact name is used by release.yml
+      - name: "Upload library zip"
+        uses: actions/upload-artifact@v7
+        with:
+          name: "AccUnit-bin"
+          path: build/AccUnit.*.bin.zip
+          if-no-files-found: error
