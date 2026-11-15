@@ -59,16 +59,10 @@ Private Function AccUnitLoaderFactory() As Object
    Set AccUnitLoaderFactory = m_AccUnitLoaderFactory
 End Function
 
-' Allows an external host (e.g. the AccUnit MCP server) to provide the factory.
-' Pass Nothing to fall back to the VBE add-in or the AccUnitLoader add-in.
-Public Sub AccUnitFactory_SetLoaderFactory(ByVal Factory As Object)
-   Set m_AccUnitLoaderFactory = Factory
-End Sub
-
 Private Function GetAccUnitLoaderFactory() As Object
 
    Dim AccUnitVbeAddIn As Object
-
+   
    If TryGetAccUnitVbeAddIn(AccUnitVbeAddIn) Then
       Set GetAccUnitLoaderFactory = AccUnitVbeAddIn.Object
    Else
@@ -211,16 +205,10 @@ Private Function AccUnitLoaderFactory() As Object
    Set AccUnitLoaderFactory = m_AccUnitLoaderFactory
 End Function
 
-' Allows an external host (e.g. the AccUnit MCP server) to provide the factory.
-' Pass Nothing to fall back to the VBE add-in or the AccUnitLoader add-in.
-Public Sub AccUnitFactory_SetLoaderFactory(ByVal Factory As Object)
-   Set m_AccUnitLoaderFactory = Factory
-End Sub
-
 Private Function GetAccUnitLoaderFactory() As Object
 
    Dim AccUnitVbeAddIn As Object
-
+   
    If TryGetAccUnitVbeAddIn(AccUnitVbeAddIn) Then
       Set GetAccUnitLoaderFactory = AccUnitVbeAddIn.Object
    Else
