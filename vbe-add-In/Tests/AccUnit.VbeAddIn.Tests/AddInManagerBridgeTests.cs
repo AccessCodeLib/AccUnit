@@ -50,6 +50,88 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Tests
             }
         }
 
+        private static readonly string[] FactoryMemberNamesUsedByTemplates =
+        {
+            "Assert", "ConstraintBuilder", "TestSuite", "AccUnitFactory", "CodeCoverageTracker", "ErrorTrappingObserver"
+        };
+
+        [Test]
+        public void BridgeViaIDispatch_ProvidesAllFactoryMembersUsedByTemplates()
+        {
+            var bridgeDispatch = Marshal.GetIDispatchForObject(new AddInManagerBridge());
+            try
+            {
+                foreach (var memberName in FactoryMemberNamesUsedByTemplates)
+                {
+                    Assert.That(DispatchHelper.TryGetDispId(bridgeDispatch, memberName), Is.True,
+                                $"Member '{memberName}' is not available via IDispatch");
+                }
+            }
+            finally
+            {
+                Marshal.Release(bridgeDispatch);
+            }
+        }
+
+        [Test]
+        public void AccUnitFactory_CalledViaIDispatch_ReturnsDispatchWithFactoryMembers()
+        {
+            var bridge = new AddInManagerBridge();
+            bridge.AccUnitFactoryRequest += (out Interop.IAccUnitFactory accUnitFactory) => accUnitFactory = new Interop.AccUnitFactory();
+
+            AssertBridgeMemberReturnsDispatchWithMembers(bridge, "AccUnitFactory",
+                "Assert", "ConstraintBuilder", "CodeCoverageTracker", "AccessErrorTrappingObserver");
+        }
+
+        [Test]
+        public void CodeCoverageTracker_CalledViaIDispatch_ReturnsDispatchWithTrackerMembers()
+        {
+            var bridge = new AddInManagerBridge();
+            bridge.CodeCoverageTrackerRequest += (out Interop.ICodeCoverageTracker tracker) => tracker = new Interop.CodeCoverageTracker();
+
+            AssertBridgeMemberReturnsDispatchWithMembers(bridge, "CodeCoverageTracker",
+                "Add", "Track", "GetReport", "Clear", "Dispose");
+        }
+
+        [Test]
+        public void ErrorTrappingObserver_CalledViaIDispatch_ReturnsDispatchWithObserverMembers()
+        {
+            // A real observer reads the Access option "Error Trapping"; only the COM type information is needed here.
+            var observer = FormatterServices.GetUninitializedObject(typeof(Configuration.AccessErrorTrappingObserver));
+            GC.SuppressFinalize(observer);
+            var bridge = new AddInManagerBridge();
+            bridge.ErrorTrappingObserverRequest += (out Configuration.IErrorTrappingObserver errorTrappingObserver) =>
+                errorTrappingObserver = (Configuration.IErrorTrappingObserver)observer;
+
+            AssertBridgeMemberReturnsDispatchWithMembers(bridge, "ErrorTrappingObserver",
+                "SetErrorTrapping", "Dispose");
+        }
+
+        private static void AssertBridgeMemberReturnsDispatchWithMembers(AddInManagerBridge bridge, string bridgeMemberName, params string[] expectedMemberNames)
+        {
+            var bridgeDispatch = Marshal.GetIDispatchForObject(bridge);
+            try
+            {
+                var resultDispatch = DispatchHelper.InvokeReturningDispatch(bridgeDispatch, bridgeMemberName);
+                try
+                {
+                    foreach (var memberName in expectedMemberNames)
+                    {
+                        Assert.That(DispatchHelper.TryGetDispId(resultDispatch, memberName), Is.True,
+                                    $"Member '{memberName}' of '{bridgeMemberName}' is not available via IDispatch");
+                    }
+                }
+                finally
+                {
+                    Marshal.Release(resultDispatch);
+                }
+            }
+            finally
+            {
+                Marshal.Release(bridgeDispatch);
+            }
+        }
+
         private static Interfaces.IVBATestSuite CreateTestSuiteWithoutHostApplication(Type testSuiteType)
         {
             // Only the COM type information is needed; a real suite would require an Office host application.
@@ -64,7 +146,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Tests
             private const int InvokeVtableSlot = 6;
             private const short DispatchMethodOrPropertyGet = 1 | 2;
             private const short VariantTypeDispatch = 9;
-            private const int VariantSize = 24; // large enough for x86 and x64
+            private static readonly int VariantSize = IntPtr.Size == 8 ? 24 : 16; // sizeof(VARIANT)
             private const int LocaleUserDefault = 0x0400;
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
@@ -84,18 +166,26 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Tests
                 return GetIDsOfNames(dispatch, name, out _) == 0;
             }
 
-            public static IntPtr InvokeReturningDispatch(IntPtr dispatch, string name, int argument)
+            public static IntPtr InvokeReturningDispatch(IntPtr dispatch, string name, params object[] arguments)
             {
                 Marshal.ThrowExceptionForHR(GetIDsOfNames(dispatch, name, out var dispId));
 
-                var argumentVariant = Marshal.AllocCoTaskMem(VariantSize);
+                var argumentVariants = Marshal.AllocCoTaskMem(VariantSize * Math.Max(arguments.Length, 1));
                 var resultVariant = Marshal.AllocCoTaskMem(VariantSize);
                 try
                 {
-                    Marshal.GetNativeVariantForObject(argument, argumentVariant);
+                    // IDispatch::Invoke expects the arguments in reverse order.
+                    for (var i = 0; i < arguments.Length; i++)
+                    {
+                        Marshal.GetNativeVariantForObject(arguments[arguments.Length - 1 - i], argumentVariants + i * VariantSize);
+                    }
                     Marshal.GetNativeVariantForObject(null, resultVariant);
 
-                    var dispParams = new ComTypes.DISPPARAMS { cArgs = 1, rgvarg = argumentVariant };
+                    var dispParams = new ComTypes.DISPPARAMS
+                    {
+                        cArgs = arguments.Length,
+                        rgvarg = arguments.Length > 0 ? argumentVariants : IntPtr.Zero
+                    };
                     var riid = Guid.Empty;
                     var invoke = GetVtableFunction<InvokeDelegate>(dispatch, InvokeVtableSlot);
                     Marshal.ThrowExceptionForHR(invoke(dispatch, dispId, ref riid, LocaleUserDefault,
@@ -109,9 +199,12 @@ namespace AccessCodeLib.AccUnit.VbeAddIn.Tests
                 }
                 finally
                 {
-                    VariantClear(argumentVariant);
+                    for (var i = 0; i < arguments.Length; i++)
+                    {
+                        VariantClear(argumentVariants + i * VariantSize);
+                    }
                     VariantClear(resultVariant);
-                    Marshal.FreeCoTaskMem(argumentVariant);
+                    Marshal.FreeCoTaskMem(argumentVariants);
                     Marshal.FreeCoTaskMem(resultVariant);
                 }
             }
