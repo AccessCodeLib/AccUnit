@@ -1,0 +1,9 @@
+﻿{
+  "Info": {
+    "Class": "clsDbTableDef",
+    "Description": "USysRegInfo Metadata"
+  },
+  "Items": {
+    "Hidden": true
+  }
+}

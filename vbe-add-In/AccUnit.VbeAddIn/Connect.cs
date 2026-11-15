@@ -206,12 +206,10 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     _addInInstance = null;
                 }
                 
-                /*
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                */
 
                 _disposed = true;
 

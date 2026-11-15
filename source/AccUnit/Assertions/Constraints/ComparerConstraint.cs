@@ -46,7 +46,8 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
                 var typeOfValue = Expected?.GetType();
                 if (typeOfValue == typeof(string))
                 {
-                    return new MatchResult(CompareText, false, "actual is vbNullstring and expected is not vbNullString", actual, Expected);
+                    var hint = Expected is string expectedText && expectedText.Length == 0 ? VbNullStringHint : string.Empty;
+                    return new MatchResult(CompareText, false, "actual is vbNullstring and expected is not vbNullString" + hint, actual, Expected);
                 }
 
                 return new MatchResult(CompareText, false, "actual is Nothing and expected is not Nothing", actual, Expected);

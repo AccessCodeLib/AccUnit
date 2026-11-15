@@ -34,7 +34,8 @@ namespace AccessCodeLib.AccUnit.Assertions.Constraints
                     return new MatchResult(CompareText, false, "actual is vbNullstring, expected is " + (Expected == null ? "vbNullstring" : "Empty"), actual, Expected);
                 }
 
-                return new MatchResult(CompareText, false, "actual is vbNullstring and expected is not vbNullString" + (Expected == string.Empty ? " or Empty" : ""), actual, Expected);
+                var hint = Expected == string.Empty ? VbNullStringHint : string.Empty;
+                return new MatchResult(CompareText, false, "actual is vbNullstring and expected is not vbNullString" + (Expected == string.Empty ? " or Empty" : "") + hint, actual, Expected);
             }
 
             if (actual == DBNull.Value)

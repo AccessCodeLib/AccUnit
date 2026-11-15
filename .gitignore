@@ -1,8 +1,4 @@
-﻿################################################################################
-# Diese .gitignore-Datei wurde von Microsoft(R) Visual Studio automatisch erstellt.
-################################################################################
-
-/examples/msaccess/lib
+﻿/examples/msaccess/lib
 /examples/msaccess/LocalTest.accdb
 /source/Tests/msaccess-files/lib
 /access-add-in/lib
@@ -11,3 +7,8 @@
 *.laccdb
 /excel-add-in/lib
 *.zip
+.env
+.mcp.json
+AGENTS.md
+CLAUDE.md
+logs/

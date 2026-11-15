@@ -223,6 +223,160 @@ End Function
         }
 
         [Test]
+        public void RunTests_SetupRaisesError_TestIsErrorAndTeardownRunsAndRunContinues()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+private m_TeardownCount as Long
+private m_TestCount as Long
+
+public sub Setup()
+   Err.Raise 5, , ""setup failed""
+End sub
+
+public sub Teardown()
+   m_TeardownCount = m_TeardownCount + 1
+End sub
+
+public Sub TestMethod1()
+   m_TestCount = m_TestCount + 1
+End Sub
+
+public Sub TestMethod2()
+   m_TestCount = m_TestCount + 1
+End Sub
+
+public Function GetTeardownCount() as Long
+   GetTeardownCount = m_TeardownCount
+End Function
+
+public Function GetTestCount() as Long
+   GetTestCount = m_TestCount
+End Function
+");
+            var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
+            var result = new TestResultCollector();
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
+            testRunner.Run(fixture, "*", result);
+
+            // public helper functions (GetTeardownCount, GetTestCount) are run as tests, too
+            Assert.That(result.Results.Count(), Is.EqualTo(4));
+            foreach (var testResult in result.Results)
+            {
+                Assert.That(testResult.IsError, Is.True);
+                Assert.That(testResult.IsPassed, Is.False);
+                Assert.That(testResult.Message, Does.StartWith("SetUp:"));
+            }
+
+            var invocHelper = new InvocationHelper(fixture);
+            Assert.That(invocHelper.InvokeMethod("GetTeardownCount"), Is.EqualTo(4));
+            Assert.That(invocHelper.InvokeMethod("GetTestCount"), Is.EqualTo(0));
+        }
+
+        [Test]
+        public void RunSingleTestMethod_CallsSetupAndTeardown()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+private m_Value as Long
+private m_TeardownCount as Long
+
+public sub Setup()
+   m_Value = 123
+End sub
+
+public sub Teardown()
+   m_TeardownCount = m_TeardownCount + 1
+End sub
+
+public Function TestMethod1() as Long
+   TestMethod1 = m_Value
+End Function
+
+public Function GetTeardownCount() as Long
+   GetTeardownCount = m_TeardownCount
+End Function
+");
+            var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
+            var testResult = testRunner.Run(fixture, "TestMethod1");
+
+            Assert.That(testResult.IsPassed, Is.True, testResult.Message);
+
+            var invocHelper = new InvocationHelper(fixture);
+            Assert.That(invocHelper.InvokeMethod("GetTeardownCount"), Is.EqualTo(1));
+            // Setup has set m_Value, so a direct call after teardown still shows it
+            Assert.That(invocHelper.InvokeMethod("TestMethod1"), Is.EqualTo(123));
+        }
+
+        [Test]
+        public void RunTest_TeardownRaisesError_PassedTestBecomesError()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+public sub Teardown()
+   Err.Raise 5, , ""teardown failed""
+End sub
+
+public Sub TestMethod1()
+End Sub
+");
+            var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
+            var collector = new TestResultCollector();
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
+            testRunner.Run(fixture, "*", collector);
+            var testResult = collector.Results.Single();
+
+            Assert.That(testResult.IsError, Is.True);
+            Assert.That(testResult.IsPassed, Is.False);
+            Assert.That(testResult.Message, Does.Contain("TearDown:"));
+        }
+
+        [Test]
+        public void RunTest_TeardownRaisesError_FailureIsKeptAndMessageAppended()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+public sub Teardown()
+   Err.Raise 5, , ""teardown failed""
+End sub
+
+public Sub TestMethod1()
+   Err.Raise 5, , ""test failed""
+End Sub
+");
+            var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
+            var collector = new TestResultCollector();
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
+            testRunner.Run(fixture, "*", collector);
+            var testResult = collector.Results.Single();
+
+            Assert.That(testResult.IsPassed, Is.False);
+            Assert.That(testResult.IsError || testResult.IsFailure, Is.True);
+            Assert.That(testResult.Message, Does.Contain("test failed"));
+            Assert.That(testResult.Message, Does.Contain("TearDown:"));
+        }
+
+        [Test]
+        public void RunRowTest_SetupRaisesError_EachRowGetsOwnErrorResult()
+        {
+            AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"
+public sub Setup()
+   Err.Raise 5, , ""setup failed""
+End sub
+
+'AccUnit:Row(1)
+'AccUnit:Row(2)
+public Sub TestMethod1(byval x as Long)
+End Sub
+");
+            var fixture = _testBuilder.CreateTest("clsAccUnitTestClass");
+            var collector = new TestResultCollector();
+            var testRunner = new Interop.TestRunner(_accessTestHelper.ActiveVBProject);
+            testRunner.Run(fixture, "*", collector);
+            var rowResult = (Integration.TestResultCollection)collector.Results.Single();
+
+            Assert.That(rowResult.Count, Is.EqualTo(2));
+            Assert.That(rowResult.All(r => r.IsError), Is.True);
+        }
+
+        [Test]
         public void RunRowTest_ArrayParam()
         {
             AccessClientTestHelper.CreateTestCodeModule(_accessTestHelper, "clsAccUnitTestClass", vbext_ComponentType.vbext_ct_ClassModule, @"

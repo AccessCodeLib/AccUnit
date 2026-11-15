@@ -6,6 +6,7 @@ using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace AccessCodeLib.AccUnit.TestRunner
@@ -58,18 +59,24 @@ namespace AccessCodeLib.AccUnit.TestRunner
 
             var results = new TestResultCollection(testFixture);
 
+            TestNameFilterMatcher placeholderMatcher = null;
+            if (methodFilter != null && methodFilter.Any(TestNameFilterMatcher.ContainsWildcard))
+            {
+                placeholderMatcher = new TestNameFilterMatcher(methodFilter);
+            }
+
             foreach (var test in testFixture.Tests)
             {
                 if (methodFilter != null)
                 {
-                    if (methodFilter.Any(m => m.Contains("*") || m.Contains("?") || m.Contains("[")))
+                    if (placeholderMatcher != null)
                     {
-                        if (!PlaceholderFilterContainsTestName(methodFilter, test.Name))
+                        if (!placeholderMatcher.IsMatch(test.Name))
                         {
                             continue;
                         }
                     }
-                    else if (!methodFilter.Contains(test.Name))
+                    else if (!methodFilter.Contains(test.Name, StringComparer.OrdinalIgnoreCase))
                     {
                         continue;
                     }
@@ -83,13 +90,6 @@ namespace AccessCodeLib.AccUnit.TestRunner
             RaiseTestFixtureFinished(results);
 
             return results;
-        }
-
-        private static bool PlaceholderFilterContainsTestName(IEnumerable<string> methodFilter, string testName)
-        {
-            var regExPattern = methodFilter.Aggregate("^", (current, filter) => current + filter.Replace("*", ".*").Replace("?", ".") + "|");
-            regExPattern = regExPattern.Substring(0, regExPattern.Length - 1) + "$";
-            return System.Text.RegularExpressions.Regex.IsMatch(testName, regExPattern);
         }
 
         void RaiseTestFixtureStarted(ITestFixture testFixture)
@@ -118,6 +118,9 @@ namespace AccessCodeLib.AccUnit.TestRunner
                 testFixture.FillTestListFromTestClassInstance(_vbProject);
                 return Run(testFixture, testResultCollector, null, filterTags);
             }
+
+            // single test run needs the fixture members as well (Setup/Teardown)
+            testFixture.FillInstanceMembers(_vbProject);
 
             var test = CreateTest(testFixture, testMethodName);
             testFixture.Add(test);
@@ -228,21 +231,48 @@ namespace AccessCodeLib.AccUnit.TestRunner
                     return testResult;
                 }
 
-                RunTestSetup(testFixture, invocationHelper);
-                RunTest(test, testResult, invocationHelper);
-                AssertThrowsStore.CompaireTestRunnerException(null, testResult);
-                RunTeardown(testFixture, invocationHelper);
+                var stopwatch = Stopwatch.StartNew();
+                if (TryRunTestSetup(testFixture, testResult, invocationHelper))
+                {
+                    RunTest(test, testResult, invocationHelper);
+                    AssertThrowsStore.CompaireTestRunnerException(null, testResult);
+                }
+                TryRunTeardown(testFixture, testResult, invocationHelper);
+                testResult.ElapsedTime = stopwatch.Elapsed.TotalMilliseconds;
             }
 
             RaiseTestFinished(testResult);
             return testResult;
         }
 
-        private static void RunTestSetup(ITestFixture testFixture, InvocationHelper invocationHelper)
+        private static Exception GetMessageException(Exception ex)
         {
-            if (testFixture.HasSetup)
+            return ex is System.Reflection.TargetInvocationException ? ex.InnerException ?? ex : ex;
+        }
+
+        // Setup error = test error (like NUnit); the test itself is not executed.
+        private static bool TryRunTestSetup(ITestFixture testFixture, TestResult testResult, InvocationHelper invocationHelper)
+        {
+            if (!testFixture.HasSetup)
+            {
+                return true;
+            }
+
+            try
             {
                 invocationHelper.InvokeMethod(testFixture.Members.Setup.Name);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // do not let an expected error number leak into the next test
+                AssertThrowsStore.Clear();
+
+                testResult.IsPassed = false;
+                testResult.IsError = true;
+                testResult.Executed = true;
+                testResult.Message = "SetUp: " + GetMessageException(ex).Message;
+                return false;
             }
         }
 
@@ -305,11 +335,34 @@ namespace AccessCodeLib.AccUnit.TestRunner
             }
         }
 
-        private static void RunTeardown(ITestFixture testFixture, InvocationHelper invocationHelper)
+        // Teardown error is reported additionally; an already determined failure/error is kept.
+        private static void TryRunTeardown(ITestFixture testFixture, TestResult testResult, InvocationHelper invocationHelper)
         {
-            if (testFixture.HasTeardown)
+            if (!testFixture.HasTeardown)
+            {
+                return;
+            }
+
+            try
             {
                 invocationHelper.InvokeMethod(testFixture.Members.Teardown.Name);
+            }
+            catch (Exception ex)
+            {
+                var message = "TearDown: " + GetMessageException(ex).Message;
+                if (testResult.IsFailure || testResult.IsError)
+                {
+                    testResult.Message = string.IsNullOrEmpty(testResult.Message)
+                        ? message
+                        : testResult.Message + Environment.NewLine + message;
+                }
+                else
+                {
+                    testResult.IsPassed = false;
+                    testResult.IsError = true;
+                    testResult.Message = message;
+                }
+                testResult.Executed = true;
             }
         }
 

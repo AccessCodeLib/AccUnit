@@ -26,6 +26,7 @@ namespace AccessCodeLib.AccUnit.Interop
         [ComVisible(false)]
         IAccessTestSuite AccessTestSuite(IAccessApplicationHelper applicationHelper, ITestBuilder testBuilder = null, ITestRunner testRunner = null, ITestSummaryFormatter testSummaryFormatter = null, ITestResultCollector externalTestResultCollector = null);
 
+        ITestResultReporter JUnitXmlTestResultReporter(string OutputFilePath);
     }
 
     [ComVisible(true)]
@@ -150,6 +151,11 @@ namespace AccessCodeLib.AccUnit.Interop
         public IErrorTrappingObserver AccessErrorTrappingObserver(object HostApplication)
         {
             return new AccessErrorTrappingObserver(HostApplication);
+        }
+
+        public ITestResultReporter JUnitXmlTestResultReporter(string outputFilePath)
+        {
+            return new Integration.JUnitXmlTestResultReporter(outputFilePath);
         }
     }
 }

@@ -58,5 +58,28 @@ namespace AccessCodeLib.AccUnit.Assertions.Tests
 
             Assert.That(result.Match, Is.EqualTo(expectedResult), result.Text);
         }
+
+        [Test]
+        [TestCase(null, "", StringCompareMode.BinaryCompare, false)]
+        [TestCase(null, "", StringCompareMode.BinaryCompare | StringCompareMode.vbNullStringEqualEmptyString, true)]
+        [TestCase("", null, StringCompareMode.BinaryCompare, false)]
+        [TestCase("", null, StringCompareMode.BinaryCompare | StringCompareMode.vbNullStringEqualEmptyString, true)]
+        [TestCase(null, null, StringCompareMode.BinaryCompare, true)]
+        [TestCase(null, null, StringCompareMode.BinaryCompare | StringCompareMode.vbNullStringEqualEmptyString, true)]
+        [TestCase(null, "abc", StringCompareMode.BinaryCompare | StringCompareMode.vbNullStringEqualEmptyString, false)]
+        [TestCase(null, "", StringCompareMode.TextCompare | StringCompareMode.vbNullStringEqualEmptyString, true)]
+        public void EqualTest_StringCompare_VbNullString(string actual, string expected, StringCompareMode ComparerMethod, bool expectedResult)
+        {
+            var testCollector = new InteropTestCollector();
+            var assert = new AccUnit.Interop.Assert
+            {
+                MatchResultCollector = testCollector
+            };
+            var Iz = new AccUnit.Interop.ConstraintBuilder();
+            assert.That(actual, Iz.StringCompare(ComparerMethod).EqualTo(expected));
+            var result = testCollector.Result;
+
+            Assert.That(result.Match, Is.EqualTo(expectedResult), result.Text);
+        }
     }
 }

@@ -129,7 +129,7 @@ namespace AccessCodeLib.AccUnit.Configuration
                 var objectInfo = new OfficeObjectInfo
                 {
                     Name = name,
-                    FileExtension = "aco",
+                    FileExtension = ".aco",
                     ObjectType = AccessApplicationHelper.AcObjectType.AcDefault
                 };
                 if (objectInfo.Name.IndexOf("Form_", StringComparison.InvariantCultureIgnoreCase) == 0)
