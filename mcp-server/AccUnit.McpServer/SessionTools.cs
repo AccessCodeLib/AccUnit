@@ -16,13 +16,16 @@ namespace AccessCodeLib.AccUnit.McpServer
 
         [McpServerTool(Name = "accunit_open_database")]
         [Description("Starts a hidden Access instance owned by this server and opens the database exclusively. " +
-                     "Only one database can be open at a time. The database should be in a trusted location, otherwise VBA code does not run.")]
+                     "Only one database can be open at a time. The database should be in a trusted location, otherwise VBA code does not run. " +
+                     "By default the startup code (AutoExec, startup form) is skipped like opening with the Shift key held down.")]
         public SessionStatus OpenDatabase(
-            [Description("Absolute path of the .accdb, .accda or .mdb file.")] string databasePath)
+            [Description("Absolute path of the .accdb, .accda or .mdb file.")] string databasePath,
+            [Description("Skip AutoExec and the startup form (Shift bypass). Set to false if the tests need the startup code. " +
+                         "Has no effect if the database sets AllowBypassKey = False.")] bool bypassStartup = true)
         {
             try
             {
-                return _session.Open(databasePath);
+                return _session.Open(databasePath, bypassStartup);
             }
             catch (DatabaseSessionException ex)
             {

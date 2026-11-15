@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Access = Microsoft.Office.Interop.Access;
+using Dao = Microsoft.Office.Interop.Access.Dao;
 
 namespace AccessCodeLib.AccUnit.McpServer
 {
@@ -14,6 +15,8 @@ namespace AccessCodeLib.AccUnit.McpServer
     {
         private const int QuitTimeoutMilliseconds = 10000;
         private const bool OpenExclusive = true;
+        private const string AllowBypassKeyPropertyName = "AllowBypassKey";
+        private const int DaoPropertyNotFoundHResult = unchecked((int)0x800A0CC6); // DAO error 3270
 
         private readonly StaComDispatcher _dispatcher;
         private Access.Application _application;
@@ -25,10 +28,10 @@ namespace AccessCodeLib.AccUnit.McpServer
             _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
         }
 
-        public SessionStatus Open(string databasePath)
+        public SessionStatus Open(string databasePath, bool bypassStartup)
         {
             var fullPath = DatabasePathValidator.Validate(databasePath);
-            return _dispatcher.Invoke(() => OpenOnStaThread(fullPath));
+            return _dispatcher.Invoke(() => OpenOnStaThread(fullPath, bypassStartup));
         }
 
         public CloseResult Close()
@@ -41,7 +44,7 @@ namespace AccessCodeLib.AccUnit.McpServer
             return _dispatcher.Invoke(() => GetStatusOnStaThread());
         }
 
-        private SessionStatus OpenOnStaThread(string fullPath)
+        private SessionStatus OpenOnStaThread(string fullPath, bool bypassStartup)
         {
             if (IsOpen())
             {
@@ -54,9 +57,12 @@ namespace AccessCodeLib.AccUnit.McpServer
 
             ReleaseAccess();
             StartAccess();
+
+            StartupBypassDecision bypass;
             try
             {
-                _application.OpenCurrentDatabase(fullPath, OpenExclusive);
+                bypass = StartupBypassDecision.Create(bypassStartup, bypassStartup ? ReadAllowBypassKey(fullPath) : null);
+                OpenCurrentDatabase(fullPath, bypass.PressShiftKey);
             }
             catch (COMException ex)
             {
@@ -65,7 +71,61 @@ namespace AccessCodeLib.AccUnit.McpServer
             }
             _databasePath = fullPath;
 
-            return GetStatusOnStaThread();
+            var status = GetStatusOnStaThread();
+            status.StartupBypassAttempted = bypass.PressShiftKey;
+            status.Warning = bypass.Warning;
+            return status;
+        }
+
+        private void OpenCurrentDatabase(string fullPath, bool pressShiftKey)
+        {
+            using (pressShiftKey ? new ShiftKeyScope() : null)
+            {
+                _application.OpenCurrentDatabase(fullPath, OpenExclusive);
+            }
+        }
+
+        /// <returns>The value of AllowBypassKey (true if the property is not set), or null if it could not be read.</returns>
+        private bool? ReadAllowBypassKey(string fullPath)
+        {
+            // Uses the DAO engine of the own Access instance, so the bitness always matches.
+            Dao._DBEngine dbEngine = null;
+            Dao.Database database = null;
+            Dao.Properties properties = null;
+            Dao.Property property = null;
+            try
+            {
+                dbEngine = _application.DBEngine;
+                database = dbEngine.OpenDatabase(fullPath, false, true);
+                properties = database.Properties;
+                property = properties[AllowBypassKeyPropertyName];
+                return Convert.ToBoolean(property.Value);
+            }
+            catch (COMException ex) when (ex.ErrorCode == DaoPropertyNotFoundHResult)
+            {
+                return true;
+            }
+            catch (COMException)
+            {
+                return null;
+            }
+            finally
+            {
+                ReleaseComObject(property);
+                ReleaseComObject(properties);
+                if (database != null)
+                {
+                    database.Close();
+                    ReleaseComObject(database);
+                }
+                ReleaseComObject(dbEngine);
+            }
+        }
+
+        private static void ReleaseComObject(object comObject)
+        {
+            if (comObject != null)
+                Marshal.ReleaseComObject(comObject);
         }
 
         private void StartAccess()
@@ -233,6 +293,8 @@ namespace AccessCodeLib.AccUnit.McpServer
         public string AccessVersion { get; set; }
         public int? ProcessId { get; set; }
         public bool? IsTrusted { get; set; }
+        public bool? StartupBypassAttempted { get; set; }
+        public string Warning { get; set; }
         public string Message { get; set; }
     }
 

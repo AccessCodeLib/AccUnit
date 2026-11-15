@@ -20,6 +20,10 @@
       <HintPath>..\..\source\lib\access\Microsoft.Office.Interop.Access.dll</HintPath>
       <EmbedInteropTypes>false</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Access.Dao">
+      <HintPath>..\..\source\lib\access\Microsoft.Office.interop.access.dao.dll</HintPath>
+      <EmbedInteropTypes>false</EmbedInteropTypes>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
