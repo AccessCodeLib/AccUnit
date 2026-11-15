@@ -1,4 +1,5 @@
-﻿using AccessCodeLib.AccUnit.Interfaces;
+﻿using AccessCodeLib.AccUnit.Configuration;
+using AccessCodeLib.AccUnit.Interfaces;
 using AccessCodeLib.AccUnit.Interop;
 using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
@@ -114,6 +115,35 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 var accUnitFactory = new Interop.AccUnitFactory();
                 return accUnitFactory.ConstraintBuilder;
+            }
+        }
+
+        public IAccUnitFactory AccUnitFactory
+        {
+            get
+            {
+                return new Interop.AccUnitFactory();
+            }
+        }
+
+        public Interop.ICodeCoverageTracker CodeCoverageTracker
+        {
+            get
+            {
+                return new Interop.CodeCoverageTracker(OfficeApplicationHelper.CurrentVBProject);
+            }
+        }
+
+        public IErrorTrappingObserver ErrorTrappingObserver
+        {
+            get
+            {
+                if (!(OfficeApplicationHelper is AccessApplicationHelper))
+                {
+                    throw new NotSupportedException("ErrorTrappingObserver is only supported in Microsoft Access.");
+                }
+
+                return new AccessErrorTrappingObserver(OfficeApplicationHelper.Application);
             }
         }
 
