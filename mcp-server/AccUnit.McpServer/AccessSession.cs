@@ -131,7 +131,8 @@ namespace AccessCodeLib.AccUnit.McpServer
         private void StartAccess()
         {
             _application = new Access.Application();
-            _application.Visible = false;
+            // Visible, so the user can see what happens and dialogs do not block unnoticed.
+            _application.Visible = true;
             _accessProcess = GetProcess(_application);
         }
 
@@ -159,7 +160,9 @@ namespace AccessCodeLib.AccUnit.McpServer
             {
                 if (IsProcessAlive())
                 {
-                    try { _application.CloseCurrentDatabase(); } catch (COMException) { }
+                    ReleaseUnreferencedComObjects();
+                    // No CloseCurrentDatabase: with unsaved modules it shows a modal save prompt
+                    // and blocks the automation. Quit with acQuitSaveNone does not ask.
                     _application.Quit(Access.AcQuitOption.acQuitSaveNone);
                 }
             }
@@ -172,7 +175,33 @@ namespace AccessCodeLib.AccUnit.McpServer
                 ReleaseApplication();
             }
 
+            ReleaseUnreferencedComObjects();
             return EnsureProcessEnded();
+        }
+
+        /// <summary>
+        /// The AccUnit core does not release every COM object it obtains (VBComponents, CodeModules, ...).
+        /// Access only quits when all references are gone, so collect the unreferenced wrappers.
+        /// </summary>
+        private static void ReleaseUnreferencedComObjects()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+
+        /// <summary>
+        /// Runs work with the Access application of the open database on the STA thread.
+        /// </summary>
+        public T Execute<T>(Func<Access.Application, T> work)
+        {
+            return _dispatcher.Invoke(() =>
+            {
+                if (!IsOpen())
+                    throw new DatabaseSessionException("No database is open. Call accunit_open_database first.");
+                return work(_application);
+            });
         }
 
         private bool EnsureProcessEnded()

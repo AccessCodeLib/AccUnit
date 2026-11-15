@@ -16,10 +16,12 @@ namespace AccessCodeLib.AccUnit.McpServer
 
             builder.Services.AddSingleton<StaComDispatcher>();
             builder.Services.AddSingleton<AccessSession>();
+            builder.Services.AddSingleton<TestRunService>();
             builder.Services
                 .AddMcpServer()
                 .WithStdioServerTransport()
-                .WithTools<SessionTools>();
+                .WithTools<SessionTools>()
+                .WithTools<TestTools>();
 
             await builder.Build().RunAsync();
         }

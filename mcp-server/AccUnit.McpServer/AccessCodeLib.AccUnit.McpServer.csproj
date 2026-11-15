@@ -24,6 +24,15 @@
       <HintPath>..\..\source\lib\access\Microsoft.Office.interop.access.dao.dll</HintPath>
       <EmbedInteropTypes>false</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.Vbe.Interop">
+      <HintPath>..\..\source\packages\ThammimTech.Microsoft.Vbe.Interop.15.0.0\lib\net20\Microsoft.Vbe.Interop.dll</HintPath>
+      <EmbedInteropTypes>false</EmbedInteropTypes>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\source\AccUnit\AccessCodeLib.AccUnit.csproj" />
+    <ProjectReference Include="..\..\source\Common\Common.VBIDETools\AccessCodeLib.Common.VBIDETools.csproj" />
   </ItemGroup>
 
   <ItemGroup>

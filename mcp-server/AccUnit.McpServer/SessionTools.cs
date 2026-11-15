@@ -15,7 +15,7 @@ namespace AccessCodeLib.AccUnit.McpServer
         }
 
         [McpServerTool(Name = "accunit_open_database")]
-        [Description("Starts a hidden Access instance owned by this server and opens the database exclusively. " +
+        [Description("Starts a visible Access instance owned by this server and opens the database exclusively. " +
                      "Only one database can be open at a time. The database should be in a trusted location, otherwise VBA code does not run. " +
                      "By default the startup code (AutoExec, startup form) is skipped like opening with the Shift key held down.")]
         public SessionStatus OpenDatabase(
