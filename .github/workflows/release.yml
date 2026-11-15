@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Download library zip"
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: "AccUnit-bin"
           path: build
@@ -61,12 +61,12 @@ jobs:
       APP_CONFIG_FILE: ${{ github.workspace }}\build\app-config.json
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ env.RELEASE_TAG }}
 
       - name: "Download library zip"
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: "AccUnit-bin"
           path: build/download
@@ -158,7 +158,7 @@ jobs:
           "zip-file=$zipFile" >> $env:GITHUB_OUTPUT
 
       - name: "Upload build artifact"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: "AccUnitLoader"
           path: |

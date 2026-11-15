@@ -35,15 +35,15 @@ jobs:
       version: ${{ steps.zip.outputs.version }}
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.ref }}
 
       - name: "Setup MSBuild"
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@v3
 
       - name: "Setup NuGet"
-        uses: NuGet/setup-nuget@v2
+        uses: NuGet/setup-nuget@v4
 
       - name: "Restore NuGet packages"
         shell: pwsh
@@ -78,7 +78,7 @@ jobs:
 
       - name: "Upload test results"
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: "TestResults"
           path: TestResults/*.trx
@@ -109,7 +109,7 @@ jobs:
 
       # The artifact name is used by release.yml
       - name: "Upload library zip"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: "AccUnit-bin"
           path: build/AccUnit.*.bin.zip
