@@ -1,0 +1,2 @@
+# Modules under test are copied from ../source/modules by Copy-ModulesUnderTest.ps1
+modules/modVersionCompare.bas

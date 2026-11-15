@@ -202,28 +202,3 @@ Private Function CheckAccUnitTlbVersion(ByVal AccUnitTlbFilePath As String) As B
    CheckAccUnitTlbVersion = (CompareVersions(InstalledFileVersion, SourceTableFileVersion) >= 0)
 
 End Function
-
-Private Function CompareVersions(ByVal Version1 As String, ByVal Version2 As String) As Long
-
-   Dim Version1Parts() As String
-   Dim Version2Parts() As String
-   Dim i As Long
-
-   If VBA.StrComp(Version1, Version2, vbTextCompare) = 0 Then
-      CompareVersions = 0
-      Exit Function
-   End If
-
-   Version1Parts = VBA.Split(Version1, ".")
-   Version2Parts = VBA.Split(Version2, ".")
-
-   For i = 0 To UBound(Version1Parts)
-      If VBA.Val(Version1Parts(i)) > VBA.Val(Version2Parts(i)) Then
-         CompareVersions = 1
-         Exit Function
-      End If
-   Next
-
-   CompareVersions = -1
-
-End Function

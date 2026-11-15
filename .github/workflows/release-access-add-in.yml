@@ -116,7 +116,12 @@ jobs:
         id: zip
         shell: pwsh
         run: |
-          $version = $env:RELEASE_TAG -replace '^v', ''
+          $configFile = Join-Path $env:GITHUB_WORKSPACE 'access-add-in\source\modules\_config_Application.bas'
+          $match = Select-String -LiteralPath $configFile -Pattern 'APPLICATION_VERSION As String = "(\d+)\.(\d+)\.(\d{2})(\d{2})\.\d+"'
+          if (-not $match) { throw "APPLICATION_VERSION not found or not in format major.minor.PPCC.date in $configFile" }
+          $parts = $match.Matches[0].Groups
+          # Add-in version major.minor.PPCC.date -> zip name major.minor.patch.CC (as in earlier releases)
+          $version = '{0}.{1}.{2}.{3}' -f $parts[1].Value, $parts[2].Value, [int]$parts[3].Value, $parts[4].Value
           $zipFile = Join-Path $env:GITHUB_WORKSPACE "build\AccUnitLoader.$version.Access.zip"
           Compress-Archive -Path (Join-Path $env:OUT_DIR 'AccUnitLoader.accda'), 'access-add-in/AccUnitLoader_Install.vbs' -DestinationPath $zipFile -Force
           "zip-file=$zipFile" >> $env:GITHUB_OUTPUT
