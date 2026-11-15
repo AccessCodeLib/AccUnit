@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+
+    <IsPublishable>False</IsPublishable>
+
+    <!-- the VBE add-in is built for x86 -->
+    <PlatformTarget>x86</PlatformTarget>
+
+    <AutoGenerateBindingRedirects>False</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\AccUnit.VbeAddIn\AccessCodeLib.AccUnit.VbeAddIn.csproj" />
+    <ProjectReference Include="..\..\..\source\AccUnit\AccessCodeLib.AccUnit.csproj" />
+  </ItemGroup>
+
+</Project>

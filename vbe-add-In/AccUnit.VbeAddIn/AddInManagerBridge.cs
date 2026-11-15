@@ -30,7 +30,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             }
         }
 
-        public Interfaces.IVBATestSuite TestSuite(TestReportOutput OutputTo = TestReportOutput.DebugPrint)
+        [return: MarshalAs(UnmanagedType.IDispatch)]
+        public object TestSuite(TestReportOutput OutputTo = TestReportOutput.DebugPrint)
         {
             Interfaces.IVBATestSuite suite = null;
             TestSuiteRequest?.Invoke(out suite);
@@ -63,7 +64,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
     public interface IAddInManagerBridge
     {
         object Application { set; }
-        Interfaces.IVBATestSuite TestSuite(TestReportOutput OutputTo = TestReportOutput.DebugPrint);
+        [return: MarshalAs(UnmanagedType.IDispatch)]
+        object TestSuite(TestReportOutput OutputTo = TestReportOutput.DebugPrint);
         IConstraintBuilder ConstraintBuilder { get; }
         IAssert Assert { get; }
     }
