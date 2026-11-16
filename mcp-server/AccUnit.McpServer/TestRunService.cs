@@ -188,46 +188,9 @@ namespace AccessCodeLib.AccUnit.McpServer
             return filePath;
         }
 
-        /// <summary>
-        /// VBE.ActiveVBProject can point to a loaded library (e.g. a protected Access wizard) after code ran,
-        /// so the project is found by the file name of the open database.
-        /// </summary>
         private static VBProject GetVBProject(Access.Application application)
         {
-            var databasePath = GetCurrentProjectFullName(application);
-            var vbe = (VBE)application.VBE;
-            foreach (VBProject vbProject in vbe.VBProjects)
-            {
-                if (string.Equals(GetFileNameOrNull(vbProject), databasePath, StringComparison.OrdinalIgnoreCase))
-                    return vbProject;
-            }
-            throw new DatabaseSessionException("The VBA project of the open database was not found: " + databasePath);
-        }
-
-        private static string GetCurrentProjectFullName(Access.Application application)
-        {
-            var currentProject = application.CurrentProject;
-            try
-            {
-                return currentProject.FullName;
-            }
-            finally
-            {
-                Marshal.ReleaseComObject(currentProject);
-            }
-        }
-
-        private static string GetFileNameOrNull(VBProject vbProject)
-        {
-            try
-            {
-                return vbProject.FileName;
-            }
-            catch (COMException)
-            {
-                // Protected or not yet saved projects do not expose their file name.
-                return null;
-            }
+            return VBProjectLocator.GetCurrentVBProject(application);
         }
 
         private static bool IsSelected(string className, IList<string> classNames)

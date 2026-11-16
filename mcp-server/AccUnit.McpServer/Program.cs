@@ -17,6 +17,8 @@ namespace AccessCodeLib.AccUnit.McpServer
             builder.Services.AddSingleton<StaComDispatcher>();
             builder.Services.AddSingleton<AccessSession>();
             builder.Services.AddSingleton<TestRunService>();
+            builder.Services.AddSingleton<TestClassDraftService>();
+            builder.Services.AddSingleton<TestEnvironmentService>();
             builder.Services
                 .AddMcpServer()
                 .WithStdioServerTransport()

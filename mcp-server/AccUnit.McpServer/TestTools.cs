@@ -9,10 +9,58 @@ namespace AccessCodeLib.AccUnit.McpServer
     public class TestTools
     {
         private readonly TestRunService _testRunService;
+        private readonly TestClassDraftService _testClassDraftService;
+        private readonly TestEnvironmentService _testEnvironmentService;
 
-        public TestTools(TestRunService testRunService)
+        public TestTools(TestRunService testRunService, TestClassDraftService testClassDraftService, TestEnvironmentService testEnvironmentService)
         {
             _testRunService = testRunService;
+            _testClassDraftService = testClassDraftService;
+            _testEnvironmentService = testEnvironmentService;
+        }
+
+        [McpServerTool(Name = "accunit_generate_test_class", ReadOnly = true)]
+        [Description("Creates the DRAFT of an AccUnit test class for a module of the open database (same generator as the VBE add-in): " +
+                     "class header with 'AccUnit:TestClass and one empty test method per public method, plus the declaration and the comment " +
+                     "(e.g. NaturalDoc) of each method under test, read from the current code in the database. Nothing is written to the database. " +
+                     "Fill the test methods (Arrange - Act - Assert) from the specification or task, NOT from the implementation, so the tests " +
+                     "do not just confirm the current behavior; if the specification is unclear, ask the developer. " +
+                     "Test names: the recommended pattern is MethodUnderTest_StateUnderTest_ExpectedBehaviour (replace the placeholders); " +
+                     "it is a recommendation, leave out parts that add nothing (e.g. NetPrice_ReturnsZeroForZero). " +
+                     "Row tests: 'AccUnit:Row(arg1, arg2, expected).Name(\"case name\") above the test method; arguments are literals: " +
+                     "strings in double quotes, numbers with decimal point, True/False, Null, Array(...), VBA or enum constants. " +
+                     "Add the finished class through the source files (e.g. msaccess-vcs import), not by writing into the database.")]
+        public TestClassDraft GenerateTestClass(
+            [Description("Name of the standard module or class module under test.")] string moduleName,
+            [Description("Only these public methods (optional, default: all public methods).")] string[] methodNames = null)
+        {
+            try
+            {
+                return _testClassDraftService.CreateDraft(moduleName, methodNames);
+            }
+            catch (DatabaseSessionException ex)
+            {
+                throw new McpException(ex.Message);
+            }
+        }
+
+        [McpServerTool(Name = "accunit_remove_test_environment", Destructive = true)]
+        [Description("Removes the AccUnit test environment from the open database like the menu item of the VBE add-in: " +
+                     "the modules AccUnit_Factory and AccUnit_TestClassFactory and the AccUnit type library reference. " +
+                     "With removeTestModules = true the test classes are removed as well (exported to a folder first by default). " +
+                     "To keep the removal, Access is closed with saving and the database is opened again.")]
+        public RemoveTestEnvironmentResult RemoveTestEnvironment(
+            [Description("Also remove the test classes and test related modules.")] bool removeTestModules = false,
+            [Description("Export the test classes before removing them.")] bool exportBeforeRemoving = true)
+        {
+            try
+            {
+                return _testEnvironmentService.RemoveTestEnvironment(removeTestModules, exportBeforeRemoving);
+            }
+            catch (DatabaseSessionException ex)
+            {
+                throw new McpException(ex.Message);
+            }
         }
 
         [McpServerTool(Name = "accunit_list_tests", ReadOnly = true)]

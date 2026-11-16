@@ -22,6 +22,7 @@ namespace AccessCodeLib.AccUnit.McpServer
         private Access.Application _application;
         private Process _accessProcess;
         private string _databasePath;
+        private bool _bypassStartup;
 
         public AccessSession(StaComDispatcher dispatcher)
         {
@@ -42,6 +43,26 @@ namespace AccessCodeLib.AccUnit.McpServer
         public SessionStatus GetStatus()
         {
             return _dispatcher.Invoke(() => GetStatusOnStaThread());
+        }
+
+        /// <summary>
+        /// Quits Access saving all changes and opens the database again (same startup bypass).
+        /// Needed after modules were removed with VBComponents.Remove: Access keeps the removal only if the
+        /// VBA project is saved, which "compile and save" does not do when the project does not compile.
+        /// </summary>
+        public SessionStatus SaveAndReopen()
+        {
+            return _dispatcher.Invoke(() =>
+            {
+                if (!IsOpen())
+                    throw new DatabaseSessionException("No database is open. Call accunit_open_database first.");
+
+                var databasePath = _databasePath;
+                var bypassStartup = _bypassStartup;
+                if (QuitAccess(Access.AcQuitOption.acQuitSaveAll))
+                    throw new DatabaseSessionException("Access did not quit in time and was terminated; the changes may not be saved.");
+                return OpenOnStaThread(databasePath, bypassStartup);
+            });
         }
 
         private SessionStatus OpenOnStaThread(string fullPath, bool bypassStartup)
@@ -70,6 +91,7 @@ namespace AccessCodeLib.AccUnit.McpServer
                 throw new DatabaseSessionException("Access could not open the database: " + ex.Message, ex);
             }
             _databasePath = fullPath;
+            _bypassStartup = bypassStartup;
 
             var status = GetStatusOnStaThread();
             status.StartupBypassAttempted = bypass.PressShiftKey;
@@ -154,7 +176,7 @@ namespace AccessCodeLib.AccUnit.McpServer
         }
 
         /// <returns>true if the Access process had to be terminated.</returns>
-        private bool QuitAccess()
+        private bool QuitAccess(Access.AcQuitOption quitOption = Access.AcQuitOption.acQuitSaveNone)
         {
             try
             {
@@ -162,8 +184,8 @@ namespace AccessCodeLib.AccUnit.McpServer
                 {
                     ReleaseUnreferencedComObjects();
                     // No CloseCurrentDatabase: with unsaved modules it shows a modal save prompt
-                    // and blocks the automation. Quit with acQuitSaveNone does not ask.
-                    _application.Quit(Access.AcQuitOption.acQuitSaveNone);
+                    // and blocks the automation. Quit with acQuitSaveNone/acQuitSaveAll does not ask.
+                    _application.Quit(quitOption);
                 }
             }
             catch (COMException)
