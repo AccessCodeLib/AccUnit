@@ -55,7 +55,7 @@ namespace AccessCodeLib.AccUnit.McpServer
             return _dispatcher.Invoke(() =>
             {
                 if (!IsOpen())
-                    throw new DatabaseSessionException("No database is open. Call accunit_open_database first.");
+                    throw new DatabaseSessionException("No database is open. Call accunit_open first.");
 
                 var databasePath = _databasePath;
                 var bypassStartup = _bypassStartup;
@@ -168,7 +168,7 @@ namespace AccessCodeLib.AccUnit.McpServer
             return new CloseResult
             {
                 WasOpen = true,
-                DatabasePath = closedPath,
+                FilePath = closedPath,
                 Message = killed
                     ? "Access did not quit in time and was terminated (no changes were saved)."
                     : "Database closed and Access quit."
@@ -221,7 +221,7 @@ namespace AccessCodeLib.AccUnit.McpServer
             return _dispatcher.Invoke(() =>
             {
                 if (!IsOpen())
-                    throw new DatabaseSessionException("No database is open. Call accunit_open_database first.");
+                    throw new DatabaseSessionException("No database is open. Call accunit_open first.");
                 return work(_application);
             });
         }
@@ -283,8 +283,8 @@ namespace AccessCodeLib.AccUnit.McpServer
             return new SessionStatus
             {
                 IsOpen = true,
-                DatabasePath = _databasePath,
-                AccessVersion = _application.Version,
+                FilePath = _databasePath,
+                ApplicationVersion = _application.Version,
                 ProcessId = _accessProcess.Id,
                 IsTrusted = IsCurrentProjectTrusted()
             };
@@ -340,8 +340,8 @@ namespace AccessCodeLib.AccUnit.McpServer
     public class SessionStatus
     {
         public bool IsOpen { get; set; }
-        public string DatabasePath { get; set; }
-        public string AccessVersion { get; set; }
+        public string FilePath { get; set; }
+        public string ApplicationVersion { get; set; }
         public int? ProcessId { get; set; }
         public bool? IsTrusted { get; set; }
         public bool? StartupBypassAttempted { get; set; }
@@ -352,7 +352,7 @@ namespace AccessCodeLib.AccUnit.McpServer
     public class CloseResult
     {
         public bool WasOpen { get; set; }
-        public string DatabasePath { get; set; }
+        public string FilePath { get; set; }
         public string Message { get; set; }
     }
 }
