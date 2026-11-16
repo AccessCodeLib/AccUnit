@@ -29,6 +29,9 @@ For more informations see [Wiki](https://github.com/AccessCodeLib/AccUnit/wiki) 
   * Select tests to run
   * show test result in tree view
   * generate test procedures
+* MCP server for AI agents (e.g. Claude Code)
+  * List and run tests, create drafts of test classes, remove the test environment
+  * See [mcp-server](https://github.com/AccessCodeLib/AccUnit/tree/main/mcp-server)
 
 ### Remarks
 Examples see [./examples/msaccess/](https://github.com/AccessCodeLib/AccUnit/blob/main/examples/msaccess/)
