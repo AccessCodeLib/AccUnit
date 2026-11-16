@@ -238,7 +238,25 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 _addInManagerBridge.HostApplicationInitialized += AddInBridgeHostApplicationInitialized;
                 _addInManagerBridge.ConstraintBuilderRequest += AddInBridgeConstraintBuilderRequest;
                 _addInManagerBridge.AssertRequest += AddInBridgeAssertRequest;
+                _addInManagerBridge.AccUnitFactoryRequest += AddInBridgeAccUnitFactoryRequest;
+                _addInManagerBridge.CodeCoverageTrackerRequest += AddInBridgeCodeCoverageTrackerRequest;
+                _addInManagerBridge.ErrorTrappingObserverRequest += AddInBridgeErrorTrappingObserverRequest;
             }
+        }
+
+        private void AddInBridgeAccUnitFactoryRequest(out Interop.IAccUnitFactory accUnitFactory)
+        {
+            accUnitFactory = _testSuiteManager.AccUnitFactory;
+        }
+
+        private void AddInBridgeCodeCoverageTrackerRequest(out Interop.ICodeCoverageTracker codeCoverageTracker)
+        {
+            codeCoverageTracker = _testSuiteManager.CodeCoverageTracker;
+        }
+
+        private void AddInBridgeErrorTrappingObserverRequest(out IErrorTrappingObserver errorTrappingObserver)
+        {
+            errorTrappingObserver = _testSuiteManager.ErrorTrappingObserver;
         }
 
         private void AddInBridgeAssertRequest(out Interop.IAssert assert)
@@ -492,6 +510,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             addInManagerBridge.HostApplicationInitialized -= AddInBridgeHostApplicationInitialized;
             addInManagerBridge.ConstraintBuilderRequest -= AddInBridgeConstraintBuilderRequest;
             addInManagerBridge.AssertRequest -= AddInBridgeAssertRequest;
+            addInManagerBridge.AccUnitFactoryRequest -= AddInBridgeAccUnitFactoryRequest;
+            addInManagerBridge.CodeCoverageTrackerRequest -= AddInBridgeCodeCoverageTrackerRequest;
+            addInManagerBridge.ErrorTrappingObserverRequest -= AddInBridgeErrorTrappingObserverRequest;
         }
 
         public void Dispose()

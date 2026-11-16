@@ -1,6 +1,7 @@
 # Creates the release assets when a release is published:
-# 1. build: builds the AccUnit library from the release tag (build.yml) -> artifact AccUnit-bin
-# 2. upload-library: attaches AccUnit.<version>.bin.zip to the release
+# 1. build: builds the AccUnit library and the MCP server from the release tag (build.yml)
+#    -> artifacts AccUnit-bin and AccUnit-McpServer
+# 2. upload-library: attaches AccUnit.<version>.bin.zip and AccUnit.McpServer.<version>.zip to the release
 # 3. build-access-add-in: builds the Access add-in (AccUnitLoader.accda) from access-add-in/source,
 #    loads the library files into the table usys_AppFiles and attaches
 #    AccUnitLoader.<add-in version>.Access.zip to the release
@@ -49,8 +50,14 @@ jobs:
           name: "AccUnit-bin"
           path: build
 
-      - name: "Upload library zip to release"
-        run: gh release upload "$RELEASE_TAG" build/AccUnit.*.bin.zip --repo "$GITHUB_REPOSITORY" --clobber
+      - name: "Download MCP server zip"
+        uses: actions/download-artifact@v8
+        with:
+          name: "AccUnit-McpServer"
+          path: build
+
+      - name: "Upload library and MCP server zip to release"
+        run: gh release upload "$RELEASE_TAG" build/AccUnit.*.bin.zip build/AccUnit.McpServer.*.zip --repo "$GITHUB_REPOSITORY" --clobber
 
   build-access-add-in:
     needs: build

@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{21839B1B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfUserControlsTests", "Tests\WpfUserControlsTests\WpfUserControlsTests.csproj", "{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccUnit.VbeAddIn.Tests", "Tests\AccUnit.VbeAddIn.Tests\AccUnit.VbeAddIn.Tests.csproj", "{0724661E-2C65-4AA6-BD2B-999583B70B39}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AzureCI|Any CPU = AzureCI|Any CPU
@@ -117,12 +119,31 @@ Global
 		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.Release|x64.Build.0 = Release|Any CPU
 		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.Release|x86.ActiveCfg = Release|Any CPU
 		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF}.Release|x86.Build.0 = Release|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.AzureCI|Any CPU.ActiveCfg = AzureCI|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.AzureCI|Any CPU.Build.0 = AzureCI|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.AzureCI|x64.ActiveCfg = AzureCI|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.AzureCI|x64.Build.0 = AzureCI|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.AzureCI|x86.ActiveCfg = AzureCI|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.AzureCI|x86.Build.0 = AzureCI|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.Debug|x64.Build.0 = Debug|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.Debug|x86.Build.0 = Debug|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.Release|x64.ActiveCfg = Release|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.Release|x64.Build.0 = Release|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.Release|x86.ActiveCfg = Release|Any CPU
+		{0724661E-2C65-4AA6-BD2B-999583B70B39}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C63CF654-F59C-4F98-9DB1-3DE62BF99ECF} = {21839B1B-5233-411F-8993-9631D5A5BA34}
+		{0724661E-2C65-4AA6-BD2B-999583B70B39} = {21839B1B-5233-411F-8993-9631D5A5BA34}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7937BEBA-24F9-4A3C-987E-8801C4C58F6C}
