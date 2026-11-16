@@ -19,7 +19,8 @@ Essential rules if the skill is not available:
 - For methods with parameters prefer ONE row test with several 'AccUnit:Row(inputs..., expected).Name(""case"") lines
   above the test Sub over one test per case.
 - Row values are VB.NET expressions, not VBA: no constants or enums of the own VBA project (use the numeric value),
-  no VBA functions (dates: System.Convert.ToDateTime(""2014-05-16"")), Array(...) only as the only value of a row.
+  no VBA functions (dates: System.Convert.ToDateTime(""2014-05-16"")); arrays next to other values as {""a"", ""b""},
+  Array(...) only as the only value of a row.
 - Iz.EqualTo distinguishes vbNullString and """".
 - Write the tests from the specification, not from the implementation; add test classes through the source files.";
     }

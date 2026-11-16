@@ -16,6 +16,7 @@ namespace AccessCodeLib.AccUnit.McpServer.Tests
         [TestCase("not VBA")]
         [TestCase("no constants or enums of the own VBA project")]
         [TestCase("System.Convert.ToDateTime")]
+        [TestCase("arrays next to other values as {\"a\", \"b\"}")]
         [TestCase("Array(...) only as the only value of a row")]
         [TestCase("distinguishes vbNullString")]
         public void ServerInstructions_ContainSkillReferenceAndCoreRules(string text)
@@ -47,7 +48,9 @@ namespace AccessCodeLib.AccUnit.McpServer.Tests
         [TestCase("not VBA")]
         [TestCase("Constants and enums of the own VBA project are not available")]
         [TestCase("inputs first, expected value last")]
-        [TestCase("`Array(...)` works only as the only value of a row")]
+        [TestCase("Arrays next to other values in VB.NET syntax: `'AccUnit:Row(1, {\"a\", \"b\"}, ...)`")]
+        [TestCase("`Array(\"a\", \"b\")` only when the array is the only value of the row")]
+        [TestCase("Whole numbers arrive as Long")]
         [TestCase("distinguishes `vbNullString`")]
         [TestCase("accunit_run_tests")]
         public void Skill_ContainsExampleAndRules(string text)

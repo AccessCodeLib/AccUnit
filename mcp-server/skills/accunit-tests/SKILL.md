@@ -64,7 +64,9 @@ Rules for row values - AccUnit compiles them as VB.NET expressions, not VBA:
   e.g. `System.Convert.ToDateTime("2014-05-16")`.
 - Numbers with decimal point; strings in double quotes (double a quote inside a string); `Null` passes VBA Null;
   VBA constants such as `vbTextCompare` work.
-- `Array(...)` works only as the only value of a row; together with other values the method receives a nested array.
+- Arrays next to other values in VB.NET syntax: `'AccUnit:Row(1, {"a", "b"}, ...)`.
+  `Array("a", "b")` only when the array is the only value of the row; next to other values it arrives nested.
+- Whole numbers arrive as Long (VB.NET Integer), so use `Long` or `Variant` parameters.
 - `.Name("case")` for each row makes the results readable.
 
 Strings: `Iz.EqualTo` distinguishes `vbNullString` and `""`. A String function that never assigns its result returns
