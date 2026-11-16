@@ -39,4 +39,9 @@
     <InternalsVisibleTo Include="AccessCodeLib.AccUnit.McpServer.Tests" />
   </ItemGroup>
 
+  <!-- The skill is shipped next to the exe (skills\accunit-tests) and installed with accunit_install_skill -->
+  <ItemGroup>
+    <None Include="..\skills\**\*" Link="skills\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

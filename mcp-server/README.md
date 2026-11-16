@@ -59,6 +59,7 @@ Start `AccUnit.McpServer.exe` as a stdio server without arguments. Log output go
 | `accunit_run_tests` | `classNames`, `testNameFilter`, `tags`, `includePassed` (default `false`) | Runs the tests; returns a summary and the failed, error and ignored tests. |
 | `accunit_generate_test_class` | `moduleName`, `methodNames` | Draft of a test class for a module: code skeleton plus declaration and comment of each method under test. Writes nothing to the database. |
 | `accunit_remove_test_environment` | `removeTestModules` (default `false`), `exportBeforeRemoving` (default `true`) | Removes the test environment like the VBE add-in menu item; optionally also the test classes (exported first). |
+| `accunit_install_skill` | `target` (`claude`/`agents`), `scope` (`project`/`user`), `projectPath`, `overwrite` (default `false`) | Installs the skill `accunit-tests` shipped with the server (see below). |
 
 ### Writing tests with `accunit_generate_test_class`
 
@@ -67,6 +68,30 @@ or the task, not from the implementation, so the tests do not just confirm the c
 If the specification is unclear, the agent should ask the developer.
 The recommended test name pattern is `MethodUnderTest_StateUnderTest_ExpectedBehaviour`; parts that add nothing may be left out.
 The finished test class is added through the source files (e.g. msaccess-vcs import), not written into the database by the server.
+
+## Skill `accunit-tests`
+
+The guide for writing and running AccUnit tests is the skill `accunit-tests` (`skills/accunit-tests/SKILL.md`,
+portable Agent Skills format). Agents load it only when they work on AccUnit tests. It asks for row tests for methods
+with parameters and explains the rules for row values: AccUnit compiles them as VB.NET expressions, so constants and
+enums of the own VBA project and VBA functions are not available (use numeric values and .NET expressions such as
+`System.Convert.ToDateTime("2014-05-16")`), and `Array(...)` works only as the only value of a row.
+
+Install it with `accunit_install_skill` or copy the folder `skills/accunit-tests` from the zip:
+
+| `target` | `scope` = `project` (default) | `scope` = `user` | Used by |
+|---|---|---|---|
+| `claude` | `<project>\.claude\skills\accunit-tests` | `%USERPROFILE%\.claude\skills\accunit-tests` | Claude Code (also GitHub Copilot) |
+| `agents` | `<project>\.agents\skills\accunit-tests` | `%USERPROFILE%\.agents\skills\accunit-tests` | Codex, GitHub Copilot, Gemini CLI |
+
+With `scope` = `project` the skill is only active in the Access projects that use AccUnit and can be committed with the
+project. An installed skill is not overwritten unless `overwrite` = `true` (it may contain local improvements);
+changed files are backed up as `.bak` first. Improvements made locally can be brought back into this repository.
+
+The server also sends short MCP server instructions with the essential rules, for clients without skill support
+(source: `AccUnit.McpServer/TestAuthoringGuide.cs`).
+
+A larger example of row tests: [SqlToolsBuildCriteriaTests.cls](https://github.com/AccessCodeLib/AccessCodeLib/blob/master/_test/data/SqlToolsBuildCriteriaTests.cls) in the AccessCodeLib repository.
 
 ## Behavior and changes to the database
 

@@ -27,8 +27,10 @@ namespace AccessCodeLib.AccUnit.McpServer
                      "do not just confirm the current behavior; if the specification is unclear, ask the developer. " +
                      "Test names: the recommended pattern is MethodUnderTest_StateUnderTest_ExpectedBehaviour (replace the placeholders); " +
                      "it is a recommendation, leave out parts that add nothing (e.g. NetPrice_ReturnsZeroForZero). " +
-                     "Row tests: 'AccUnit:Row(arg1, arg2, expected).Name(\"case name\") above the test method; arguments are literals: " +
-                     "strings in double quotes, numbers with decimal point, True/False, Null, Array(...), VBA or enum constants. " +
+                     "Methods with parameters get a row test skeleton: write one 'AccUnit:Row(inputs..., expected).Name(\"case\") line per case " +
+                     "(normal case, boundaries, invalid input, Null) instead of separate test methods. Row values are VB.NET expressions, not VBA: " +
+                     "no constants or enums of the own VBA project (use the numeric value), no VBA functions (dates: " +
+                     "System.Convert.ToDateTime(\"2014-05-16\")); see the server instructions for an example. " +
                      "Add the finished class through the source files (e.g. msaccess-vcs import), not by writing into the database.")]
         public TestClassDraft GenerateTestClass(
             [Description("Name of the standard module or class module under test.")] string moduleName,

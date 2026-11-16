@@ -22,16 +22,22 @@ namespace AccessCodeLib.AccUnit.McpServer
             builder.Services.AddSingleton<TestRunService>();
             builder.Services.AddSingleton<TestClassDraftService>();
             builder.Services.AddSingleton<TestEnvironmentService>();
+            builder.Services.AddSingleton(_ => new SkillInstaller());
             builder.Services
-                .AddMcpServer(options => options.ServerInfo = new Implementation
+                .AddMcpServer(options =>
                 {
-                    Name = ServerName,
-                    // The server is released together with AccUnit and uses its version.
-                    Version = typeof(AccessCodeLib.AccUnit.Interop.AccUnitFactory).Assembly.GetName().Version.ToString(3)
+                    options.ServerInfo = new Implementation
+                    {
+                        Name = ServerName,
+                        // The server is released together with AccUnit and uses its version.
+                        Version = typeof(AccessCodeLib.AccUnit.Interop.AccUnitFactory).Assembly.GetName().Version.ToString(3)
+                    };
+                    options.ServerInstructions = TestAuthoringGuide.Text;
                 })
                 .WithStdioServerTransport()
                 .WithTools<SessionTools>()
-                .WithTools<TestTools>();
+                .WithTools<TestTools>()
+                .WithTools<SkillTools>();
 
             await builder.Build().RunAsync();
         }

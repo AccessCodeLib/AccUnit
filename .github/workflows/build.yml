@@ -135,10 +135,12 @@ jobs:
         run: |
           $serverDir = "mcp-server\AccUnit.McpServer\bin\Release\net48"
           if (-not (Test-Path "$serverDir\AccUnit.McpServer.exe")) { throw "AccUnit.McpServer.exe not found in $serverDir" }
+          if (-not (Test-Path "$serverDir\skills\accunit-tests\SKILL.md")) { throw "Skill accunit-tests not found in $serverDir\skills" }
           $files = @(Get-ChildItem -Path $serverDir -File | Where-Object { $_.Extension -ne '.pdb' })
           $files | Format-Table Name, Length, LastWriteTime
           $zipFile = "build\AccUnit.McpServer.$env:VERSION.zip"
-          Compress-Archive -Path $files.FullName -DestinationPath $zipFile -Force
+          # The folder skills (skill accunit-tests) is installed with the tool accunit_install_skill
+          Compress-Archive -Path (@($files.FullName) + "$serverDir\skills") -DestinationPath $zipFile -Force
 
       # The artifact name is used by release.yml
       - name: "Upload MCP server zip"
