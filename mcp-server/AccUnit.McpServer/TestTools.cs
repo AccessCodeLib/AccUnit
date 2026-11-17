@@ -23,8 +23,10 @@ namespace AccessCodeLib.AccUnit.McpServer
         [Description("Creates the DRAFT of an AccUnit test class for a module of the open database (same generator as the VBE add-in): " +
                      "class header with 'AccUnit:TestClass and one empty test method per public method, plus the declaration and the comment " +
                      "(e.g. NaturalDoc) of each method under test, read from the current code in the database. Nothing is written to the database. " +
-                     "Fill the test methods (Arrange - Act - Assert) from the specification or task, NOT from the implementation, so the tests " +
-                     "do not just confirm the current behavior; if the specification is unclear, ask the developer. " +
+                     "Fill the test methods (Arrange - Act - Assert) from the specification: the method name plus the returned declaration " +
+                     "and comment. Do not read the body of the method under test on your own, so the tests do not just confirm the current behavior. " +
+                     "If the expected behavior cannot be derived for some methods or cases, ask the developer once how to proceed " +
+                     "(assume values, look at the code, developer specifies, leave out). " +
                      "Test names: the recommended pattern is MethodUnderTest_StateUnderTest_ExpectedBehaviour (replace the placeholders); " +
                      "it is a recommendation, leave out parts that add nothing (e.g. NetPrice_ReturnsZeroForZero). " +
                      "Methods with parameters get a row test skeleton: write one 'AccUnit:Row(inputs..., expected).Name(\"case\") line per case " +

@@ -88,6 +88,10 @@ With `scope` = `project` the skill is only active in the Access projects that us
 project. An installed skill is not overwritten unless `overwrite` = `true` (it may contain local improvements);
 changed files are backed up as `.bak` first. Improvements made locally can be brought back into this repository.
 
+Installing the skill once per project is enough; there is no need to check it before each session. The agent decides
+from the skill description whether to load it, so this is not guaranteed. To make sure the skill is used, invoke it
+explicitly (in Claude Code: `/accunit-tests`).
+
 The server also sends short MCP server instructions with the essential rules, for clients without skill support
 (source: `AccUnit.McpServer/TestAuthoringGuide.cs`).
 

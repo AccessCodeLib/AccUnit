@@ -19,6 +19,10 @@ namespace AccessCodeLib.AccUnit.McpServer.Tests
         [TestCase("arrays next to other values as {\"a\", \"b\"}")]
         [TestCase("Array(...) only as the only value of a row")]
         [TestCase("distinguishes vbNullString")]
+        [TestCase("do not read the body of the method under test")]
+        [TestCase("Assert.Throws 457")]
+        [TestCase("start with accunit_generate_test_class")]
+        [TestCase("neither the exported source files nor through other tools")]
         public void ServerInstructions_ContainSkillReferenceAndCoreRules(string text)
         {
             Assert.That(TestAuthoringGuide.Text, Does.Contain(text));
@@ -53,6 +57,11 @@ namespace AccessCodeLib.AccUnit.McpServer.Tests
         [TestCase("Whole numbers arrive as Long")]
         [TestCase("distinguishes `vbNullString`")]
         [TestCase("accunit_run_tests")]
+        [TestCase("Do not read the body of the method under test")]
+        [TestCase("`Assert.Throws 457`")]
+        [TestCase("for expected errors use `Assert.Throws`")]
+        [TestCase("Start here: do not read the source of the module under")]
+        [TestCase("Use when the user asks to create unit tests for VBA code")]
         public void Skill_ContainsExampleAndRules(string text)
         {
             Assert.That(File.ReadAllText(ShippedSkillFile), Does.Contain(text));

@@ -1,6 +1,6 @@
 ---
 name: accunit-tests
-description: Write and run AccUnit unit tests for VBA code in Microsoft Access - test classes, row tests ('AccUnit:Row), Assert/Iz - with the AccUnit MCP server (accunit_* tools). Use when creating or changing AccUnit test classes or when running AccUnit tests.
+description: Write and run AccUnit unit tests for VBA code in Microsoft Access - test classes, row tests ('AccUnit:Row), Assert/Iz - with the AccUnit MCP server (accunit_* tools). Use when the user asks to create unit tests for VBA code, when creating or changing AccUnit test classes or when running AccUnit tests.
 ---
 
 # AccUnit tests
@@ -11,9 +11,11 @@ the tests and creates drafts of test classes.
 ## Workflow
 
 1. `accunit_open` the database (absolute path; it must be in a trusted location).
-2. `accunit_generate_test_class` for the module under test: you get a draft plus the declaration and the comment of
+2. `accunit_generate_test_class` for the module under test. Start here: do not read the source of the module under
+   test first, neither the exported source files nor through other tools. You get a draft plus the declaration and the comment of
    each method under test, read from the current code in the database. Methods with parameters already get a row test skeleton.
-3. Fill the tests (see below) and add the test class through the source files (e.g. msaccess-vcs export/import).
+3. Fill the tests (see below), add the test class through the source files and import them with msaccess-vcs
+   (e.g. `vcs_import_objects`).
    The server does not write test code into the database.
 4. `accunit_run_tests` (optionally `classNames`, `testNameFilter`, `tags`); it returns a summary and the failed,
    error and ignored tests. Fix and run again.
@@ -30,14 +32,29 @@ Notes on running:
 
 - Test class: class module named `<ModuleUnderTest>Tests` with the comment `'AccUnit:TestClass`,
   `Option Compare Text`, `Option Explicit`. Every public `Sub` is a test; `Setup` and `Teardown` run before/after each test.
-- Write the tests from the specification or the task, not from the implementation, so they do not just confirm the
-  current behavior. If the specification is unclear, ask the developer.
+- The specification is the method name plus the declaration and comment returned by
+  `accunit_generate_test_class`. Do not read the body of the method under test on your own, neither in the
+  exported source files nor through other tools; this includes the procedures it calls. Public declarations
+  used by the method (enums, constants) may be looked up.
+  If the expected behavior cannot be derived from that for some methods or cases (e.g. Null, empty
+  input, boundaries, error behavior), tell the developer once, listing the affected methods/cases
+  briefly, and let them choose how to proceed:
+  - **Assume values:** choose expected values from the method's purpose and common conventions; mark
+    them with `' assumption: ...` and list them in the summary.
+  - **Look at the code:** derive the expected values from the implementation; the tests then pin the
+    current behavior (characterization tests). Say so in the summary.
+  - **Developer specifies:** the developer states the expected behavior.
+  - **Leave out:** skip these cases.
+  A failing test is a result: report it as "assumption or code wrong?" and do not adjust the
+  expectation to the current behavior unless the developer agrees.
 - One behavior per test; Arrange - Act - Assert.
 - Assertions: `Assert.That Actual, Iz.EqualTo(Expected)` (also `Iz.Empty`, `Iz.Null`, ...).
-  Expected error: `Assert.Throws <ErrNumber>` before the call that raises it.
+  Expected error: `Assert.Throws <ErrNumber>` before the call that raises it, with the VBA error number
+  as seen in `Err.Number` (e.g. `Assert.Throws 457`).
 - Names: `MethodUnderTest_StateUnderTest_ExpectedBehaviour` is recommended; leave out parts that add nothing
   (e.g. `NetPrice_ReturnsZeroForZero`).
-- Annotations above a test: `'AccUnit:Tags(Fast, Database)`, `'AccUnit:Ignore reason text`,
+- Annotations above a test: `'AccUnit:Tags(Fast, Database)`, `'AccUnit:Ignore reason text`
+  (only for tests whose expected behavior is still open; for expected errors use `Assert.Throws`),
   `'AccUnit:Rollback` (the test changes data).
 
 ## Row tests
