@@ -507,7 +507,19 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 _codeWindowRunCurrentTestButton = null;
                 _projectWindowRunCurrentTestButton = null;
 
-                _accUnitSubMenuEvents = null;
+                if (_accUnitSubMenuEvents != null)
+                {
+                    try
+                    {
+                        // unadvise COM event sink while the VBE is still alive
+                        _accUnitSubMenuEvents.Click -= OnAccUnitSubMenuEventsClick;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
+                    _accUnitSubMenuEvents = null;
+                }
 
                 if (VbeIntegrationManager != null)
                 {

@@ -113,8 +113,40 @@ namespace AccessCodeLib.Common.VBIDETools.Commandbar
 
             using (new BlockLogger())
             {
+                if (disposing)
+                {
+                    RemoveCommandBarButtonClickHandlers();
+                }
                 DisposeUnmanagedResources();
                 _disposed = true;
+            }
+        }
+
+        /// <summary>
+        /// Unadvises the COM event sinks of the command bar buttons.
+        /// </summary>
+        /// <remarks>
+        /// Must run while the VBE is still alive (never from a finalizer).
+        /// If the sinks stay advised, the CLR finalizer unadvises them during process shutdown,
+        /// which crashes the host (access violation in combase.dll/clr.dll) and lets Office restart Access.
+        /// The buttons are not deleted here (issue #77: http://accunit.access-codelib.net/bugs/view.php?id=77).
+        /// </remarks>
+        protected void RemoveCommandBarButtonClickHandlers()
+        {
+            using (new BlockLogger())
+            {
+                while (_commandBarButtons.Count > 0)
+                {
+                    var button = _commandBarButtons.Pop();
+                    try
+                    {
+                        button.Button.Click -= button.ClickEventHandler;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
+                }
             }
         }
 
@@ -122,52 +154,8 @@ namespace AccessCodeLib.Common.VBIDETools.Commandbar
         {
             using (new BlockLogger())
             {
-                Marshal.ReleaseComObject(VBE);  
+                Marshal.ReleaseComObject(VBE);
                 VBE = null;
-                
-                // issue #77: (http://accunit.access-codelib.net/bugs/view.php?id=77)
-                return;
-                /*
-                try
-                {
-                    while (_commandBarButtons.Count > 0)
-                    {
-                        var button = _commandBarButtons.Pop();
-                        try
-                        {
-                            Logger.Log(string.Format("Button: {0}, -ClickEventHandler", button.Button.Caption));
-                            button.Button.Click -= button.ClickEventHandler;
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Log(ex);
-                        }
-                        try
-                        {
-                            Logger.Log(string.Format("Button: {0}, Delete", button.Button.Caption));
-                            button.Button.Delete();
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Log(ex);
-                        }
-                        try
-                        {
-                            button.Dispose();
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Log(ex);
-                        }
-                    }
-                    Logger.Log("_commandBarButtons.Clear");
-                    _commandBarButtons.Clear();
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-                */
             }
         }
 
