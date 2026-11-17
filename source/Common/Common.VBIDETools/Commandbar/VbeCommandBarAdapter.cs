@@ -116,8 +116,8 @@ namespace AccessCodeLib.Common.VBIDETools.Commandbar
                 if (disposing)
                 {
                     RemoveCommandBarButtonClickHandlers();
+                    ReleaseVbe();
                 }
-                DisposeUnmanagedResources();
                 _disposed = true;
             }
         }
@@ -150,10 +150,17 @@ namespace AccessCodeLib.Common.VBIDETools.Commandbar
             }
         }
 
-        private void DisposeUnmanagedResources()
+        /// <remarks>
+        /// Only called from Dispose(true): there is no finalizer, because COM objects must not be
+        /// touched on the finalizer thread (the STA may already be gone during process exit).
+        /// </remarks>
+        private void ReleaseVbe()
         {
             using (new BlockLogger())
             {
+                if (VBE is null)
+                    return;
+
                 Marshal.ReleaseComObject(VBE);
                 VBE = null;
             }
@@ -163,11 +170,6 @@ namespace AccessCodeLib.Common.VBIDETools.Commandbar
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        ~VbeCommandBarAdapter()
-        {
-            Dispose(false);
         }
 
         #endregion
@@ -230,11 +232,6 @@ namespace AccessCodeLib.Common.VBIDETools.Commandbar
             {
                 Dispose(true);
                 GC.SuppressFinalize(this);
-            }
-
-            ~CommandBarButtonAndClickHandler()
-            {
-                Dispose(false);
             }
 
             #endregion

@@ -419,6 +419,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 if (_disposed) return;
 
+                // COM objects are only released on deterministic dispose, never from a finalizer thread
                 if (disposing)
                 {
                     try
@@ -429,15 +430,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     {
                         Logger.Log(ex);
                     }
-                }
 
-                try
-                {
-                    DisposeUnmanagedResources();
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
+                    try
+                    {
+                        DisposeUnmanagedResources();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
                 }
 
                 _disposed = true;
@@ -522,13 +523,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 Dispose(true);
                 GC.SuppressFinalize(this);
             }
-        }
-
-        ~AddInManager()
-        {
-            Logger.Log("~AddInManager");
-            Dispose(false);
-            Logger.Log("~AddInManager completed");
         }
 
         #endregion

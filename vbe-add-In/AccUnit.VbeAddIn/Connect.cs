@@ -179,37 +179,40 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     return;
                 }
 
-                try
-                {
-                    _addInInstance.Object = null;
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-
+                // COM objects are only touched on deterministic dispose (OnDisconnection/OnBeginShutdown).
+                // There is no finalizer: during process exit the STA may already be gone.
                 if (disposing)
                 {
                     Logger.Log("disposing == true");
+
+                    try
+                    {
+                        _addInInstance.Object = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
+
                     if (AddInManager != null)
                     {
                         Logger.Log("Start AddInManager.Dispose ...");
                         AddInManager.Dispose();
                         AddInManager = null;
                     }
-                }
 
-                if (_addInInstance != null)
-                {
-                    Logger.Log("Start Marshal.ReleaseComObject(_addInInstance) ...");
-                    Marshal.ReleaseComObject(_addInInstance);
-                    _addInInstance = null;
+                    if (_addInInstance != null)
+                    {
+                        Logger.Log("Start Marshal.ReleaseComObject(_addInInstance) ...");
+                        Marshal.ReleaseComObject(_addInInstance);
+                        _addInInstance = null;
+                    }
+
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
                 }
-                
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
 
                 _disposed = true;
 
@@ -221,13 +224,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        ~Connect()
-        {
-            Logger.Log("~Connect");
-            Dispose(false);
-            Logger.Log("~Connect completed");
         }
 
         #endregion
