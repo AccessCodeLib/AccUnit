@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Access = Microsoft.Office.Interop.Access;
@@ -17,6 +18,10 @@ namespace AccessCodeLib.AccUnit.McpServer
         private const bool OpenExclusive = true;
         private const string AllowBypassKeyPropertyName = "AllowBypassKey";
         private const int DaoPropertyNotFoundHResult = unchecked((int)0x800A0CC6); // DAO error 3270
+        private const string AccessProcessName = "MSACCESS";
+        private const string DatabaseNotOpenedMessage =
+            "Access did not open the database, although it reported no error. This can happen while another Access automation " +
+            "is running; the Access instance of this server was closed. Try again.";
 
         private readonly StaComDispatcher _dispatcher;
         private Access.Application _application;
@@ -90,6 +95,14 @@ namespace AccessCodeLib.AccUnit.McpServer
                 QuitAccess();
                 throw new DatabaseSessionException("Access could not open the database: " + ex.Message, ex);
             }
+
+            // Seen while another Access automation was running: OpenCurrentDatabase returned without error,
+            // but no database was open (CurrentProject "closed or doesn't exist").
+            if (!HasOpenDatabase())
+            {
+                QuitAccess();
+                throw new DatabaseSessionException(DatabaseNotOpenedMessage);
+            }
             _databasePath = fullPath;
             _bypassStartup = bypassStartup;
 
@@ -97,6 +110,24 @@ namespace AccessCodeLib.AccUnit.McpServer
             status.StartupBypassAttempted = bypass.PressShiftKey;
             status.Warning = bypass.Warning;
             return status;
+        }
+
+        private bool HasOpenDatabase()
+        {
+            Access._CurrentProject currentProject = null;
+            try
+            {
+                currentProject = _application.CurrentProject;
+                return !string.IsNullOrEmpty(currentProject.FullName);
+            }
+            catch (COMException)
+            {
+                return false;
+            }
+            finally
+            {
+                ReleaseComObject(currentProject);
+            }
         }
 
         private void OpenCurrentDatabase(string fullPath, bool pressShiftKey)
@@ -152,10 +183,35 @@ namespace AccessCodeLib.AccUnit.McpServer
 
         private void StartAccess()
         {
-            _application = new Access.Application();
+            var processIdsBeforeStart = GetAccessProcessIds();
+            var application = new Access.Application();
+            var process = GetProcess(application);
+
+            if (!AccessInstanceOwnership.IsStartedByServer(process.Id, processIdsBeforeStart))
+            {
+                // COM handed out a running instance (e.g. of another automation): release it, never quit or kill it.
+                process.Dispose();
+                Marshal.FinalReleaseComObject(application);
+                throw new DatabaseSessionException(AccessInstanceOwnership.ExistingInstanceMessage);
+            }
+
+            _application = application;
+            _accessProcess = process;
             // Visible, so the user can see what happens and dialogs do not block unnoticed.
             _application.Visible = true;
-            _accessProcess = GetProcess(_application);
+        }
+
+        private static HashSet<int> GetAccessProcessIds()
+        {
+            var processIds = new HashSet<int>();
+            foreach (var process in Process.GetProcessesByName(AccessProcessName))
+            {
+                using (process)
+                {
+                    processIds.Add(process.Id);
+                }
+            }
+            return processIds;
         }
 
         private CloseResult CloseOnStaThread()

@@ -71,7 +71,9 @@ The finished test class is added through the source files (e.g. msaccess-vcs imp
 ## Behavior and changes to the database
 
 - **One database at a time**, opened exclusively in an Access instance started by the server; the server never uses
-  an Access instance it did not start. The instance is visible.
+  an Access instance it did not start. The instance is visible. If COM hands out an Access instance that was already
+  running (e.g. while another Access automation runs), `accunit_open` fails and leaves that instance untouched.
+  If Access reports no error but has no database open afterwards, the server quits its own instance and reports it.
 - **Startup code** (AutoExec, startup form) is skipped by default like opening with the Shift key held down.
   This does not work if the database sets `AllowBypassKey = False`; the result then contains a warning.
 - **`accunit_run_tests`** inserts the module `AccUnit_Factory` if it is missing (test classes use `Assert`/`Iz` from it)
