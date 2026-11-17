@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
@@ -37,24 +38,19 @@ namespace AccessCodeLib.AccUnit.McpServer.Tests
         }
 
         [Test]
-        public void Decode_Utf8WithBom_RemovesBomAndKeepsUmlauts()
+        public void Read_AnsiFile_KeepsUmlauts()
         {
-            var bytes = new UTF8Encoding(true).GetPreamble();
-            bytes = Concat(bytes, Encoding.UTF8.GetBytes("' Gr\u00F6\u00DFe"));
+            var file = CreateFile("modStringsTests.cls", TestClassCode + "' Gr\u00F6\u00DFe\r\n", Ansi);
 
-            Assert.That(TestModuleSourceFile.Decode(bytes, Ansi), Is.EqualTo("' Gr\u00F6\u00DFe"));
+            Assert.That(file.SourceCode, Does.EndWith("' Gr\u00F6\u00DFe\r\n"));
         }
 
         [Test]
-        public void Decode_Utf8WithoutBom_KeepsUmlauts()
+        public void Read_Utf8FileWithBom_KeepsUmlauts()
         {
-            Assert.That(TestModuleSourceFile.Decode(Encoding.UTF8.GetBytes("' Gr\u00F6\u00DFe"), Ansi), Is.EqualTo("' Gr\u00F6\u00DFe"));
-        }
+            var file = CreateFile("modStringsTests.cls", TestClassCode + "' Gr\u00F6\u00DFe\r\n", new UTF8Encoding(true));
 
-        [Test]
-        public void Decode_Ansi_KeepsUmlauts()
-        {
-            Assert.That(TestModuleSourceFile.Decode(Ansi.GetBytes("' Gr\u00F6\u00DFe"), Ansi), Is.EqualTo("' Gr\u00F6\u00DFe"));
+            Assert.That(file.SourceCode, Is.EqualTo(TestClassCode + "' Gr\u00F6\u00DFe\r\n"));
         }
 
         [TestCase("'AccUnit:TestClass")]
@@ -138,24 +134,20 @@ namespace AccessCodeLib.AccUnit.McpServer.Tests
         }
 
         [Test]
-        public void WriteAnsiCopy_Utf8WithLf_WritesAnsiWithCrLf()
+        public void WriteImportCopy_Utf8WithLfWithoutHeader_WritesUtf8BomWithHeaderAndCrLf()
         {
-            var file = CreateFile("modStringsTests.cls", ClassExportHeader.Replace("\r\n", "\n") + "'AccUnit:TestClass\n' Gr\u00F6\u00DFe\n", new UTF8Encoding(true));
-            var targetDirectory = Path.Combine(_directory, "ansi");
+            var file = CreateFile("modStringsTests.cls", "'AccUnit:TestClass\n' Gr\u00F6\u00DFe\n", Encoding.UTF8);
+            var targetDirectory = Path.Combine(_directory, "import");
             Directory.CreateDirectory(targetDirectory);
 
-            file.WriteAnsiCopy(targetDirectory, Ansi);
+            var copyPath = file.WriteImportCopy(targetDirectory);
 
-            var bytes = File.ReadAllBytes(Path.Combine(targetDirectory, "modStringsTests.cls"));
-            Assert.That(bytes, Is.EqualTo(Ansi.GetBytes(ClassExportHeader + "'AccUnit:TestClass\r\n' Gr\u00F6\u00DFe\r\n")));
-        }
-
-        private static byte[] Concat(byte[] first, byte[] second)
-        {
-            var result = new byte[first.Length + second.Length];
-            first.CopyTo(result, 0);
-            second.CopyTo(result, first.Length);
-            return result;
+            Assert.That(copyPath, Is.EqualTo(Path.Combine(targetDirectory, "modStringsTests.cls")));
+            var bytes = File.ReadAllBytes(copyPath);
+            Assert.That(bytes.Take(3), Is.EqualTo(new UTF8Encoding(true).GetPreamble()));
+            var text = new UTF8Encoding(true).GetString(bytes, 3, bytes.Length - 3);
+            Assert.That(text, Does.StartWith("VERSION 1.0 CLASS\r\n"));
+            Assert.That(text, Does.EndWith("'AccUnit:TestClass\r\n' Gr\u00F6\u00DFe\r\n"));
         }
     }
 }

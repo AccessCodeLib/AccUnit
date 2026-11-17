@@ -28,10 +28,10 @@ namespace AccessCodeLib.AccUnit.McpServer
             _session = session ?? throw new ArgumentNullException(nameof(session));
         }
 
-        /// <summary>VBComponents.Import reads the system ANSI code page (Encoding.Default on .NET Framework).</summary>
+        /// <summary>VBComponents.Import reads the system ANSI code page.</summary>
         private static Encoding AnsiEncoding
         {
-            get { return Encoding.Default; }
+            get { return VbaSourceFile.AnsiEncoding; }
         }
 
         public TestClassImportResult ImportTestClasses(string fileNameFilter, string importPath)
@@ -151,22 +151,26 @@ namespace AccessCodeLib.AccUnit.McpServer
 
         private static void Import(TestClassManager testClassManager, List<TestModuleSourceFile> files, TestClassImportResult result)
         {
-            var ansiDirectory = Path.Combine(Path.GetTempPath(), "AccUnitMcpServer", "Import-" + Guid.NewGuid().ToString("N"));
-            Directory.CreateDirectory(ansiDirectory);
+            // Copies with export header, so code without header (e.g. the draft) is imported as class module;
+            // the core converts them to the ANSI code page.
+            var importDirectory = Path.Combine(Path.GetTempPath(), "AccUnitMcpServer", "Import-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(importDirectory);
             try
             {
-                foreach (var file in files)
-                    file.WriteAnsiCopy(ansiDirectory, AnsiEncoding);
+                var copies = files.Select(file => new CodeModuleInfo(new FileInfo(file.WriteImportCopy(importDirectory)))).ToList();
 
                 // Same import as the VBE add-in: an existing module with the same name is replaced.
-                testClassManager.ImportTestComponents(
-                    files.Select(file => new CodeModuleInfo(new FileInfo(Path.Combine(ansiDirectory, Path.GetFileName(file.FilePath))))),
-                    true);
+                testClassManager.ImportTestComponents(copies, true);
                 result.ImportedModules.AddRange(files.Select(file => file.ModuleName));
+            }
+            catch (UnsupportedSourceCharactersException ex)
+            {
+                // Not expected after the check per file; the core imports nothing in this case.
+                throw new DatabaseSessionException(ex.Message, ex);
             }
             finally
             {
-                Directory.Delete(ansiDirectory, true);
+                Directory.Delete(importDirectory, true);
             }
         }
 

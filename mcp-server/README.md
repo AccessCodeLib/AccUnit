@@ -115,12 +115,13 @@ A larger example of row tests: [SqlToolsBuildCriteriaTests.cls](https://github.c
   (`%TEMP%\AccUnitMcpServer`).
 - **`accunit_import_test_classes`** writes only test classes and test related modules (header comment
   `'AccUnit:TestClass` or `'AccUnit:TestRelated`). An existing test module with the same name is replaced; a module that is
-  not a test module is never replaced. The file name must match the module name. The files may be UTF-8 or ANSI; they are
-  converted to the ANSI code page of the VBA editor (characters outside it are rejected), and code without export
-  header gets the header the VBA editor writes. Default folder: the AccUnit test folder
+  not a test module is never replaced. The file name must match the module name. The files may be UTF-8 or ANSI; the
+  AccUnit core converts them to the ANSI code page of the VBA editor (files with characters outside it are rejected),
+  and code without export header gets the header the VBA editor writes. Default folder: the AccUnit test folder
   (`<database folder>\Tests\<database name>` or the folder of the AccUnit setting `ImportExportFolder`).
 - **`accunit_export_test_classes`** and **`accunit_remove_test_classes`** work only on test classes and test related
-  modules. They export to the AccUnit test folder; an existing file is written over only with `overwrite = true` (export)
+  modules. They export to the AccUnit test folder in the encoding of the AccUnit setting `ImportExportEncoding`
+  (default UTF-8 with BOM, or ANSI); an existing file is written over only with `overwrite = true` (export)
   or before removing, and is kept as `.bak`. Removing a test class also removes `AccUnit_TestClassFactory`
   (core behavior); `accunit_run_tests` adds it again.
 - **`accunit_remove_test_environment`**, **`accunit_import_test_classes`** and **`accunit_remove_test_classes`** save the
