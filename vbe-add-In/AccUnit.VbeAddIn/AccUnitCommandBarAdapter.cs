@@ -111,7 +111,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 if (disposing)
                 {
-                    // managed resources:
+                    // unadvise COM event sinks before the command bars are deleted
+                    RemoveCommandBarButtonClickHandlers();
                 }
 
                 // unmanaged resources:
