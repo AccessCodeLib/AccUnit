@@ -113,7 +113,18 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
 
         private static object GetOfficeComObjectByProgIDAndVBEfromFirstObjectInROT(string progID, VBE vbe)
         {
-            var comInstance = Marshal.GetActiveObject(progID);
+            object comInstance;
+            try
+            {
+                comInstance = Marshal.GetActiveObject(progID);
+            }
+            catch (Exception ex)
+            {
+                // e.g. MK_E_UNAVAILABLE: no active object registered for this ProgID => continue with the ROT search
+                Logger.Log(ex);
+                return null;
+            }
+
             if (comInstance is null)
                 return null;
 
@@ -152,6 +163,11 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
                                 Logger.Log($"found: {comInstance}");
                                 return comInstance;
                             }
+                        }
+                        catch (Exception ex)
+                        {
+                            // a faulty ROT entry must not abort the search
+                            Logger.Log(ex);
                         }
                         finally
                         {
@@ -282,6 +298,8 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
             using (new BlockLogger("comObject: " + comObject.GetType().Name))
             {
                 var comType = Type.GetTypeFromProgID(progID);
+                if (comType is null)
+                    return null; // ProgID not registered
 
                 // get the com object and fetch its IUnknown
                 var iunkwn = Marshal.GetIUnknownForObject(comObject);
