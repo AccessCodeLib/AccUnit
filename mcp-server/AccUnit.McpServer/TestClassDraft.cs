@@ -8,6 +8,9 @@ namespace AccessCodeLib.AccUnit.McpServer
         public string TestClassName { get; set; }
         public string ModuleUnderTest { get; set; }
         public string SourceCode { get; set; }
+
+        /// <summary>AccUnit test folder of the database: default folder of accunit_import_test_classes.</summary>
+        public string TestFolder { get; set; }
         public List<MethodUnderTest> MethodsUnderTest { get; set; } = new List<MethodUnderTest>();
     }
 

@@ -29,6 +29,7 @@ Essential rules if the skill is not available:
   do not read the body of the method under test on your own. If the expected behavior cannot be derived, ask the
   developer once how to proceed (assume values, look at the code, developer specifies, leave out).
 - Expected error: Assert.Throws with the VBA error number as seen in Err.Number (e.g. Assert.Throws 457).
-- Add test classes through the source files.";
+- Save the test class as <TestClassName>.cls in the testFolder returned by accunit_generate_test_class and import it
+  with accunit_import_test_classes.";
     }
 }

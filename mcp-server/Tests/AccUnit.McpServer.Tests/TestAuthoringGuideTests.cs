@@ -23,6 +23,7 @@ namespace AccessCodeLib.AccUnit.McpServer.Tests
         [TestCase("Assert.Throws 457")]
         [TestCase("start with accunit_generate_test_class")]
         [TestCase("neither the exported source files nor through other tools")]
+        [TestCase("with accunit_import_test_classes")]
         public void ServerInstructions_ContainSkillReferenceAndCoreRules(string text)
         {
             Assert.That(TestAuthoringGuide.Text, Does.Contain(text));
@@ -62,6 +63,8 @@ namespace AccessCodeLib.AccUnit.McpServer.Tests
         [TestCase("for expected errors use `Assert.Throws`")]
         [TestCase("Start here: do not read the source of the module under")]
         [TestCase("Use when the user asks to create unit tests for VBA code")]
+        [TestCase("`accunit_import_test_classes` with the class name as `fileNameFilter`")]
+        [TestCase("in the `testFolder` returned by the draft")]
         public void Skill_ContainsExampleAndRules(string text)
         {
             Assert.That(File.ReadAllText(ShippedSkillFile), Does.Contain(text));

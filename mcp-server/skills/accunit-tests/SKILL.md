@@ -6,7 +6,7 @@ description: Write and run AccUnit unit tests for VBA code in Microsoft Access -
 # AccUnit tests
 
 AccUnit runs unit tests for VBA code in Microsoft Access. The AccUnit MCP server (tools `accunit_*`) lists and runs
-the tests and creates drafts of test classes.
+the tests, creates drafts of test classes and imports test classes into the database.
 
 ## Workflow
 
@@ -14,12 +14,14 @@ the tests and creates drafts of test classes.
 2. `accunit_generate_test_class` for the module under test. Start here: do not read the source of the module under
    test first, neither the exported source files nor through other tools. You get a draft plus the declaration and the comment of
    each method under test, read from the current code in the database. Methods with parameters already get a row test skeleton.
-3. Fill the tests (see below), add the test class through the source files and import them with msaccess-vcs
-   (e.g. `vcs_import_objects`).
-   The server does not write test code into the database.
-4. `accunit_run_tests` (optionally `classNames`, `testNameFilter`, `tags`); it returns a summary and the failed,
-   error and ignored tests. Fix and run again.
-5. `accunit_close` when done.
+3. Fill the tests (see below) and save the class as `<TestClassName>.cls` in the `testFolder` returned by the draft
+   (the AccUnit test folder of the database). The draft code can be saved as it is; the export header is added on import.
+4. `accunit_import_test_classes` with the class name as `fileNameFilter` (optionally `importPath` for another folder,
+   e.g. the source folder of msaccess-vcs). Only modules with `'AccUnit:TestClass` or `'AccUnit:TestRelated` are imported;
+   an existing test module with the same name is replaced. Import again after each change of the file.
+5. `accunit_run_tests` (optionally `classNames`, `testNameFilter`, `tags`); it returns a summary and the failed,
+   error and ignored tests. Fix the file, import and run again.
+6. `accunit_close` when done.
 
 Notes on running:
 - The tests run inside Access with the installed AccUnitLoader add-in; private test classes work unchanged.

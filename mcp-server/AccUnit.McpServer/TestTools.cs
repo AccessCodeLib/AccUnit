@@ -11,12 +11,15 @@ namespace AccessCodeLib.AccUnit.McpServer
         private readonly TestRunService _testRunService;
         private readonly TestClassDraftService _testClassDraftService;
         private readonly TestEnvironmentService _testEnvironmentService;
+        private readonly TestClassImportService _testClassImportService;
 
-        public TestTools(TestRunService testRunService, TestClassDraftService testClassDraftService, TestEnvironmentService testEnvironmentService)
+        public TestTools(TestRunService testRunService, TestClassDraftService testClassDraftService,
+                         TestEnvironmentService testEnvironmentService, TestClassImportService testClassImportService)
         {
             _testRunService = testRunService;
             _testClassDraftService = testClassDraftService;
             _testEnvironmentService = testEnvironmentService;
+            _testClassImportService = testClassImportService;
         }
 
         [McpServerTool(Name = "accunit_generate_test_class", ReadOnly = true)]
@@ -33,7 +36,8 @@ namespace AccessCodeLib.AccUnit.McpServer
                      "(normal case, boundaries, invalid input, Null) instead of separate test methods. Row values are VB.NET expressions, not VBA: " +
                      "no constants or enums of the own VBA project (use the numeric value), no VBA functions (dates: " +
                      "System.Convert.ToDateTime(\"2014-05-16\")); see the server instructions for an example. " +
-                     "Add the finished class through the source files (e.g. msaccess-vcs import), not by writing into the database.")]
+                     "Save the finished class as a source file (e.g. <ClassName>.cls in the AccUnit test folder) and import it with " +
+                     "accunit_import_test_classes.")]
         public TestClassDraft GenerateTestClass(
             [Description("Name of the standard module or class module under test.")] string moduleName,
             [Description("Only these public methods (optional, default: all public methods).")] string[] methodNames = null)
@@ -41,6 +45,27 @@ namespace AccessCodeLib.AccUnit.McpServer
             try
             {
                 return _testClassDraftService.CreateDraft(moduleName, methodNames);
+            }
+            catch (DatabaseSessionException ex)
+            {
+                throw new McpException(ex.Message);
+            }
+        }
+
+        [McpServerTool(Name = "accunit_import_test_classes", Destructive = true)]
+        [Description("Imports test classes and test related modules from source files (.cls/.bas, VBA export format, UTF-8 or ANSI) " +
+                     "into the open database with the import of the AccUnit core, as the VBE add-in does. Only files with the header comment " +
+                     "'AccUnit:TestClass or 'AccUnit:TestRelated are imported; the file name must match the module name. An existing test module " +
+                     "with the same name is replaced; a module that is not a test module is never replaced. " +
+                     "Default folder: the AccUnit test folder of the database (<database folder>\\Tests\\<database name>, returned as importDirectory). " +
+                     "To keep the import, Access is closed with saving and the database is opened again.")]
+        public TestClassImportResult ImportTestClasses(
+            [Description("File name without extension, wildcards * and ? allowed (e.g. modStringsTests).")] string fileNameFilter,
+            [Description("Absolute path of the folder with the source files (optional, default: AccUnit test folder of the database).")] string importPath = null)
+        {
+            try
+            {
+                return _testClassImportService.ImportTestClasses(fileNameFilter, importPath);
             }
             catch (DatabaseSessionException ex)
             {
