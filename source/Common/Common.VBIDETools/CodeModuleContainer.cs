@@ -2,6 +2,7 @@
 using Microsoft.Vbe.Interop;
 using System;
 using System.Linq;
+using System.Text;
 
 namespace AccessCodeLib.Common.VBIDETools
 {
@@ -68,11 +69,33 @@ namespace AccessCodeLib.Common.VBIDETools
             return Export(c, exportfolder);
         }
 
+        public string Export(string name, string exportfolder, Encoding fileEncoding)
+        {
+            var c = _vbProject.VBComponents.Item(name);
+            return Export(c, exportfolder, fileEncoding);
+        }
+
         public string Export(VBComponent component, string exportfolder)
+        {
+            return Export(component, exportfolder, null);
+        }
+
+        /// <param name="fileEncoding">Encoding of .cls and .bas files; null keeps the ANSI file of the VBA editor.</param>
+        public string Export(VBComponent component, string exportfolder, Encoding fileEncoding)
         {
             var fileName = $"{exportfolder.TrimEnd(' ', '\\')}\\{component.Name}{GetVbComponentTypeFileExtension(component.Type)}";
             component.Export(fileName);
+            if (fileEncoding != null && IsConvertibleComponentType(component.Type))
+            {
+                VbaSourceFile.ConvertExportedFile(fileName, fileEncoding, VbaSourceFile.AnsiEncoding);
+            }
             return fileName;
+        }
+
+        private static bool IsConvertibleComponentType(vbext_ComponentType componenttype)
+        {
+            return componenttype == vbext_ComponentType.vbext_ct_ClassModule ||
+                   componenttype == vbext_ComponentType.vbext_ct_StdModule;
         }
 
         private static string GetVbComponentTypeFileExtension(vbext_ComponentType componenttype)
@@ -107,7 +130,18 @@ namespace AccessCodeLib.Common.VBIDETools
 
         public string ExportAndRemove(VBComponent component, string exportfolder)
         {
-            var fileName = Export(component, exportfolder);
+            return ExportAndRemove(component, exportfolder, null);
+        }
+
+        public string ExportAndRemove(string name, string exportfolder, Encoding fileEncoding)
+        {
+            var c = _vbProject.VBComponents.Item(name);
+            return ExportAndRemove(c, exportfolder, fileEncoding);
+        }
+
+        public string ExportAndRemove(VBComponent component, string exportfolder, Encoding fileEncoding)
+        {
+            var fileName = Export(component, exportfolder, fileEncoding);
             Remove(component);
             return fileName;
         }
