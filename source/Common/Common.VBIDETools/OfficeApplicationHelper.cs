@@ -67,7 +67,7 @@ namespace AccessCodeLib.Common.VBIDETools
             try
             {
                 var activeDocumentFullName = FileTools.ConvertPathToUNC(GetDocumentFullName());
-                if (string.IsNullOrEmpty(activeDocumentFullName) && !VbProjectMatchWithFullName(activeVBProject, activeDocumentFullName))
+                if (IsProjectLookupRequired(activeDocumentFullName, fullName => VbProjectMatchWithFullName(activeVBProject, fullName)))
                 {
                     activeVBProject = FindVbProjectEqualsFullName(activeDocumentFullName);
                 }
@@ -78,6 +78,15 @@ namespace AccessCodeLib.Common.VBIDETools
                 Logger.Log(ex);
                 return null;
             }
+        }
+
+        /// <summary>
+        /// The active VBProject has to be replaced only if the active document is known
+        /// and the active VBProject does not belong to it.
+        /// </summary>
+        public static bool IsProjectLookupRequired(string activeDocumentFullName, Func<string, bool> activeVbProjectMatches)
+        {
+            return !string.IsNullOrEmpty(activeDocumentFullName) && !activeVbProjectMatches(activeDocumentFullName);
         }
 
         private string GetDocumentFullName()

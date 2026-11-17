@@ -284,9 +284,17 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             using (new BlockLogger())
             {
                 // Note: if load RubberDuck, an instance of Access stay in memory after close => HostApplicationTools.GetOfficeApplicationHelper(..., ..., true);
+                var previousHelper = _officeApplicationHelper;
                 _officeApplicationHelper = HostApplicationTools.GetOfficeApplicationHelper(VBE, ref hostApplication, true);
                 _vbeIntegrationManager.OfficeApplicationHelper = _officeApplicationHelper;
                 _testSuiteManager.OfficeApplicationHelper = _officeApplicationHelper;
+
+                // Dispose the previous helper only after the new one exists: both may wrap the same
+                // application RCW, whose reference count must not drop to 0 in between.
+                if (previousHelper != null)
+                {
+                    DisposeManagedResource(previousHelper);
+                }
             }
         }
 
@@ -447,11 +455,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void DisposeUnmanagedResources()
         {
-            if (_addIn != null)
-            {
-                Marshal.ReleaseComObject(_addIn);
-                _addIn = null;
-            }
+            // The AddIn RCW is owned by Connect (it receives it in OnConnection and releases it once in Dispose),
+            // so it is only dereferenced here. A second ReleaseComObject would throw InvalidComObjectException.
+            _addIn = null;
         }
 
         private void DisposeManagedResources()
