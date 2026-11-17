@@ -142,6 +142,7 @@
     <Compile Include="TestHelper\TestResultCollector.cs" />
     <Compile Include="TestRunnerTests.cs" />
     <Compile Include="TestSuiteTests.cs" />
+    <Compile Include="AccessTestSuiteCodeCoverageTrackerTests.cs" />
     <Compile Include="VbNullstringCompareTests.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -42,6 +42,15 @@ End Property
 
 Public Property Set CodeCoverageTracker(ByVal NewRef As Object)
    Set m_CodeCoverageTracker = NewRef
+   Set m_TestSuite.CodeCoverageTracker = NewRef
+End Property
+
+Private Property Set AccessTestSuite_CodeCoverageTracker(ByVal RHS As AccUnit.ICodeCoverageTracker)
+   Set CodeCoverageTracker = RHS
+End Property
+
+Private Property Get AccessTestSuite_CodeCoverageTracker() As AccUnit.ICodeCoverageTracker
+   Set AccessTestSuite_CodeCoverageTracker = m_TestSuite.CodeCoverageTracker
 End Property
 
 Private Sub m_TestSuite_TestSuiteStarted(ByVal TestSuite As AccUnit.ITestSuite)
