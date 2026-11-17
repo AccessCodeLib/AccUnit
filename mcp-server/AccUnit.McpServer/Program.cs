@@ -23,6 +23,7 @@ namespace AccessCodeLib.AccUnit.McpServer
             builder.Services.AddSingleton<TestClassDraftService>();
             builder.Services.AddSingleton<TestEnvironmentService>();
             builder.Services.AddSingleton<TestClassImportService>();
+            builder.Services.AddSingleton<TestModuleExportService>();
             builder.Services.AddSingleton(_ => new SkillInstaller());
             builder.Services
                 .AddMcpServer(options =>

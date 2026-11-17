@@ -6,7 +6,7 @@ description: Write and run AccUnit unit tests for VBA code in Microsoft Access -
 # AccUnit tests
 
 AccUnit runs unit tests for VBA code in Microsoft Access. The AccUnit MCP server (tools `accunit_*`) lists and runs
-the tests, creates drafts of test classes and imports test classes into the database.
+the tests, creates drafts of test classes and imports, exports and removes test classes.
 
 ## Workflow
 
@@ -22,6 +22,14 @@ the tests, creates drafts of test classes and imports test classes into the data
 5. `accunit_run_tests` (optionally `classNames`, `testNameFilter`, `tags`); it returns a summary and the failed,
    error and ignored tests. Fix the file, import and run again.
 6. `accunit_close` when done.
+
+Existing test class: if the module already has a test class, the draft proposes a name with a number
+(e.g. `modCalcTests1`). Create, import and run this second class first, so the developer can look at both. Then ask:
+- **Merge:** `accunit_export_test_classes` for the existing class (to edit its current code), add the new tests,
+  import it, then `accunit_remove_test_classes` for the second class.
+- **Replace:** save the new code under the name of the existing class, import it, then remove the second class.
+- **Keep both:** nothing more to do.
+`accunit_export_test_classes` writes over an existing file only with `overwrite = true` (kept as `.bak`).
 
 Notes on running:
 - The tests run inside Access with the installed AccUnitLoader add-in; private test classes work unchanged.

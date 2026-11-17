@@ -59,6 +59,8 @@ Start `AccUnit.McpServer.exe` as a stdio server without arguments. Log output go
 | `accunit_run_tests` | `classNames`, `testNameFilter`, `tags`, `includePassed` (default `false`) | Runs the tests; returns a summary and the failed, error and ignored tests. |
 | `accunit_generate_test_class` | `moduleName`, `methodNames` | Draft of a test class for a module: code skeleton plus declaration and comment of each method under test, and the AccUnit test folder (`testFolder`). Writes nothing to the database. |
 | `accunit_import_test_classes` | `fileNameFilter`, `importPath` (default: AccUnit test folder) | Imports test classes and test related modules from source files with the import of the AccUnit core. |
+| `accunit_export_test_classes` | `classNames`, `overwrite` (default `false`) | Exports single test classes or test related modules to the AccUnit test folder. |
+| `accunit_remove_test_classes` | `classNames`, `exportBeforeRemoving` (default `true`) | Removes single test classes or test related modules from the database (exported first by default). |
 | `accunit_remove_test_environment` | `removeTestModules` (default `false`), `exportBeforeRemoving` (default `true`) | Removes the test environment like the VBE add-in menu item; optionally also the test classes (exported first). |
 | `accunit_install_skill` | `target` (`claude`/`agents`), `scope` (`project`/`user`), `projectPath`, `overwrite` (default `false`) | Installs the skill `accunit-tests` shipped with the server (see below). |
 
@@ -115,8 +117,12 @@ A larger example of row tests: [SqlToolsBuildCriteriaTests.cls](https://github.c
   converted to the ANSI code page of the VBA editor (characters outside it are rejected), and code without export
   header gets the header the VBA editor writes. Default folder: the AccUnit test folder
   (`<database folder>\Tests\<database name>` or the folder of the AccUnit setting `ImportExportFolder`).
-- **`accunit_remove_test_environment`** and **`accunit_import_test_classes`** save the database and open it again:
-  Access keeps removed and imported modules only when the VBA project is saved.
+- **`accunit_export_test_classes`** and **`accunit_remove_test_classes`** work only on test classes and test related
+  modules. They export to the AccUnit test folder; an existing file is written over only with `overwrite = true` (export)
+  or before removing, and is kept as `.bak`. Removing a test class also removes `AccUnit_TestClassFactory`
+  (core behavior); `accunit_run_tests` adds it again.
+- **`accunit_remove_test_environment`**, **`accunit_import_test_classes`** and **`accunit_remove_test_classes`** save the
+  database and open it again: Access keeps removed and imported modules only when the VBA project is saved.
 - Tests never run in parallel; all calls to Access are serialized.
 
 ## Limitations

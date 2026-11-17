@@ -24,6 +24,7 @@ namespace AccessCodeLib.AccUnit.McpServer.Tests
         [TestCase("start with accunit_generate_test_class")]
         [TestCase("neither the exported source files nor through other tools")]
         [TestCase("with accunit_import_test_classes")]
+        [TestCase("whether to merge it into the existing class")]
         public void ServerInstructions_ContainSkillReferenceAndCoreRules(string text)
         {
             Assert.That(TestAuthoringGuide.Text, Does.Contain(text));
@@ -65,6 +66,8 @@ namespace AccessCodeLib.AccUnit.McpServer.Tests
         [TestCase("Use when the user asks to create unit tests for VBA code")]
         [TestCase("`accunit_import_test_classes` with the class name as `fileNameFilter`")]
         [TestCase("in the `testFolder` returned by the draft")]
+        [TestCase("Create, import and run this second class first")]
+        [TestCase("`accunit_remove_test_classes` for the second class")]
         public void Skill_ContainsExampleAndRules(string text)
         {
             Assert.That(File.ReadAllText(ShippedSkillFile), Does.Contain(text));

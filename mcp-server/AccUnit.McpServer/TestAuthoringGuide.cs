@@ -30,6 +30,9 @@ Essential rules if the skill is not available:
   developer once how to proceed (assume values, look at the code, developer specifies, leave out).
 - Expected error: Assert.Throws with the VBA error number as seen in Err.Number (e.g. Assert.Throws 457).
 - Save the test class as <TestClassName>.cls in the testFolder returned by accunit_generate_test_class and import it
-  with accunit_import_test_classes.";
+  with accunit_import_test_classes.
+- If the module already has a test class, the draft name gets a number (e.g. modCalcTests1): create, import and run it,
+  then ask the developer whether to merge it into the existing class (accunit_export_test_classes,
+  accunit_remove_test_classes), replace the existing class or keep both.";
     }
 }
