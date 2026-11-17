@@ -138,17 +138,17 @@ namespace AccessCodeLib.Common.VBIDETools
                         _invocationHelper.Dispose();
                         _invocationHelper = null;
                     }
-                }
 
-                if (_application != null)
-                {
-                    if (_releaseApplicationComObjectOnDispose)
+                    // COM release only on deterministic dispose, never from the finalizer thread
+                    if (_application != null)
                     {
-                        Marshal.ReleaseComObject(_application);
+                        if (_releaseApplicationComObjectOnDispose)
+                        {
+                            Marshal.ReleaseComObject(_application);
+                        }
+                        _application = null;
                     }
-                    _application = null;
-                }   
-                
+                }
             }
             catch (Exception ex)
             {
@@ -167,11 +167,6 @@ namespace AccessCodeLib.Common.VBIDETools
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        ~OfficeApplicationHelper()
-        {
-            Dispose(false);
         }
 
         #endregion

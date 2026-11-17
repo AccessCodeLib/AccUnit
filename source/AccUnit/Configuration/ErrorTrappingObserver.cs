@@ -78,17 +78,19 @@ namespace AccessCodeLib.AccUnit.Configuration
 
             try
             {
-                if (_applicationHelper != null)
-                {
-                    // set the error trapping back to the initial value
-                    if (GetAccessErrorTrapping() != _initialErrorTrapping)
-                    {
-                        SetErrorTrapping(_initialErrorTrapping);
-                    }
-                }
-
+                // COM calls only on deterministic dispose, never from a finalizer thread:
+                // if Dispose is not called, the error trapping is not restored.
                 if (disposing)
                 {
+                    if (_applicationHelper != null)
+                    {
+                        // set the error trapping back to the initial value
+                        if (GetAccessErrorTrapping() != _initialErrorTrapping)
+                        {
+                            SetErrorTrapping(_initialErrorTrapping);
+                        }
+                    }
+
                     DisposeManagedResources();
                 }
                 DisposeUnmanagedResources();
@@ -113,11 +115,6 @@ namespace AccessCodeLib.AccUnit.Configuration
         void DisposeUnmanagedResources()
         {
             _hostApplication = null;
-        }
-
-        ~AccessErrorTrappingObserver()
-        {
-            Dispose(false);
         }
 
         #endregion
