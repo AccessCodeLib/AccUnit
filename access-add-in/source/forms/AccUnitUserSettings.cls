@@ -53,6 +53,7 @@ End Sub
 Private Sub LoadDataFromSettings()
    With m_UserSettings
       Me.txtImportExportFolder.Value = .ImportExportFolder
+      Me.cboImportExportEncoding.Value = .ImportExportEncoding
       Me.txtTemplateFolder.Value = .TemplateFolder
       Me.txtTestClassNameFormat.Value = .TestClassNameFormat
       Me.txtTestMethodTemplate.Value = Replace(.TestMethodTemplate, vbTab, TabSpaces)
@@ -62,6 +63,7 @@ End Sub
 Private Sub SaveDataToSettings()
    With m_UserSettings
       .ImportExportFolder = Me.txtImportExportFolder.Value
+      .ImportExportEncoding = Me.cboImportExportEncoding.Value
       .TemplateFolder = Me.txtTemplateFolder.Value
       .TestClassNameFormat = Me.txtTestClassNameFormat.Value
       .TestMethodTemplate = Replace(Me.txtTestMethodTemplate.Value, TabSpaces, vbTab)
