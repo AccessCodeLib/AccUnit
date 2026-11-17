@@ -11,25 +11,38 @@ namespace AccessCodeLib.AccUnit.McpServer
         private readonly TestRunService _testRunService;
         private readonly TestClassDraftService _testClassDraftService;
         private readonly TestEnvironmentService _testEnvironmentService;
+        private readonly TestClassImportService _testClassImportService;
+        private readonly TestModuleExportService _testModuleExportService;
 
-        public TestTools(TestRunService testRunService, TestClassDraftService testClassDraftService, TestEnvironmentService testEnvironmentService)
+        public TestTools(TestRunService testRunService, TestClassDraftService testClassDraftService,
+                         TestEnvironmentService testEnvironmentService, TestClassImportService testClassImportService,
+                         TestModuleExportService testModuleExportService)
         {
             _testRunService = testRunService;
             _testClassDraftService = testClassDraftService;
             _testEnvironmentService = testEnvironmentService;
+            _testClassImportService = testClassImportService;
+            _testModuleExportService = testModuleExportService;
         }
 
         [McpServerTool(Name = "accunit_generate_test_class", ReadOnly = true)]
         [Description("Creates the DRAFT of an AccUnit test class for a module of the open database (same generator as the VBE add-in): " +
                      "class header with 'AccUnit:TestClass and one empty test method per public method, plus the declaration and the comment " +
                      "(e.g. NaturalDoc) of each method under test, read from the current code in the database. Nothing is written to the database. " +
-                     "Fill the test methods (Arrange - Act - Assert) from the specification or task, NOT from the implementation, so the tests " +
-                     "do not just confirm the current behavior; if the specification is unclear, ask the developer. " +
+                     "Fill the test methods (Arrange - Act - Assert) from the specification: the method name plus the returned declaration " +
+                     "and comment. Do not read the body of the method under test on your own, so the tests do not just confirm the current behavior. " +
+                     "If the expected behavior cannot be derived for some methods or cases, ask the developer once how to proceed " +
+                     "(assume values, look at the code, developer specifies, leave out). " +
                      "Test names: the recommended pattern is MethodUnderTest_StateUnderTest_ExpectedBehaviour (replace the placeholders); " +
                      "it is a recommendation, leave out parts that add nothing (e.g. NetPrice_ReturnsZeroForZero). " +
-                     "Row tests: 'AccUnit:Row(arg1, arg2, expected).Name(\"case name\") above the test method; arguments are literals: " +
-                     "strings in double quotes, numbers with decimal point, True/False, Null, Array(...), VBA or enum constants. " +
-                     "Add the finished class through the source files (e.g. msaccess-vcs import), not by writing into the database.")]
+                     "Methods with parameters get a row test skeleton: write one 'AccUnit:Row(inputs..., expected).Name(\"case\") line per case " +
+                     "(normal case, boundaries, invalid input, Null) instead of separate test methods. Row values are VB.NET expressions, not VBA: " +
+                     "no constants or enums of the own VBA project (use the numeric value), no VBA functions (dates: " +
+                     "System.Convert.ToDateTime(\"2014-05-16\")); see the server instructions for an example. " +
+                     "Save the finished class as a source file (e.g. <ClassName>.cls in the AccUnit test folder) and import it with " +
+                     "accunit_import_test_classes. If a test class for the module exists already, the proposed name gets a number " +
+                     "(e.g. modCalcTests1): create, import and run it, then ask the developer whether to merge it into the existing class, " +
+                     "replace the existing class or keep both.")]
         public TestClassDraft GenerateTestClass(
             [Description("Name of the standard module or class module under test.")] string moduleName,
             [Description("Only these public methods (optional, default: all public methods).")] string[] methodNames = null)
@@ -37,6 +50,66 @@ namespace AccessCodeLib.AccUnit.McpServer
             try
             {
                 return _testClassDraftService.CreateDraft(moduleName, methodNames);
+            }
+            catch (DatabaseSessionException ex)
+            {
+                throw new McpException(ex.Message);
+            }
+        }
+
+        [McpServerTool(Name = "accunit_import_test_classes", Destructive = true)]
+        [Description("Imports test classes and test related modules from source files (.cls/.bas, VBA export format, UTF-8 or ANSI) " +
+                     "into the open database with the import of the AccUnit core, as the VBE add-in does. Only files with the header comment " +
+                     "'AccUnit:TestClass or 'AccUnit:TestRelated are imported; the file name must match the module name. An existing test module " +
+                     "with the same name is replaced; a module that is not a test module is never replaced. " +
+                     "Default folder: the AccUnit test folder of the database (<database folder>\\Tests\\<database name>, returned as importDirectory). " +
+                     "To keep the import, Access is closed with saving and the database is opened again.")]
+        public TestClassImportResult ImportTestClasses(
+            [Description("File name without extension, wildcards * and ? allowed (e.g. modStringsTests).")] string fileNameFilter,
+            [Description("Absolute path of the folder with the source files (optional, default: AccUnit test folder of the database).")] string importPath = null)
+        {
+            try
+            {
+                return _testClassImportService.ImportTestClasses(fileNameFilter, importPath);
+            }
+            catch (DatabaseSessionException ex)
+            {
+                throw new McpException(ex.Message);
+            }
+        }
+
+        [McpServerTool(Name = "accunit_export_test_classes")]
+        [Description("Exports test classes and test related modules of the open database to the AccUnit test folder (VBA export " +
+                     "format, ANSI), e.g. to edit an existing test class and import it again with accunit_import_test_classes. " +
+                     "Only modules with 'AccUnit:TestClass or 'AccUnit:TestRelated are exported. An existing file is written over only " +
+                     "with overwrite = true and is kept as .bak. Nothing is written to the database.")]
+        public ExportTestClassesResult ExportTestClasses(
+            [Description("Names of the test classes or test related modules.")] string[] classNames,
+            [Description("Write over an existing file in the test folder (kept as .bak).")] bool overwrite = false)
+        {
+            try
+            {
+                return _testModuleExportService.ExportTestClasses(classNames, overwrite);
+            }
+            catch (DatabaseSessionException ex)
+            {
+                throw new McpException(ex.Message);
+            }
+        }
+
+        [McpServerTool(Name = "accunit_remove_test_classes", Destructive = true)]
+        [Description("Removes single test classes or test related modules from the open database, e.g. a second test class after it " +
+                     "was merged into the existing one. Only modules with 'AccUnit:TestClass or 'AccUnit:TestRelated are removed; " +
+                     "they are exported to the AccUnit test folder first by default (an existing file is kept as .bak). " +
+                     "The module AccUnit_TestClassFactory is removed as well; accunit_run_tests adds it again. " +
+                     "To keep the removal, Access is closed with saving and the database is opened again.")]
+        public RemoveTestClassesResult RemoveTestClasses(
+            [Description("Names of the test classes or test related modules.")] string[] classNames,
+            [Description("Export the modules to the AccUnit test folder before removing them.")] bool exportBeforeRemoving = true)
+        {
+            try
+            {
+                return _testModuleExportService.RemoveTestClasses(classNames, exportBeforeRemoving);
             }
             catch (DatabaseSessionException ex)
             {

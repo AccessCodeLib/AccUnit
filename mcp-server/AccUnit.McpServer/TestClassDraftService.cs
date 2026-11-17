@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AccessCodeLib.AccUnit.Configuration;
 using AccessCodeLib.AccUnit.Tools;
 using AccessCodeLib.Common.VBIDETools;
 using Microsoft.Vbe.Interop;
@@ -53,6 +54,7 @@ namespace AccessCodeLib.AccUnit.McpServer
                 TestClassName = new TestClassNameGenerator(vbProject).GetTestClassName(moduleName),
                 ModuleUnderTest = moduleName,
                 SourceCode = generator.GenerateSourceCode(),
+                TestFolder = GetTestFolder(vbProject),
                 MethodsUnderTest = members.Select(member => new MethodUnderTest
                 {
                     Name = member.Name,
@@ -61,6 +63,14 @@ namespace AccessCodeLib.AccUnit.McpServer
                     Comment = ProcedureCommentFormatter.Format(reader.GetProcedureHeader(member.Name, member.ProcKind))
                 }).ToList()
             };
+        }
+
+        private static string GetTestFolder(VBProject vbProject)
+        {
+            using (var testClassManager = new TestClassManager(new VBProjectOnlyApplicatonHelper(vbProject)))
+            {
+                return testClassManager.ImportDirectory;
+            }
         }
 
         private static List<CodeModuleMember> SelectMembers(List<CodeModuleMember> publicMembers, IList<string> methodNames)

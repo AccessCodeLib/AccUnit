@@ -57,16 +57,49 @@ Start `AccUnit.McpServer.exe` as a stdio server without arguments. Log output go
 | `accunit_status` | | Path, Access version, process id, whether the database is trusted. |
 | `accunit_list_tests` | `classNames` | Test classes with test methods, tags, ignore info and number of data rows (row tests). |
 | `accunit_run_tests` | `classNames`, `testNameFilter`, `tags`, `includePassed` (default `false`) | Runs the tests; returns a summary and the failed, error and ignored tests. |
-| `accunit_generate_test_class` | `moduleName`, `methodNames` | Draft of a test class for a module: code skeleton plus declaration and comment of each method under test. Writes nothing to the database. |
+| `accunit_generate_test_class` | `moduleName`, `methodNames` | Draft of a test class for a module: code skeleton plus declaration and comment of each method under test, and the AccUnit test folder (`testFolder`). Writes nothing to the database. |
+| `accunit_import_test_classes` | `fileNameFilter`, `importPath` (default: AccUnit test folder) | Imports test classes and test related modules from source files with the import of the AccUnit core. |
+| `accunit_export_test_classes` | `classNames`, `overwrite` (default `false`) | Exports single test classes or test related modules to the AccUnit test folder. |
+| `accunit_remove_test_classes` | `classNames`, `exportBeforeRemoving` (default `true`) | Removes single test classes or test related modules from the database (exported first by default). |
 | `accunit_remove_test_environment` | `removeTestModules` (default `false`), `exportBeforeRemoving` (default `true`) | Removes the test environment like the VBE add-in menu item; optionally also the test classes (exported first). |
+| `accunit_install_skill` | `target` (`claude`/`agents`), `scope` (`project`/`user`), `projectPath`, `overwrite` (default `false`) | Installs the skill `accunit-tests` shipped with the server (see below). |
 
 ### Writing tests with `accunit_generate_test_class`
 
 The tool returns a draft only. The agent fills the test methods (Arrange - Act - Assert) from the specification
-or the task, not from the implementation, so the tests do not just confirm the current behavior.
-If the specification is unclear, the agent should ask the developer.
+(method name, declaration and comment), not from the implementation, so the tests do not just confirm the current behavior.
+If the expected behavior cannot be derived, the agent asks the developer once how to proceed.
 The recommended test name pattern is `MethodUnderTest_StateUnderTest_ExpectedBehaviour`; parts that add nothing may be left out.
-The finished test class is added through the source files (e.g. msaccess-vcs import), not written into the database by the server.
+The finished test class is saved as a source file in the AccUnit test folder (`testFolder` of the draft) and imported
+with `accunit_import_test_classes`; no other tool (e.g. msaccess-vcs) is needed.
+
+## Skill `accunit-tests`
+
+The guide for writing and running AccUnit tests is the skill `accunit-tests` (`skills/accunit-tests/SKILL.md`,
+portable Agent Skills format). Agents load it only when they work on AccUnit tests. It asks for row tests for methods
+with parameters and explains the rules for row values: AccUnit compiles them as VB.NET expressions, so constants and
+enums of the own VBA project and VBA functions are not available (use numeric values and .NET expressions such as
+`System.Convert.ToDateTime("2014-05-16")`), and `Array(...)` works only as the only value of a row.
+
+Install it with `accunit_install_skill` or copy the folder `skills/accunit-tests` from the zip:
+
+| `target` | `scope` = `project` (default) | `scope` = `user` | Used by |
+|---|---|---|---|
+| `claude` | `<project>\.claude\skills\accunit-tests` | `%USERPROFILE%\.claude\skills\accunit-tests` | Claude Code (also GitHub Copilot) |
+| `agents` | `<project>\.agents\skills\accunit-tests` | `%USERPROFILE%\.agents\skills\accunit-tests` | Codex, GitHub Copilot, Gemini CLI |
+
+With `scope` = `project` the skill is only active in the Access projects that use AccUnit and can be committed with the
+project. An installed skill is not overwritten unless `overwrite` = `true` (it may contain local improvements);
+changed files are backed up as `.bak` first. Improvements made locally can be brought back into this repository.
+
+Installing the skill once per project is enough; there is no need to check it before each session. The agent decides
+from the skill description whether to load it, so this is not guaranteed. To make sure the skill is used, invoke it
+explicitly (in Claude Code: `/accunit-tests`).
+
+The server also sends short MCP server instructions with the essential rules, for clients without skill support
+(source: `AccUnit.McpServer/TestAuthoringGuide.cs`).
+
+A larger example of row tests: [SqlToolsBuildCriteriaTests.cls](https://github.com/AccessCodeLib/AccessCodeLib/blob/master/_test/data/SqlToolsBuildCriteriaTests.cls) in the AccessCodeLib repository.
 
 ## Behavior and changes to the database
 
@@ -80,8 +113,18 @@ The finished test class is added through the source files (e.g. msaccess-vcs imp
   and adds missing factory methods to `AccUnit_TestClassFactory`. These changes are kept and listed in
   `environmentChanges`. Test classes are not changed. The results are read from the JUnit XML file AccUnit writes
   (`%TEMP%\AccUnitMcpServer`).
-- **`accunit_remove_test_environment`** saves the database and opens it again: Access keeps removed modules only
-  when the VBA project is saved.
+- **`accunit_import_test_classes`** writes only test classes and test related modules (header comment
+  `'AccUnit:TestClass` or `'AccUnit:TestRelated`). An existing test module with the same name is replaced; a module that is
+  not a test module is never replaced. The file name must match the module name. The files may be UTF-8 or ANSI; they are
+  converted to the ANSI code page of the VBA editor (characters outside it are rejected), and code without export
+  header gets the header the VBA editor writes. Default folder: the AccUnit test folder
+  (`<database folder>\Tests\<database name>` or the folder of the AccUnit setting `ImportExportFolder`).
+- **`accunit_export_test_classes`** and **`accunit_remove_test_classes`** work only on test classes and test related
+  modules. They export to the AccUnit test folder; an existing file is written over only with `overwrite = true` (export)
+  or before removing, and is kept as `.bak`. Removing a test class also removes `AccUnit_TestClassFactory`
+  (core behavior); `accunit_run_tests` adds it again.
+- **`accunit_remove_test_environment`**, **`accunit_import_test_classes`** and **`accunit_remove_test_classes`** save the
+  database and open it again: Access keeps removed and imported modules only when the VBA project is saved.
 - Tests never run in parallel; all calls to Access are serialized.
 
 ## Limitations
