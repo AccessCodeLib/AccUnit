@@ -80,7 +80,8 @@ namespace AccessCodeLib.AccUnit.McpServer
 
         [McpServerTool(Name = "accunit_export_test_classes")]
         [Description("Exports test classes and test related modules of the open database to the AccUnit test folder (VBA export " +
-                     "format, ANSI), e.g. to edit an existing test class and import it again with accunit_import_test_classes. " +
+                     "format; encoding from the AccUnit setting ImportExportEncoding, default UTF-8 with BOM), e.g. to edit an existing " +
+                     "test class and import it again with accunit_import_test_classes. " +
                      "Only modules with 'AccUnit:TestClass or 'AccUnit:TestRelated are exported. An existing file is written over only " +
                      "with overwrite = true and is kept as .bak. Nothing is written to the database.")]
         public ExportTestClassesResult ExportTestClasses(

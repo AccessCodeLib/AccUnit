@@ -3,12 +3,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using AccessCodeLib.Common.VBIDETools;
 
 namespace AccessCodeLib.AccUnit.McpServer
 {
     /// <summary>
-    /// A test class or test related module in a source file (VBA export format), checked before it is imported.
-    /// VBComponents.Import reads the ANSI code page, while source files of agents and msaccess-vcs are usually UTF-8.
+    /// A test class or test related module in a source file (VBA export format, UTF-8 or ANSI), checked before it is imported.
+    /// The encoding (VbaSourceFile) and the conversion to ANSI for VBComponents.Import are done by the AccUnit core;
+    /// this class adds the checks of the MCP server and the export header for code without header.
     /// </summary>
     public sealed class TestModuleSourceFile
     {
@@ -24,7 +26,6 @@ namespace AccessCodeLib.AccUnit.McpServer
             RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
         private const string ClassModuleExtension = ".cls";
         private static readonly string[] LineSeparators = { "\r\n", "\n" };
-        private static readonly byte[] Utf8Preamble = Encoding.UTF8.GetPreamble();
 
         private TestModuleSourceFile(string filePath, string sourceCode)
         {
@@ -42,23 +43,7 @@ namespace AccessCodeLib.AccUnit.McpServer
 
         public static TestModuleSourceFile Read(string filePath, Encoding ansiEncoding)
         {
-            return new TestModuleSourceFile(filePath, Decode(File.ReadAllBytes(filePath), ansiEncoding));
-        }
-
-        /// <summary>UTF-8 with or without BOM if the bytes are valid UTF-8, otherwise the ANSI code page.</summary>
-        public static string Decode(byte[] bytes, Encoding ansiEncoding)
-        {
-            if (bytes.Take(Utf8Preamble.Length).SequenceEqual(Utf8Preamble))
-                return Encoding.UTF8.GetString(bytes, Utf8Preamble.Length, bytes.Length - Utf8Preamble.Length);
-
-            try
-            {
-                return new UTF8Encoding(false, true).GetString(bytes);
-            }
-            catch (DecoderFallbackException)
-            {
-                return ansiEncoding.GetString(bytes);
-            }
+            return new TestModuleSourceFile(filePath, VbaSourceFile.ReadAllText(filePath, ansiEncoding));
         }
 
         /// <returns>null if the file can be imported, otherwise the reason why not.</returns>
@@ -71,17 +56,24 @@ namespace AccessCodeLib.AccUnit.McpServer
             if (vbName != null && !string.Equals(vbName, ModuleName, StringComparison.OrdinalIgnoreCase))
                 return "The file name must match the module name (Attribute VB_Name = \"" + vbName + "\").";
 
-            if (!CanBeEncoded(SourceCode, ansiEncoding))
+            // Checked per file, so the other files are still imported (the core rejects the whole import).
+            if (!VbaSourceFile.CanBeEncoded(SourceCode, ansiEncoding))
                 return "The file contains characters that are not available in the ANSI code page " + ansiEncoding.WebName +
                        " used by the VBA editor.";
 
             return null;
         }
 
-        /// <summary>Writes the source in the ANSI code page with CRLF line endings, as the VBA editor exports it.</summary>
-        public void WriteAnsiCopy(string directory, Encoding ansiEncoding)
+        /// <summary>
+        /// Writes the source as it is imported (with export header) in UTF-8 with BOM and CRLF line endings;
+        /// the core converts it to the ANSI code page for VBComponents.Import.
+        /// </summary>
+        /// <returns>Path of the copy (same file name).</returns>
+        public string WriteImportCopy(string directory)
         {
-            File.WriteAllText(Path.Combine(directory, Path.GetFileName(FilePath)), ToCrLf(GetImportSource()), ansiEncoding);
+            var copyPath = Path.Combine(directory, Path.GetFileName(FilePath));
+            File.WriteAllText(copyPath, VbaSourceFile.ToCrLf(GetImportSource()), VbaSourceFile.Utf8BomEncoding);
+            return copyPath;
         }
 
         /// <summary>
@@ -113,11 +105,6 @@ namespace AccessCodeLib.AccUnit.McpServer
                    "Attribute VB_Exposed = False\r\n";
         }
 
-        public static string ToCrLf(string sourceCode)
-        {
-            return string.Join("\r\n", sourceCode.Split(LineSeparators, StringSplitOptions.None));
-        }
-
         public static bool HasTestModuleHeader(string sourceCode)
         {
             var headerLines = sourceCode.Split(LineSeparators, StringSplitOptions.None)
@@ -129,11 +116,6 @@ namespace AccessCodeLib.AccUnit.McpServer
         {
             var match = VbNameRegex.Match(sourceCode);
             return match.Success ? match.Groups[1].Value : null;
-        }
-
-        private static bool CanBeEncoded(string sourceCode, Encoding ansiEncoding)
-        {
-            return ansiEncoding.GetString(ansiEncoding.GetBytes(sourceCode)) == sourceCode;
         }
     }
 }
