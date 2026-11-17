@@ -1,4 +1,5 @@
-﻿using AccessCodeLib.AccUnit.Properties;
+﻿using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.AccUnit.Properties;
 using AccessCodeLib.AccUnit.Tools.Templates;
 using AccessCodeLib.Common.Tools.Logging;
 using System;
@@ -19,6 +20,8 @@ namespace AccessCodeLib.AccUnit.Configuration
         string TestMethodTemplate { get; set; }
 
         void Save();
+
+        ImportExportEncoding ImportExportEncoding { get; set; }
     }
 
     public class UserSettings : IUserSettings
@@ -124,6 +127,15 @@ namespace AccessCodeLib.AccUnit.Configuration
         {
             get { return _testSuiteUserSettings.ImportExportFolder; }
             set { _testSuiteUserSettings.ImportExportFolder = value.TrimEnd('\\', ' ').TrimStart(); }
+        }
+
+        [Category("Import/Export")]
+        [DefaultValue(ImportExportEncoding.Utf8Bom)]
+        [Description("Encoding of exported test classes (.cls, .bas): Utf8Bom (UTF-8 with BOM) or Ansi (code page of the VBA editor).\nThe import detects the encoding.")]
+        public ImportExportEncoding ImportExportEncoding
+        {
+            get { return _testSuiteUserSettings.ImportExportEncoding; }
+            set { _testSuiteUserSettings.ImportExportEncoding = value; }
         }
 
         [Category("Templates")]

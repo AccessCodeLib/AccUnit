@@ -1,4 +1,5 @@
-﻿using AccessCodeLib.AccUnit.Tools.Templates;
+﻿using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.AccUnit.Tools.Templates;
 using AccessCodeLib.Common.Tools.Logging;
 using System;
 using System.ComponentModel;
@@ -84,6 +85,8 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             AccUnit.UserSettings.Current = _testSuiteUserSettings;
             AccUnit.UserSettings.Current.Save();
+            // TestClassManager reads TestSuiteUserSettings: reload it from the saved settings
+            TestSuiteUserSettings.UnloadCurrent();
             Tools.UserSettings.Current = _toolsUserSettings;
             Tools.UserSettings.Current.Save();
             /*
@@ -119,6 +122,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
         {
             get { return _testSuiteUserSettings.ImportExportFolder; }
             set { _testSuiteUserSettings.ImportExportFolder = value.TrimEnd('\\', ' ').TrimStart(); }
+        }
+
+        [Category("Import/Export")]
+        [DefaultValue(ImportExportEncoding.Utf8Bom)]
+        [Description("Encoding of exported test classes (.cls, .bas): Utf8Bom (UTF-8 with BOM) or Ansi (code page of the VBA editor).\nThe import detects the encoding.")]
+        public ImportExportEncoding ImportExportEncoding
+        {
+            get { return _testSuiteUserSettings.ImportExportEncoding; }
+            set { _testSuiteUserSettings.ImportExportEncoding = value; }
         }
 
         [Category("Templates")]
