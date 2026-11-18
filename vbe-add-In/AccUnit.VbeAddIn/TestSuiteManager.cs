@@ -61,14 +61,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 try
                 {
                     _vbaTestSuite = CreateVbaTestSuite(OfficeApplicationHelper);
+                    TestSuiteInitialized?.Invoke(_vbaTestSuite);
                 }
                 catch (Exception ex)
                 {
-                    UITools.ShowException(ex);
-                }
-                finally
-                {
-                    TestSuiteInitialized?.Invoke(_vbaTestSuite);
+                    // Do not hand out a silent null: VBA would fail later with a meaningless message.
+                    // The exception reaches VBA as COM error (Err.Description contains the message);
+                    // UI callers show it themselves.
+                    Logger.Log(ex);
+                    throw new InvalidOperationException("AccUnit test suite could not be initialized: " + ex.Message, ex);
                 }
             }
         }

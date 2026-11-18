@@ -79,7 +79,14 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 {
                     _testListAndResultVbideControl = new VbideUserControl<TestListAndResultView>(AddIn, Resources.UserControls.TestResultUserControlInfoCaption, TestListAndResultViewUserControlInfo.PositionGuid);
                     _testListAndResultView = _testListAndResultVbideControl.Control;
-                    _testListAndResultView.RunBreakOnErrorMenuItemEnabled = (TestSuiteManager.TestSuite is AccessTestSuite);
+                    try
+                    {
+                        _testListAndResultView.RunBreakOnErrorMenuItemEnabled = (TestSuiteManager.TestSuite is AccessTestSuite);
+                    }
+                    catch (Exception ex)
+                    {
+                        UITools.ShowException(ex);
+                    }
 
                     _testListAndResultView.RunTests += TestListAndResultViewRunTests;
                     _testListAndResultView.ShowSourceCodeInvoked += TestListAndResultViewShowSourceCodeInvoked;
