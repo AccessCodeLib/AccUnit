@@ -20,9 +20,14 @@ namespace AccessCodeLib.AccUnit.CodeCoverage
 
         public void Clear(string codeModuleName = null)
         {
-            if (codeModuleName.Length > 0)
+            if (!string.IsNullOrEmpty(codeModuleName))
             {
                 RemoveCodeCoverageTracker(codeModuleName);
+                if (_codeModules.TryGetValue(codeModuleName, out var codeModuleTracker))
+                {
+                    codeModuleTracker.Procedures.Clear();
+                    _codeModules.Remove(codeModuleName);
+                }
             }
             else
             {
