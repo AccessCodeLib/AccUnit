@@ -112,6 +112,7 @@ namespace AccessCodeLib.Common.VBIDETools
             }
         }
 
+        // when re-enabled: call HotKeys.Dispose() in DisposeManagedResources (unregisters the hot keys)
         public HotKeys HotKeys { get; private set; }
 
         private void CheckHotKeys(int wParam)

@@ -29,6 +29,9 @@ namespace AccessCodeLib.AccUnit.Interop
         IAccessTestSuite SelectTests(object TestNameFilter);
         IAccessTestSuite Filter(object FilterTags);
         ITestClassGenerator TestClassGenerator { get; }
+
+        // Hides the non-COM-visible ITestSuite.CodeCoverageTracker; keep as last member (vtable order).
+        new ICodeCoverageTracker CodeCoverageTracker { get; set; }
     }
 
     [ComVisible(true)]
@@ -94,6 +97,12 @@ namespace AccessCodeLib.AccUnit.Interop
             {
                 return new TestClassGenerator(ActiveVBProject);
             }
+        }
+
+        public new ICodeCoverageTracker CodeCoverageTracker
+        {
+            get { return base.CodeCoverageTracker as ICodeCoverageTracker; }
+            set { base.CodeCoverageTracker = value; }
         }
 
         public new IAccessTestSuite AppendTestResultReporter(ITestResultReporter reporter)

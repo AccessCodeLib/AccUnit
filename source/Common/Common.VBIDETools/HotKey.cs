@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace AccessCodeLib.Common.VBIDETools
 {
-    public class HotKey
+    public class HotKey : IDisposable
     {
         [Flags]
         public enum ModKeys
@@ -50,14 +50,24 @@ namespace AccessCodeLib.Common.VBIDETools
         public ModKeys Modifiers { get; private set; }
         public uint Key { get; private set; }
 
-        ~HotKey()
+        bool _disposed;
+
+        /// <remarks>
+        /// UnregisterHotKey only works on the thread that registered the hot key,
+        /// so this must be called on deterministic dispose (not from a finalizer).
+        /// </remarks>
+        public void Dispose()
         {
+            if (_disposed)
+                return;
+
             try
             {
-                if ((int)_hwnd != 0)
+                Pressed = null;
+                if (_hwnd != IntPtr.Zero)
                 {
                     UnregisterHotKey(_hwnd, HotKeyAtom);
-                    _hwnd = (IntPtr)0;
+                    _hwnd = IntPtr.Zero;
                 }
                 GlobalDeleteAtom(HotKeyAtom);
             }
@@ -65,6 +75,8 @@ namespace AccessCodeLib.Common.VBIDETools
             {
                 Logger.Log(ex);
             }
+
+            _disposed = true;
         }
 
     }

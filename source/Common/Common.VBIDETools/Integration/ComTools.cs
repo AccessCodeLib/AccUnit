@@ -15,6 +15,9 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
         [DllImport("ole32.dll")]
         private static extern int CreateBindCtx(uint reserved, out IBindCtx pctx);
 
+        [DllImport("ole32.dll")]
+        private static extern int CreateFileMoniker([MarshalAs(UnmanagedType.LPWStr)] string lpszPathName, out IMoniker ppmk);
+
         private static IRunningObjectTable RunningObjectTable
         {
             get
@@ -45,12 +48,16 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
                 if (progID.Equals("Access.Application", StringComparison.CurrentCultureIgnoreCase) && vbe.VBProjects.Count == 1)
                 {
                     var fileName = vbe.ActiveVBProject.FileName;
-                    using (new BlockLogger($"Marshal.BindToMoniker({fileName})"))
+                    using (new BlockLogger($"GetComObjectFromROTByFileName({fileName})"))
                     {
-                        comInstance = Marshal.BindToMoniker(fileName);
+                        comInstance = GetComObjectFromROTByFileName(fileName);
                         if (comInstance != null)
                         {
-                            return comInstance;
+                            if (BelongsToVbe(comInstance, vbe))
+                            {
+                                return comInstance;
+                            }
+                            ReleaseComObject(comInstance);
                         }
                     }
                 }
@@ -73,22 +80,59 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
             }
         }
 
-        private static object GetOfficeComObjectByProgIDAndVBEfromFirstObjectInROT(string progID, VBE vbe)
+        /// <summary>
+        /// Looks up a file moniker in the running object table.
+        /// </summary>
+        /// <remarks>
+        /// Unlike Marshal.BindToMoniker, IRunningObjectTable.GetObject never activates the object,
+        /// so no new instance of the host application is started if the file is not open.
+        /// </remarks>
+        private static object GetComObjectFromROTByFileName(string fileName)
         {
-            var comInstance = Marshal.GetActiveObject(progID);
-            if (comInstance is null)
+            if (string.IsNullOrEmpty(fileName))
                 return null;
 
+            var runningObjectTable = RunningObjectTable;
+            if (runningObjectTable is null)
+                return null;
+
+            IMoniker fileMoniker = null;
             try
             {
-                var appVbe = comInstance.GetType().InvokeMember("VBE", BindingFlags.GetProperty, null, comInstance, null);
-                return vbe.Equals(appVbe) ? comInstance : null;
+                if (CreateFileMoniker(fileName, out fileMoniker) != 0 || fileMoniker is null)
+                    return null;
+
+                return runningObjectTable.GetObject(fileMoniker, out object comInstance) == 0 ? comInstance : null;
+            }
+            finally
+            {
+                ReleaseComObject(fileMoniker);
+                ReleaseComObject(runningObjectTable);
+            }
+        }
+
+        private static object GetOfficeComObjectByProgIDAndVBEfromFirstObjectInROT(string progID, VBE vbe)
+        {
+            object comInstance;
+            try
+            {
+                comInstance = Marshal.GetActiveObject(progID);
             }
             catch (Exception ex)
             {
+                // e.g. MK_E_UNAVAILABLE: no active object registered for this ProgID => continue with the ROT search
                 Logger.Log(ex);
                 return null;
             }
+
+            if (comInstance is null)
+                return null;
+
+            if (BelongsToVbe(comInstance, vbe))
+                return comInstance;
+
+            ReleaseComObject(comInstance);
+            return null;
         }
 
         private static object GetOfficeComObjectByProgIDAndVBEfromROT(string progID, VBE vbe)
@@ -99,48 +143,146 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
                 if (runningObjectTable is null)
                     return null;
 
-                runningObjectTable.EnumRunning(out IEnumMoniker monikerList);
-
-                var monikerContainer = new IMoniker[1];
-                var pointerFetchedMonikers = IntPtr.Zero;
-                monikerList.Reset();
-                while (monikerList.Next(1, monikerContainer, pointerFetchedMonikers) == 0)
+                IEnumMoniker monikerList = null;
+                try
                 {
-                    CreateBindCtx(0, out IBindCtx binder);
+                    runningObjectTable.EnumRunning(out monikerList);
 
-                    monikerContainer[0].GetDisplayName(binder, null, out string displayName);
-                    Logger.Log($"displayName: {displayName}");
-
-                    runningObjectTable.GetObject(monikerContainer[0], out object comInstance);
-                    if (GetTypeForComObject(comInstance, progID) is null) continue;
-                    object appVbe;
-                    try
+                    var monikerContainer = new IMoniker[1];
+                    var pointerFetchedMonikers = IntPtr.Zero;
+                    monikerList.Reset();
+                    while (monikerList.Next(1, monikerContainer, pointerFetchedMonikers) == 0)
                     {
-                        appVbe = comInstance.GetType().InvokeMember("VBE", BindingFlags.GetProperty, null, comInstance, null);
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log($"VBE error => attempt: Application / Error: {ex.Message}");
+                        var moniker = monikerContainer[0];
+                        monikerContainer[0] = null;
                         try
                         {
-                            comInstance = comInstance.GetType().InvokeMember("Application", BindingFlags.GetProperty, null, comInstance, null);
-                            // Microsoft Word & Co.: enable option 'Trust access to the VBA project object model'!
-                            appVbe = comInstance.GetType().InvokeMember("VBE", BindingFlags.GetProperty, null, comInstance, null);
-                            Logger.Log($"VBE: {comInstance.GetType()}");
+                            var comInstance = GetComObjectFromROTIfOfficeApplicationOfVbe(runningObjectTable, moniker, progID, vbe);
+                            if (comInstance != null)
+                            {
+                                Logger.Log($"found: {comInstance}");
+                                return comInstance;
+                            }
                         }
-                        catch (Exception ex2)
+                        catch (Exception ex)
                         {
-                            Logger.Log(ex2);
-                            appVbe = comInstance = null;
+                            // a faulty ROT entry must not abort the search
+                            Logger.Log(ex);
+                        }
+                        finally
+                        {
+                            ReleaseComObject(moniker);
                         }
                     }
-
-                    if (appVbe is null || !vbe.Equals(appVbe)) continue;
-
-                    Logger.Log($"found: {comInstance}");
-                    return comInstance;
+                    return null;
                 }
+                finally
+                {
+                    ReleaseComObject(monikerList);
+                    ReleaseComObject(runningObjectTable);
+                }
+            }
+        }
+
+        private static object GetComObjectFromROTIfOfficeApplicationOfVbe(IRunningObjectTable runningObjectTable, IMoniker moniker, string progID, VBE vbe)
+        {
+            IBindCtx binder = null;
+            try
+            {
+                CreateBindCtx(0, out binder);
+                moniker.GetDisplayName(binder, null, out string displayName);
+                Logger.Log($"displayName: {displayName}");
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                ReleaseComObject(binder);
+            }
+
+            if (runningObjectTable.GetObject(moniker, out object comInstance) != 0 || comInstance is null)
                 return null;
+
+            if (GetTypeForComObject(comInstance, progID) is null)
+            {
+                ReleaseComObject(comInstance);
+                return null;
+            }
+
+            if (BelongsToVbe(comInstance, vbe))
+                return comInstance;
+
+            // Microsoft Word & Co.: enable option 'Trust access to the VBA project object model'!
+            Logger.Log("VBE does not match or is not accessible => attempt: Application");
+            object application = null;
+            try
+            {
+                application = comInstance.GetType().InvokeMember("Application", BindingFlags.GetProperty, null, comInstance, null);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+            }
+            finally
+            {
+                // each marshalled reference increments the RCW count, so this is balanced
+                // even if Application returns the same RCW
+                ReleaseComObject(comInstance);
+            }
+
+            if (application is null)
+                return null;
+
+            if (BelongsToVbe(application, vbe))
+            {
+                Logger.Log($"VBE: {application.GetType()}");
+                return application;
+            }
+
+            ReleaseComObject(application);
+            return null;
+        }
+
+        /// <summary>
+        /// Checks whether the VBE property of the COM object is the given VBE.
+        /// </summary>
+        private static bool BelongsToVbe(object comInstance, VBE vbe)
+        {
+            object appVbe = null;
+            try
+            {
+                appVbe = comInstance.GetType().InvokeMember("VBE", BindingFlags.GetProperty, null, comInstance, null);
+                return appVbe != null && vbe.Equals(appVbe);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                return false;
+            }
+            finally
+            {
+                // the matching VBE is the RCW shared with the add-in => do not release it
+                if (!ReferenceEquals(appVbe, vbe))
+                {
+                    ReleaseComObject(appVbe);
+                }
+            }
+        }
+
+        private static void ReleaseComObject(object comObject)
+        {
+            if (comObject is null || !Marshal.IsComObject(comObject))
+                return;
+
+            try
+            {
+                Marshal.ReleaseComObject(comObject);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 
@@ -156,39 +298,48 @@ namespace AccessCodeLib.Common.VBIDETools.Integration
             using (new BlockLogger("comObject: " + comObject.GetType().Name))
             {
                 var comType = Type.GetTypeFromProgID(progID);
+                if (comType is null)
+                    return null; // ProgID not registered
 
                 // get the com object and fetch its IUnknown
                 var iunkwn = Marshal.GetIUnknownForObject(comObject);
-
-                // enum all the types defined in the interop assembly
-                var comAssembly = Assembly.GetAssembly(comType);
-                var comTypes = comAssembly.GetTypes();
-
-                using (new BlockLogger("foreach loop, comTypes.Count = " + comTypes.Length))
+                try
                 {
-                    // find the first implemented interop type
-                    foreach (var currType in comTypes)
+                    // enum all the types defined in the interop assembly
+                    var comAssembly = Assembly.GetAssembly(comType);
+                    var comTypes = comAssembly.GetTypes();
+
+                    using (new BlockLogger("foreach loop, comTypes.Count = " + comTypes.Length))
                     {
-                        // get the iid of the current type
-                        var iid = currType.GUID;
-                        if (!currType.IsInterface || iid == Guid.Empty)
+                        // find the first implemented interop type
+                        foreach (var currType in comTypes)
                         {
-                            // com interop type must be an interface with valid iid
-                            continue;
-                        }
+                            // get the iid of the current type
+                            var iid = currType.GUID;
+                            if (!currType.IsInterface || iid == Guid.Empty)
+                            {
+                                // com interop type must be an interface with valid iid
+                                continue;
+                            }
 
-                        // query supportability of current interface on object
-                        Marshal.QueryInterface(iunkwn, ref iid, out IntPtr ipointer);
+                            // query supportability of current interface on object
+                            Marshal.QueryInterface(iunkwn, ref iid, out IntPtr ipointer);
 
-                        if (ipointer != IntPtr.Zero)
-                        {
-                            // yeah, that’s the one we’re after
-                            return currType;
+                            if (ipointer != IntPtr.Zero)
+                            {
+                                Marshal.Release(ipointer);
+                                // yeah, that’s the one we’re after
+                                return currType;
+                            }
                         }
                     }
+                    // no implemented type found
+                    return null;
                 }
-                // no implemented type found
-                return null;
+                finally
+                {
+                    Marshal.Release(iunkwn);
+                }
             }
         }
 

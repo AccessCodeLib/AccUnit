@@ -1,4 +1,5 @@
-﻿using AccessCodeLib.Common.Tools.Logging;
+﻿using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.Common.Tools.Logging;
 using AccessCodeLib.Common.VBIDETools;
 using AccessCodeLib.Common.VBIDETools.Templates;
 using Microsoft.Vbe.Interop;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace AccessCodeLib.AccUnit.Configuration
@@ -53,12 +55,23 @@ namespace AccessCodeLib.AccUnit.Configuration
 
         private string ExportTestClass(string name, string exportdirectory)
         {
-            return CodeModuleManager.Export(name, exportdirectory);
+            return CodeModuleManager.Export(name, exportdirectory, ExportFileEncoding);
         }
 
         public string ExportTestClass(VBComponent component)
         {
-            return CodeModuleManager.Export(component, ExportDirectory);
+            return CodeModuleManager.Export(component, ExportDirectory, ExportFileEncoding);
+        }
+
+        /// <summary>Encoding of exported .cls and .bas files (setting ImportExportEncoding); null keeps the ANSI file of the VBA editor.</summary>
+        private static Encoding ExportFileEncoding
+        {
+            get
+            {
+                return TestSuiteUserSettings.Current.ImportExportEncoding == ImportExportEncoding.Ansi
+                    ? null
+                    : VbaSourceFile.Utf8BomEncoding;
+            }
         }
 
         public void RemoveTestClass(string name, bool export = true)
@@ -98,7 +111,7 @@ namespace AccessCodeLib.AccUnit.Configuration
         {
             if (export)
             {
-                CodeModuleManager.ExportAndRemove(name, exportdirectory);
+                CodeModuleManager.ExportAndRemove(name, exportdirectory, ExportFileEncoding);
             }
             else
             {
@@ -261,15 +274,76 @@ namespace AccessCodeLib.AccUnit.Configuration
             ImportTestComponents(importComponents, overwriteExistingComponent);
         }
 
+        /// <exception cref="UnsupportedSourceCharactersException">
+        /// A .cls or .bas file contains characters that are not available in the ANSI code page of the VBA editor; nothing is imported.
+        /// </exception>
         public void ImportTestComponents(IEnumerable<CodeModuleInfo> list, bool overwriteExistingComponent = false)
         {
-            foreach (var m in list)
+            var modules = list.ToList();
+            ThrowIfSourceFilesCannotBeImported(modules);
+
+            string ansiDirectory = null;
+            try
             {
-                if (overwriteExistingComponent)
+                foreach (var m in modules)
                 {
-                    RemoveComponentIfExists(m);
+                    if (overwriteExistingComponent)
+                    {
+                        RemoveComponentIfExists(m);
+                    }
+
+                    if (m.ComponentType == vbext_ComponentType.vbext_ct_Document)
+                    {
+                        ImportOfficeObject(new FileInfo(m.FileName));
+                    }
+                    else
+                    {
+                        if (ansiDirectory is null)
+                        {
+                            ansiDirectory = CreateTempImportDirectory();
+                        }
+                        // VBComponents.Import reads the ANSI code page: import an ANSI copy of the (UTF-8 or ANSI) source file
+                        var ansiFile = VbaSourceFile.WriteAnsiCopy(m.FileName, ansiDirectory, VbaSourceFile.AnsiEncoding);
+                        CodeModuleManager.Generator.Add(new FileInfo(ansiFile));
+                    }
                 }
-                ImportTestComponent(new FileInfo(m.FileName), m.ComponentType);
+            }
+            finally
+            {
+                if (ansiDirectory != null)
+                {
+                    DeleteTempImportDirectory(ansiDirectory);
+                }
+            }
+        }
+
+        private static void ThrowIfSourceFilesCannotBeImported(IEnumerable<CodeModuleInfo> modules)
+        {
+            var sourceFiles = modules.Where(m => m.ComponentType != vbext_ComponentType.vbext_ct_Document)
+                                     .Select(m => m.FileName);
+            var rejectedFiles = VbaSourceFile.GetFilesWithUnsupportedCharacters(sourceFiles, VbaSourceFile.AnsiEncoding).ToList();
+            if (rejectedFiles.Count > 0)
+            {
+                throw new UnsupportedSourceCharactersException(rejectedFiles, VbaSourceFile.AnsiEncoding);
+            }
+        }
+
+        private static string CreateTempImportDirectory()
+        {
+            var directory = Path.Combine(Path.GetTempPath(), "AccUnit", "Import-" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(directory);
+            return directory;
+        }
+
+        private static void DeleteTempImportDirectory(string directory)
+        {
+            try
+            {
+                Directory.Delete(directory, true);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
             }
         }
 
@@ -292,16 +366,6 @@ namespace AccessCodeLib.AccUnit.Configuration
             }
         }
 
-
-        private void ImportTestComponent(FileInfo importFile, vbext_ComponentType type)
-        {
-            if (type == vbext_ComponentType.vbext_ct_Document)
-                ImportOfficeObject(importFile);
-            else
-            {
-                CodeModuleManager.Generator.Add(importFile);
-            }
-        }
 
         private void ImportOfficeObject(FileSystemInfo importFile)
         {

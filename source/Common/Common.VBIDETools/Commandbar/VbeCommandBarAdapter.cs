@@ -113,61 +113,56 @@ namespace AccessCodeLib.Common.VBIDETools.Commandbar
 
             using (new BlockLogger())
             {
-                DisposeUnmanagedResources();
+                if (disposing)
+                {
+                    RemoveCommandBarButtonClickHandlers();
+                    ReleaseVbe();
+                }
                 _disposed = true;
             }
         }
 
-        private void DisposeUnmanagedResources()
+        /// <summary>
+        /// Unadvises the COM event sinks of the command bar buttons.
+        /// </summary>
+        /// <remarks>
+        /// Must run while the VBE is still alive (never from a finalizer).
+        /// If the sinks stay advised, the CLR finalizer unadvises them during process shutdown,
+        /// which crashes the host (access violation in combase.dll/clr.dll) and lets Office restart Access.
+        /// The buttons are not deleted here (issue #77: http://accunit.access-codelib.net/bugs/view.php?id=77).
+        /// </remarks>
+        protected void RemoveCommandBarButtonClickHandlers()
         {
             using (new BlockLogger())
             {
-                Marshal.ReleaseComObject(VBE);  
-                VBE = null;
-                
-                // issue #77: (http://accunit.access-codelib.net/bugs/view.php?id=77)
-                return;
-                /*
-                try
+                while (_commandBarButtons.Count > 0)
                 {
-                    while (_commandBarButtons.Count > 0)
+                    var button = _commandBarButtons.Pop();
+                    try
                     {
-                        var button = _commandBarButtons.Pop();
-                        try
-                        {
-                            Logger.Log(string.Format("Button: {0}, -ClickEventHandler", button.Button.Caption));
-                            button.Button.Click -= button.ClickEventHandler;
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Log(ex);
-                        }
-                        try
-                        {
-                            Logger.Log(string.Format("Button: {0}, Delete", button.Button.Caption));
-                            button.Button.Delete();
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Log(ex);
-                        }
-                        try
-                        {
-                            button.Dispose();
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Log(ex);
-                        }
+                        button.Button.Click -= button.ClickEventHandler;
                     }
-                    Logger.Log("_commandBarButtons.Clear");
-                    _commandBarButtons.Clear();
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-                */
+            }
+        }
+
+        /// <remarks>
+        /// Only called from Dispose(true): there is no finalizer, because COM objects must not be
+        /// touched on the finalizer thread (the STA may already be gone during process exit).
+        /// </remarks>
+        private void ReleaseVbe()
+        {
+            using (new BlockLogger())
+            {
+                if (VBE is null)
+                    return;
+
+                Marshal.ReleaseComObject(VBE);
+                VBE = null;
             }
         }
 
@@ -175,11 +170,6 @@ namespace AccessCodeLib.Common.VBIDETools.Commandbar
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        ~VbeCommandBarAdapter()
-        {
-            Dispose(false);
         }
 
         #endregion
@@ -242,11 +232,6 @@ namespace AccessCodeLib.Common.VBIDETools.Commandbar
             {
                 Dispose(true);
                 GC.SuppressFinalize(this);
-            }
-
-            ~CommandBarButtonAndClickHandler()
-            {
-                Dispose(false);
             }
 
             #endregion

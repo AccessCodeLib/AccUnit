@@ -225,6 +225,7 @@
     <Compile Include="Interfaces\ITestRunner.cs" />
     <Compile Include="Interfaces\ITestSuite.cs" />
     <Compile Include="Interfaces\ITestSummary.cs" />
+    <Compile Include="Interfaces\ImportExportEncoding.cs" />
     <Compile Include="Interfaces\ResetMode.cs" />
     <Compile Include="Interfaces\RunState.cs" />
     <Compile Include="Interfaces\TestContextMethodNames.cs" />

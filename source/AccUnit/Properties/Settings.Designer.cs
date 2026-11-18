@@ -61,6 +61,18 @@ namespace AccessCodeLib.AccUnit.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Utf8Bom")]
+        public global::AccessCodeLib.AccUnit.Interfaces.ImportExportEncoding ImportExportEncoding {
+            get {
+                return ((global::AccessCodeLib.AccUnit.Interfaces.ImportExportEncoding)(this["ImportExportEncoding"]));
+            }
+            set {
+                this["ImportExportEncoding"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("%APPDATA%\\AccessCodeLib\\AccUnit\\Templates")]
         public string TemplateFolder {
             get {

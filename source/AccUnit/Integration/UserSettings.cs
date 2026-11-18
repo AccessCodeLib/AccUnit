@@ -1,4 +1,5 @@
-﻿using AccessCodeLib.AccUnit.Properties;
+﻿using AccessCodeLib.AccUnit.Interfaces;
+using AccessCodeLib.AccUnit.Properties;
 using AccessCodeLib.Common.Tools.Logging;
 using System;
 using System.ComponentModel;
@@ -47,6 +48,7 @@ namespace AccessCodeLib.AccUnit
             var clone = new UserSettings
             {
                 ImportExportFolder = ImportExportFolder,
+                ImportExportEncoding = ImportExportEncoding,
                 SeparatorChar = SeparatorChar,
                 SeparatorMaxLength = SeparatorMaxLength
             };
@@ -60,6 +62,7 @@ namespace AccessCodeLib.AccUnit
             using (new BlockLogger())
             {
                 ImportExportFolder = Settings.Default.ImportExportFolder;
+                ImportExportEncoding = Settings.Default.ImportExportEncoding;
                 SeparatorMaxLength = Settings.Default.SeparatorMaxLength;
                 SeparatorChar = Settings.Default.SeparatorChar;
             }
@@ -68,6 +71,7 @@ namespace AccessCodeLib.AccUnit
         public void Save()
         {
             Settings.Default.ImportExportFolder = ImportExportFolder;
+            Settings.Default.ImportExportEncoding = ImportExportEncoding;
             Settings.Default.SeparatorMaxLength = SeparatorMaxLength;
             Settings.Default.SeparatorChar = SeparatorChar;
             Settings.Default.Save();
@@ -89,6 +93,9 @@ namespace AccessCodeLib.AccUnit
                 _importExportFolder = value.TrimEnd('\\', ' ').TrimStart();
             }
         }
+
+        /// <summary>Encoding of exported .cls and .bas files; the import detects the encoding.</summary>
+        public ImportExportEncoding ImportExportEncoding { get; set; }
 
         [Category("Text output")]
         [DefaultValue(60)]

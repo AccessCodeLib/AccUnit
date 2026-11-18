@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>AccUnit.McpServer</AssemblyName>
+    <RootNamespace>AccessCodeLib.AccUnit.McpServer</RootNamespace>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ModelContextProtocol" Version="2.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Access">
+      <HintPath>..\..\source\lib\access\Microsoft.Office.Interop.Access.dll</HintPath>
+      <EmbedInteropTypes>false</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Access.Dao">
+      <HintPath>..\..\source\lib\access\Microsoft.Office.interop.access.dao.dll</HintPath>
+      <EmbedInteropTypes>false</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Vbe.Interop">
+      <HintPath>..\..\source\packages\ThammimTech.Microsoft.Vbe.Interop.15.0.0\lib\net20\Microsoft.Vbe.Interop.dll</HintPath>
+      <EmbedInteropTypes>false</EmbedInteropTypes>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\source\AccUnit\AccessCodeLib.AccUnit.csproj" />
+    <ProjectReference Include="..\..\source\Common\Common.VBIDETools\AccessCodeLib.Common.VBIDETools.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="AccessCodeLib.AccUnit.McpServer.Tests" />
+  </ItemGroup>
+
+  <!-- The skill is shipped next to the exe (skills\accunit-tests) and installed with accunit_install_skill -->
+  <ItemGroup>
+    <None Include="..\skills\**\*" Link="skills\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

@@ -67,7 +67,7 @@ namespace AccessCodeLib.Common.VBIDETools
             try
             {
                 var activeDocumentFullName = FileTools.ConvertPathToUNC(GetDocumentFullName());
-                if (string.IsNullOrEmpty(activeDocumentFullName) && !VbProjectMatchWithFullName(activeVBProject, activeDocumentFullName))
+                if (IsProjectLookupRequired(activeDocumentFullName, fullName => VbProjectMatchWithFullName(activeVBProject, fullName)))
                 {
                     activeVBProject = FindVbProjectEqualsFullName(activeDocumentFullName);
                 }
@@ -78,6 +78,15 @@ namespace AccessCodeLib.Common.VBIDETools
                 Logger.Log(ex);
                 return null;
             }
+        }
+
+        /// <summary>
+        /// The active VBProject has to be replaced only if the active document is known
+        /// and the active VBProject does not belong to it.
+        /// </summary>
+        public static bool IsProjectLookupRequired(string activeDocumentFullName, Func<string, bool> activeVbProjectMatches)
+        {
+            return !string.IsNullOrEmpty(activeDocumentFullName) && !activeVbProjectMatches(activeDocumentFullName);
         }
 
         private string GetDocumentFullName()
@@ -138,17 +147,17 @@ namespace AccessCodeLib.Common.VBIDETools
                         _invocationHelper.Dispose();
                         _invocationHelper = null;
                     }
-                }
 
-                if (_application != null)
-                {
-                    if (_releaseApplicationComObjectOnDispose)
+                    // COM release only on deterministic dispose, never from the finalizer thread
+                    if (_application != null)
                     {
-                        Marshal.ReleaseComObject(_application);
+                        if (_releaseApplicationComObjectOnDispose)
+                        {
+                            Marshal.ReleaseComObject(_application);
+                        }
+                        _application = null;
                     }
-                    _application = null;
-                }   
-                
+                }
             }
             catch (Exception ex)
             {
@@ -167,11 +176,6 @@ namespace AccessCodeLib.Common.VBIDETools
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        ~OfficeApplicationHelper()
-        {
-            Dispose(false);
         }
 
         #endregion

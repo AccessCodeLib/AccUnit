@@ -136,6 +136,8 @@
     <Compile Include="CodeModuleGenerator.cs" />
     <Compile Include="CodeModuleInfo.cs" />
     <Compile Include="CodeModuleContainer.cs" />
+    <Compile Include="UnsupportedSourceCharactersException.cs" />
+    <Compile Include="VbaSourceFile.cs" />
     <Compile Include="CodeModuleMember.cs" />
     <Compile Include="CodeModuleMemberList.cs" />
     <Compile Include="CodeModuleReader.cs" />

@@ -238,7 +238,25 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 _addInManagerBridge.HostApplicationInitialized += AddInBridgeHostApplicationInitialized;
                 _addInManagerBridge.ConstraintBuilderRequest += AddInBridgeConstraintBuilderRequest;
                 _addInManagerBridge.AssertRequest += AddInBridgeAssertRequest;
+                _addInManagerBridge.AccUnitFactoryRequest += AddInBridgeAccUnitFactoryRequest;
+                _addInManagerBridge.CodeCoverageTrackerRequest += AddInBridgeCodeCoverageTrackerRequest;
+                _addInManagerBridge.ErrorTrappingObserverRequest += AddInBridgeErrorTrappingObserverRequest;
             }
+        }
+
+        private void AddInBridgeAccUnitFactoryRequest(out Interop.IAccUnitFactory accUnitFactory)
+        {
+            accUnitFactory = _testSuiteManager.AccUnitFactory;
+        }
+
+        private void AddInBridgeCodeCoverageTrackerRequest(out Interop.ICodeCoverageTracker codeCoverageTracker)
+        {
+            codeCoverageTracker = _testSuiteManager.CodeCoverageTracker;
+        }
+
+        private void AddInBridgeErrorTrappingObserverRequest(out IErrorTrappingObserver errorTrappingObserver)
+        {
+            errorTrappingObserver = _testSuiteManager.ErrorTrappingObserver;
         }
 
         private void AddInBridgeAssertRequest(out Interop.IAssert assert)
@@ -266,9 +284,17 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             using (new BlockLogger())
             {
                 // Note: if load RubberDuck, an instance of Access stay in memory after close => HostApplicationTools.GetOfficeApplicationHelper(..., ..., true);
+                var previousHelper = _officeApplicationHelper;
                 _officeApplicationHelper = HostApplicationTools.GetOfficeApplicationHelper(VBE, ref hostApplication, true);
                 _vbeIntegrationManager.OfficeApplicationHelper = _officeApplicationHelper;
                 _testSuiteManager.OfficeApplicationHelper = _officeApplicationHelper;
+
+                // Dispose the previous helper only after the new one exists: both may wrap the same
+                // application RCW, whose reference count must not drop to 0 in between.
+                if (previousHelper != null)
+                {
+                    DisposeManagedResource(previousHelper);
+                }
             }
         }
 
@@ -401,6 +427,7 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             {
                 if (_disposed) return;
 
+                // COM objects are only released on deterministic dispose, never from a finalizer thread
                 if (disposing)
                 {
                     try
@@ -411,15 +438,15 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                     {
                         Logger.Log(ex);
                     }
-                }
 
-                try
-                {
-                    DisposeUnmanagedResources();
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
+                    try
+                    {
+                        DisposeUnmanagedResources();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
                 }
 
                 _disposed = true;
@@ -428,11 +455,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
 
         private void DisposeUnmanagedResources()
         {
-            if (_addIn != null)
-            {
-                Marshal.ReleaseComObject(_addIn);
-                _addIn = null;
-            }
+            // The AddIn RCW is owned by Connect (it receives it in OnConnection and releases it once in Dispose),
+            // so it is only dereferenced here. A second ReleaseComObject would throw InvalidComObjectException.
+            _addIn = null;
         }
 
         private void DisposeManagedResources()
@@ -492,6 +517,9 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
             addInManagerBridge.HostApplicationInitialized -= AddInBridgeHostApplicationInitialized;
             addInManagerBridge.ConstraintBuilderRequest -= AddInBridgeConstraintBuilderRequest;
             addInManagerBridge.AssertRequest -= AddInBridgeAssertRequest;
+            addInManagerBridge.AccUnitFactoryRequest -= AddInBridgeAccUnitFactoryRequest;
+            addInManagerBridge.CodeCoverageTrackerRequest -= AddInBridgeCodeCoverageTrackerRequest;
+            addInManagerBridge.ErrorTrappingObserverRequest -= AddInBridgeErrorTrappingObserverRequest;
         }
 
         public void Dispose()
@@ -501,13 +529,6 @@ namespace AccessCodeLib.AccUnit.VbeAddIn
                 Dispose(true);
                 GC.SuppressFinalize(this);
             }
-        }
-
-        ~AddInManager()
-        {
-            Logger.Log("~AddInManager");
-            Dispose(false);
-            Logger.Log("~AddInManager completed");
         }
 
         #endregion

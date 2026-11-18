@@ -11,6 +11,9 @@
     <Setting Name="ImportExportFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)">%APPFOLDER%\Tests\%APPNAME%</Value>
     </Setting>
+    <Setting Name="ImportExportEncoding" Type="AccessCodeLib.AccUnit.Interfaces.ImportExportEncoding" Scope="User">
+      <Value Profile="(Default)">Utf8Bom</Value>
+    </Setting>
     <Setting Name="TemplateFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)">%APPDATA%\AccessCodeLib\AccUnit\Templates</Value>
     </Setting>

@@ -1,5 +1,6 @@
-# Builds the AccUnit library and the VBE add-in, runs the unit tests and creates the
-# library zip AccUnit.<major.minor.patch>.bin.zip as workflow artifact.
+# Builds the AccUnit library, the VBE add-in and the MCP server, runs the unit tests and creates the
+# library zip AccUnit.<major.minor.patch>.bin.zip and the MCP server zip
+# AccUnit.McpServer.<major.minor.patch>.zip as workflow artifacts.
 # Runs for pushes and pull requests to dev/main and is called by the release workflow.
 
 name: Build
@@ -61,6 +62,14 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw "Build failed for $solution" }
           }
 
+      # Own configuration (Release): the MCP server solution has no AzureCI configuration.
+      # /restore restores its PackageReference projects; the AccUnit projects were restored above.
+      - name: "Build MCP server"
+        shell: pwsh
+        run: |
+          msbuild mcp-server\AccessCodeLib.AccUnit.McpServer.sln /restore /p:Configuration=Release "/p:Platform=$env:BUILD_PLATFORM" /m /v:minimal /nologo
+          if ($LASTEXITCODE -ne 0) { throw "Build failed for the MCP server" }
+
       - name: "Run unit tests"
         shell: pwsh
         run: |
@@ -71,6 +80,9 @@ jobs:
           $excludedTestAssemblies = @('AccessTestClientTests.dll', 'AccessCodeLib.Common.VBIDETools.Tests.dll')
           $testAssemblies = @(Get-ChildItem -Recurse -Filter '*Tests.dll' -Path source, vbe-add-In |
             Where-Object { $_.FullName -match "\\bin\\$env:BUILD_CONFIGURATION\\" -and $_.Name -notin $excludedTestAssemblies })
+          # MCP server tests need no Access (built with Release, see "Build MCP server")
+          $testAssemblies += @(Get-ChildItem -Recurse -Filter '*Tests.dll' -Path mcp-server |
+            Where-Object { $_.FullName -match '\\bin\\Release\\' })
           if ($testAssemblies.Count -eq 0) { throw "No test assemblies found" }
           $testAssemblies.FullName
           & $vstest $testAssemblies.FullName '/TestCaseFilter:TestCategory!=AccessClientTests' '/logger:trx' '/ResultsDirectory:TestResults'
@@ -113,4 +125,27 @@ jobs:
         with:
           name: "AccUnit-bin"
           path: build/AccUnit.*.bin.zip
+          if-no-files-found: error
+
+      # Same version as the AccUnit library: the MCP server is released together with AccUnit.
+      - name: "Create MCP server zip"
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.zip.outputs.version }}
+        run: |
+          $serverDir = "mcp-server\AccUnit.McpServer\bin\Release\net48"
+          if (-not (Test-Path "$serverDir\AccUnit.McpServer.exe")) { throw "AccUnit.McpServer.exe not found in $serverDir" }
+          if (-not (Test-Path "$serverDir\skills\accunit-tests\SKILL.md")) { throw "Skill accunit-tests not found in $serverDir\skills" }
+          $files = @(Get-ChildItem -Path $serverDir -File | Where-Object { $_.Extension -ne '.pdb' })
+          $files | Format-Table Name, Length, LastWriteTime
+          $zipFile = "build\AccUnit.McpServer.$env:VERSION.zip"
+          # The folder skills (skill accunit-tests) is installed with the tool accunit_install_skill
+          Compress-Archive -Path (@($files.FullName) + "$serverDir\skills") -DestinationPath $zipFile -Force
+
+      # The artifact name is used by release.yml
+      - name: "Upload MCP server zip"
+        uses: actions/upload-artifact@v7
+        with:
+          name: "AccUnit-McpServer"
+          path: build/AccUnit.McpServer.*.zip
           if-no-files-found: error
