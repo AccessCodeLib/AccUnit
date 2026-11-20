@@ -10,6 +10,9 @@ For more informations see [Wiki](https://github.com/AccessCodeLib/AccUnit/wiki) 
 * For 32 and 64 Bit Office/Access
 * Run COM regfree (with [Access Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in) or [Excel Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/excel-add-in))
 
+### Architecture
+![AccUnit architecture](.github/images/architecture.svg)
+
 ### Dev state
 * Run tests
   * Tests can started by [Access-Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/access-add-in) or [Excel Add-In](https://github.com/AccessCodeLib/AccUnit/tree/main/excel-add-in)

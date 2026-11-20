@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 1100" width="1240" height="1100" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <title>AccUnit architecture</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#37474f"/>
+    </marker>
+    <style>
+      .title { font-size: 24px; font-weight: 600; fill: #263238; }
+      .subtitle { font-size: 13px; fill: #607d8b; }
+      .box-title { font-size: 15px; font-weight: 600; fill: #263238; }
+      .box-sub { font-size: 11.5px; fill: #546e7a; }
+      .row { fill: #ffffff; stroke: #cfd8dc; }
+      .row-text { font-size: 12px; fill: #263238; }
+      .code { font-family: Consolas, "Courier New", monospace; font-size: 11.5px; fill: #37474f; }
+      .small { font-size: 11.5px; fill: #455a64; }
+      .flow { stroke: #37474f; stroke-width: 1.6; fill: none; }
+      .flow-dashed { stroke: #78909c; stroke-width: 1.4; fill: none; stroke-dasharray: 6 4; }
+      .badge { fill: #37474f; }
+      .badge-text { font-size: 11px; font-weight: 600; fill: #ffffff; text-anchor: middle; }
+      .ext { fill: #fafafa; stroke: #90a4ae; stroke-dasharray: 5 4; }
+      .legend { font-size: 12px; fill: #263238; }
+    </style>
+  </defs>
+
+  <rect width="1240" height="1100" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="50" y="42" class="title">AccUnit – Architecture</text>
+  <text x="50" y="66" class="subtitle">Access add-in (AccUnitLoader), .NET core and VBE add-in · Excel add-in not shown</text>
+
+  <!-- External starters above the Access process -->
+  <rect x="50" y="88" width="180" height="56" rx="6" class="ext"/>
+  <text x="140" y="111" class="box-title" text-anchor="middle" font-size="13">Developer</text>
+  <text x="140" y="131" class="small" text-anchor="middle">works in the VBA editor</text>
+
+  <rect x="262" y="88" width="160" height="56" rx="6" class="ext"/>
+  <text x="342" y="111" class="box-title" text-anchor="middle" font-size="13">AI agent</text>
+  <text x="342" y="131" class="small" text-anchor="middle">e.g. Claude Code</text>
+
+  <rect x="455" y="88" width="280" height="56" rx="6" class="ext"/>
+  <text x="595" y="111" class="box-title" text-anchor="middle" font-size="13">AccUnit MCP server</text>
+  <text x="595" y="131" class="small" text-anchor="middle">own process · uses AccUnit core</text>
+
+  <!-- Developer -> AI agent -> MCP server -->
+  <path d="M230,116 L260,116" class="flow-dashed" marker-end="url(#arrow)"/>
+  <path d="M422,116 L453,116" class="flow-dashed" marker-end="url(#arrow)"/>
+  <text x="438" y="107" class="small" text-anchor="middle" font-size="10">MCP</text>
+
+  <rect x="880" y="88" width="150" height="56" rx="6" class="ext"/>
+  <text x="955" y="111" class="box-title" text-anchor="middle" font-size="13">msaccess-vcs add-in</text>
+  <text x="955" y="131" class="code" text-anchor="middle">AutomatedTestRunVCS</text>
+
+  <rect x="1045" y="88" width="135" height="56" rx="6" class="ext"/>
+  <text x="1112" y="111" class="box-title" text-anchor="middle" font-size="13">CI / scripts</text>
+  <text x="1112" y="131" class="code" text-anchor="middle">AutomatedTestRun</text>
+
+  <!-- Access process frame -->
+  <rect x="30" y="170" width="1190" height="705" rx="10" fill="#f5f7f8" stroke="#90a4ae" stroke-width="1.5"/>
+  <text x="585" y="200" class="box-title" font-size="14" text-anchor="middle">Microsoft Access process</text>
+  <text x="585" y="218" class="box-sub" text-anchor="middle">32 or 64 bit</text>
+
+  <!-- VBE add-in -->
+  <rect x="80" y="240" width="270" height="320" rx="8" fill="#f3e5f5" stroke="#ab47bc" stroke-width="1.5"/>
+  <text x="92" y="266" class="box-title">VBE add-in</text>
+  <text x="92" y="284" class="box-sub">AccUnit.VbeAddIn.dll · in the VBA editor</text>
+  <circle cx="330" cy="260" r="10" class="badge"/><text x="330" y="264" class="badge-text">6</text>
+  <rect x="92" y="300" width="246" height="28" rx="4" class="row"/>
+  <text x="102" y="318" class="row-text">Test Explorer: test tree, results</text>
+  <rect x="92" y="336" width="246" height="28" rx="4" class="row"/>
+  <text x="102" y="354" class="row-text">Select and run tests</text>
+  <rect x="92" y="372" width="246" height="28" rx="4" class="row"/>
+  <text x="102" y="390" class="row-text">Generate test procedures</text>
+  <rect x="92" y="408" width="246" height="28" rx="4" class="row"/>
+  <text x="102" y="426" class="row-text">Import / export test classes</text>
+  <rect x="92" y="444" width="246" height="28" rx="4" class="row"/>
+  <text x="102" y="462" class="row-text">Bridge: TestSuite, Assert, Iz</text>
+
+  <!-- AccUnit core -->
+  <rect x="440" y="240" width="290" height="320" rx="8" fill="#e8f5e9" stroke="#66bb6a" stroke-width="1.5"/>
+  <text x="452" y="266" class="box-title">AccUnit core</text>
+  <text x="452" y="284" class="box-sub">AccUnit.dll · .NET Framework 4.8 · COM-visible</text>
+  <rect x="452" y="300" width="266" height="28" rx="4" class="row"/>
+  <text x="462" y="318" class="row-text">AccessTestSuite · TestRunner</text>
+  <rect x="452" y="336" width="266" height="28" rx="4" class="row"/>
+  <text x="462" y="354" class="row-text">TestClassReader: attributes, tags</text>
+  <rect x="452" y="372" width="266" height="28" rx="4" class="row"/>
+  <text x="462" y="390" class="row-text">Row tests · parameterized tests</text>
+  <rect x="452" y="408" width="266" height="28" rx="4" class="row"/>
+  <text x="462" y="426" class="row-text">Assert · Iz constraints</text>
+  <rect x="452" y="444" width="266" height="28" rx="4" class="row"/>
+  <text x="462" y="462" class="row-text">CodeCoverageTracker</text>
+  <rect x="452" y="480" width="266" height="28" rx="4" class="row"/>
+  <text x="462" y="498" class="row-text">Configurator · TestClassGenerator</text>
+  <rect x="452" y="516" width="266" height="28" rx="4" class="row"/>
+  <text x="462" y="534" class="row-text">Common.Tools · Common.VBIDETools</text>
+
+  <!-- AccUnitLoader -->
+  <rect x="840" y="240" width="340" height="320" rx="8" fill="#fff8e1" stroke="#ffb300" stroke-width="1.5"/>
+  <text x="852" y="266" class="box-title">AccUnitLoader.accda</text>
+  <text x="852" y="284" class="box-sub">Access add-in (VBA) · in %APPDATA%\Microsoft\AddIns</text>
+  <rect x="852" y="300" width="316" height="28" rx="4" class="row"/>
+  <text x="862" y="318" class="row-text">GetAccUnitFactory · AccUnitLoaderFactory</text>
+  <rect x="852" y="336" width="316" height="28" rx="4" class="row"/>
+  <text x="862" y="354" class="row-text">TestSuite (wraps AccessTestSuite, events)</text>
+  <rect x="852" y="372" width="316" height="28" rx="4" class="row"/>
+  <text x="862" y="390" class="row-text">NetComDomain: CLR 4 hosting (mscoree.dll)</text>
+  <rect x="852" y="408" width="316" height="28" rx="4" class="row"/>
+  <text x="862" y="426" class="row-text">Reporters: Debug.Print, log file, VCS, JUnit</text>
+  <rect x="852" y="444" width="316" height="28" rx="4" class="row"/>
+  <text x="862" y="462" class="row-text">Ribbon · AutomatedTestRun(VCS)</text>
+  <rect x="852" y="480" width="316" height="28" rx="4" class="row"/>
+  <text x="862" y="498" class="row-text">VbeAddInInstaller</text>
+  <circle cx="1150" cy="494" r="10" class="badge"/><text x="1150" y="498" class="badge-text">6</text>
+  <rect x="852" y="516" width="316" height="28" rx="4" class="row"/>
+  <text x="862" y="534" class="row-text">usys_AppFiles: DLL and TLB files</text>
+
+  <!-- lib folder -->
+  <rect x="960" y="600" width="220" height="92" rx="8" fill="#eceff1" stroke="#90a4ae" stroke-width="1.5"/>
+  <text x="972" y="623" class="box-title" font-size="14">lib\ next to the add-in</text>
+  <text x="972" y="645" class="code">AccUnit.dll · AccUnit.tlb</text>
+  <text x="972" y="663" class="code">AccessCodeLib.Common.*.dll</text>
+  <text x="972" y="681" class="code">AccUnit.VbeAddIn.dll · …</text>
+
+  <!-- Tested database -->
+  <rect x="50" y="720" width="1130" height="130" rx="8" fill="#e3f2fd" stroke="#64b5f6" stroke-width="1.5"/>
+  <text x="62" y="744" class="box-title">Tested database (.accdb)</text>
+  <text x="62" y="762" class="box-sub">VBA project of the application</text>
+  <rect x="62" y="776" width="360" height="28" rx="4" class="row"/>
+  <text x="72" y="794" class="row-text">AccUnit_Factory (inserted by loader or MCP server)</text>
+  <rect x="62" y="812" width="360" height="28" rx="4" class="row"/>
+  <text x="72" y="830" class="row-text">Reference to AccUnit.tlb (optional)</text>
+  <rect x="435" y="776" width="360" height="28" rx="4" class="row"/>
+  <text x="445" y="794" class="row-text">Test classes <tspan class="code">'AccUnit:TestClass</tspan> · <tspan class="code">'AccUnit:Row(...)</tspan></text>
+  <rect x="435" y="812" width="360" height="28" rx="4" class="row"/>
+  <text x="445" y="830" class="row-text">Test class factories (generated)</text>
+  <rect x="808" y="776" width="360" height="28" rx="4" class="row"/>
+  <text x="818" y="794" class="row-text">Code under test</text>
+  <rect x="808" y="812" width="360" height="28" rx="4" class="row"/>
+  <text x="818" y="830" class="code">Assert.That Actual, Iz.EqualTo(x)</text>
+
+  <!-- Developer: Test Explorer, Immediate window, loader -->
+  <path d="M190,144 L190,238" class="flow-dashed" marker-end="url(#arrow)"/>
+  <text x="198" y="212" class="small">Test Explorer</text>
+  <path d="M62,144 L62,718" class="flow-dashed" marker-end="url(#arrow)"/>
+  <text x="70" y="212" class="small">Immediate</text>
+  <text x="70" y="227" class="small">window</text>
+  <path d="M155,88 L155,77 L870,77 L870,238" class="flow-dashed" marker-end="url(#arrow)"/>
+  <circle cx="800" cy="77" r="10" class="badge"/><text x="800" y="81" class="badge-text">11</text>
+
+  <!-- Other starters -> loader -->
+  <path d="M955,144 L955,238" class="flow-dashed" marker-end="url(#arrow)"/>
+  <path d="M1112,144 L1112,238" class="flow-dashed" marker-end="url(#arrow)"/>
+
+  <!-- 7: VBE add-in -> core -->
+  <path d="M350,458 L438,458" class="flow" marker-end="url(#arrow)"/>
+  <circle cx="372" cy="458" r="10" class="badge"/><text x="372" y="462" class="badge-text">7</text>
+
+  <!-- 2: loader -> core -->
+  <path d="M840,386 L732,386" class="flow" marker-end="url(#arrow)"/>
+  <circle cx="785" cy="386" r="10" class="badge"/><text x="785" y="390" class="badge-text">2</text>
+
+  <!-- 4: core -> reporters -->
+  <path d="M730,422 L838,422" class="flow" marker-end="url(#arrow)"/>
+  <circle cx="785" cy="422" r="10" class="badge"/><text x="785" y="426" class="badge-text">4</text>
+
+  <!-- 8: AccUnit_Factory -> VBE add-in, if connected -->
+  <path d="M215,718 L215,562" class="flow-dashed" marker-end="url(#arrow)"/>
+  <circle cx="215" cy="640" r="10" class="badge"/><text x="215" y="644" class="badge-text">8</text>
+
+  <!-- 3: core -> test classes -->
+  <path d="M585,560 L585,718" class="flow" marker-end="url(#arrow)"/>
+  <circle cx="585" cy="640" r="10" class="badge"/><text x="585" y="644" class="badge-text">3</text>
+  <text x="602" y="644" class="small">VBIDE + Application.Run</text>
+
+  <!-- 1: AccUnit_Factory <-> loader -->
+  <path d="M880,718 L880,562" class="flow" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <circle cx="880" cy="640" r="10" class="badge"/><text x="880" y="644" class="badge-text">1</text>
+
+  <!-- 5: usys_AppFiles -> lib -->
+  <path d="M1070,560 L1070,598" class="flow" marker-end="url(#arrow)"/>
+  <circle cx="1070" cy="579" r="10" class="badge"/><text x="1070" y="583" class="badge-text">5</text>
+
+  <!-- 9: MCP server -> VBA project (VBIDE) -->
+  <path d="M480,144 L480,190 L405,190 L405,718" class="flow-dashed" marker-end="url(#arrow)"/>
+  <circle cx="405" cy="640" r="10" class="badge"/><text x="405" y="644" class="badge-text">9</text>
+
+  <!-- 10: MCP server -> loader (test run) -->
+  <path d="M735,116 L852,116 L852,238" class="flow-dashed" marker-end="url(#arrow)"/>
+  <circle cx="852" cy="200" r="10" class="badge"/><text x="852" y="204" class="badge-text">10</text>
+
+  <!-- Legend -->
+  <g transform="translate(0,-70)">
+  <text x="50" y="996" class="box-title" font-size="14">Flow</text>
+
+  <circle cx="60" cy="1021" r="10" class="badge"/><text x="60" y="1025" class="badge-text">1</text>
+  <text x="78" y="1025" class="legend">AccUnit_Factory: Application.Run …AccUnitLoader.GetAccUnitFactory → TestSuite, Assert</text>
+  <circle cx="60" cy="1047" r="10" class="badge"/><text x="60" y="1051" class="badge-text">2</text>
+  <text x="78" y="1051" class="legend">NetComDomain hosts CLR 4, loads lib\AccUnit.dll – no COM registration</text>
+  <circle cx="60" cy="1073" r="10" class="badge"/><text x="60" y="1077" class="badge-text">3</text>
+  <text x="78" y="1077" class="legend">Core reads test classes (VBIDE), creates them via Application.Run, runs tests</text>
+  <circle cx="60" cy="1099" r="10" class="badge"/><text x="60" y="1103" class="badge-text">4</text>
+  <text x="78" y="1103" class="legend">Results and events go back to the TestSuite and its reporters</text>
+  <circle cx="60" cy="1125" r="10" class="badge"/><text x="60" y="1129" class="badge-text">5</text>
+  <text x="78" y="1129" class="legend">On first use the loader extracts DLL/TLB files from usys_AppFiles to lib\</text>
+  <line x1="42" y1="1155" x2="72" y2="1155" class="flow"/>
+  <text x="80" y="1159" class="legend">call at run time</text>
+  <line x1="200" y1="1155" x2="230" y2="1155" class="flow-dashed"/>
+  <text x="238" y="1159" class="legend">optional or conditional path</text>
+
+  <circle cx="650" cy="1021" r="10" class="badge"/><text x="650" y="1025" class="badge-text">6</text>
+  <text x="668" y="1025" class="legend">Optional: VbeAddInInstaller writes HKCU entries for the VBE add-in only</text>
+  <circle cx="650" cy="1047" r="10" class="badge"/><text x="650" y="1051" class="badge-text">7</text>
+  <text x="668" y="1051" class="legend">The VBE add-in uses the core to list, run and generate tests</text>
+  <circle cx="650" cy="1073" r="10" class="badge"/><text x="650" y="1077" class="badge-text">8</text>
+  <text x="668" y="1077" class="legend">If the VBE add-in is connected, AccUnit_Factory uses it instead of 1</text>
+  <circle cx="650" cy="1099" r="10" class="badge"/><text x="650" y="1103" class="badge-text">9</text>
+  <text x="668" y="1103" class="legend">MCP server: VBIDE – list tests, import/export, insert factory modules</text>
+  <circle cx="650" cy="1125" r="10" class="badge"/><text x="650" y="1129" class="badge-text">10</text>
+  <text x="668" y="1129" class="legend">MCP server: TestSuite from the loader (JUnit XML); Assert via 1 or 8</text>
+  <circle cx="650" cy="1151" r="10" class="badge"/><text x="650" y="1155" class="badge-text">11</text>
+  <text x="668" y="1155" class="legend">Developer: loader ribbon or AutomatedTestRun – loader TestSuite</text>
+  </g>
+</svg>
